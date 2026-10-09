@@ -318,7 +318,7 @@ function renderHome(root) {
     ${planTodayHTML()}
     <div class="homelinks"><button class="btn big" type="button" id="tomile">看我的里程碑（徽章 ${Object.keys(ST.badges).length}/${BADGES.length}）</button><button class="btn big ghost" type="button" id="toset">設定與備份</button></div>
     <button type="button" class="cfahome" id="tocfa"><span class="cfahi">${navIcon('cfa')}</span><span><b>CFA 特區</b><span>Level I 完整筆記（93 個學習單元）、考試指南、費用與日程、打怪題庫</span></span><span class="cfago">→</span></button>
-    <div class="dates"><h3>考試日程（依課程大綱）</h3><ul><li><b>管理學期中</b>：11/4（第 9 週）· 期末 12/23 · <b>英文作答</b></li><li><b>衍金期中</b>：2026/11/16 · 期末 12/21 · A4 手抄小抄＋計算機 · <b>英文作答</b></li><li><b>衍金小考</b>：每單元結束後勾選習題，隔週考其中一題或類題（可開書）</li></ul></div></div>`;
+    <div class="dates"><h3>考試日程（依課程大綱）</h3><ul><li><b>管理學期中</b>：11/4（第 9 週）· 期末 12/23 · <b>英文作答</b></li><li><b>衍金期中</b>：2026/11/16 · 期末 12/21 · A4 手抄小抄＋計算機 · <b>英文作答</b></li><li><b>不動產財管</b>（清大磨課師）：期中 11/12 · 期末 12/17</li><li><b>GMAT</b>：12/30</li><li><b>衍金小考</b>：每單元結束後勾選習題，隔週考其中一題或類題（可開書）</li></ul></div></div>`;
   $$('[data-go]', root).forEach(b => b.onclick = () => go(b.dataset.go));
   $('#tomile', root).onclick = () => go('milestones'); $('#toset', root).onclick = () => go('settings');
   $('#tocfa', root).onclick = () => go('cfa'); $('#toplan', root).onclick = () => go('plan');
