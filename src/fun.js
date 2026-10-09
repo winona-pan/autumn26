@@ -41,7 +41,7 @@ const FUN = {
   flame() { return '<svg width="14" height="16" viewBox="0 0 14 16" aria-hidden="true"><path d="M7,0 C9,4 13,6 13,10 A6,6 0 0,1 1,10 C1,7 3,6 4,3 C5,5 6,5 7,0 Z" class="flm"/></svg>'; },
   toast(msg, mood = 'happy') {
     let t = $('#toast'); if (!t) { t = document.createElement('div'); t.id = 'toast'; t.setAttribute('role', 'status'); document.body.appendChild(t); }
-    t.innerHTML = PIG(mood, 54) + `<span>${msg}</span>`; t.className = 'show'; clearTimeout(this._tt); this._tt = setTimeout(() => t.className = '', 2600);
+    t.innerHTML = PIG(mood, 54) + `<span>${msg}</span>`; t.className = 'show'; clearTimeout(this._tt); this._tt = setTimeout(() => t.className = '', 3500);
   },
   confetti(n = 40) {
     if (ST.calm || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
