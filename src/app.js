@@ -73,7 +73,7 @@ function renderLearn(key, root) {
   updateCounts();
 }
 function updateCounts() {
-  ORDER.forEach(k => {
+  ORDER.concat('cfa').forEach(k => {
     const s = DATA[k]; const all = subjCards(s); const d = all.filter(c => ST.done[c.id]).length;
     $$(`[data-prog="${k}"]`).forEach(e => { e.style.setProperty('--p', (d / all.length * 100).toFixed(1) + '%'); e.title = `${d}/${all.length}`; });
     $$(`[data-progt="${k}"]`).forEach(e => e.textContent = `${d}/${all.length}`);
@@ -316,7 +316,7 @@ function renderHome(root) {
   root.innerHTML = `<div class="home"><div class="hero">${PIG('happy', 120)}<div><h2>${hello}！我是豬豬老師</h2><p>今天也一起存一點知識吧。看卡片、玩遊戲、打怪物都會得到 XP，升級後會換新稱號。你已經連續 <b>${FUN.streak()}</b> 天來複習了！</p><p class="stats"><span>Lv.${FUN.level()}</span><span>${ST.xp} XP</span><span>${Object.keys(ST.badges).length}/${BADGES.length} 徽章</span></p></div></div>
     <div class="subjgrid">${ORDER.map(k => { const s = DATA[k]; const n = subjCards(s).length; const lang = k === 'basic' ? '<span class="pill en-pill">先備知識</span>' : k === 'deriv' || k === 'mgmt' ? '<span class="pill en-pill">英文考試</span>' : ''; return `<button class="sg ${s.hue}" data-go="${k}" type="button"><span class="sgn">${s.full} ${lang}</span><span class="sgm">${n} 個知識點${s.formulas ? ` · ${s.formulas.length} 個公式` : ''}</span><span class="bar" data-prog="${k}"><i></i></span><span class="sgp" data-progt="${k}"></span><span class="sgi">${s.intro}</span></button>`; }).join('')}</div>
     <div class="homelinks"><button class="btn big" type="button" id="tomile">看我的里程碑（徽章 ${Object.keys(ST.badges).length}/${BADGES.length}）</button><button class="btn big ghost" type="button" id="toset">設定與備份</button></div>
-    <button type="button" class="cfahome" id="tocfa"><span class="cfahi">${navIcon('cfa')}</span><span><b>CFA 特區</b><span>考試內容、十大科目、費用與日程、讀書計畫，還有你在各科已經學到的 CFA 觀念</span></span><span class="cfago">→</span></button>
+    <button type="button" class="cfahome" id="tocfa"><span class="cfahi">${navIcon('cfa')}</span><span><b>CFA 特區</b><span>Level I 完整筆記（93 個學習單元）、考試指南、費用與日程、打怪題庫</span></span><span class="cfago">→</span></button>
     <div class="dates"><h3>考試日程（依課程大綱）</h3><ul><li><b>管理學期中</b>：11/4（第 9 週）· 期末 12/23 · <b>英文作答</b></li><li><b>衍金期中</b>：2026/11/16 · 期末 12/21 · A4 手抄小抄＋計算機 · <b>英文作答</b></li><li><b>衍金小考</b>：每單元結束後勾選習題，隔週考其中一題或類題（可開書）</li></ul></div></div>`;
   $$('[data-go]', root).forEach(b => b.onclick = () => go(b.dataset.go));
   $('#tomile', root).onclick = () => go('milestones'); $('#toset', root).onclick = () => go('settings');
@@ -333,7 +333,8 @@ const PANES = {
   deriv: [['learn', '知識點'], ['formula', '公式教室'], ['prob', '課本習題'], ['gen', '變化題'], ['game', '小遊戲'], ['mcq', '打怪＆選擇題']],
   invest: [['learn', '知識點'], ['formula', '公式教室'], ['flash', '講義問題'], ['game', '小遊戲'], ['mcq', '打怪＆選擇題']],
   law: [['learn', '知識點＋條文'], ['game', '小遊戲'], ['mcq', '打怪＆選擇題']],
-  mgmt: [['learn', '知識點'], ['formula', '公式教室'], ['essay', '申論批改'], ['game', '小遊戲'], ['mcq', '打怪＆選擇題']]
+  mgmt: [['learn', '知識點'], ['formula', '公式教室'], ['essay', '申論批改'], ['game', '小遊戲'], ['mcq', '打怪＆選擇題']],
+  cfa: [['intro', '考試指南'], ['learn', 'Level I 完整筆記'], ['mcq', '打怪＆選擇題']]
 };
 let CUR = ['home'];
 function go(k, tab) {
@@ -344,13 +345,12 @@ function go(k, tab) {
   if (k === 'home') { renderHome(main); window.scrollTo(0, 0); return; }
   if (k === 'settings') { renderSettings(main); window.scrollTo(0, 0); return; }
   if (k === 'milestones') { renderMilestones(main); window.scrollTo(0, 0); return; }
-  if (k === 'cfa') { renderCFA(main); window.scrollTo(0, 0); return; }
-  const s = DATA[k]; tab = tab || ST.tab[k] || 'learn'; CUR = [k, tab];
+  const s = DATA[k]; tab = tab || ST.tab[k] || PANES[k][0][0]; CUR = [k, tab];
   main.innerHTML = `<div class="shead"><div><h2>${s.full}</h2><p class="intro">${s.intro}</p></div><div class="prog"><span class="bar" data-prog="${k}"><i></i></span><span data-progt="${k}"></span> 已掌握</div></div><div class="ptabs" role="tablist">${PANES[k].map(p => `<button role="tab" class="ptab" data-p="${p[0]}" aria-selected="${p[0] === tab}" type="button">${p[1]}</button>`).join('')}</div><div id="pane"></div>`;
   $$('.ptab', main).forEach(b => b.onclick = () => go(k, b.dataset.p));
   ST.tab[k] = tab; save();
   const pane = $('#pane');
-  ({ learn: () => renderLearn(k, pane), formula: () => renderFormulas(k, pane), mcq: () => renderMCQ(k, pane), prob: () => renderProblems(pane), gen: () => renderGens(pane), flash: () => renderFlash(pane), essay: () => renderEssay(pane), game: () => renderGames(k, pane) })[tab]();
+  ({ intro: () => renderCFA(pane), learn: () => renderLearn(k, pane), formula: () => renderFormulas(k, pane), mcq: () => renderMCQ(k, pane), prob: () => renderProblems(pane), gen: () => renderGens(pane), flash: () => renderFlash(pane), essay: () => renderEssay(pane), game: () => renderGames(k, pane) })[tab]();
   updateCounts();
 }
 window.rerender = () => go(CUR[0], CUR[1]);
@@ -366,7 +366,7 @@ const NAVI = {
 const navIcon = k => `<svg class="navi" viewBox="0 0 24 24" aria-hidden="true">${NAVI[k]}</svg>`;
 function boot() {
   FUN.init(); applyPrefs();
-  $('#stabs').innerHTML = `<button class="stab home" data-s="home" type="button">${navIcon('home')}<span>首頁</span></button>` + ORDER.map(k => `<button class="stab ${DATA[k].hue}" data-s="${k}" type="button">${navIcon(k)}<span>${DATA[k].name}</span><span class="bar mini" data-prog="${k}"><i></i></span></button>`).join('') + `<button class="stab cfa" data-s="cfa" type="button">${navIcon('cfa')}<span>CFA</span></button>`;
+  $('#stabs').innerHTML = `<button class="stab home" data-s="home" type="button">${navIcon('home')}<span>首頁</span></button>` + ORDER.map(k => `<button class="stab ${DATA[k].hue}" data-s="${k}" type="button">${navIcon(k)}<span>${DATA[k].name}</span><span class="bar mini" data-prog="${k}"><i></i></span></button>`).join('') + `<button class="stab cfa" data-s="cfa" type="button">${navIcon('cfa')}<span>CFA</span><span class="bar mini" data-prog="cfa"><i></i></span></button>`;
   $$('.stab').forEach(b => b.onclick = () => go(b.dataset.s));
   FUN.hud();
   const h = (location.hash || '').slice(1);
