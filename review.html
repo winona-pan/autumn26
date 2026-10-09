@@ -1,0 +1,1603 @@
+<title>26 秋季複習本</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&family=Noto+Sans+TC:wght@400;500;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: a study binder — sticky subject tabs on top, a section index on the left, cards stacked like index cards. Each subject recolors the accent. */
+:root{
+  --bg:#eef1f5; --panel:#ffffff; --ink:#1b2230; --mute:#5b6577; --line:#d5dbe4; --soft:#e4e9f0;
+  --deriv:#0b7a74; --invest:#b45f06; --law:#b3264c; --mgmt:#3f6b2a; --acc:var(--deriv);
+  --plain:#e7f3f2; --life:#fbf1e3; --good:#2e7d4f; --bad:#b3341f; --hit:#fff4c7;
+  --f-display:"LXGW WenKai TC","Kaiti TC","STKaiti",serif; --f-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#11151c; --panel:#1a2029; --ink:#e4e8ef; --mute:#9aa4b5; --line:#2e3644; --soft:#232a35;
+  --deriv:#3cc1b7; --invest:#f0a24a; --law:#f0708f; --mgmt:#8cc46a; --plain:#173230; --life:#33281a; --good:#5fc48a; --bad:#f08470; --hit:#3a3415; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#11151c; --panel:#1a2029; --ink:#e4e8ef; --mute:#9aa4b5; --line:#2e3644; --soft:#232a35;
+  --deriv:#3cc1b7; --invest:#f0a24a; --law:#f0708f; --mgmt:#8cc46a; --plain:#173230; --life:#33281a; --good:#5fc48a; --bad:#f08470; --hit:#3a3415; color-scheme:dark }
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.7}
+body[data-subj="invest"]{--acc:var(--invest)} body[data-subj="law"]{--acc:var(--law)} body[data-subj="mgmt"]{--acc:var(--mgmt)}
+*{box-sizing:border-box}
+h1,h2,h3,h4{font-family:var(--f-display);text-wrap:balance;line-height:1.3;margin:0}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--bg);border-bottom:1px solid var(--line)}
+.topin{max-width:1180px;margin:0 auto;padding:10px 16px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.brand{font-family:var(--f-display);font-size:20px;font-weight:700;white-space:nowrap}
+.brand small{font-family:var(--f-mono);font-size:11px;color:var(--mute);margin-left:6px;letter-spacing:.06em}
+#stabs{display:flex;gap:6px;flex-wrap:wrap}
+.stab{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:5px 14px 7px;cursor:pointer;position:relative;font-weight:500}
+.stab[aria-current="page"]{color:#fff;border-color:transparent}
+.stab.deriv[aria-current="page"]{background:var(--deriv)} .stab.invest[aria-current="page"]{background:var(--invest)} .stab.law[aria-current="page"]{background:var(--law)} .stab.mgmt[aria-current="page"]{background:var(--mgmt)} .stab.home[aria-current="page"]{background:var(--ink);color:var(--bg)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .stab[aria-current="page"]{color:#11151c}}
+:root[data-theme="dark"] .stab[aria-current="page"]{color:#11151c}
+.bar{display:block;height:6px;border-radius:3px;background:var(--soft);overflow:hidden;--p:0%}
+.bar i{display:block;height:100%;width:var(--p);background:var(--acc);transition:width .3s}
+.bar.mini{position:absolute;left:12px;right:12px;bottom:2px;height:2px;background:transparent}
+.stab.deriv .bar i{background:var(--deriv)} .stab.invest .bar i{background:var(--invest)} .stab.law .bar i{background:var(--law)} .stab.mgmt .bar i{background:var(--mgmt)}
+.stab[aria-current="page"] .bar i{background:currentColor;opacity:.7}
+main{max-width:1180px;margin:0 auto;padding-block:20px 60px;padding-inline:16px}
+.shead{display:flex;justify-content:space-between;gap:20px;align-items:flex-end;flex-wrap:wrap;padding-bottom:14px}
+.shead h2{font-size:30px;color:var(--acc)}
+.intro{color:var(--mute);max-width:68ch;margin:6px 0 0}
+.prog{display:flex;align-items:center;gap:8px;font-family:var(--f-mono);font-size:13px;color:var(--mute)} .prog .bar{width:140px}
+.ptabs{display:flex;gap:4px;border-bottom:2px solid var(--line);margin-bottom:18px;overflow-x:auto}
+.ptab{border:0;background:none;padding:8px 14px;cursor:pointer;color:var(--mute);border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap;font-weight:500}
+.ptab[aria-selected="true"]{color:var(--acc);border-bottom-color:var(--acc)}
+.learn{display:grid;grid-template-columns:220px minmax(0,1fr);gap:24px}
+.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 76px);align-self:start;display:flex;flex-direction:column;gap:2px;max-height:calc(100vh - 100px);overflow:auto}
+.toc a{color:var(--ink);text-decoration:none;padding:6px 10px;border-radius:6px;font-size:14px;display:flex;justify-content:space-between;gap:8px}
+.toc a:hover{background:var(--soft)} .cnt{font-family:var(--f-mono);font-size:11px;color:var(--mute)}
+@media (max-width:820px){.learn{grid-template-columns:minmax(0,1fr)}.toc{position:static;flex-direction:row;flex-wrap:wrap;max-height:none}.toc a{background:var(--panel);border:1px solid var(--line)}}
+.cards{min-width:0;display:flex;flex-direction:column;gap:18px}
+.searchbar input{width:100%;padding:10px 14px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.sec{display:flex;flex-direction:column;gap:14px;scroll-margin-top:90px}
+.sec>h3{font-size:22px;padding-top:8px;border-top:1px dashed var(--line)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px 18px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.card.done{border-color:color-mix(in srgb,var(--acc) 45%,var(--line))}
+.card header{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.card h4{font-size:19px} .en{font-family:var(--f-mono);font-size:12px;color:var(--mute)}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:10px} @media (max-width:640px){.duo{grid-template-columns:1fr}}
+.duo>div{border-radius:8px;padding:10px 12px;min-width:0} .duo p{margin:2px 0 0}
+.plain{background:var(--plain)} .life{background:var(--life)}
+.lbl{font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--mute)}
+figure{margin:0;overflow-x:auto} .fig{width:100%;max-width:560px;height:auto;display:block;margin:0 auto}
+.fig text{fill:var(--ink);font-family:var(--f-body);font-size:11px} .fig .sm{font-size:10px;fill:var(--mute)} .fig .hd{font-size:12px;font-weight:700;fill:var(--ink)} .fig .bt{font-size:11px;fill:var(--ink)}
+.fig .bx{fill:var(--soft);stroke:var(--line)} .fig .bx.c1{fill:color-mix(in srgb,var(--acc) 18%,var(--panel));stroke:var(--acc)} .fig .bx.c2{fill:var(--plain);stroke:var(--line)} .fig .bx.c3{fill:var(--life);stroke:var(--line)} .fig .bx.c0{fill:color-mix(in srgb,var(--acc) 10%,var(--panel));stroke:var(--acc)}
+.fig .ax,.fig .grid{stroke:var(--line);stroke-width:1} .fig .grid{stroke-dasharray:2 3}
+.fig .ln{fill:none;stroke:var(--mute);stroke-width:2} .fig .ln.a1{stroke:var(--mute)} .fig .ln.a2,.fig .ar.a2{stroke:var(--acc)} .fig .thick{stroke-width:3} .fig .dash{stroke-dasharray:5 4;stroke:var(--mute);fill:none;stroke-width:1.5}
+.fig .ar{stroke:var(--mute);stroke-width:1.5;fill:none} .fig .ahd{fill:var(--mute)} .fig .dot{fill:var(--acc)} .fig .br{stroke:var(--acc);stroke-width:2} .fig .wick{stroke:var(--ink);stroke-width:2}
+.fig .kred{fill:#d33c3c} .fig .kblk{fill:#2a6e4a} .fig .grad{fill:var(--soft);stroke:var(--line)}
+.fig .seg.s1{fill:var(--acc)} .fig .seg.s2{fill:color-mix(in srgb,var(--acc) 45%,var(--panel))} .fig .seg.s3{fill:var(--soft);stroke:var(--line)}
+.fig text.a1{fill:var(--mute)} .fig text.a2{fill:var(--acc)}
+details summary{cursor:pointer;font-weight:700;color:var(--acc)} .body{max-width:72ch} .body ul,.body ol{padding-left:1.3em;margin:6px 0} .body li{margin:3px 0}
+.note{font-size:14px;color:var(--mute);border-left:3px solid var(--line);padding-left:10px}
+.formula{font-family:var(--f-mono);font-size:16px;background:var(--soft);padding:8px 12px;border-radius:6px;display:inline-block}
+.terms{display:grid;grid-template-columns:max-content 1fr;gap:4px 14px;font-size:14px;margin:8px 0 0} .terms dt{font-weight:700} .terms dd{margin:0;color:var(--mute)}
+.chk{display:flex;gap:8px;align-items:center;font-size:14px;color:var(--mute);cursor:pointer} .chk input{accent-color:var(--acc);width:18px;height:18px}
+.tblwrap{overflow-x:auto;max-width:100%}
+.tbl{border-collapse:collapse;font-size:14px;margin:6px 0;min-width:100%} .tbl th,.tbl td{border:1px solid var(--line);padding:5px 9px;text-align:left;vertical-align:top} .tbl th{background:var(--soft)}
+.tbl.num td{font-variant-numeric:tabular-nums} .tbl tr.hit td{background:var(--hit)}
+.arts td:first-child{white-space:nowrap;font-family:var(--f-mono)} .arts.masked .artc{color:transparent;background:var(--soft)} .arts.masked tr.peek .artc{color:inherit;background:none} .arts tr{cursor:pointer}
+.wg{border:1px dashed var(--acc);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:10px;background:color-mix(in srgb,var(--acc) 4%,var(--panel))}
+.wg-row{display:flex;flex-wrap:wrap;gap:10px 16px} .wg label{display:flex;flex-direction:column;font-size:13px;color:var(--mute);gap:2px} .wg label b{font-family:var(--f-mono);color:var(--ink)}
+.wg label.full{width:100%} .wg input[type=number],.wg input[type=text],.wg select{border:1px solid var(--line);border-radius:6px;padding:5px 8px;background:var(--panel);min-width:0;width:100%;max-width:200px} .wg label.full input{max-width:none}
+.wg input[type=range]{accent-color:var(--acc);width:160px} .wg-out{margin:0;font-size:14px} .sm-p{font-size:14px;color:var(--mute);margin:0}
+.cell{width:64px!important;border:1px solid var(--line);border-radius:4px;padding:2px 4px;background:var(--panel)}
+.pill{display:inline-block;font-size:12px;padding:1px 8px;border-radius:999px;background:var(--soft);color:var(--mute)} .pill.good{background:color-mix(in srgb,var(--good) 18%,var(--panel));color:var(--good)} .pill.bad{background:color-mix(in srgb,var(--bad) 18%,var(--panel));color:var(--bad)}
+.flipgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px}
+.flip{border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:10px;text-align:left;cursor:pointer;min-height:78px;font-size:14px}
+.flip .f2{display:none} .flip.on .f1{display:none} .flip.on .f2{display:block} .flip.on{background:var(--plain)}
+.btn{border:1px solid var(--acc);background:var(--acc);color:var(--panel);border-radius:8px;padding:7px 14px;cursor:pointer;font-weight:500}
+.btn.ghost{background:var(--panel);color:var(--acc)} .btn.on{outline:2px solid var(--ink)} .btn:disabled{opacity:.5;cursor:not-allowed} .btn.big{padding:10px 22px;font-size:16px}
+.quizbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:14px} .quizbar select{border:1px solid var(--line);border-radius:6px;padding:6px;background:var(--panel);max-width:100%}
+.quizbar label{display:flex;gap:6px;align-items:center;flex-wrap:wrap;min-width:0}
+.qcard,.prob,.result{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px 18px;max-width:780px}
+.qmeta{font-family:var(--f-mono);font-size:12px;color:var(--mute)} .qtext{font-size:17px;margin:8px 0 12px}
+.opts{display:flex;flex-direction:column;gap:8px} .opt{text-align:left;border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:10px 14px;cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--acc)} .opt.right{border-color:var(--good);background:color-mix(in srgb,var(--good) 14%,var(--panel))} .opt.wrongc{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 14%,var(--panel))}
+.exp{margin-top:12px;padding:10px 12px;border-radius:8px;background:var(--soft);font-size:15px} .next{margin-top:12px}
+.result .big{font-family:var(--f-display);font-size:42px;margin:0;color:var(--acc)} .empty{color:var(--mute)}
+.plist{display:flex;flex-direction:column;gap:14px} .psrc{font-size:13px;color:var(--mute)} .steps{padding-left:1.4em} .steps li{margin:4px 0} .ans{background:var(--hit);padding:8px 12px;border-radius:6px} .pbtn{display:flex;gap:8px;flex-wrap:wrap}
+.ansrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap} .ansrow input{border:1px solid var(--line);border-radius:6px;padding:8px 10px;width:160px;background:var(--bg);font-family:var(--f-mono)} .unit{color:var(--mute);font-size:13px}
+.flashlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
+.fcard{text-align:left;border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:14px;cursor:pointer;display:flex;flex-direction:column;gap:8px;min-height:110px}
+.fcard .fa{display:none;color:var(--ink);font-size:14px;border-top:1px dashed var(--line);padding-top:8px} .fcard.on .fa{display:block} .fcard.on{background:var(--plain)}
+.fq{font-weight:700} .num{font-family:var(--f-mono);font-size:12px;color:var(--acc);margin-right:8px}
+.essay{display:flex;flex-direction:column;gap:16px;max-width:820px}
+.estep{display:grid;grid-template-columns:34px minmax(0,1fr);gap:12px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px}
+.estep .n{width:30px;height:30px;border-radius:50%;background:var(--acc);color:var(--panel);display:grid;place-items:center;font-family:var(--f-mono)}
+.lblb{display:block;font-weight:700;margin-bottom:6px} .estep select,.estep textarea{width:100%;border:1px solid var(--line);border-radius:6px;padding:8px;background:var(--bg)}
+.drop{display:block;border:2px dashed var(--line);border-radius:10px;padding:22px;text-align:center;color:var(--mute);cursor:pointer} .drop.over{border-color:var(--acc)} .drop input{position:absolute;opacity:0;width:1px;height:1px}
+.thumbs{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0} .th{position:relative;margin:0} .th img{width:96px;height:96px;object-fit:cover;border-radius:6px;border:1px solid var(--line)} .th button{position:absolute;top:-6px;right:-6px;border:0;border-radius:50%;width:22px;height:22px;background:var(--ink);color:var(--bg);cursor:pointer}
+.rub{margin-top:8px} .feedback{margin-top:12px} .feedback h4{font-size:17px;color:var(--acc);margin-top:14px} .feedback ul{padding-left:1.3em} .thinking{color:var(--mute)}
+.home .hero{padding:10px 0 20px} .home h2{font-size:34px} .home .hero p{max-width:66ch;color:var(--mute)}
+.subjgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.sg{text-align:left;border:1px solid var(--line);border-top:5px solid var(--acc);background:var(--panel);border-radius:10px;padding:16px;cursor:pointer;display:flex;flex-direction:column;gap:8px}
+.sg.deriv{--acc:var(--deriv)} .sg.invest{--acc:var(--invest)} .sg.law{--acc:var(--law)} .sg.mgmt{--acc:var(--mgmt)}
+.sgn{font-family:var(--f-display);font-size:24px;color:var(--acc)} .sgm{font-size:13px;color:var(--mute)} .sgp{font-family:var(--f-mono);font-size:12px;color:var(--mute)} .sgi{font-size:13px}
+.dates{margin-top:24px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 18px;max-width:780px} .dates h3{font-size:18px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+<header class="top"><div class="topin"><span class="brand">26 秋季複習本<small>AUTUMN 2026</small></span><nav id="stabs" aria-label="科目"></nav></div></header>
+<main id="main"></main>
+<script>
+const DATA = {};
+// ===== 衍生性金融市場 (Hull, Ch1–3) =====
+DATA.deriv = {
+  name: '衍金', full: '衍生性金融市場', hue: 'deriv',
+  intro: '課本：Hull《Options, Futures & Other Derivatives》11版。小考：從老師勾選習題中出一題或類題（可開書）。期中考 2026/11/16，可帶 A4 手抄小抄＋計算機。',
+  sections: [
+  { id: 'ch1', t: 'Ch1 衍生性商品入門', cards: [
+    { id: 'd1', t: '衍生性商品是什麼？', en: 'Derivative',
+      plain: '價值「跟著另一個東西走」的合約。那個被跟著的東西叫「標的資產」(underlying asset)。',
+      life: '演唱會黃牛票：票本身不是演唱會，但票價跟著演唱會有多搶手而漲跌。票＝衍生品，演唱會熱度＝標的。',
+      body: '<p>四大類：<b>期貨 Futures、遠期 Forwards、交換 Swaps、選擇權 Options</b>。</p><p>老師的動森例子：週日買大頭菜，怕之後跌價 → 若能買一個「保證能用 99 鈴錢賣出」的權利（<b>賣權 Put</b>），就不怕跌了。</p>',
+      terms: [['標的資產 underlying','合約價值所依附的資產：股票、指數、黃金、原油、匯率…'],['到期日 maturity','合約約定的那一天']] },
+    { id: 'd2', t: '三種用途：避險、投機、套利', en: 'Hedging / Speculation / Arbitrage',
+      plain: '避險＝怕價格亂動，先鎖住；投機＝看好方向就賭；套利＝價格不合理時買低賣高，賺無風險的錢（無本生意）。',
+      life: '避險像買保險；投機像賭球賽輸贏；套利像發現 A 超商飲料 20 元、隔壁 B 店收購 25 元，同時買賣立刻賺 5 元。',
+      fig: 'triad',
+      body: '<ul><li><b>Hedging 避險</b>：為避免未來價格波動造成損失所採用的策略。</li><li><b>Speculation 投機</b>：對未來價格走勢有一定看法，賭方向。</li><li><b>Arbitrage 套利</b>：目前價格違反「單一價格法則」，買低賣高，賺無風險報酬。</li></ul>' },
+    { id: 'd3', t: '遠期與期貨：約好未來的價格', en: 'Forward & Futures',
+      plain: '雙方約定在「某個日期」用「某個價格」買或賣某資產。這是<b>義務</b>，到時候一定要履行。',
+      life: '預購新手機：現在講好 3 萬元、下個月交機。到時候市價漲到 3 萬 5，你還是付 3 萬（你賺）；跌到 2 萬 5，你還是得付 3 萬（你虧）。',
+      fig: 'fwdpayoff',
+      body: '<ul><li>買方 = <b>long 多頭、做多</b>；賣方 = <b>short 空頭、做空</b></li><li>約定價格 = <b>delivery price 交割價 K</b></li><li>到期收益：多頭 = S<sub>T</sub> − K；空頭 = K − S<sub>T</sub></li><li>例：12 月以 US$1400/oz 賣 100 oz 黃金（short forward）。若 12 月金價 1300，賺 (1400−1300)×100。</li></ul>' },
+    { id: 'd4', t: '選擇權：買權與賣權', en: 'Call & Put Options',
+      plain: '選擇權給買方「權利」不是義務：划算才執行，不划算就放棄。買這個權利要先付<b>權利金 premium</b>。',
+      life: 'Call 像訂房訂金：付 500 元保留「用 3000 元住」的權利，到時房價漲到 5000 你就住（執行）；跌到 2000 你寧願不要這個訂金。Put 像手機「保價險」：保證能用某個價錢賣掉。',
+      fig: 'w:payoff',
+      body: '<ul><li><b>Call 買權</b>：有權在某日以某價<b>買</b>。到期收益 max(S<sub>T</sub>−K, 0)</li><li><b>Put 賣權</b>：有權在某日以某價<b>賣</b>。到期收益 max(K−S<sub>T</sub>, 0)</li><li>執行價 = exercise / strike price K</li><li><b>歐式 European</b>：只能在到期日執行；<b>美式 American</b>：到期前任何時候都能執行。</li><li>四種部位：Long call、Short call、Long put、Short put。</li><li><b>Payoff 收益</b> 不扣權利金；<b>Profit 利潤</b> = Payoff − 權利金（賣方則 + 權利金）。</li></ul><p class="note">講義例：Call 權利金 $5、K=$100；Put 權利金 $7、K=$70。用上面的互動圖自己拉看看。</p>',
+      terms: [['權利金 premium','買選擇權要先付的錢；賣方收下'],['執行 exercise','使用你的權利'],['價內 in-the-money','現在執行有賺（call: S>K；put: S<K）']] }
+  ]},
+  { id: 'ch2', t: 'Ch2 期貨市場的運作', cards: [
+    { id: 'd5', t: '期貨 vs 遠期（必考比較表）', en: 'Futures vs Forwards',
+      plain: '期貨＝在交易所買賣、規格統一、每天結算的遠期。遠期＝兩個人私下講好的客製合約。',
+      life: '期貨像全家超商的標準便當：規格固定、誰都能買、店家（結算所）掛保證。遠期像請朋友幫你訂做蛋糕：內容隨你談，但朋友跑掉你就倒楣（信用風險）。',
+      body: '<table class="tbl"><tr><th>遠期 Forwards</th><th>期貨 Futures</th></tr><tr><td>雙方私下合約</td><td>交易所交易</td></tr><tr><td>非標準化</td><td>標準化</td></tr><tr><td>通常一個交割日</td><td>有一段交割日期範圍</td></tr><tr><td>到期才結算</td><td><b>每日結算</b></td></tr><tr><td>通常交割或最後現金結算</td><td>通常到期前就平倉</td></tr><tr><td>有一些信用風險</td><td>幾乎沒有信用風險</td></tr></table><p>損益加總：期貨 (F<sub>1</sub>−F<sub>0</sub>)+(F<sub>2</sub>−F<sub>1</sub>)+…+(F<sub>T</sub>−F<sub>T−1</sub>)；遠期 (F<sub>T</sub>−F<sub>0</sub>) —— 總額一樣，只是期貨「每天分期」實現。</p>' },
+    { id: 'd6', t: '合約規格：交割什麼、在哪、何時', en: 'Contract specifications',
+      plain: '交易所要先定好：交割什麼（品質、數量）、在哪交割、何時交割。',
+      life: '像團購規定：「每單 = 一箱 24 罐、到 7-11 取貨、每月第三個週三出貨」。',
+      body: '<ul><li><b>Contract size 契約規模</b>：1 口 = 多少標的。太大 → 避險找不到合適部位、小額投資人買不起；太小 → 交易成本過高。</li><li>台股期貨：指數 × NT$200/口；股票期貨：2000 股/口。</li><li>商品通常<b>實物結算</b> physical settlement；金融資產（股票、指數、貨幣、債券）常<b>現金結算</b> cash settlement。</li><li><b>Delivery month 交割月份</b>：台指期最後交易日 = 交割月份第三個星期三。<b>三個近月 + 三個季月</b> → 每個交易日都有 6 個月份契約。</li><li>例：2025 年 9 月，最後結算日 9/17。9/17(含)前有 9、10、11、12、3、6 月；9/18 起有 10、11、12、3、6、9 月。</li><li><b>Price limit 漲跌幅</b>：前一營業日結算價上下 10%（limit up 漲停／limit down 跌停）。</li><li><b>Position limit 部位限制</b>：一個人同一方向可持有的最大口數，防止操縱市場。</li><li>交割有選擇（交什麼、在哪、何時）時，由<b>空方 short</b> 決定。</li><li>台指期最後結算價：最後結算日收盤前 30 分鐘標的指數的簡單算術平均。</li></ul>' },
+    { id: 'd7', t: '開倉、平倉與價格收斂', en: 'Open / Close out / Convergence',
+      plain: '開倉 = 建立新部位；平倉 = 做一筆相反的交易把部位抵銷掉。大部分人不會等到交割。到期時期貨價格一定會收斂到現貨價格。',
+      life: '老師猜價遊戲：猜「期末二手課本賣多少」，越接近期末，大家猜的數字越接近真正的成交價。',
+      fig: 'converge',
+      body: '<p>為什麼一定收斂？若到期時兩者不一致就能套利：</p><ul><li><b>F &gt; S</b>：用市價買資產、同時 short futures，交割拿到 F → 賺 F−S。</li><li><b>F &lt; S</b>：long futures 用低價 F 買到資產，再用高的市價 S 賣出 → 賺 S−F。（課本 2.8 補充：這個方向不是完美套利，因為何時交割由空方決定。）</li></ul>' },
+    { id: 'd8', t: '保證金與每日結算（Margin）', en: 'Margin, Marking to market',
+      plain: '進場要先押一筆錢（原始保證金）。每天收盤依結算價算你賺賠，直接從帳戶加減。若跌破「維持保證金」，就要補回「原始保證金」。',
+      life: '像健身房押金：開卡押 12,000。每天依表現扣或加。押金低於 9,000（維持線）時，櫃台打電話叫你補到 12,000（margin call）。不補就把你的會籍收掉（強制平倉）。',
+      fig: 'w:margin',
+      body: '<ul><li><b>Initial margin 原始保證金</b>、<b>Maintenance margin 維持保證金</b>、<b>Margin call 保證金追繳</b>：餘額 &lt; 維持 → 補足至<b>原始</b>（不是補到維持！）。</li><li>超過原始保證金的部分可以提領。</li><li>保證金可用現金或有價證券：國庫券約抵 90% 面額、股票約 50%。</li><li><b>每日結算價</b>：收盤前 1 分鐘內所有成交的成交量加權平均價。</li><li>講義範例（Table 2.1）：6/5 long 2 口 12 月黃金期貨、100 oz/口、F=$1450（11 版改 $1750），原始 $6,000/口（共 12,000）、維持 $4,500/口（共 9,000）。第 7 天剩 7,980 &lt; 9,000 → 補 4,020。第 16 天平倉：帳面 15,180−12,000=3,180，但追繳兩次 4,020+3,780=7,800，淨損 7,800−3,180=4,620 = (1426.9−1450)×100×2。</li></ul>',
+      terms: [['marking to market','每日依市價結算損益'],['margin call','保證金不足被追繳']] },
+    { id: 'd9', t: '未平倉量 OI 與成交量', en: 'Open interest & Volume',
+      plain: 'OI = 市場上還沒平倉的合約總數（單邊算，多方總口數 = 空方總口數）。成交量 = 當天成交了幾口。',
+      life: 'OI 像「現在還在場上的情侶對數」，成交量像「今天有幾對牽手或分手」。兩個新人在一起，對數 +1；兩個舊情侶都分手，−1；一個舊的分手、新人頂上，不變。',
+      fig: 'w:oi',
+      body: '<p><b>口訣：OI 變化 = 買方開倉 − 賣方平倉</b>（＝ 賣方開倉 − 買方平倉）</p><ul><li>雙方都開倉 → OI 上升該數量</li><li>雙方都平倉 → OI 下降該數量</li><li>一開一平 → OI 不變</li><li>成交量可以大於 OI 嗎？可以，例如當沖（Day trade）：當天開又當天平。</li><li>到期前一個月 OI 通常下降：多數人在交割月份前就平倉。</li></ul><p>範例：成交 2000 口，買方開 600、平 1400；賣方開 800、平 1200 → 600−1200 = <b>−600</b>。</p>' },
+    { id: 'd10', t: '委託單種類與行情用語', en: 'Orders & Quotes',
+      plain: 'IOC、FOK、ROD 是三種「這張單要多快成交」的規定。',
+      life: 'IOC：去夜市說「現在有幾個就給我幾個，剩下不要了」。FOK：「10 個一次給齊，不然我一個都不要」。ROD：「今天之內有貨就幫我留」。',
+      body: '<ul><li><b>IOC</b> immediate or cancel：立即成交，數量不足自動刪單（想買 10 口但只有 8 口賣單 → 2 口刪單）。</li><li><b>FOK</b> fill or kill：一次整批成交，否則全部取消。</li><li><b>ROD</b> rest of day：當日有效（限價單預設）。</li><li>課本另有：stop order 停損單、limit order 限價單、stop-limit、market-if-touched（2.3、2.9、2.10）。</li><li>行情：Open/High/Low、Prior Settle、Last、<b>Change</b>（結算價較前一日變化：+ 多方賺、− 空方賺）、Volume、OI。</li><li>監管：美國 <b>CFTC</b> 商品期貨交易委員會；台灣：行政院金管會證券期貨局。</li></ul>' },
+    { id: 'd11', t: '外匯報價方式（2.13 必考）', en: 'FX quotes',
+      plain: '期貨的匯率一律報「每 1 單位外幣值幾美元」。遠期、即期：英鎊、歐元、澳幣、紐幣也這樣報；其他（加幣、日圓、瑞郎）報「1 美元換幾單位外幣」。',
+      life: '像價目表有人寫「1 杯 = 50 元」，有人寫「100 元 = 2 杯」，比較前要先換成同一種寫法。',
+      body: '<p>2.13：瑞郎遠期報 1.1000（= CHF/USD），期貨報 0.9000（= USD/CHF）。把遠期換成同一單位：1/1.1 = 0.9091 USD/CHF &gt; 0.9000 → 瑞郎在遠期市場比較值錢 → <b>想賣瑞郎的人選遠期</b>。</p>' }
+  ]},
+  { id: 'ch3', t: 'Ch3 用期貨避險', cards: [
+    { id: 'd12', t: '空頭避險 vs 多頭避險', en: 'Short hedge / Long hedge',
+      plain: '未來要「賣」東西 → 怕跌 → 先 short futures。未來要「買」東西 → 怕漲 → 先 long futures。現貨與期貨一賺一賠互相抵銷，價格就被鎖住。',
+      life: '農夫三個月後要賣豬，怕豬價跌 → 先賣期貨（short hedge）。麵包店三個月後要買麵粉，怕漲 → 先買期貨（long hedge）。',
+      fig: 'hedge',
+      body: '<p>講義例 1（short hedge，想賣在 79）：</p><table class="tbl"><tr><th></th><th>S<sub>T</sub>=75</th><th>S<sub>T</sub>=85</th></tr><tr><td>現貨</td><td>75</td><td>85</td></tr><tr><td>期貨</td><td>79−75=+4</td><td>79−85=−6</td></tr><tr><td>合計</td><td>79 鎖定</td><td>79 鎖定</td></tr></table><p>講義例 2（long hedge，想買在 3.2/磅）：S<sub>T</sub>=3.25 → −3.25+0.05=−3.2；S<sub>T</sub>=3.05 → −3.05−0.15=−3.2。</p><p>想未來擁有某東西：買期貨比買現貨好，因為買現貨要先付錢屯著 → 有<b>倉儲成本</b>與<b>利息損失</b>。</p><p><b>Perfect hedge</b>：完全消除風險。<b>Static hedge</b>（hedge-and-forget）一旦建立部位就不調；相對的是 dynamic hedge。</p>' },
+    { id: 'd13', t: '該不該避險？正反理由', en: 'Arguments for / against hedging',
+      plain: '支持：公司該專心本業，把利率、匯率等風險避掉。反對：股東自己會分散；競爭者不避險時你避反而更危險；避險虧錢時很難跟老闆解釋。',
+      life: '你幫全家訂了固定價格的年度蔬菜箱，結果菜價大跌，家人只看到「你多花錢」，卻忘了如果大漲你就省很多。',
+      body: '<p><b>反對理由 2</b>（競爭者不避險）：珠寶業金價上升 → 成本上升，大家都漲價，你避險後成本不變但售價也上升 → 利潤上升；反之金價下跌 → 大家降價，你成本沒降 → 利潤下降。也就是說避險反而讓你的利潤波動。</p><ul><li>避險是犧牲賺的機會來避免虧損；目的是讓結果<b>更確定</b>，不是更好（3.1）。</li></ul>' },
+    { id: 'd14', t: '基差風險 Basis risk', en: 'Basis = S − F',
+      plain: '基差 = 要避險的現貨價格 − 所用期貨價格。到期日時基差=0，但如果你在到期前平倉，那天的基差你事先不知道 → 這就是基差風險。',
+      life: '你用「台北市平均房價」來對沖「你家那間房」的價格。兩者大致同步，但不會完全一樣，那個差距就是基差。',
+      fig: 'basis',
+      body: '<p>b<sub>1</sub>=S<sub>1</sub>−F<sub>1</sub>（開始），b<sub>2</sub>=S<sub>2</sub>−F<sub>2</sub>（平倉）。講義：S<sub>1</sub>=2.5、F<sub>1</sub>=2.2、S<sub>2</sub>=2、F<sub>2</sub>=1.9。</p><ul><li>Short hedge 實際賣價 = S<sub>2</sub> + (F<sub>1</sub>−F<sub>2</sub>) = <b>F<sub>1</sub> + b<sub>2</sub></b> = 2.2+0.1 = 2.3</li><li>Long hedge 實際買價 = S<sub>2</sub> − (F<sub>2</sub>−F<sub>1</sub>) = <b>F<sub>1</sub> + b<sub>2</sub></b></li><li>基差風險來源：(1) 不確定何時要買賣 (2) 避險者不能等到最後結算日才平倉 (3) 要避險的商品與期貨標的不一致（交叉避險）。</li><li><b>3.7</b>：short hedger 持有現貨多頭＋期貨空頭 → <b>基差變強（增加）時有利</b>，變弱時不利；long hedger 相反。</li><li>交叉避險時基差有兩個來源：S<sub>2</sub>−S<sub>2</sub>* 與 S<sub>2</sub>*−F<sub>2</sub>。</li></ul>' },
+    { id: 'd15', t: '選合約：月份與標的', en: 'Choice of contract',
+      plain: '月份：選「離避險結束最近、但比它晚」的月份。標的：沒有剛好的期貨時，選價格跟你的資產最相關的（交叉避險）。',
+      life: '買機票：要在 4/10 抵達，就訂 4/10 之後最近的一班，不要訂 4/8（太早到期沒用）。',
+      body: '<ul><li>季月合約（3、6、9、12）：避險在 12、1、2 月結束 → 選 3 月；在 3、4、5 月結束 → 選 6 月。（到期月份本身容易受交割影響，所以避險在 3 月結束也選 6 月。）</li><li><b>Cross hedge 交叉避險</b>：拿 F 對 S 避險，但 F 的標的是 S*，S* 與 S 要高度相關（例：用原油期貨避航空燃油）。</li></ul>' },
+    { id: 'd16', t: '最小變異避險比率 h*', en: 'Minimum variance hedge ratio',
+      plain: '每 1 單位現貨要配多少單位期貨？標的一樣就 1:1；不一樣就用 h* = ρ × σ<sub>S</sub>/σ<sub>F</sub> 讓整體波動最小。',
+      life: '用跑步機訓練去準備馬拉松：兩者相關但不完全一樣。如果跑步機的強度波動是實際賽道的 2 倍，你只需要一半的跑步機訓練量就能「對齊」。',
+      fig: 'w:hedge',
+      body: '<p class="formula">h* = ρ · σ<sub>S</sub> / σ<sub>F</sub></p><ul><li>σ<sub>S</sub>：避險期間現貨價格變動 ΔS 的標準差；σ<sub>F</sub>：期貨價格變動 ΔF 的標準差；ρ：兩者相關係數。</li><li>推導：Short hedge 部位價值變動 = ΔS − hΔF，對 h 取變異數最小 → h* 如上。</li><li>ρ=1、σ<sub>F</sub>=σ<sub>S</sub> → h*=1（期貨完全反映現貨）；ρ=1、σ<sub>F</sub>=2σ<sub>S</sub> → h*=0.5（期貨變動兩倍，用量只需一半）。</li><li>ρ=0 → h*=0，不避險（3.2）。</li><li><b>3.10</b>：h*=1 不代表完美避險（例 ρ=0.5、σ<sub>S</sub>=2σ<sub>F</sub>）。<b>3.11</b>：若無基差風險，h* 必為 1。</li></ul>' },
+    { id: 'd17', t: '最適契約口數（含 tailing）', en: 'Optimal number of contracts',
+      plain: '口數 N* = h* × 你要避險的數量 Q<sub>A</sub> ÷ 1 口期貨的數量 Q<sub>F</sub>。',
+      life: '要用 6 罐裝的箱子裝 100 罐、但只需裝八成 → 0.8×100/6 ≈ 13 箱。',
+      body: '<p class="formula">N* = h* · Q<sub>A</sub> / Q<sub>F</sub></p><p>講義例：航空公司要避險 2,000,000 加侖航空燃油，h*=0.7778，用加熱油期貨 42,000 加侖/口 → N* = 0.7778×2,000,000/42,000 = 37.03 ≈ <b>37 口</b>。</p><p><b>Tailing the hedge</b>（考慮每日結算）：N* = ĥ · V<sub>A</sub> / V<sub>F</sub>，V<sub>A</sub> = 現貨部位價值、V<sub>F</sub> = 期貨價格×1口規模，ĥ 用「一天報酬率」的相關與標準差算。遠期沒有每日結算，所以不需要 tailing。（例：3.22 第 (d) 小題）</p>' },
+    { id: 'd18', t: '用股價指數期貨避險／調整 β', en: 'Index futures & Beta',
+      plain: '股票組合的市場風險 = β。賣出指數期貨可以把 β 降到 0；買或賣適當口數可以把 β 調到任何你要的 β*。',
+      life: 'β 像車子跟著大盤的「油門倍數」。指數期貨像一個可以反向踩的煞車：踩多少口，就把倍數降多少。',
+      fig: 'w:beta',
+      body: '<p class="formula">N* = β · V<sub>A</sub> / V<sub>F</sub>　（V<sub>F</sub> = 期貨價格 × 乘數）</p><p>由 CAPM：r<sub>P</sub>−r<sub>f</sub> = α + β(r<sub>M</sub>−r<sub>f</sub>) + ε，h* = cov(r<sub>P</sub>,r<sub>F</sub>)/σ<sub>F</sub>² ≈ β。</p><p>講義例：S&amp;P 500 期貨 1000、組合 $5M、β=1.5、乘數 $250 → N* = 1.5×5,000,000/(250×1000) = <b>30 口 short</b>。</p><ul><li>β 降到 0.75：short (1.5−0.75)×20 = <b>15 口</b></li><li>β 升到 2.0：long (2−1.5)×20 = <b>10 口</b></li><li>公式：β&gt;β* → short (β−β*)V<sub>A</sub>/V<sub>F</sub>；β&lt;β* → long (β*−β)V<sub>A</sub>/V<sub>F</sub></li></ul>' },
+    { id: 'd19', t: '為什麼避險股票報酬？', en: 'Why hedge equity returns',
+      plain: '為何不乾脆賣股票存定存？(1) 想長期持有，避險可省下賣掉又買回的成本；(2) 你覺得自己選的股會贏大盤：避掉大盤風險後，就只賺「無風險利率 + 你贏大盤的部分」。',
+      life: '你很會挑球員，但不確定整個聯盟景氣。避險就像只賭「你的球員比平均強多少」，不賭聯盟整體好壞。',
+      body: '<p>3.15：持有 50,000 股、$30、β=1.3，Mini S&amp;P 期貨 1500、乘數 $50 → short 1.3×1,500,000/75,000 = <b>26 口</b>。當股票報酬高於 CAPM 預測（α&gt;0）時獲利。</p>' },
+    { id: 'd20', t: '集中式展期 Stack and Roll／流動性問題', en: 'Stack and roll, Liquidity',
+      plain: '所有期貨合約都比避險期間短時，就到期前平倉、換下一個合約，一路滾下去。風險：期貨先大虧時要一直付保證金，現貨的利益還沒拿到 → 現金周轉不靈。',
+      life: '租房子只能一年一簽，你想住五年 → 每年續約。但若某年租金暴漲又要立刻付清，你可能撐不到房子增值那天。',
+      fig: 'roll',
+      body: '<p>Business Snapshot 3.2（Metallgesellschaft）：預售資產、先收價金，未來要交貨 → 未來資產漲價會虧，所以用 long futures hedge。但避險期間比期貨長，很可能還等不到現貨賺錢，期貨就跌很多、收到 margin call 卻沒有資金撐到 T。</p>' }
+  ]}
+  ],
+  // 課本習題（11版：2.1、2.7、2.13、2.19、2.23；3.7、3.13、3.14、3.15、3.23；舊版 3.4、3.10、3.11）
+  problems: [
+    { id:'p2_1', src:'課本 2.1（11版勾選）', lvl:'課本', q:'你建立一口 7 月白銀期貨空頭部位，價格 $17.20/盎司，合約規模 5,000 盎司。原始保證金 $4,000、維持保證金 $3,000。期貨價格變動多少會收到保證金追繳？若不補繳會怎樣？',
+      steps:['可虧損空間 = 4,000 − 3,000 = $1,000','空頭在價格上漲時虧：1,000 / 5,000 = $0.20','17.20 + 0.20 = <b>$17.40</b> 時追繳','不補繳 → 經紀商將你的部位強制平倉'], ans:'價格漲到 $17.40/oz（漲 $0.20）時追繳；不補則被平倉。' },
+    { id:'p2_7', src:'課本 2.7（11版勾選）', lvl:'課本', q:'交易者買進 2 口 7 月冷凍柳橙汁期貨，每口 15,000 磅，現價 160 美分/磅，原始保證金每口 $6,000、維持保證金每口 $4,500。價格變動多少會被追繳？什麼情況下可以從保證金帳戶提領 $2,000？',
+      steps:['每口可虧 6,000 − 4,500 = $1,500','1,500 / 15,000 = $0.10 = 10 美分 → 跌到 <b>150 美分</b>以下追繳（多頭怕跌）','提領 $2,000 = 2 口共賺 2,000 → 每口賺 1,000','1,000 / 15,000 = 6.67 美分 → 漲到 <b>166.67 美分</b>'], ans:'跌破 150¢ 追繳；漲到 166.67¢ 可提 $2,000。' },
+    { id:'p2_13', src:'課本 2.13（11版勾選）', lvl:'課本', q:'45 天交割的瑞士法郎遠期報價 1.1000，45 天交割的期貨報價 0.9000。請解釋兩個報價，並說明想賣出瑞郎的交易者用哪個比較有利？',
+      steps:['遠期 1.1000 = 每 1 美元可換 1.1 瑞郎（CHF/USD）','期貨 0.9000 = 每 1 瑞郎值 0.9 美元（USD/CHF）','遠期換成期貨的報法：1/1.1 = 0.9091 USD/CHF','0.9091 &gt; 0.9000 → 瑞郎在遠期市場更值錢'], ans:'想賣瑞郎 → 選<b>遠期市場</b>。' },
+    { id:'p2_19', src:'課本 2.19（11版勾選）', lvl:'課本', q:'養牛戶預期三個月後有 120,000 磅活牛要賣。CME 活牛期貨每口 40,000 磅。養牛戶如何用期貨避險？從養牛戶角度，避險的優缺點？',
+      steps:['未來要賣 → short hedge','120,000/40,000 = <b>short 3 口</b>三個月到期的合約','牛價跌：期貨賺抵銷賣牛少收；牛價漲：賣牛多收抵銷期貨虧損'], ans:'Short 3 口。優點：大幅降低售價的不確定性；缺點：牛價上漲時也享受不到好處。' },
+    { id:'p2_23', src:'課本 2.23（11版勾選，講義範例）', lvl:'課本', q:'解釋為何交割月前一個月 OI 通常下降。某天某期貨成交 2,000 口：2,000 位買方中 1,400 位平倉、600 位開新倉；2,000 位賣方中 1,200 位平倉、800 位開新倉。當天交易對 OI 的影響？',
+      steps:['許多人在進入交割月前就平倉，所以 OI 下降','口訣：買方開 − 賣方平 = 600 − 1,200 = −600','或：賣方開 − 買方平 = 800 − 1,400 = −600'], ans:'OI 下降 <b>600</b>。' },
+    { id:'p3_7', src:'課本 3.7（11版勾選）', lvl:'課本', q:'解釋為何空頭避險者的部位在基差意外變強時改善、在基差意外變弱時惡化。',
+      steps:['基差 b = S − F','Short hedger = 現貨多頭 + 期貨空頭','實際賣價 = F₁ + b₂ → b₂ 越大越好'], ans:'基差變強（S 相對 F 上升）→ short hedger 有利；變弱 → 不利。Long hedger 相反。' },
+    { id:'p3_13', src:'課本 3.13（11版勾選）', lvl:'課本', q:'活牛現貨價格每月變動標準差 1.2（美分/磅），最近月期貨每月變動標準差 1.4，相關係數 0.7。現在 10/15，牛肉商承諾 11/15 買 200,000 磅活牛，想用 12 月活牛期貨（每口 40,000 磅）避險。策略為何？',
+      steps:['h* = 0.7 × 1.2 / 1.4 = <b>0.6</b>','未來要買 → long hedge','需 long 0.6 × 200,000 = 120,000 磅','120,000 / 40,000 = <b>3 口</b>'], ans:'Long 3 口 12 月合約，11/15 平倉。' },
+    { id:'p3_14', src:'課本 3.14（11版勾選）', lvl:'課本', q:'玉米農夫說：「我不用期貨避險，我真正的風險不是玉米價格，而是天氣毀掉我整片收成。」請評論。農夫是否應估計預期產量並避險鎖價？',
+      steps:['天氣差 → 自己減產，但其他農夫也減產','整體產量少 → 玉米價格反而上漲','若已 short futures → 期貨也虧，雙重打擊'], ans:'產量不確定性大時，不應對預期產量全額 short forward/futures；避險要看整體風險，不能只看價格風險。' },
+    { id:'p3_15', src:'課本 3.15（11版新增）', lvl:'課本', q:'7/1 投資人持有某股票 50,000 股，市價 $30，β=1.3，想避險未來一個月的市場變動，使用 9 月 Mini S&P 500 期貨：期貨價格 1,500、每口 $50 × 指數。策略為何？何時會獲利？',
+      steps:['V<sub>A</sub> = 50,000 × 30 = 1,500,000','V<sub>F</sub> = 1,500 × 50 = 75,000','N* = 1.3 × 1,500,000 / 75,000 = <b>26</b>'], ans:'Short 26 口。當這支股票的報酬超過 CAPM 預測（表現優於市場）時獲利。' },
+    { id:'p3_23', src:'課本 3.23（11版新增）', lvl:'課本', q:'公司要對一種新燃料避險，其價格變動與汽油期貨價格變動相關係數 0.6。新燃料每加侖每漲 1 美分，公司損失 $1M（未來三個月）。新燃料價格變動的標準差比汽油期貨大 50%。(a) 避險比率？(b) 曝險量（加侖）？(c) 汽油期貨部位（加侖）？(d) 每口 42,000 加侖，要幾口？',
+      steps:['h* = 0.6 × 1.5 = <b>0.9</b>','0.01 × Q = 1,000,000 → Q = <b>1 億加侖</b>','0.9 × 1 億 = <b>9,000 萬加侖</b>（long，因為怕漲）','90,000,000 / 42,000 = 2142.9 ≈ <b>2143 口</b>'], ans:'h*=0.9；曝險 1 億加侖；long 9,000 萬加侖；2143 口。' },
+    { id:'p3_4', src:'舊版 3.4（類題，對應講義 β 例）', lvl:'類題', q:'公司有 $20M 投資組合、β=1.2，想用股價指數期貨避險。指數期貨 1080，每口 $250 × 指數。最小風險的避險？若想把 β 降到 0.6 呢？',
+      steps:['N* = 1.2 × 20,000,000 / (1080 × 250) = 88.9','≈ <b>short 89 口</b>','降到 0.6：(1.2−0.6) × 20,000,000/270,000 = 44.4 → short 44 口'], ans:'Short 89 口；降 β 至 0.6 → short 44 口。' },
+    { id:'p3_10', src:'舊版 3.10（類題）', lvl:'類題', q:'「若算出最小變異避險比率為 1.0，避險必定是完美的。」對嗎？',
+      steps:['h* = ρσ<sub>S</sub>/σ<sub>F</sub>','例：ρ=0.5、σ<sub>S</sub>=2σ<sub>F</sub> → h*=1','但 ρ&lt;1 → 仍有剩餘風險'], ans:'錯。h*=1 可以發生在 ρ&lt;1 的情況，避險並不完美。' },
+    { id:'p3_11', src:'舊版 3.11（類題）', lvl:'類題', q:'「若沒有基差風險，最小變異避險比率一定是 1.0。」對嗎？',
+      steps:['買入價格 = S₂ − h(F₂−F₁) = hb₂ + hF₁ + (1−h)S₂','無基差風險 → b₂ 已知，前兩項確定','只有 h=1 時第三項 (1−h)S₂ 的不確定性才消失'], ans:'對。' },
+    { id:'p3_3', src:'課本 3.3（類題）', lvl:'類題', q:'某商品價格每季變動標準差 $0.65，期貨價格每季變動標準差 $0.81，相關係數 0.8。三個月期避險的最適避險比率？意義？',
+      steps:['h* = 0.8 × 0.65 / 0.81 = <b>0.642</b>'], ans:'期貨部位應為曝險部位的 64.2%。' },
+    { id:'p2_24', src:'課本 2.24（類題，同 2.1/2.7 型）', lvl:'類題', q:'公司 short 一口小麥期貨，5,000 蒲式耳、750 美分/蒲式耳。原始保證金 $3,000、維持 $2,000。什麼價格變動會被追繳？何時可提領 $1,500？',
+      steps:['可虧 1,000 → 1,000/5,000 = 20 美分','空頭怕漲 → 漲到 <b>770 美分</b> 追繳','賺 1,500 → 30 美分 → 跌到 <b>720 美分</b> 可提領'], ans:'770¢ 追繳；720¢ 可提 $1,500。' },
+    { id:'p2_11', src:'課本 2.11（類題，結算會員）', lvl:'類題', q:'某日收盤結算會員 long 100 口，結算價 $50,000/口，原始保證金 $2,000/口。隔天新增 20 口 long，成交價 $51,000；當日結算價 $50,200。會員要補多少保證金給結算所？',
+      steps:['新合約原始保證金 20 × 2,000 = 40,000','舊 100 口賺 (50,200−50,000)×100 = 20,000','新 20 口虧 (51,000−50,200)×20 = 16,000','40,000 − 20,000 + 16,000 = <b>36,000</b>'], ans:'$36,000（結算所會員只有原始保證金、沒有維持保證金）。' },
+    { id:'p3_25', src:'課本 3.25（類題）', lvl:'類題', q:'公司 $100M 組合 β=1.2，指數期貨 2,000、乘數 $250。(a) 要把 β 降到 0.5？(b) 要把 β 升到 1.5？',
+      steps:['V<sub>F</sub> = 2,000 × 250 = 500,000','(a) (1.2−0.5) × 100M / 500,000 = 140 → short 140','(b) (1.5−1.2) × 100M / 500,000 = 60 → long 60'], ans:'(a) short 140 口 (b) long 60 口' },
+    { id:'p3_21', src:'課本 3.21（類題，基差）', lvl:'類題', q:'交易者用 60 口白銀期貨（每口 5,000 oz）避險，平倉時現貨比期貨高 $0.20/oz（基差 = +0.20，原本預期為 0）。若是避險「買進」白銀，損益影響？若是避險「賣出」呢？',
+      steps:['實際價格 = F₁ + b₂','買方：付的價格多 0.20 → 損失 60×5,000×0.20','賣方：收的價格多 0.20 → 獲利'], ans:'買方避險損失 $60,000；賣方避險獲利 $60,000。' }
+  ]
+};
+// ===== 投資學（張焯然；漫步華爾街為主） =====
+DATA.invest = {
+  name: '投資學', full: '投資學', hue: 'invest',
+  intro: '老師教材來自市面投資書籍，以《漫步華爾街》(Malkiel) 為主，另有 Reilly & Brown。考法不確定 → 講義上每一個「問題」都要能用自己的話回答，下面的「講義問題」區全部收齊了。',
+  sections: [
+  { id: 'i1', t: '課程地圖與基本觀念', cards: [
+    { id:'i1a', t:'金融、財務管理、投資學差在哪？', en:'Finance / Financial management / Investment',
+      plain:'金融＝錢怎麼從有錢的人流到需要錢的人。財務管理＝公司的角度：怎麼籌錢、怎麼投資、怎麼發股利。投資學＝投資人的角度：買什麼、何時買賣、怎麼評估。',
+      life:'開一家飲料店：跟銀行借錢（融資決策）、決定開第二家分店（投資決策）、年底分紅給合夥人（股利決策）。你作為「買飲料店股份的人」思考的就是投資學。',
+      fig:'finflow',
+      body:'<ul><li><b>直接金融</b>：投資人 → 證券市場（股票、債券）→ 企業。</li><li><b>間接金融</b>：存款人 → 金融機構（存款）→ 融資給企業。</li><li>財務管理三大決策：<b>Financing 融資決策、Investment 投資決策、Dividend 股利決策</b>。</li><li>Corporate finance：商業模式、資本結構、董事會（代表人物：巴菲特 Warren Buffett）。Personal finance：股東、有限責任（代表人物：彼得林區 Peter Lynch）。</li></ul>' },
+    { id:'i1b', t:'投資 vs 投機', en:'Investment vs Speculation',
+      plain:'投資＝犧牲現在的消費，換未來更大的消費；投機＝追求短期價差、高不確定性。',
+      life:'投資像種果樹：研究土壤、等它長大收果子（股利）。投機像搶限量球鞋轉賣：賭明天價格會更高。',
+      body:'<table class="tbl"><tr><th>比較點</th><th>投資</th><th>投機</th></tr><tr><td>確定性</td><td>較確定</td><td>不確定</td></tr><tr><td>報酬來源</td><td>股利 dividend</td><td>資本利得 capital gain</td></tr><tr><td>期間</td><td>長期</td><td>短期</td></tr><tr><td>做研究</td><td>有</td><td>不一定</td></tr><tr><td>控制風險／避險</td><td>有</td><td>不一定</td></tr><tr><td>會不會破產</td><td>較不會</td><td>可能</td></tr><tr><td>睡得好嗎</td><td>Sleep well</td><td>睡不著</td></tr></table>' },
+    { id:'i1c', t:'效率市場假說 EMH', en:'Efficient Market Hypothesis',
+      plain:'市場價格已經反映了資訊，所以你很難靠那些資訊持續賺「超額報酬」。依反映多少資訊分三種強度。',
+      life:'考試前全班都拿到同一份考古題，大家分數都會上來，你很難靠它贏別人。只有拿到「還沒公開的考卷」才有優勢（內線），而強式效率說連那個都沒用。',
+      fig:'emh',
+      body:'<ul><li><b>弱式 Weak form</b>：價格反映所有<b>歷史價量</b> → <b>技術分析</b>無效。</li><li><b>半強式 Semi-strong</b>：反映所有<b>公開資訊</b> → <b>基本分析</b>也無效。</li><li><b>強式 Strong form</b>：反映<b>所有資訊含內線</b> → 連內線消息也無效。</li><li>關鍵字：Random walk 隨機漫步（明天漲跌無法從今天預測）、No abnormal return 沒有超額報酬。</li><li>《漫步華爾街》的核心主張：大多數人打不贏市場 → 買低成本指數基金。</li></ul>' },
+    { id:'i1d', t:'技術分析 vs 基本分析', en:'Technical vs Fundamental',
+      plain:'技術分析看「過去價格與成交量的圖形」；基本分析看「公司的真實價值（財報、產業）」，價格低於價值就買。',
+      life:'挑餐廳：技術分析看「門口排隊人潮趨勢」；基本分析進廚房看食材、廚師、成本。',
+      body:'<ul><li>技術分析：Historical price and volume、Graph & Technical indicator、<b>Momentum 動能策略</b>（追漲）與 contrarian 反向策略。</li><li>基本分析：Public information、<b>Firm value 價值 vs Market price 價格</b>、contrarian strategies。</li><li>《漫步華爾街》：<b>堅實基礎理論 firm-foundation</b>（內在價值）vs <b>空中樓閣理論 castle-in-the-air</b>（猜別人願意出多少：凱因斯選美比賽）。</li><li>課程推薦工具：聚財網智慧選股（技術）、元大證券大師選股（基本）。</li></ul>' },
+    { id:'i1e', t:'風險與報酬、CML 與 SML', en:'Risk & Return',
+      plain:'高報酬通常伴隨高風險。CML（資本市場線）用「總風險 σ」畫效率投資組合；SML（證券市場線）用「β」畫每一支證券該有的報酬。',
+      life:'機車騎越快到得越早（報酬），但越可能摔車（風險）。',
+      fig:'cmlsml',
+      body:'<ul><li><b>CML</b>：E(R<sub>p</sub>) = R<sub>f</sub> + [(E(R<sub>M</sub>)−R<sub>f</sub>)/σ<sub>M</sub>]·σ<sub>p</sub>，只適用效率組合。</li><li><b>SML</b>（CAPM）：E(R<sub>i</sub>) = R<sub>f</sub> + β<sub>i</sub>(E(R<sub>M</sub>)−R<sub>f</sub>)，適用所有證券。</li><li>講義的思考題：低價 → 高報酬（高風險、破產）還是低風險？高價 → 低報酬（低風險）還是高風險？→ 連到<b>價值投資 value investing</b> 與<b>泡沫 bubble</b>。</li></ul>' },
+    { id:'i1f', t:'投資組合管理、買賣時機、績效評估', en:'Portfolio, Buy & sell, Evaluation',
+      plain:'組合管理：主動 vs 被動（指數、ETF）。資產配置：策略性（長期比例）vs 戰術性（短期調整）。買賣：買進持有、停損停利、再平衡。績效：要跟基準比、要調整風險、分辨選股能力與擇時能力。',
+      life:'健身菜單：長期固定比例練各部位（策略配置）；這週肩膀痠就少練一點（戰術配置）。評估成果要跟同年齡標準比（benchmark），還要考慮你冒了多少受傷風險（risk adjustment）。',
+      body:'<ul><li>Mutual funds 共同基金；Active vs Passive（index、ETF）。</li><li><b>Strategic</b> asset allocation（長期目標比例）vs <b>Tactical</b>（短期偏離）。</li><li>Buy and hold、Stop loss / Stop revenue（停損停利）、Balance（再平衡）。</li><li>Performance：<b>Benchmark</b>、<b>Risk adjustment</b>（如 Sharpe、Treynor、Jensen α）、<b>Selectivity</b> 選股能力 vs <b>Timing</b> 擇時能力。</li></ul>' }
+  ]},
+  { id: 'i2', t: '泡沫史 Bubble History', cards: [
+    { id:'i2a', t:'六大泡沫時間軸', en:'Speculative Bubble History', plain:'鬱金香 → 南海 → 1929 華爾街 → 日本土地股市 → 網路 → 房市。共通點：大家相信「價格只會漲」、有人用槓桿、最後崩盤。',
+      life:'就像搶購某款爆紅公仔：一開始收藏家買，後來大家為了轉賣而買，最後沒有下一個傻瓜接手時價格崩掉。',
+      fig:'bubbles', body:'<p>《漫步華爾街》的重點：<b>更傻的傻瓜理論 greater fool theory</b> —— 價格不重要，只要找得到下一個更傻的人以更高價接手。</p>' },
+    { id:'i2b', t:'1. 鬱金香狂熱 (1593–1639)', en:'The Tulip-Bulb Craze',
+      plain:'荷蘭人瘋鬱金香球莖，價格一個月漲 20 倍，然後跌到跟洋蔥一樣便宜。',
+      life:'某年特定稀有色的多肉植物被炒到一盆幾萬元，後來大量繁殖、熱潮退去就崩盤。',
+      body:'<ul><li>1593 植物學教授從<b>維也納</b>帶來原產<b>土耳其</b>的鬱金香到萊頓 Leyden；有小偷偷球莖賺大錢。</li><li>感染非致命的<b>馬賽克病毒 mosaic virus</b> → 花瓣出現火焰般條紋（bizarre）→ 更稀有更貴。</li><li>熱潮 1634–1637；人們用土地、珠寶、家具換球莖。</li><li>交易工具：<b>買權 call option</b>（不必付全額就能參與上漲）。</li><li>1637/1–2 月漲 <b>20 倍</b>，2 月起以更大幅度暴跌，1639 年幾乎一文不值、和洋蔥價格相當。</li><li>最貴品種：<b>Semper Augustus（永恆的奧古斯都）</b>：1637/1/2 2000 → 2/5 6290 → 1639 0.1 基爾德（荷蘭盾）。</li><li>水手把富商的 Semper Augustus 球莖當洋蔥配鯡魚吃掉，它的身價足夠養全船的人吃一年。</li></ul>' },
+    { id:'i2c', t:'2. 南海泡沫 (1711–1825)', en:'The South Sea Bubble',
+      plain:'南海公司幫英國政府承擔債務，換來南海貿易壟斷權。公司前景其實普通，股價卻從 130 衝到 1000 英鎊以上，然後崩盤。牛頓也虧大錢。',
+      life:'一家新創只有簡報、沒有營收，但因為「拿到政府特許」，大家搶著投資。',
+      body:'<ul><li>背景：英國長期繁榮 → 儲蓄過多、投資機會過少。</li><li>1711 成立，承擔約 <b>1000 萬英鎊</b>政府債務 → 獲南海貿易特權（monopoly）。</li><li>1720 決議承擔 <b>3100 萬英鎊</b>債務；法案送國會時股價 130 → 300。</li><li>1720/4/12 法案通過 5 天後，以每股 300 發新股，之後 400、800，最後衝到 <b>1000 以上</b>。</li><li>8 月董事與職員看清前景撐不住股價，夏季出清持股 → 跌到 200 以下。</li><li><b>牛頓</b>：「我能計算天體運行，卻無法計算人類的瘋狂。」</li><li>國會通過 <b>泡沫法案 Bubble Act</b>：禁止公司（未經特許）發行股票；直到 <b>1825</b> 廢除前英國少有股票。</li></ul>' },
+    { id:'i2d', t:'3. 華爾街垮了 (1921–1932)', en:'Wall Street Lays an Egg',
+      plain:'大家借錢（融資）買股票，股友社聯手炒股再倒貨，1929 年崩盤，績優股大多跌 95% 以上。',
+      life:'一群人在群組先偷偷買某檔股票、再找網紅說好話，散戶衝進來時他們賣掉（現代的「養套殺」）。',
+      body:'<ul><li><b>融資買進 buying on margin</b>：借錢買股；金額從 1921 的 10 億美元增到 1929 近 90 億。</li><li><b>股友社 investment pools</b>：經理人數週內默默囤股（可能也買選擇權）→ 控制的記者評論員放出好消息 → 大眾跟進時抽身賣出 → 股價一路下滑。</li><li>金融專家<b>貝森 Roger Babson</b>（麻州衛斯理）：「股市遲早會崩盤。」1929/9/3 市場平均達此後 25 年都未超越的頂點，<b>9/5 暴跌 → 貝森缺口 Babson Break</b>。</li><li><b>黑色星期四</b>：1929/10/24，成交量達 1,300 萬股。</li><li>除了 AT&amp;T 只跌約四分之三，大部分績優股在 1932 觸底前跌了 95% 以上。</li></ul>' },
+    { id:'i2e', t:'4. 日本土地與股票 (1955–1990)', en:'The Japanese Yen for Land and Stocks',
+      plain:'日本地價與股價各漲 75 倍、100 倍，相信「地價永不下跌、股價只漲」。1990 年利率急升後崩盤。',
+      life:'就像相信「台北房價永遠不會跌」，於是大家借錢買房，結果利率一升就撐不住。',
+      body:'<ul><li>1955–1990 房地產上漲 <b>75 倍</b>；1990 總值近 20 兆美元，超過世界總財富 20%，是全美國房地產的 <b>5 倍</b>（美國面積約日本 <b>25 倍</b>，日本面積≈美國 0.04）。傳說東京皇居的地價 ≈ 整個加州。</li><li>股市漲 <b>100 倍</b>，本益比 P/E 超過 <b>60 倍</b>。</li><li>1989/12 日本股市總值 4 兆美元，約美國 <b>1.5 倍</b>，佔全球 <b>45%</b>。</li><li>兩個神話：地價永不下跌、股價只會上漲；加上強迫性儲蓄與超低利率推波助瀾。</li><li>1989 利率開始上升、1990 急升 → 崩潰：1992/8 中指數從約 40,000 跌到 <b>14,309</b>（約 −63%），房地產跌幅幾乎一樣。</li></ul>' },
+    { id:'i2f', t:'5. 網際網路泡沫 (1998–2002)', en:'The Internet Bubble',
+      plain:'有史以來最大的泡沫。只要公司名字加 .com 就漲；沒有獲利的公司也能上市，首日暴漲。2000 年破滅。',
+      life:'就像現在任何公司只要說自己是「AI 公司」股價就飆，不管有沒有在賺錢。',
+      body:'<ul><li>席勒 Shiller《非理性繁榮》：泡沫是<b>正向反饋回圈</b>：漲 → 媒體報導 → 更多人買 → 再漲。</li><li>NASDAQ 1998 末到 2000/3 漲 3 倍（約 2000→5000），成分股本益比超過 100 或根本虧損。</li><li><b>Amazon</b> 網路書店：營收不起眼、虧損龐大，市值卻超過所有上市書商總和。<b>Priceline</b> 網上拍賣剩餘機票：虧損累累，市值卻超過所有主要航空公司總和。</li><li>思科：若 25 年每年成長 15%、美國經濟成長 6%，思科會比整個美國經濟還大 → 評價與合理成長完全脫節。泡沫破後思科跌超過 90%。</li><li>普渡大學研究：1998–99 改名加入網路字眼的 63 家公司，改名期間漲幅比同類公司高 <b>125%</b>。</li><li>2000 Q1：916 家創投在 1,009 家新網路公司投資 157 億美元。<b>SwapIt.com</b>：用破爛換交換貨幣再換別人的破爛（eBay 成功因為沒有庫存，SwapIt 卻要處理庫存）。</li><li><b>TheGlobe.com</b>：康乃爾宿舍創立的線上信息版，無收入無盈餘卻上市，9 美元 → 首日 97 美元，市值近 10 億；2001 關站。</li><li>創投家 John Doerr：2000「有史以來最大的合法財富創造」→ 2002 改口「最大的合法財富毀滅」。</li></ul>' },
+    { id:'i2g', t:'6. 房市泡沫與 2008 金融海嘯 (2000–2012)', en:'Housing Bubble',
+      plain:'銀行放寬貸款，把房貸包裝成證券賣出去（不必自己承擔風險），信用差的人也借得到錢（次級房貸）。房價跌 → 違約 → 證券崩 → 金融海嘯。',
+      life:'就像有人把一堆「可能不會還錢的借條」打包成理財商品賣給你，還說很安全。',
+      fig:'securitize',
+      body:'<ul><li>實質房價：2000 = 100 → 2006 = 180 → 2012 回到約 100。</li><li><b>次貸 subprime</b>：借給信用不良者的房貸；甚至 <b>NO-DOC</b>（不需收入證明）。優點：讓更多人買得起房；缺點：違約風險高。</li><li>新銀行體系：從 <b>Originate and hold</b>（放貸後自己持有）變成 <b>Originate and distribute</b>（放貸後打包賣掉）→ 放貸標準變鬆。</li><li>證券化商品：<b>MBS</b> 房貸抵押證券、<b>CMO</b>、<b>CDO</b> 擔保債權憑證、<b>CDS</b> 信用違約交換。</li><li>資產證券化優點：提高流動性、分散風險、降低資金成本；缺點：資訊不透明、道德風險、風險傳染到整個金融體系。</li><li>Federal Housing Administration 等政府政策也推動房屋擁有率。</li></ul>' }
+  ]},
+  { id: 'i3', t: '技術分析 I：假設與市場指標', cards: [
+    { id:'i3a', t:'技術分析的假設', en:'Assumptions of TA',
+      plain:'價格由供需決定；供需由理性與非理性因素決定，市場會自動權衡；價格以趨勢移動；趨勢會因供需改變而改變。',
+      life:'看潮汐：你不用知道月亮引力的公式，只要觀察海水的規律就能預測漲退。',
+      body:'<ul><li>S &amp; D → P*；S &amp; D = f(理性與非理性因素、基本分析所依賴的經濟變數…，市場權衡所有因素)</li><li>三大假設（口訣）：<b>價格反映一切 Price discounts everything、價格以趨勢移動、歷史會重演</b>。</li></ul>' },
+    { id:'i3b', t:'技術分析的挑戰與優點', en:'Challenges & Advantages',
+      plain:'挑戰：實證顯示價格不一定有趨勢、過去不一定重演、型態會變成自我實現、規則有人用就失效、需要主觀判斷。優點：不用管財報細節、不受會計方法影響、能抓到心理因素。',
+      life:'一招打遍天下的密技一旦被大家知道，就不再是密技了。',
+      body:'<ul><li>挑戰「假設」：無趨勢、無自我相關（no autocorrelation）；EMH 實證顯示價格不會依趨勢移動。</li><li>挑戰「交易規則」：過去不一定重演、<b>自我實現預言 self-fulfilling prophecies</b>、成功的規則會吸引跟隨者而失效、需大量主觀判斷。</li><li>優點：(1) 不需銷售與管理費用等細節 (2) 財報有多種費用、資產報告方式，技術分析不受影響 (3) 能反映心理因素。</li></ul>' },
+    { id:'i3c', t:'4.1 反向意見指標', en:'Contrary-opinion rules',
+      plain:'大多數人（散戶、顧問）都看好時反而該賣，大家都悲觀時反而該買。',
+      life:'菜市場阿姨都在聊股票時，就是該小心的時候。',
+      fig:'contrary',
+      body:'<table class="tbl"><tr><th>指標</th><th>買進訊號</th><th>賣出訊號</th></tr><tr><td>共同基金現金部位</td><td>現金比率↑（潛在買盤）</td><td>現金比率低</td></tr><tr><td>券商帳戶信用餘額</td><td>↑（潛在買盤）</td><td>↓</td></tr><tr><td>投資顧問看空指數</td><td>&gt; 60%</td><td>&lt; 20%</td></tr><tr><td>OTC 量 / NYSE 量</td><td>&lt; 87%</td><td>&gt; 112%（投機過熱）</td></tr><tr><td>CBOE Put/Call ratio</td><td>&gt; 0.9（太悲觀）</td><td>&lt; 0.7</td></tr><tr><td>期貨交易人看多比例</td><td>≤ 30%</td><td>≥ 70%</td></tr></table>' },
+    { id:'i3d', t:'4.2 跟隨聰明錢', en:'Follow the smart money',
+      plain:'觀察專業法人、債券市場、做市商在做什麼。',
+      life:'看大廚自己去哪家吃飯，比看廣告準。',
+      body:'<ul><li><b>巴倫信心指數 Confidence index</b> = 高評級公司債平均殖利率 / 一般（中級）公司債平均殖利率（如 Dow Jones 40 檔）× 100%。法人有信心 → 買中級債 → 其殖利率下降 → 指數上升接近 100% → 股市看多。</li><li><b>TED spread</b> = 3 個月 LIBOR（歐洲美元）− 3 個月美國國庫券利率。暴增 = 銀行互不信任、流動性危機（2008 曾超過 450 bps）。LIBOR 退場後改看 SOFR 利差、FRA-OIS。</li><li><b>Short sales by specialists</b>：做市商放空占全部放空比例：&gt; 50% → 看空；&lt; 30% → 看多。</li><li><b>Debit balances 融資餘額</b>：起漲時溫和增加 = 良性；高檔暴增 = 籌碼凌亂、小心斷頭；暴跌後銳減 = 浮額洗清、可能落底。</li></ul>' },
+    { id:'i3e', t:'4.3 其他市場環境指標', en:'Market environment indicators',
+      plain:'看漲是「全面普漲」還是「少數權值股撐盤」、放空的人有多少、多少股票站在年線上、大單在追價還是在倒貨。',
+      life:'班平均分數上升，是每個人都進步，還是只有兩個學霸拉高？',
+      body:'<ul><li><b>Breadth of market 市場廣度</b>：上漲家數 − 下跌家數（騰落線 A/D line）、ADR = 上漲/下跌。指數創新高但上漲家數萎縮 = 頂部背離。</li><li><b>Short interest 融券餘額</b>：Days to cover = 融券總量 / 日均成交量。傳統解讀是看空，但反向觀點：空單是未來必須回補的買盤 → 比例高反而<b>買進</b>（軋空 short squeeze）。</li><li><b>Stocks above 200-day MA</b>：&gt; 80% 超買 overbought；&lt; 20% 超賣 oversold。</li><li><b>Block uptick-downtick ratio</b>：大額交易（≥1 萬股）以上漲價成交 / 下跌價成交。講義：比率高（約 &gt;1.2）→ 看多情緒、低（約 &lt;0.7）→ 看空情緒。</li></ul>' }
+  ]},
+  { id: 'i4', t: '技術分析 II：法則、線圖、指標', cards: [
+    { id:'i4a', t:'黃金切割率（費波那契）', en:'Fibonacci / Golden ratio',
+      plain:'1,1,2,3,5,8,13,21,34,55,89,144… 相鄰比值趨近 0.618。市場常在這些比例附近出現支撐與壓力。',
+      life:'鸚鵡螺殼、向日葵種子排列都有黃金比例；投資人的心理預期也常集中在這些比例上，久了就自我實現。',
+      fig:'w:fib',
+      body:'<ul><li>Fibonacci（約 1170–1250，比薩的李奧納多）：《計算之書》把阿拉伯數字引進歐洲；兔子繁殖問題。</li><li>0.618 = 55/89 = 89/144；0.382 = 55/144；0.191 = 0.382/2；1.618 = 89/55。</li><li>講義：$10 上漲壓力區 11.91、13.82、16.18、18.09；$30 下跌支撐區 24.27、18.54、11.46、5.73。</li><li>回撤 Retracement：23.6%、38.2%、50%、<b>61.8%（最關鍵）</b>；延伸 Extension：127.2%、161.8%、261.8%；時間週期：第 13、21、34、55 交易日。</li><li>補充（week4 講義）：2026/6/23 台股高點 48,218.87 → 7/29 低點 39,384，跌 8,834.87 點（−18.32%）；7/17 單日暴跌 2,953.71 點。</li></ul>' },
+    { id:'i4b', t:'道氏理論', en:'The Dow Theory',
+      plain:'股價像水的移動：主要趨勢像潮汐、次級趨勢像波浪、短期波動像漣漪。',
+      life:'站在海邊：漲潮（主要趨勢）時還是有一波一波往回退的浪（次級折返），表面還有小漣漪（雜訊）。',
+      fig:'dow',
+      body:'<ul><li>Charles H. Dow（1851–1902）：道瓊公司共同創辦人、《華爾街日報》首任主編，創道瓊工業指數（1896，12 檔）、鐵路指數（1884，現運輸指數）。現代技術分析之父。</li><li>三種價格移動：<b>Major trends 潮汐、Intermediate trends 波浪、Short-term ripples 漣漪</b>。</li><li>多頭三階段：累積期 → 大眾參與期 → 過度投機期。</li><li>工業與運輸指數必須互相驗證；成交量要驗證趨勢（價漲量增）；趨勢持續直到出現明確反轉訊號。</li><li>講義圖：反轉可能來自 profit taking（獲利了結）或 recovery（回升）；高點與 troughs（谷底）不斷墊高 = 多頭。</li></ul>' },
+    { id:'i4c', t:'艾略特波浪理論', en:'Elliott Wave Principle',
+      plain:'一個完整循環 = 五波上升 + 三波下降，共 8 波。大浪裡有小浪（碎形）。',
+      life:'爬山：上坡走 1、休息 2、大爬坡 3、再休息 4、衝頂 5；下山 a 先走一段、b 回頭看風景、c 一路走到底。',
+      fig:'elliott',
+      body:'<ul><li>Ralph Nelson Elliott（1871–1948）會計師，臥病時研究道瓊 75 年走勢；1938《波浪原理》。</li><li>基本特性：(1) 作用力之後伴隨反作用力 (2) 五波上升、三波下降形成一週期 (3) 時間延長或縮短不改變波的型態。</li><li>多頭：1 初升段、2 修正、3 <b>主升段</b>、4 修正、5 末升段、a 回檔波、b <b>反彈波（逃命波）</b>、c 跌破波（主跌段）。</li><li>三大鐵律：浪 2 不能跌破浪 1 起點；浪 3 不能是 1、3、5 中最短；浪 4 低點不能進入浪 1 高點區。</li><li>浪數 8、34、144 都是費波那契數；浪 2 常回檔浪 1 的 50% 或 61.8%；浪 3 常為浪 1 的 1.618 倍。</li><li>講義也把波浪與頭肩型態（左肩、頭、右肩、頸線）對照。</li></ul>' },
+    { id:'i4d', t:'葛蘭碧八大法則', en:"Granville's 8 Rules",
+      plain:'看股價和移動平均線（MA）的相對位置：4 個買點、4 個賣點。',
+      life:'MA 像遛狗的繩子：狗（股價）跑太遠會被拉回來；繩子方向（MA 的方向）才是主人要去的方向。',
+      fig:'granville',
+      body:'<p>MA<sub>t</sub> = (1/T) Σ<sub>j=0</sub><sup>T−1</sup> X<sub>t−j</sub>；滾動更新：MA<sub>t+1</sub> = (T·MA<sub>t</sub> + X<sub>t+1</sub> − X<sub>t−T+1</sub>)/T</p><ul><li><b>買 1</b>：MA 由下跌走平，股價<b>突破</b> MA</li><li><b>買 2</b>：MA 向上，股價在 MA 之上，拉回至 MA 但未跌破</li><li><b>買 3</b>：MA 向上，股價跌破 MA，不久又回升到 MA 之上</li><li><b>買 4</b>：股價在 MA 之下，負乖離很大</li><li><b>賣 5</b>：MA 由上升走平，股價<b>跌破</b> MA</li><li><b>賣 6</b>：MA 向下，股價在 MA 之下，反彈至 MA 但未突破</li><li><b>賣 7</b>：MA 向下，股價突破 MA，又立刻拉回到 MA 之下</li><li><b>賣 8</b>：股價在 MA 之上，正乖離很大</li></ul><p>Granville（1923–2013）也發明 OBV；名言「成交量是蒸汽、價格是火車頭」。1981/1/6 喊「全面做空」造成隔天道瓊大跌。</p>' },
+    { id:'i4e', t:'K 線圖', en:'Candlestick chart',
+      plain:'一根 K 棒記錄一段時間的開、高、低、收四個價格。收盤 &gt; 開盤 = 紅 K（收紅盤）；收盤 &lt; 開盤 = 黑 K。',
+      life:'像一天的心情紀錄：早上起床心情（開）、最高點、最低點、睡前心情（收）。',
+      fig:'kline',
+      body:'<ul><li>發明人：<b>本間宗久</b>（1724–1803），日本酒田米商，在大阪堂島米市（全球最早成熟期貨市場）交易；「酒田五法」三山、三川、三空、三兵、三法。1980 年代 Steve Nison 引進西方。</li><li>可分日線、週線、月線、季線、年線。</li><li>問題：<b>股價下跌卻收紅盤？</b> 可以！紅黑只比「收盤 vs 當天開盤」，不比昨天收盤。若今天開低（低於昨收）但收盤高於開盤，價格比昨天跌了卻是紅 K。</li><li>開=收 → 十字線（平盤）；跳空漲停或跌停鎖住 → 一字線。</li><li>紅 K 收最高 = 多強；黑 K 收最低 = 多弱。</li><li>組合：<b>包容線</b>（後一根完全包住前一根）、<b>孕育線</b>（後一根被前一根包住）、連續兩紅 K 後比前強、連續兩黑 K 後比前弱。</li></ul>' },
+    { id:'i4f', t:'移動平均線：黃金交叉與死亡交叉', en:'MA cross',
+      plain:'短天期 MA 由下往上穿過長天期 MA = 黃金交叉（買）；由上往下跌破 = 死亡交叉（賣）。',
+      life:'短跑選手（短 MA）超越長跑選手（長 MA）代表最近狀態變好。',
+      fig:'cross', body:'<p>講義用台股加權指數 MA6、MA24 為例標出交叉點與葛蘭碧買賣點。</p>' },
+    { id:'i4g', t:'乖離率 Bias 與 RSI', en:'Bias & Relative Strength Index',
+      plain:'乖離率 = 股價離 MA 多遠。RSI = 一段時間內「漲的力道」佔「漲跌總力道」的比例：漲久必跌、跌久必漲。',
+      life:'乖離率像橡皮筋拉多長；拉太長（±7%）就會彈回來。',
+      fig:'w:ind',
+      body:'<ul><li><b>Bias</b> = (S − MA<sub>t</sub>) / MA<sub>t</sub>。正乖離達 7% → 買超 → 賣出；負乖離達 7% → 賣超 → 買進。</li><li><b>RSI</b>（Wilder）：RS = i 日內上漲平均 / i 日內下跌平均；RSI = 100 − 100/(1+RS) = 100 × 上漲部分 /(上漲 + 下跌部分)。RSI 過高（常用 80）→ 買超 → 賣出；過低（常用 20）→ 賣超 → 買進。</li></ul>' },
+    { id:'i4h', t:'KD 隨機指標', en:'Stochastic (George Lane)',
+      plain:'看今天收盤價落在最近 n 天「最高與最低之間」的哪個位置，再平滑成 K 與 D。',
+      life:'問「你今天的成績，在最近 9 次考試的最低分到最高分之間排在哪」。',
+      body:'<ul><li>RSV<sub>t</sub> = (C<sub>t</sub> − L<sub>n</sub>) / (H<sub>n</sub> − L<sub>n</sub>) × 100</li><li>K<sub>t</sub> = RSV<sub>t</sub> × 1/3 + K<sub>t−1</sub> × 2/3（沒有前一天以 50 代替）</li><li>D<sub>t</sub> = K<sub>t</sub> × 1/3 + D<sub>t−1</sub> × 2/3</li><li>0 ≤ KD ≤ 100；KD &gt; 50 多頭、&lt; 50 空頭；高檔（常用 80）K 跌破 D → 賣出；低檔（常用 20）K 突破 D → 買進。</li></ul>' },
+    { id:'i4i', t:'OBV 能量潮', en:'On Balance Volume',
+      plain:'收盤漲就把當天成交量加上去、跌就減掉，累積起來看資金流向。',
+      life:'看一家店的「進門人數 − 出門人數」累積，就知道人氣是聚集還是散去。',
+      body:'<ul><li>OBV = 累積成交量 + 本日成交量（收盤上漲）／ − 本日成交量（收盤下跌）；平盤不變。</li><li>股價趨勢下降但 OBV 上升 → 買進；股價上升但 OBV 下降 → 賣出（背離）。</li><li>價量關係：正常 = <b>價漲量增、價跌量縮</b>；反轉 = <b>量先價行</b>、<b>價量背離</b>（高檔/低檔）。「天價若無天量支撐不叫天價」。</li><li>講義另列 MACD、DMI（未展開）。</li></ul>' }
+  ]}
+  ],
+  // 講義上的所有「問題」→ 翻卡練習
+  flash: [
+    {q:'你是用公司理財還是個人理財的角度買股票？兩者差別？', a:'公司理財（corporate finance）看商業模式、資本結構、董事會，像巴菲特以經營者角度買整家公司；個人理財（personal finance）以股東身份、有限責任，像彼得林區從生活中發現好公司。'},
+    {q:'什麼是投資？什麼是投機？', a:'投資：犧牲現在消費換取更大的未來消費，較確定、重股利、長期、做研究、控制風險、會避險、不會破產、睡得好。投機則相反：不確定、追資本利得、短期。'},
+    {q:'什麼是效率市場？三種形式？', a:'價格反映資訊、無法持續獲得超額報酬（隨機漫步）。弱式：反映歷史價量 → 技術分析無效；半強式：反映公開資訊 → 基本分析無效；強式：反映所有含內線資訊。'},
+    {q:'什麼是技術分析？什麼是基本分析？', a:'技術分析：用歷史價格與成交量、圖形與技術指標，動能或反向策略。基本分析：用公開資訊比較公司價值與市場價格，價格低於價值就買（常為反向策略）。'},
+    {q:'風險與報酬的關係？資本市場線 vs 證券市場線？', a:'高風險高報酬。CML：以總風險 σ 衡量、只適用效率投資組合；SML：以 β（系統風險）衡量、適用所有證券（CAPM）。'},
+    {q:'什麼是投資組合管理？資產配置？', a:'組合管理：共同基金、主動 vs 被動（指數、ETF）。資產配置：策略性（長期目標比例）與戰術性（短期依市場調整）。'},
+    {q:'何時買進？何時賣出？買比較重要還是賣？是否需要賣出？', a:'方法有買進持有（buy and hold）、停損停利（stop loss / stop revenue）、再平衡（balance）。開放題：可說明買進決定報酬潛力、賣出紀律決定是否保住獲利，長期投資者甚至可能不需要賣。'},
+    {q:'如何進行績效評估？', a:'與基準 benchmark 比較、做風險調整（Sharpe、Treynor、Jensen α），並拆解選股能力 selectivity 與擇時能力 timing。'},
+    {q:'鬱金香狂熱是指什麼？鬱金香是哪一國的國花？最貴的品種？', a:'1634–1637 荷蘭人狂炒鬱金香球莖，1637/1 月漲約 20 倍後崩盤。鬱金香是荷蘭的代表花（也是土耳其國花，原產地）。最貴品種 Semper Augustus（永恆的奧古斯都）。'},
+    {q:'鬱金香的交易方式？為什麼會崩盤？', a:'市場出現買權 call option，可用少量錢參與上漲，最後甚至以土地、珠寶、家具換球莖。崩盤：價格遠超價值，買主找不到下一個接手者，1637/2 起暴跌到與洋蔥相當。'},
+    {q:'什麼是股票？為什麼南海公司接收政府債務股價會漲？', a:'股票是公司所有權的憑證，持有人分享盈餘。南海公司承擔政府債務換得南海貿易壟斷權，投資人相信壟斷帶來巨大利潤（只有光明前景，沒有業績），加上英國儲蓄過多、投資機會少，股價從 130 衝到 1000 以上。'},
+    {q:'為什麼牛頓買股票會虧？何謂 Bubble Act？', a:'牛頓在高點追進（相信更傻的傻瓜），董事職員在 8 月前出清，股價崩到 200 以下。他說「我能計算天體運行，卻無法計算人類的瘋狂」。Bubble Act 泡沫法案：國會禁止公司（未經特許）發行股票，直到 1825 年廢除。'},
+    {q:'何謂融資買進股票？股友社是什麼？', a:'融資：向券商借錢買股（1921 年 10 億 → 1929 年近 90 億美元）。股友社 investment pools：經理人暗中囤股、買選擇權、找記者放好消息，大眾跟進時倒貨。'},
+    {q:'何謂貝森缺口？黑色星期四是指什麼？', a:'貝森缺口：Roger Babson 預言股市將崩盤，1929/9/3 見頂後 9/5 暴跌。黑色星期四：1929/10/24，成交量達 1,300 萬股的崩盤日。'},
+    {q:'美國國土面積為日本的幾倍？1990 年日本房地產價格是美國的幾倍？日本地價永不下跌合不合理？', a:'美國約為日本 25 倍；1990 年日本房地產總值是美國 5 倍。不合理：地價應反映租金與經濟基本面，利率上升後就崩跌。'},
+    {q:'1990 年日本股市市值佔全世界多少？歷史最高日本股價指數？何謂過高的股價？', a:'1989/12 約佔全球 45%（美國的 1.5 倍）。日經指數高點約 39,000（講義寫約 40,000），1992/8 跌至 14,309。過高股價：本益比超過 60 倍、與盈餘基本面脫節。'},
+    {q:'網路為什麼會泡沫化？虧損公司可不可以上市？你會不會買公司名稱有 .com 的股票？', a:'正向反饋回圈 + 新科技新商機的故事 + 新上市狂熱，評價與合理成長脫節。過去需有收入盈餘才能上市，泡沫期 TheGlobe.com 兩者都沒有仍上市。改名加 .com 的公司漲幅多 125%，但多是失敗模式 → 應看商業模式而非名字。'},
+    {q:'Amazon 與 Priceline 是什麼樣的公司？股價合不合理？', a:'Amazon 是網路書店，Priceline 拍賣剩餘機票，當時都虧損累累，市值卻分別超過所有上市書商、所有主要航空公司總和 → 當時不合理。'},
+    {q:'何謂次貸？次貸的優缺點？造成次貸風暴的原因？', a:'次級房貸：借給信用不良者。優點：讓更多人買得起房；缺點：違約率高。原因：放款標準寬鬆（NO-DOC）、originate and distribute 模式、證券化、低利率與房價只漲的信念。'},
+    {q:'何謂 2008 年金融海嘯？與次貸的關係？資產證券化的優缺點？', a:'2008 年房價下跌 → 次貸違約 → MBS/CDO 崩跌、CDS 賣方（如 AIG）與投資銀行（雷曼）倒閉 → 全球金融危機。證券化優點：流動性、分散風險；缺點：資訊不透明、道德風險、風險擴散。'},
+    {q:'何謂技術分析？技術分析的假設？', a:'檢視過去市場資料（價格、成交量）。假設：價格由供需決定、價格反映一切、價格以趨勢移動、趨勢因供需改變而改變、歷史會重演。'},
+    {q:'技術分析的挑戰？優點？', a:'挑戰：無趨勢、無自我相關、過去不一定重演、自我實現、規則被跟隨後失效、主觀判斷。優點：不需財報細節、不受會計方法影響、反映心理因素。'},
+    {q:'技術分析法則有哪些？技術分析線圖？', a:'法則：黃金切割率、道氏理論、艾略特波浪理論、葛蘭碧八大法則。線圖：K 線圖、移動平均線。'},
+    {q:'技術分析指標有哪些？種類？', a:'乖離率 Bias、RSI、KD、OBV、MACD、DMI。種類（Reilly）：反向意見指標、跟隨聰明錢、其他市場環境指標、股價與成交量技術。'},
+    {q:'股價下跌卻收紅盤，可能嗎？', a:'可能。紅黑 K 比的是今天收盤 vs 今天開盤。開低後走高、收盤仍低於昨收 → 跌但收紅。'}
+  ],
+  mcq: [
+    {q:'弱式效率市場成立時，哪一種分析方法無法持續獲得超額報酬？', o:['技術分析','基本分析','內線消息','以上皆可獲利'], a:0, e:'弱式：價格已反映歷史價量 → 技術分析無效（基本分析、內線仍可能有效）。'},
+    {q:'半強式效率市場成立時：', o:['只有技術分析無效','技術與基本分析皆無效','連內線消息也無效','市場無效率'], a:1, e:'半強式反映所有公開資訊，技術、基本分析都無效，但內線仍可能有效。'},
+    {q:'鬱金香狂熱中最昂貴的品種是？', o:['Admirael de Man','Gheele Croonen','Semper Augustus','Switsers'], a:2, e:'Semper Augustus：1637/1 約 2000 基爾德、2/5 達 6290。'},
+    {q:'鬱金香條紋花瓣的成因是？', o:['人工染色','馬賽克病毒','嫁接','土壤酸鹼'], a:1, e:'非致命的 mosaic virus 造成火焰般條紋。'},
+    {q:'南海公司 1720 年決議承擔的政府債務約為？', o:['1000 萬英鎊','3100 萬英鎊','90 億美元','4 兆美元'], a:1, e:'1711 承擔約 1000 萬；1720 決議承擔 3100 萬英鎊。'},
+    {q:'英國泡沫法案（Bubble Act）於哪一年廢除？', o:['1720','1776','1825','1929'], a:2, e:'1825 年廢除，在此之前英國少有股票。'},
+    {q:'「黑色星期四」是哪一天？', o:['1929/9/3','1929/9/5','1929/10/24','1987/10/19'], a:2, e:'1929/10/24 成交量 1300 萬股。9/3 見頂、9/5 為貝森缺口。'},
+    {q:'1929 年崩盤到 1932 年觸底，跌幅相對最小的績優股是？', o:['GE','AT&T','RCA','US Steel'], a:1, e:'AT&T 只跌約四分之三，其他多跌 95% 以上。'},
+    {q:'1955–1990 年日本房地產價值上漲約：', o:['20 倍','45 倍','75 倍','100 倍'], a:2, e:'房地產 75 倍；股市 100 倍。'},
+    {q:'1990 年前後日本股市本益比約？', o:['15 倍','30 倍','60 倍以上','100 倍以上'], a:2, e:'股價是盈餘的 60 多倍。'},
+    {q:'日本股市指數 1992/8 跌至約多少點？', o:['24,000','14,309','8,000','40,000'], a:1, e:'由約 40,000 跌到 14,309，約 −63%。'},
+    {q:'研究顯示 1998–99 年改名加入網路字眼的公司，改名期間漲幅比同類公司高出：', o:['25%','63%','125%','300%'], a:2, e:'普渡大學研究 63 家公司，高出 125%。'},
+    {q:'TheGlobe.com 首日股價從 9 美元漲到約？', o:['19','47','97','197'], a:2, e:'上市 9 美元 → 立刻漲至 97 美元。'},
+    {q:'「Originate and distribute」模式指的是：', o:['銀行放貸後自己持有','銀行放貸後打包證券化賣出','政府直接放款','央行購買國債'], a:1, e:'放貸後轉賣 → 放貸標準變鬆，是房市泡沫成因之一。'},
+    {q:'下列何者屬於「反向意見指標」中的買進訊號？', o:['Put/Call ratio < 0.7','投資顧問看空比例 > 60%','OTC/NYSE 量 > 112%','期貨交易人 70% 看多'], a:1, e:'大多數顧問看空時反而該買。其他三者都是賣出訊號。'},
+    {q:'巴倫信心指數上升代表：', o:['法人逃往高評級債','法人願承擔信用風險，看好後市','利率上升','做市商放空增加'], a:1, e:'中級債殖利率下降 → 分母變小 → 指數上升 → 看多。'},
+    {q:'TED spread 是哪兩者之差？', o:['10 年公債 − 2 年公債','3 個月 LIBOR − 3 個月國庫券','高評級債 − 垃圾債','聯邦基金利率 − 貼現率'], a:1, e:'衡量銀行間信用風險。'},
+    {q:'做市商（specialists）放空佔全部放空比例超過多少被視為看空？', o:['20%','30%','50%','80%'], a:2, e:'> 50 看空；< 30 看多。'},
+    {q:'站上 200 日均線的股票比例超過 80% 代表：', o:['超賣','超買','中性','空頭'], a:1, e:'> 80 overbought；< 20 oversold。'},
+    {q:'艾略特波浪理論中，哪一浪通常是主升段且不可能是推動浪中最短的？', o:['第 1 浪','第 3 浪','第 5 浪','b 浪'], a:1, e:'第 3 浪主升段；b 浪是逃命反彈波。'},
+    {q:'道氏理論中「漣漪」對應：', o:['主要趨勢','次級趨勢','短期波動','反轉訊號'], a:2, e:'潮汐 = 主要、波浪 = 次級、漣漪 = 短期。'},
+    {q:'葛蘭碧法則：MA 向下、股價在 MA 之下，反彈至 MA 但未突破，是：', o:['買點 2','買點 4','賣點 6','賣點 8'], a:2, e:'賣點 6（壓力賣點）。'},
+    {q:'葛蘭碧法則：MA 向上、股價跌破 MA 不久又回到 MA 之上：', o:['買點 1','買點 3','賣點 5','賣點 7'], a:1, e:'買點 3（假跌破）。'},
+    {q:'某股開盤 50、最高 53、最低 48、收盤 49（昨收 47）。這根 K 線是？', o:['紅 K，上漲','黑 K，但比昨天上漲','紅 K，但下跌','十字線'], a:1, e:'收 49 < 開 50 → 黑 K；但 49 > 昨收 47，股價其實上漲。'},
+    {q:'乖離率公式為：', o:['(S − MA)/MA','(MA − S)/S','S/MA','(H − L)/C'], a:0, e:'Bias = (S − MA_t)/MA_t；±7% 為判斷。'},
+    {q:'KD 指標中 K 值的計算：', o:['K = RSV','K = RSV×1/3 + 前日K×2/3','K = D×1/3 + 前日K×2/3','K = (H−L)/C'], a:1, e:'無前一日以 50 代替；D = K×1/3 + 前日D×2/3。'},
+    {q:'OBV：收盤下跌當天應：', o:['加上當日成交量','減去當日成交量','不變','乘以漲跌幅'], a:1, e:'漲加、跌減、平不變。'},
+    {q:'價格 $10 依黃金切割率 0.382 的上漲壓力區為？', o:['11.91','13.82','16.18','18.09'], a:1, e:'10 × 1.382 = 13.82。'},
+    {q:'價格 $30 依 0.618 的下跌支撐為？', o:['24.27','18.54','11.46','5.73'], a:2, e:'30 × (1 − 0.618) = 11.46。'},
+    {q:'K 線的發明者是？', o:['Charles Dow','本間宗久','Joseph Granville','George Lane'], a:1, e:'本間宗久，日本酒田米商；KD 是 George Lane。'},
+    {q:'「量先價行」屬於價量關係中的：', o:['正常現象','反轉現象','與價格無關','僅適用債券'], a:1, e:'正常：價增量漲、價跌量縮；反轉：量先價行、價量背離。'},
+    {q:'財務管理的三大決策不包括：', o:['融資決策','投資決策','股利決策','行銷決策'], a:3, e:'Financing、Investment、Dividend。'}
+  ]
+};
+// ===== 民商法 =====
+DATA.law = {
+  name: '民商法', full: '民商法', hue: 'law',
+  intro: '考試全部是選擇題 → 重點是「條號＋關鍵字」要背熟，並能把案例套進要件。每張卡片下方的「條文」要能一眼認出。',
+  sections: [
+  { id:'l1', t:'民法入門緒論', cards: [
+    { id:'l1a', t:'民法五編與立法原則', en:'Structure of the Civil Code',
+      plain:'總則、債、物權、親屬、繼承。由抽象到具體、由一般到特殊、通則放前面。',
+      life:'像一本食譜：第一章先講所有料理共用的「基本刀工火候」（總則），後面才是各類菜（債、物權…）。',
+      fig:'civil5',
+      body:'<ul><li><b>總則</b>：共通原則與概念</li><li><b>債</b>：人與人之間因特定原因產生的權利義務</li><li><b>物權</b>：對物的支配權（所有權、抵押權）</li><li><b>親屬</b>：婚姻、親子</li><li><b>繼承</b>：死亡後財產權利義務的移轉</li></ul><p>立法原則：由抽象到具體、由一般到特殊、通則優先（各章設通則）。</p>' },
+    { id:'l1b', t:'公法 vs 私法', en:'Public / Private law',
+      plain:'公法管「國家與人民」，私法管「人民與人民」。分錯了會告錯法院。',
+      life:'酒駕撞人：被害人要求賠償（私法、民事庭）；檢察官起訴（刑法、公法）；監理所吊照（行政法、公法）。',
+      body:'<ul><li>案例：甲酒駕超速撞傷乙 → 乙對甲請求損害賠償（民事）；甲負刑事責任；主管機關吊銷駕照（行政處分）。</li><li>公法爭議 → <b>行政法院</b>；救濟：訴願、行政訴訟。</li><li>私法爭議 → <b>普通法院（民事庭）</b>；民事訴訟程序、民事非訟程序。</li><li>請求權時效也不同。</li><li>審級：地方法院（第一審；簡易訴訟獨任，上訴地院合議庭）→ 高等法院（上訴審；內亂外患妨害國交罪第一審）→ 最高法院（第三審）。智慧財產及商業法院：智財民事第一審、智財民刑事第二審。</li></ul>' },
+    { id:'l1c', t:'民商合一 vs 民商分立；特別民法', en:'Unified code',
+      plain:'我國採<b>民商合一</b>（和瑞士一樣）；但另有公司法、票據法、保險法、海商法等特別法。特別法優於普通法。',
+      life:'一般校規＋各社團自己的社規：社規（特別法）有寫的優先適用。',
+      body:'<ul><li>民商合一：瑞士、我國。優點：體系完整、避免重複；缺點：法典龐大不易修正、商事特殊性可能被忽視。</li><li>民商分立：法國、西班牙、日本。優點：商法可針對商業需求；缺點：適用界限不明、可能重複或矛盾。</li><li>特別民法：<b>消費者保護法</b>（企業經營者責任、消費爭議處理、懲罰性賠償）、<b>勞動基準法</b>（最低標準、限制解僱、勞工保障）。特點：針對特定法律關係、保護弱勢、解決特定社會問題、規範新興關係。</li></ul>' },
+    { id:'l1d', t:'適用、準用、類推適用；視為 vs 推定', en:'Apply / Mutatis mutandis / Analogy',
+      plain:'適用＝直接用。準用＝法律明文說「參照那條用」。類推適用＝法律沒寫，法官比照類似規定。視為＝法律硬性規定，不能推翻；推定＝先這樣認定，可以舉證推翻。',
+      life:'視為：「遲到 3 次視為曠課一次」，你解釋也沒用。推定：「沒交作業推定沒寫」，你拿出寫好的作業就能推翻。',
+      body:'<ul><li><b>適用</b>：直接、完全、無條件。</li><li><b>準用</b>：避免重複規定，法律明文引用他條，有選擇性地適用。</li><li><b>類推適用</b>：無明文，比附援引相類似規定。<b>刑法禁止類推適用</b>（罪刑法定）。</li><li><b>視為</b>：§1064 非婚生子女，其生父與生母結婚者，<b>視為</b>婚生子女。</li><li><b>推定</b>：§124 II 出生月日無從確定時，推定 <b>7 月 1 日</b>出生；知月不知日，推定該月 <b>15 日</b>。</li></ul>' },
+    { id:'l1e', t:'民法總則七章', en:'General Part',
+      plain:'法例 → 人 → 物 → 法律行為 → 期日期間 → 消滅時效 → 權利之行使。',
+      life:'口訣：「例人物，行期時權」。',
+      body:'<ol><li>法例：適用原則與法源</li><li>人（自然人、法人）：權利主體</li><li>物：權利客體</li><li>法律行為：意思表示與效力</li><li>期日及期間：時間計算</li><li>消滅時效：權利因時間經過而消滅</li><li>權利之行使：行使界限與方式</li></ol>' },
+    { id:'l1f', t:'法源：法律 → 習慣 → 法理（§1、§2）', en:'Sources of law',
+      plain:'民事先看法律，法律沒規定看習慣，沒習慣看法理。習慣不能違背公序良俗。',
+      life:'家裡規矩：先看爸媽明說的；沒說就照家裡慣例；連慣例都沒有就照「道理」。',
+      fig:'source',
+      body:'<ul><li><b>§1</b>：民事，法律所未規定者，依習慣，無習慣者，依法理。</li><li>直接法源：法律、習慣、法理；間接法源：判例（已廢止）、學說。</li><li><b>習慣法</b>成立：客觀要件 = 多年慣行之事實；主觀要件 = 普通一般人之確信心（17 年上字 613 號）。</li><li><b>§2</b>：民事所適用之習慣，以不背於公共秩序或善良風俗者為限。17 年上字 691 號：須一般人共信不害公益。</li><li>案例：兄弟繼承相鄰 A、B 古屋，甲出售 A 屋，乙主張親屬「先買權」習慣 → 30 年上字 191 號：妨礙經濟流通與地方發達，<b>不具法律效力</b>。</li><li><b>事實上習慣</b>：只是社會慣行，欠缺法的確信。例 §207：利息不得滾入原本（禁止複利），但書面約定遲付逾一年經催告不還可滾入；商業上另有習慣者不適用。</li></ul>' },
+    { id:'l1g', t:'判例的廢止（2018/12/7）與學說', en:'Precedents',
+      plain:'舊制最高法院可「選編判例」，有事實上拘束力。2018/12/7 修法：沒有裁判全文的判例停止適用；其他判例效力等同一般最高法院裁判。',
+      life:'學長姐的筆記以前是「官方指定參考書」，現在只是「一份參考資料」。',
+      body:'<ul><li>舊法院組織法 §57：經民事庭會議、刑事庭會議或總會議決議後選編判例，報司法院備查。</li><li>事實上拘束力：不遵循可能被上級廢棄發回；實務也曾認有法律上拘束力；判例與決議可為大法官解釋對象。</li><li><b>§57-1</b>：2018/12/7 修正施行前選編之判例，若無裁判全文可資查考，應停止適用；未停止的，效力與未經選編的最高法院裁判相同；施行後三年內，確定終局裁判援用之判例、決議有牴觸憲法疑義者，得聲請解釋。</li><li>學說：如王澤鑑院士的學說，為間接法源。</li></ul>' },
+    { id:'l1h', t:'三段論法；強行法 vs 任意法', en:'Syllogism / Mandatory law',
+      plain:'大前提（法條）＋小前提（事實）→ 結論（判決），把事實「涵攝」到法條下。強行法不能用約定排除；任意法可以。',
+      life:'大前提：遲到扣 5 分；小前提：你遲到了；結論：扣 5 分。',
+      body:'<ul><li>強行法：物權法（物權法定）、身分法、權利能力。</li><li>半強行法：勞基法 §1 規定最低標準，勞動條件不得低於本法。</li><li>任意法：契約法，當事人得約定排除或變更。</li></ul>' },
+    { id:'l1i', t:'法律解釋方法', en:'Interpretation',
+      plain:'文義 → 體系 → 歷史 → 比較法 → 目的 → 合憲性。另有擴張解釋與限縮解釋。',
+      life:'讀一條校規：先看字面（文義）、看前後條（體系）、看當初為什麼訂（歷史）、看別校怎麼規定（比較）、看規定目的（目的）、不能違反更高的憲法（合憲）。',
+      body:'<ul><li><b>文義解釋</b>：基礎方法，不能過度偏離字面；其他方法統稱「論理解釋」。</li><li><b>體系解釋</b>：外在體系（民法與商事法、與特別法、實體與程序法）、內在體系（總則與分則、各編章、條文間）。</li><li><b>歷史解釋</b>：立法動機、立法過程、立法資料（立法理由、委員會紀錄）。</li><li><b>比較法解釋</b>：日本法（大陸法系，發展相近）、<b>德國法（我國民法之母法）</b>、美國法（對商法影響最大）。</li><li><b>目的解釋</b>：目的性擴張、目的性限縮，具整合各方法功能。</li><li><b>合憲性解釋</b>：多種結果時避免違憲，一般法官也應使用。</li><li><b>擴張解釋</b>：文字過窄 → 在文義可能範圍內作最大解釋；<b>限制解釋</b>：文字過寬 → 縮小。</li></ul>' },
+    { id:'l1j', t:'法律漏洞與民法基本原則', en:'Gaps & Principles',
+      plain:'漏洞＝依立法目的應規定卻沒規定。填補：類推適用、法律續造、目的性限縮。基本原則：人的尊嚴、私法自治、私有財產、過失責任、性別平等。',
+      life:'遊戲規則沒寫「平手怎麼辦」就是漏洞，裁判會比照類似規則（類推）。',
+      body:'<ul><li><b>故意的漏洞</b>：立法者認為不宜詳細規定，留給判例學說；<b>非故意的漏洞</b>：立法技術極限、未能預見。</li><li>三大原則演進：契約自由 → 契約自由限制；過失責任 → 無過失責任（風險分配）；所有權絕對 → 所有權社會化；男尊女卑、父債子還 → 男女平等、個人自主。</li></ul>' }
+  ]},
+  { id:'l2', t:'行為與能力', cards: [
+    { id:'l2a', t:'四種能力', en:'Capacities',
+      plain:'權利能力＝能不能「當主角」享權利負義務；意思能力＝懂不懂自己在做什麼；行為能力＝能不能自己做有效的法律行為；責任能力＝做錯事要不要負責（看識別能力）。',
+      life:'嬰兒有權利能力（可以繼承房子）但沒有行為能力（不能自己簽約賣房）。',
+      fig:'capacity',
+      body:'<ul><li><b>權利能力</b>：自然人自出生起即有，法人亦有。</li><li><b>意思能力</b>：理解行為法律效果的能力，是有效法律行為的前提。</li><li><b>行為能力</b>：無、限制、完全行為能力人。</li><li><b>責任能力</b>：取決於行為時是否具識別（意思）能力。</li></ul>' },
+    { id:'l2b', t:'年齡與監護、輔助宣告（§12、§13、§15、§15-2）', en:'Age thresholds',
+      plain:'未滿 7 歲：無行為能力。7 歲到未滿 18 歲：限制行為能力。滿 18 歲：成年（2023 年施行）。受監護宣告：無行為能力。受輔助宣告：重要行為要輔助人同意。',
+      life:'7 歲前像坐嬰兒座椅（全靠大人）；7–18 歲像騎腳踏車有大人陪（重要事要同意）；18 歲拿到駕照。',
+      body:'<ul><li><b>§12</b>：滿十八歲為成年（2023 年施行）。</li><li><b>§13</b>：未滿七歲無行為能力；滿七歲以上之未成年人有限制行為能力。（講義仍列「未成年人已結婚者有行為能力」，此項已因結婚年齡同為 18 歲於 2023 年刪除。）</li><li><b>§15</b>：受監護宣告之人，無行為能力。</li><li><b>§15-2</b>：受輔助宣告之人為下列行為應經輔助人同意（但純獲法律上利益、或依年齡身分日常生活所必需者不在此限）：獨資合夥營業或為法人負責人；消費借貸、消費寄託、保證、贈與、信託；訴訟行為；和解、調解、調處、仲裁；不動產、船舶、航空器、汽車等重要財產之處分、設定負擔、買賣、租賃、借貸；遺產分割、遺贈、拋棄繼承；法院指定之其他行為。未得同意 → 準用 §78–§83。</li></ul>' },
+    { id:'l2c', t:'權利能力、行為能力、自由不得拋棄（§16、§17）', en:'Non-waivable',
+      plain:'權利能力和行為能力不能拋棄；自由也不能拋棄，限制自由不能違背公序良俗。',
+      life:'簽「賣身契」或「我放棄所有權利」的契約，法律上無效。',
+      body:'<ul><li><b>§16</b>：權利能力及行為能力，不得拋棄。</li><li><b>§17</b>：自由不得拋棄。自由之限制，以不背於公共秩序或善良風俗者為限。</li></ul>' },
+    { id:'l2d', t:'未成年人侵權：識別能力（§187、§221）', en:'Liability of minors',
+      plain:'無或限制行為能力人侵權：行為時<b>有識別能力</b> → 和法定代理人<b>連帶</b>賠；<b>無識別能力</b> → 法定代理人自己賠。法代能證明監督沒疏懈可免責；都不能賠時法院可衡平判賠。',
+      life:'15 歲國中生故意砸破鄰居窗戶（懂事）→ 他跟爸媽一起賠；3 歲小孩打破（不懂事）→ 爸媽賠。',
+      body:'<ul><li>§187 I：有識別能力 → 與法定代理人連帶；無識別能力 → 由法定代理人負責。</li><li>§187 II：監督並未疏懈，或縱加相當監督仍不免發生損害 → 法代不負責。</li><li>§187 III：不能依前二項受賠償時，法院因被害人聲請，斟酌經濟狀況令行為人或法代全部或一部賠償（<b>衡平責任</b>）。</li><li>§187 IV：其他人在無意識或精神錯亂中致第三人損害，準用。</li><li>§221：債務人為無或限制行為能力人，其（債務不履行）責任依 §187 定之。</li></ul><p class="note">例題：乙受監護宣告（無行為能力）但日常生活尚可：買 3 萬元手機、把機車送朋友、租屋契約 → 皆無效（§75，需法定代理人代為）；開車撞傷路人 → 依 §187 看識別能力。</p>' },
+    { id:'l2e', t:'法律行為與生效要件', en:'Juridical act',
+      plain:'法律行為＝以「意思表示」為核心、想發生私法效果的行為（第四章 §71–85…）。要生效：人有能力、意思健全、標的合法、方式合法。',
+      life:'簽租約：你要成年（能力）、不是被騙被逼（意思健全）、租的不是毒品工廠（標的合法）、需要書面的要寫書面（方式）。',
+      body:'<table class="tbl"><tr><th>要件</th><th>條文範圍</th></tr><tr><td>行為人有行為能力</td><td>§75–§85</td></tr><tr><td>意思表示健全（無詐欺、脅迫、錯誤）</td><td>§86–§98</td></tr><tr><td>標的合法妥當（確定、可能、合法、不背公序良俗）</td><td>§71–§74</td></tr><tr><td>符合法定方式（書面、登記）</td><td>—</td></tr></table>' },
+    { id:'l2f', t:'好意施惠、事實行為、單獨行為、準法律行為', en:'Related concepts',
+      plain:'好意施惠＝朋友情誼不想有法律拘束（搭便車）；事實行為＝不需想發生效果，法律直接給效果（拾得遺失物、加工、無因管理）；單獨行為＝一方意思就生效（遺囑、解除權）；準法律行為＝意思通知、觀念通知、感情表示。',
+      life:'答應載同學回家卻臨時沒去，不會被告違約（好意施惠），但若開車撞傷他仍可能侵權。',
+      body:'<ul><li><b>好意施惠</b>：非法律行為，無拘束力；不生債務不履行責任，損害依侵權判斷。例：無償幫忙、搭便車、請吃飯。</li><li><b>事實行為</b>：非表示行為，效果源於法律規定。例：拾得遺失物、加工、無因管理。</li><li><b>單獨行為</b>：無相對人 → 遺囑；有相對人 → 行使解除權、撤銷權。</li><li><b>準法律行為</b>：<b>意思通知</b>（債務催告）、<b>觀念通知</b>（債權讓與通知）、<b>感情表示</b>（宥恕）。</li></ul>' }
+  ]},
+  { id:'l3', t:'契約之成立與生效', cards: [
+    { id:'l3a', t:'債的意義與性質（§199）', en:'Obligation',
+      plain:'債＝債權人可以向債務人請求給付。給付不限有財產價值，不作為也可以是給付。債有相對性（只能向特定人要），債權之間平等（先成立不優先）。',
+      life:'你只能找跟你訂約的店家要貨，不能找路人要（相對性）。一物二賣時，兩個買家的「債權」地位平等，誰先完成過戶（物權）誰拿到。',
+      body:'<ul><li><b>§199</b>：債權人基於債之關係，得向債務人請求給付。給付，不以有財產價格者為限。不作為亦得為給付。</li><li>廣義：契約有效成立的所有內容；狹義：債權人得請求之給付。</li><li>相對性 vs 物權<b>對世性</b>。</li><li>一物二賣：甲先賣 A 地給乙、再賣給丙 → 甲丙契約有效（丙明知亦同，債權平等）；先交乙占有、後登記給丙 → 丙取得所有權；丙可對乙請求返還（乙的債權不能對抗丙）。</li></ul>' },
+    { id:'l3b', t:'給付義務的種類', en:'Types of duties',
+      plain:'主給付（契約核心）、從給付（附屬但重要）、附隨義務（依誠信產生的保護與輔助）、不真正義務（對自己利益的義務）。原給付 vs 次給付（原本給不出來而生的賠償、回復原狀）。',
+      life:'買手機：交手機＝主給付；附發票保固書＝從給付；店員提醒你電池不要泡水＝附隨義務；你自己不好好保管導致損害擴大＝違反不真正義務（賠償會被減少）。',
+      fig:'duties',
+      body:'<ul><li><b>原給付義務</b>：最初承擔（賣方交貨）。<b>次給付義務</b>：因給付不能、遲延、不完全給付而生（賠償、違約金、解除後回復原狀）。</li><li><b>主給付義務</b>：買賣交貨、租賃提供使用。</li><li><b>從給付義務</b>：(1) 法律明文（出租人修繕義務）(2) 當事人約定（承租人繳押金）(3) 誠信原則與補充解釋（賣方提供產品證明書）。§68 從物：主物之處分及於從物。</li><li><b>附隨義務</b>：依誠信原則而生，輔助功能＋保護功能。違反 → 不完全給付、加害給付（§227 II、§227-1 人格權受侵害準用 §192–195、§197）。</li><li><b>不真正義務</b>：§217 與有過失，法院得減輕或免除賠償。</li><li>例題（名馬）：馬有病傳染乙的馬群 → 甲違反附隨（保護）義務、加害給付；乙怠於採取措施 → 違反不真正義務（§217 減賠）；甲遲未交血統證明書 → 違反從給付義務；乙解除契約 → 雙方回復原狀（§259）＋損害賠償。</li></ul>' },
+    { id:'l3c', t:'債的發生原因與契約定義', en:'Sources of obligations',
+      plain:'債的發生：契約、代理權之授與、無因管理、不當得利、侵權行為。契約有最廣義、廣義、狹義三層。',
+      life:'口訣：「契代無不侵」。',
+      body:'<ul><li>代理權之授與：單獨行為說 vs 契約說。</li><li>最廣義：任何以發生私法效果為目的的合意（債權、物權、身分契約）。</li><li>廣義：與債務有關的契約：債之發生、變更（債權讓與）、消滅（代物清償）契約。</li><li>狹義：僅指發生債務關係的契約（買賣、租賃、保證）。</li></ul>' },
+    { id:'l3d', t:'要約與承諾、契約成立（§153）', en:'Offer & Acceptance',
+      plain:'要約＝我想跟你訂約、條件如下；承諾＝我同意。意思表示一致（明示或默示）契約就成立。必要之點一致即推定成立。',
+      life:'甲在網路說「王澤鑑的書 50 萬賣」（要約）；乙說「5 千賣不賣？」（新要約，不成立）；丙說「50 萬我買」（承諾）→ 甲丙成立。',
+      fig:'offer',
+      body:'<ul><li><b>§153 I</b>：當事人互相表示意思一致者，無論明示或默示，契約即為成立。</li><li><b>§153 II</b>：必要之點意思一致，非必要之點未經表示 → <b>推定</b>契約成立；非必要之點意思不一致時，法院依事件性質定之。</li><li><b>要素</b>：成立基本要件（買賣的標的物與價金）；<b>常素</b>：法律規定而存在、可約定變更（物之瑕疵擔保）；<b>偶素</b>：當事人自行約定（分期付款）。</li></ul>' },
+    { id:'l3e', t:'要約的拘束力與要約引誘（§154）', en:'Binding offer / Invitation to offer',
+      plain:'要約人受要約拘束，除非事先聲明不受拘束。<b>貨物標定賣價陳列 → 視為要約</b>；<b>價目表寄送 → 不視為要約</b>（要約引誘）。',
+      life:'IKEA 貨架上貼價格的商品＝要約，你拿去結帳就成立；寄到你家的 DM＝要約引誘，你下單才是要約。',
+      body:'<ul><li>§154 I 但書：預先聲明不受拘束，或依情形、事件性質可認無受拘束意思者，不在此限。</li><li>網頁標價：98 年戴爾標錯價案多數判決認為是<b>要約之引誘</b>（預先聲明、對不特定多數人無法預測訂單量）；但實務不一致，近年地院多採「要約說」。</li><li>管制：網路交易定型化契約應記載事項第五點——訂約前確認機制、成立後確實履行。</li></ul>' },
+    { id:'l3f', t:'要約的失效（§155–§158）', en:'Lapse of offer',
+      plain:'被拒絕、對話時沒立刻承諾、非對話時在合理期間沒回、有期限卻過期 → 要約失去拘束力。',
+      life:'朋友問「要不要跟我合租？」你說不要，一週後反悔 → 原本的邀約已失效，要重新談。',
+      body:'<ul><li><b>§155</b>：要約經拒絕者，失其拘束力（乙拒絕甲 50 萬賣車，一週後反悔也不成立）。</li><li><b>§156</b>：對話為要約者，非立時承諾，即失其拘束力（店員兜售，行人默然離去）。</li><li><b>§157</b>：非對話為要約，依通常情形可期待承諾到達時期內不為承諾 → 失效（寄信討論交易）。</li><li><b>§158</b>：要約定有承諾期限者，非於期限內承諾 → 失效（5 天內答覆）。</li><li><b>§95</b>：非對話意思表示，以<b>通知達到相對人時</b>發生效力（到達主義）；撤回通知同時或先時到達者不生效。表意人發出後死亡或喪失行為能力，不影響效力。</li></ul>' },
+    { id:'l3g', t:'承諾遲到、遲到之承諾、變更承諾（§159、§160）', en:'Late acceptance',
+      plain:'承諾「按常理該準時到卻遲到」，要約人看得出來就要立刻通知對方遲到，不通知 → 視為沒遲到（契約成立）。其他遲到承諾 → 視為新要約。改條件的承諾 → 視為拒絕原要約＋新要約。',
+      life:'王小明請林大方 10 天內回覆租店面，林隔天就回信但颱風讓信 15 天才到。王看得出是郵務問題卻沒發遲到通知 → 視為沒遲到 → 租約成立。',
+      body:'<ul><li><b>§159 I</b>：承諾通知按傳達方法通常在相當時期內可達到而遲到，要約人可得而知者，應向相對人即發遲到之通知。<b>II</b>：怠於通知者，其承諾<b>視為未遲到</b>。</li><li><b>§160 I</b>：遲到之承諾，除前條情形外，<b>視為新要約</b>。<b>II</b>：將要約擴張、限制或其他變更而承諾者，<b>視為拒絕原要約而為新要約</b>（討價還價）。</li><li>案例處理：王小明應立即發遲到通知，否則租約成立；若想不租，必須在收到時即發通知。</li></ul>' },
+    { id:'l3h', t:'要約交錯、意思實現（§161）、強迫推銷', en:'Cross offers / Conduct',
+      plain:'要約交錯：雙方同時寄出內容相同的要約 → 契約成立。意思實現：依習慣不用通知，有可認為承諾的事實就成立（旅館備好房間）。未經要約寄來的商品不必保管。',
+      life:'你傳真訂房，飯店把房間準備好那一刻契約就成立了，不必回你「好的」。',
+      body:'<ul><li><b>§161</b>：依習慣或依事件之性質，承諾無須通知者，在相當時期內有可認為承諾之事實時，契約成立；要約人預先聲明承諾無須通知者準用。（和默示不同）</li><li>例：送吐司的廠商；往來廠商約定「一定時間內未回答即表示承諾」。</li><li><b>消保法 §20</b>：未經消費者要約而郵寄或投遞之商品，消費者<b>不負保管義務</b>；寄送人經定相當期限通知取回而逾期未取回或無法通知 → <b>視為拋棄</b>；寄送後逾<b>一個月</b>未經承諾仍不取回，亦同；消費者得請求償還損害及必要費用。</li></ul>' },
+    { id:'l3i', t:'撤回要約或承諾的遲到（§162、§163）', en:'Withdrawal',
+      plain:'撤回通知「本該先到或同時到」卻比要約晚到，相對人看得出來就要通知遲到；不通知 → 視為撤回沒遲到（撤回有效）。承諾的撤回準用。',
+      life:'A 公司 9 點 email 報價、10 點用 Line 撤回，結果 B 的 Line 故障、撤回比 email 晚到 → B 應立即通知 A「撤回遲到了」，否則視為撤回有效。',
+      body:'<ul><li><b>§162 I</b>：撤回要約之通知，到達在要約到達之後，而按傳達方法通常應先時或同時到達，相對人可得而知者，應即發遲到之通知。<b>II</b>：怠於通知 → 撤回通知視為未遲到。</li><li><b>§163</b>：前條規定，於承諾之撤回準用之。</li></ul>' },
+    { id:'l3j', t:'締約過失（§245-1）', en:'Culpa in contrahendo',
+      plain:'契約還沒成立，但談判時惡意隱瞞說謊、洩漏對方秘密、或明顯違反誠信 → 要賠償對方「相信契約會成立」而受的損害。兩年不行使消滅。',
+      life:'買家假裝要買你的房子，其實是競爭對手來套你的底價和客戶名單。',
+      body:'<ul><li>契約<b>未成立</b>時，為準備或商議訂約而有：一、就訂約重要事項，對他方詢問惡意隱匿或為不實說明；二、知悉或持有他方秘密，經他方明示應保密，因故意或重大過失洩漏；三、其他顯然違反誠實及信用方法 → 對非因過失而信契約能成立致受損害之他方負賠償責任。</li><li>請求權因 <b>二年</b>間不行使而消滅。</li></ul>' }
+  ]},
+  { id:'l4', t:'無因管理', cards: [
+    { id:'l4a', t:'定義與要件（§172）', en:'Negotiorum gestio',
+      plain:'沒人委託、也沒義務，卻幫別人管事。要依本人明示或可推知的意思、用對本人有利的方法。',
+      life:'鄰居出國，颱風把他家屋頂吹壞，你自掏腰包請人修。',
+      body:'<ul><li><b>§172</b>：未受委任，並無義務，而為他人管理事務者，其管理應依本人明示或可得推知之意思，以有利於本人之方法為之。</li><li>緣由：鼓勵互助、導正冷漠，打破「干涉他人事務為不法」，是介於道德與法律之間的折衷；繼受德國民法，英美法無此制度（靠不當得利與侵權）。</li><li>要件：(1) <b>無法律上義務</b>（有委任 §528 或法定扶養義務就不成立）(2) <b>管理他人之事務</b> (3) <b>為他人管理事務之意思</b>（為自己 → 不真正無因管理）(4) 客觀上有利於本人？（區分適法與否）</li></ul>' },
+    { id:'l4b', t:'無因管理的體系圖', en:'System',
+      plain:'真正無因管理（為本人）分適法、不適法；不真正無因管理（為自己）分不法管理（明知）、誤信管理（誤以為自己的）。',
+      life:'幫鄰居代賣水果用市價（適法）；用遠低於市價賤賣（不適法，違反可推知意思）；明知是別人的畫拿去賣自己賺（不法管理）；以為是自己爸爸的遺產拿去賣（誤信管理）。',
+      fig:'gestio',
+      body:'<ul><li>適法無因管理：利於本人且不違反本人意思（§176）。</li><li>不適法無因管理：不合 §176（§177 I；違反本人意思另依 §174 I）。</li><li>不法管理：明知為他人事務而為自己利益管理（§177 II 準用 I）。</li><li>誤信管理：無明文，依 §179 不當得利、§184 侵權處理。</li><li>例：代賣隔壁攤販的香蕉，以每斤 20 元賣出（市價 100）→ 違反本人可推知意思。</li></ul>' },
+    { id:'l4c', t:'管理人的義務（§173、§540–542）', en:'Duties of the gestor',
+      plain:'通知義務、管理義務（善良管理人注意）、計算報告義務（準用委任 §540–542）。',
+      life:'幫鄰居修牆前，能聯絡就先打電話問他；修完把收據和剩下的錢交給他。',
+      body:'<ul><li><b>§173 I</b>：開始管理時，以能通知為限，應即通知本人；如無急迫情事，應俟本人指示。<b>II</b>：§540–§542 委任規定準用。</li><li>§540 報告義務；§541 交付所收金錢物品孳息、移轉為委任人取得之權利；§542 為自己使用應交付之金錢 → 自使用日起付利息，有損害並賠償。</li><li>案例 1：甲出國，鄰居乙見圍牆有倒塌之虞 → 先通知甲（能通知時）、無急迫則等指示；以善良管理人注意修繕；事後報告計算。</li></ul>' },
+    { id:'l4d', t:'適法無因管理的效果（§176）', en:'Effects',
+      plain:'阻卻違法＋產生債的關係：管理人可請求本人償還必要或有益費用（含利息）、清償代負的債務、賠償損害。',
+      life:'你幫鄰居救火把自己的滅火器用壞了 → 可以請鄰居賠。',
+      body:'<ul><li><b>§176 I</b>：管理事務利於本人並不違反本人明示或可得推知之意思者，管理人為本人支出必要或有益之費用、或負擔債務、或受損害時，得請求本人償還其費用及<b>自支出時起之利息</b>、或清償其所負擔之債務、或賠償其損害。</li><li>例：代鄰人清償稅款（費用）、和工人訂約修圍牆（負債清償）、救火毀損自己消防設備（損害）。</li><li><b>§176 II</b>：§174 II 情形（公益義務、法定扶養義務、本人意思違反公序良俗），雖違反本人意思，仍有前項請求權。</li></ul>' },
+    { id:'l4e', t:'違反本人意思（§174）與急迫危險免責（§175）', en:'Against will / Emergency',
+      plain:'違反本人意思管理 → 即使沒過失也要賠因管理所生的損害（無過失責任）；但公益義務、法定扶養、本人意思違反公序良俗時例外。為免除本人生命身體財產急迫危險 → 除惡意或重大過失外不負賠償。',
+      life:'甲想自殺並拒絕被救，路人乙還是救了 → 本人意思違反公序良俗，乙不必負 §174 I 責任。',
+      body:'<ul><li><b>§174 I</b>：違反本人明示或可得推知之意思而管理，對因管理所生損害，<b>雖無過失亦應負賠償之責</b>。</li><li><b>§174 II</b> 例外：為本人盡<b>公益上之義務</b>（代繳拖欠的稅）、履行<b>法定扶養義務</b>（甲不顧病重老母，鄰人代送醫）、本人之意思<b>違反公序良俗</b>（自殺者拒救）。效果同適法無因管理（§176 II）。</li><li><b>§175</b>：為免除本人生命、身體或財產上之<b>急迫危險</b>而管理，除有<b>惡意或重大過失</b>外，不負賠償之責（急救自殺少年致終身失能）。</li></ul>' },
+    { id:'l4f', t:'不適法管理、不法管理（§177）與承認（§178）', en:'§177 / §178',
+      plain:'不合 §176 時，本人仍可選擇享有管理所得利益，但他對管理人的義務以所得利益為限。明知是他人事務而為自己利益管理（不法管理）也準用。本人承認 → 溯及開始時適用委任。',
+      life:'鄰居要拆籬笆，你卻擅自修好 → 不能請錢；若他後來決定留下籬笆，只需在他得到的利益範圍內還你。',
+      body:'<ul><li><b>§177 I</b>：不合前條規定時，本人仍得享有因管理所得之利益，而本人所負前條第一項之義務，以其所得之利益為限。</li><li><b>§177 II</b>：管理人明知為他人之事務，而為自己之利益管理之者，準用之 → 本人可請求交出全部所得（例：明知 A 畫為乙所有，花 1 萬辦畫展，以 20 萬賣給善意丙 → 乙可依 §177 II 請求 20 萬，扣除 1 萬費用）。</li><li>誤信管理（以為是父親遺產）→ 依不當得利／侵權。</li><li><b>§178</b>：管理事務經本人承認者，除當事人有特別意思表示外，<b>溯及</b>管理事務開始時，適用關於<b>委任</b>之規定。</li></ul>' }
+  ]},
+  { id:'l5', t:'不當得利', cards: [
+    { id:'l5a', t:'概念與法條（§179）', en:'Unjust enrichment',
+      plain:'沒有法律上原因而受利益，使他人受損害 → 要還。原本有原因但後來不存在（撤銷、解除）也一樣。目的是「除去不該有的利益」，不是填補損害。',
+      life:'銀行把小明的 1 萬元誤轉到小華帳戶，小華明知不是他的還拿去買手機 → 要還（還可能同時成立侵權）。',
+      body:'<ul><li><b>§179</b>：無法律上之原因而受利益，致他人受損害者，應返還其利益。雖有法律上之原因，而其後已不存在者，亦同。</li><li>嗣後不存在：契約被撤銷、解除、終止？（終止只向將來失效，終止前受益仍有原因）、附解除條件成就、目的不能達成。</li><li>機能：調整秩序 —（一）矯正欠缺法律關係的財貨移轉（失敗的法律交易、非債清償）（二）保護財貨歸屬（擅用他人寫真、無權出租他人房屋、在他人牆上掛廣告）。</li><li>不問受益人有無故意過失、行為是否違法；常與侵權行為<b>請求權自由競合</b>。</li></ul>' },
+    { id:'l5b', t:'要件與類型', en:'Elements & Types',
+      plain:'給付型（你有意識有目的地給錢給東西，但原因不存在）vs 非給付型（權益侵害型最常見、支出費用型、求償型）。',
+      life:'給付型：你付了訂金但契約無效。權益侵害型：別人沒經同意用你的照片當廣告。',
+      fig:'enrich',
+      body:'<ul><li>一般要件：受有利益、致他人受損害、利益與損害有因果關係、無法律上原因。</li><li><b>給付不當得利</b>要件：基於給付、一方受有利益、無法律上原因（給付目的或原因關係不存在）。</li><li><b>非給付不當得利</b>要件：一方受利益、他方受損害、受益致受損（因果關係）、無法律上原因。</li><li>最高法院 101 台上 1722：給付型（基於受損人有目的有意識之給付）與非給付型（給付以外的行為或法律規定）；權益侵害型：以侵害行為取得應歸屬他人權益內容的利益，不具正當性 → 無法律上原因。</li><li>法源：一般 §179–§183；特殊 §197 II、§266 II、§419 II、§816。</li></ul>' },
+    { id:'l5c', t:'不當得利與其他制度的關係', en:'Relations',
+      plain:'和契約：契約是財產變動的原因；解除後可選擇 §259 回復原狀或不當得利。和無因管理：適法無因管理是法律上原因，不成立不當得利。和侵權：權益侵害型不當得利不以過失為要件，補充侵權。',
+      life:'吃了別人的便當：不當得利（還便當的價值）＋侵權（若有故意過失，賠損害）都可能成立，可擇一主張。',
+      body:'<table class="tbl"><tr><th></th><th>不當得利</th><th>侵權行為</th></tr><tr><td>要件</td><td>受利益、致損害、因果、無法律上原因；不問主觀</td><td>加害行為、損害、因果、故意過失（特殊時無過失）</td></tr><tr><td>重點</td><td>利益的不當取得</td><td>行為的不法性</td></tr><tr><td>效果</td><td>返還所受利益（善意只返還現存利益）</td><td>損害賠償（所受損害＋所失利益）</td></tr></table><ul><li>最高法院 100 台上 2：終止僅向將來；解除溯及消滅 → 存續期間受領之給付成為無法律上原因，可捨回復原狀改請不當得利。</li><li>權益侵害型例：消費他人食物、無權占有他人土地、用他人水泥修自己房屋、附合（§811、§816）。</li><li><b>補償責任的界限</b>：時效完成（§144 I）、取得時效（§768、§768-1）、情事變更（§227-2）所生財產變動，依法律特別規定處理 → <b>不成立</b>不當得利（法安定性排除補償利益）。</li></ul>' },
+    { id:'l5d', t:'統一說 vs 非統一說；比較法', en:'Theories',
+      plain:'統一說：所有不當得利用同一標準（公平、正義、權利…）判斷。非統一說（區別說）：分給付型與非給付型各自判斷。實務與王澤鑑採非統一說。',
+      life:'統一說像一把萬用鑰匙；非統一說像分門別類的一串鑰匙。',
+      body:'<ul><li>羅馬法：condictio 對人訴訟，非統一的個別訴權；condictio indebiti 非債清償；另有目的不達 ob rem、竊盜 furtiva、不道德原因 ob turpem causam、不法原因 ex injusta causa。Pomponius：「損人利己乃違反衡平」。</li><li>法國：1804 民法 §1376–1381 非債清償，無統一規定；2016 債法改革增訂 enrichissement injustifié（§1303–1303-4）。</li><li>德國：Savigny、Windscheid 影響；第二次草案改一般規則；德民 §812。學說爭議 Einheitstheorie vs Trennungstheorie；1934 奧國 <b>Wilburg</b> 提非統一說（給付／非給付）。</li><li>英美：分散於準契約 quasi contract、信託、侵權；英國 Restitution 是救濟方法而非獨立請求權；美國 Restatement of Restitution（1937，Scott &amp; Seavey）、Third Restatement（2011）；Goff &amp; Jones《The Law of Restitution》(1966)。</li><li>我國 §179 只繼受德民 §812 I 第 1 句與第 2 句前段（原因嗣後不存在），<b>不含「目的不達」</b>。</li><li>統一說：鄭玉波採統一說之<b>權利說</b>；王伯琦理論上採統一說但認分別說明較佳。非統一說：史尚寬、<b>王澤鑑</b>（民律草案 §929 原分給付與非給付）。</li></ul>' },
+    { id:'l5e', t:'公平、衡平原則與不法原因給付', en:'Equity',
+      plain:'不當得利的基礎在公平正義。§180④ 因不法原因給付不得請求返還，但「不法」限違反公序良俗，且應從嚴認定。',
+      life:'被詐騙集團騙去「行賄」而匯款 → 不法原因只在詐騙集團，被害人仍可請求返還。',
+      body:'<ul><li>86 台上 1102：合建公司倒閉，上訴人自行續建在他人土地上 → 長期占用土地受益 → 返還相當於租金之不當得利。</li><li>96 台上 2362：遭詐騙「行賄香港廉政公署」而匯款，不法原因僅存在於詐騙集團 → 不能以不法原因給付拒絕返還。</li><li>81 台上 742：§180 ④ 不法原因係指<b>違反公共秩序或善良風俗</b>，非謂凡違反強制或禁止規定均屬之。</li></ul>' },
+    { id:'l5f', t:'利益、損害、因果關係、無法律上原因', en:'Core concepts',
+      plain:'利益看「個別具體利益」不看總財產；損害採「權益歸屬說」；因果採「直接因果關係說」（同一原因事實）；無法律上原因依類型判斷。',
+      life:'你免費住別人的房子：你得到的利益就是「住的使用」，不是「省下多少房租讓你存款變多」。',
+      body:'<ul><li><b>利益</b>：<b>個別財產觀察法</b>（非總體財產觀察法）。89 台上 214：個別具體利益；99 台上 1399：以土地抵償借款債權 → 債權滿足即受利益，即使總財產沒增加。</li><li><b>損害</b>：<b>權益歸屬說</b>（106 台上 2467、106 台上 461、102 台上 837）——不以受益人有歸責性與違法性為必要；與損害賠償法的「總體財產觀察」不同。<b>違法性說</b>（Schulz）：對給付型難以說明，修正後作為權益侵害型基礎。</li><li><b>因果關係</b>：<b>直接因果關係說</b>（同一原因事實）——53 台上 2661（拍賣價金分配給債權人，買受人只能向債務人求償）、85 台上 2656（鮑國亮案：90 萬匯入被上訴人帳戶清償欠款，非同一原因事實）。給付型中由「給付關係」取代因果關係。亦有相當因果關係說（104 台上 2081、88 台上 2970）。</li><li><b>無法律上原因</b>：給付型看給付目的是否存在；非給付型依類型用權利說、法規目的說等。</li><li>給付不當得利<b>優先性</b>：同一事實使多數人受益，優先適用給付型，排除對第三人的非給付型。</li></ul>' }
+  ]},
+  { id:'l6', t:'侵權行為', cards: [
+    { id:'l6a', t:'損害救濟體系', en:'Remedies',
+      plain:'民法侵權（一般 §184、特殊 §185–§191-3）＋特別法（消保法、核子損害賠償法、智財）＋無過失補償制度＋社會安全保障。',
+      life:'被撞傷：可以告肇事者（侵權）、也可以申請強制汽車責任險（無過失補償）、健保給付（社會安全）。',
+      body:'<ul><li>無過失補償：勞工職業災害保險及保護法（111/5/1）、藥害救濟法、預防接種受害救濟、生產事故救濟條例、強制汽車責任保險法、犯罪被害人權益保障法。</li><li>社會安全：全民健保、社會救助、國民年金、老農津貼、身心障礙者權益保障法。</li><li>基於風險分散與社會互助，不以過失為前提。</li></ul>' },
+    { id:'l6b', t:'§184 三種類型', en:'Three bases',
+      plain:'184 I 前段：故意或過失侵害「權利」。184 I 後段：故意以背於善良風俗的方法加損害（保護權利＋利益）。184 II：違反保護他人之法律（保護權利＋利益，推定過失）。',
+      life:'不小心撞壞別人的車（I 前）；惡意散播謠言讓對手生意變差（I 後）；酒駕撞人（違反交通法規，II）。',
+      fig:'tort3',
+      body:'<ul><li><b>§184 I 前</b>：因故意或過失，不法侵害他人之<b>權利</b>者，負損害賠償責任。過失責任，被害人舉證。</li><li><b>§184 I 後</b>：故意以背於善良風俗之方法，加損害於他人者亦同。限故意＋背於善良風俗，保護權利與利益。</li><li><b>§184 II</b>：違反保護他人之法律，致生損害於他人者，負賠償責任。但能證明其行為無過失者，不在此限 → <b>推定過失（舉證責任倒置）</b>。</li><li>保護範圍由窄到寬。對照德民 §823 I（權利侵害）、§823 II（違反保護他人法律）、§826（故意背俗）。</li><li>例題 1：甲挖斷乙的電纜，丙停電不能營業 → 丙受的是<b>純粹經濟上損失</b>，不受 I 前段保護；需看 I 後段（甲須故意背俗）或 II（違反保護他人法律）。</li></ul>' },
+    { id:'l6c', t:'184 I 前段要件；什麼是「權利」', en:'Rights protected',
+      plain:'客觀：加害行為（作為或不作為）、不法、侵害權利、損害、因果關係。主觀：責任能力、故意或過失。「權利」包括人格權、身分權、物權、智財權、占有；<b>不包括債權與純粹經濟上損失</b>。',
+      life:'有人偷拍你（人格權—隱私）、弄壞你的機車（物權）都算；但你跟店家訂的貨被第三人搶先買走（債權）原則上不算。',
+      body:'<ul><li>加害行為：積極作為（撞擊他人）、消極不作為（父母疏於照顧子女）。</li><li>不法：違背強行法規、也包括違背善良風俗。</li><li>權利：人格權（生命、身體、健康、自由、姓名、肖像、隱私）；財產權（物權、智財權）；占有；身分權（親權、監護權、繼承權）。</li><li>不受保護：債權、純粹經濟上損失（營業收入減少、預期利益喪失、市場競爭損失）——「純粹」＝無伴隨人身或絕對權受損。</li><li>例題 2：(1) 私錄性愛談話發行卡帶 → 隱私權/人格權 (2) 電視線路設計不當爆破 → 所有權（商品責任）(3) 甲盜乙車後被丙所盜，甲不能營業 → 甲是無權占有，其營業損失不受保護 (4) 撞傷歌星乙，丙歌廳受損 → 丙為純粹經濟上損失。</li><li>判決：漁船營業損失案 103 台上 845、廠房失火案 99 重上 758／102 台上 1338、參展品被竊案 98 台上 1961。</li></ul>' },
+    { id:'l6d', t:'損害與相當因果關係', en:'Causation',
+      plain:'先判斷「條件關係」（沒有這行為就不會有這損害），再判斷「相當性」（有這行為通常就足以生這損害）。分責任成立因果與責任範圍因果。',
+      life:'你推倒骨牌，倒下來的骨牌壓壞了手機（相當）；但手機主人因此改搭的公車出車禍，就太遠了（不相當）。',
+      body:'<ul><li>責任成立因果：行為與權利侵害的關聯；責任範圍因果：決定賠償範圍。</li><li>有相當因果：無此行為必不生此損害＋有此行為通常即足生此損害（經驗法則、社會通念，非單純統計機率）。</li><li>無相當因果：無此行為雖必不生，但有此行為通常亦不生此損害。</li><li>判例：23 上 107、33 上 769、48 台上 481；101 台上 443（先條件、後相當性）。</li><li>例題 3：甲超速撞乙，乙追撞丙車燃燒，丙跳車墜河谷重傷、遺失名錶、住院期間家中遭竊 → 重傷、手錶：有相當因果；家中遭竊：通常不會因車禍發生，<b>無相當因果</b>。</li></ul>' },
+    { id:'l6e', t:'阻卻違法事由', en:'Justifications',
+      plain:'正當防衛、緊急避難、自助行為、權利行使、無因管理、被害人允諾、正當業務行為等，讓本來違法的行為變成不違法。',
+      life:'被打時適度反擊（正當防衛）；為了救人打破別人車窗（緊急避難）；攔住要潛逃出境的債務人（自助行為）。',
+      body:'<ul><li><b>§149 正當防衛</b>：防衛自己或他人權利，對侵害者所為必要行為，不得過當。</li><li><b>§150 緊急避難</b>：避免自己或他人生命、身體、自由或財產上急迫危險所為必要行為。</li><li><b>§151、§152 自助行為</b>：官方救濟不及時，為保全權利的自力救濟（事後須即時聲請法院處理）。</li><li>其他：權利行使（非濫用，§148）、無因管理（§172）、被害人允諾、正當業務行為、超法規阻卻違法事由。</li></ul>' },
+    { id:'l6f', t:'主觀要件：責任能力、故意、過失', en:'Fault',
+      plain:'要有識別能力。故意：直接故意（明知並有意）、間接故意（預見發生而不違背本意）。過失：應注意、能注意而不注意（善良管理人注意義務）。',
+      life:'直接故意：拿石頭砸窗。間接故意：在人多的地方亂丟石頭，覺得「砸到就算了」。過失：倒車沒看後照鏡。',
+      body:'<ul><li>法院判斷過失會考慮身分、專業、當時情境、可預見性。</li><li>184 I 後段案例：明知他人已婚仍通姦（侵害配偶權）、侵害他人債權（唆使二重買賣、通謀虛偽設定抵押）、詐欺、濫用訴訟制度（故意不實陳述、賄賂證人）。</li><li>184 II 構成要件：須有保護他人之法律、被害人屬保護範圍、損害為該法所欲保護之法益（108 台上 1351）。保護他人之法律包含公法（交通、環保、食安）。</li><li>案例 1：張三酒駕撞倒人行道上的李四致骨折 → §184 I 前段（侵害身體健康權）＋§184 II（違反道路交通安全規則，推定過失）＋§191-2。</li></ul>' },
+    { id:'l6g', t:'無過失責任與舉證責任倒置', en:'Strict liability',
+      plain:'某些高風險活動不需證明過失就要賠（無過失責任）；某些特殊侵權推定加害人有過失，由他自己證明沒過失（舉證責任倒置）。',
+      life:'飛機失事，航空公司不管有沒有過失都要賠旅客。',
+      body:'<ul><li>無過失責任：民用航空法 §91（航空器失事）；消保法 §7（企業經營者對消費者或第三人）。</li><li>舉證責任：我國採<b>規範說</b>（依實體法要件結構分配）；48 台上 887。包含提出證據之責任與說服責任。</li><li>一般侵權 184 I 前：被害人須證明加害行為、損害、因果、故意過失。</li></ul><table class="tbl"><tr><th>條文</th><th>類型</th><th>舉證</th></tr><tr><td>§184 II</td><td>違反保護他人法律</td><td>推定過失</td></tr><tr><td>§190</td><td>動物占有人</td><td>推定占有人過失</td></tr><tr><td>§191</td><td>工作物所有人</td><td>推定所有人過失</td></tr><tr><td>§191-1</td><td>商品製造人</td><td>推定過失、推定因果</td></tr><tr><td>§191-2</td><td>動力車輛駕駛人</td><td>推定駕駛人過失</td></tr><tr><td>§191-3</td><td>一般危險責任</td><td>推定過失、推定因果（雙重推定，被害人負擔最輕）</td></tr></table>' }
+  ]}
+  ],
+  mcq: [
+    {q:'依民法第 1 條，民事法律所未規定者，應依何者？', o:['法理','習慣','判例','學說'], a:1, e:'法律 → 習慣 → 法理。'},
+    {q:'習慣法成立的主觀要件為？', o:['多年慣行之事實','普通一般人之確信心','經法院判決承認','經立法院通過'], a:1, e:'客觀：多年慣行；主觀：一般人確信心（17 上 613）。'},
+    {q:'民法第 2 條規定民事所適用之習慣，以何者為限？', o:['經登記者','不背於公共秩序或善良風俗者','有書面者','經最高法院承認者'], a:1, e:'§2。'},
+    {q:'兄弟相鄰古屋，主張親屬優先承買習慣，最高法院見解為？', o:['具習慣法效力','妨礙經濟流通與地方發達，不具法之效力','依法理承認','依類推適用承認'], a:1, e:'30 上 191。'},
+    {q:'民法第 207 條「商業上另有習慣者，不適用之」中的習慣屬於：', o:['習慣法','事實上習慣','判例','法理'], a:1, e:'事實上習慣：社會慣行，欠缺法的確信。'},
+    {q:'我國民法典的編制體例為：', o:['民商分立','民商合一','僅有商法','判例法'], a:1, e:'與瑞士相同；法國、西班牙、日本採民商分立。'},
+    {q:'被稱為我國民法「母法」的是：', o:['日本法','德國法','美國法','法國法'], a:1, e:'比較法解釋中，德國法是我國民法之母法。'},
+    {q:'「非婚生子女，其生父與生母結婚者，○○婚生子女」（§1064）空格應填：', o:['推定為','視為','準用','類推為'], a:1, e:'視為 → 不得舉證推翻。'},
+    {q:'出生之月日無從確定時，推定其為何日出生？', o:['1 月 1 日','7 月 1 日','該年 15 日','12 月 31 日'], a:1, e:'§124 II；知月不知日 → 該月 15 日。'},
+    {q:'下列何者在刑法中被禁止？', o:['文義解釋','體系解釋','類推適用','目的解釋'], a:2, e:'罪刑法定，刑法禁止類推適用。'},
+    {q:'法律明文規定某事項比照他條規定適用，稱為：', o:['適用','準用','類推適用','視為'], a:1, e:'準用需有明文；類推適用無明文。'},
+    {q:'2018/12/7 法院組織法修正後，無裁判全文可資查考的判例：', o:['仍具拘束力','應停止適用','升格為法律','由大法官重新解釋'], a:1, e:'§57-1 I。'},
+    {q:'未停止適用的判例，其效力：', o:['同法律','同一般最高法院裁判','同大法官解釋','同行政命令'], a:1, e:'§57-1 II。'},
+    {q:'民法總則的章節順序，下列何者正確？', o:['法例、人、物、法律行為、期日期間、消滅時效、權利之行使','人、物、法例、法律行為…','法例、物、人…','法例、人、物、消滅時效、法律行為…'], a:0, e:'口訣：例人物，行期時權。'},
+    {q:'物權法、身分法屬於：', o:['任意法','強行法','半強行法','程序法'], a:1, e:'當事人不得以約定排除。勞基法為半強行法；契約法為任意法。'},
+    {q:'在文義可能範圍內作最大範圍的解釋稱為：', o:['限制解釋','擴張解釋','目的性限縮','類推適用'], a:1, e:'擴張解釋 vs 限制解釋。'},
+    {q:'下列何者「不是」法律漏洞的填補方法？', o:['類推適用','法律續造','目的性限縮','合憲性解釋'], a:3, e:'講義三種：類推適用、法律續造、目的性限縮。'},
+    {q:'智慧財產權民事事件的第一審管轄法院為：', o:['地方法院','高等法院','智慧財產及商業法院','行政法院'], a:2, e:'智商法院：智財民事第一審、民刑事第二審。'},
+    {q:'內亂、外患及妨害國交罪的第一審為：', o:['地方法院','高等法院','最高法院','憲法法庭'], a:1, e:'高等法院。'},
+    {q:'依現行民法，幾歲為成年？', o:['16','18','20','21'], a:1, e:'§12（2023 施行）。'},
+    {q:'6 歲兒童的行為能力為：', o:['完全行為能力','限制行為能力','無行為能力','視情形而定'], a:2, e:'§13 I：未滿七歲無行為能力。'},
+    {q:'受監護宣告之人：', o:['有限制行為能力','無行為能力','有完全行為能力但需輔助人同意','只有權利能力欠缺'], a:1, e:'§15。'},
+    {q:'受輔助宣告之人下列何種行為「不需」經輔助人同意？', o:['為保證','買賣不動產','依其年齡身分日常生活所必需之行為','拋棄繼承權'], a:2, e:'§15-2 I 但書：純獲法律上利益或日常生活所必需。'},
+    {q:'權利能力及行為能力：', o:['得以書面拋棄','不得拋棄','經法院許可得拋棄','成年後得拋棄'], a:1, e:'§16。'},
+    {q:'限制行為能力人不法侵害他人權利，行為時有識別能力者：', o:['由其單獨負責','由法定代理人單獨負責','與法定代理人連帶負責','不負責任'], a:2, e:'§187 I 前段。'},
+    {q:'無行為能力人行為時無識別能力，不法侵害他人：', o:['自己負責','由法定代理人負損害賠償責任','與法代連帶負責','國家賠償'], a:1, e:'§187 I 後段。'},
+    {q:'法定代理人證明監督並未疏懈時：', o:['仍須負責','不負賠償責任','減半賠償','由國家負責'], a:1, e:'§187 II；但法院仍可依 III 衡平判賠。'},
+    {q:'法律行為「標的合法妥當」規定在民法第幾條？', o:['§71–74','§75–85','§86–98','§153–163'], a:0, e:'§71–74 標的；§75–85 行為能力；§86–98 意思表示。'},
+    {q:'朋友間順道搭便車，屬於：', o:['法律行為','好意施惠行為','準法律行為','單獨行為'], a:1, e:'無法律拘束力；造成損害依侵權判斷。'},
+    {q:'下列何者屬於「事實行為」？', o:['遺囑','拾得遺失物','債務催告','債權讓與通知'], a:1, e:'事實行為：拾得遺失物、加工、無因管理。'},
+    {q:'遺囑屬於：', o:['契約','有相對人的單獨行為','無相對人的單獨行為','事實行為'], a:2, e:'行使解除權、撤銷權為有相對人的單獨行為。'},
+    {q:'債務催告屬於準法律行為中的：', o:['意思通知','觀念通知','感情表示','事實行為'], a:0, e:'債權讓與通知 = 觀念通知；宥恕 = 感情表示。'},
+    {q:'依民法第 199 條，下列何者正確？', o:['給付以有財產價格者為限','不作為亦得為給付','債權具有對世性','先成立的債權優先'], a:1, e:'給付不以財產價格為限；債有相對性與平等性。'},
+    {q:'甲將 A 地先賣乙後賣丙，丙明知甲乙契約，甲丙買賣契約效力為何？', o:['無效','有效','效力未定','得撤銷'], a:1, e:'債權平等，一物二賣兩個買賣契約皆有效。'},
+    {q:'承上，甲先將 A 地交乙占有，後辦理所有權登記給丙：', o:['乙取得所有權','丙取得所有權','共有','皆未取得'], a:1, e:'不動產物權依登記；乙的債權不能對抗丙。'},
+    {q:'出租人的修繕義務屬於：', o:['主給付義務','依法律明文的從給付義務','附隨義務','不真正義務'], a:1, e:'從給付義務三類：法律明文、當事人約定（押金）、誠信原則（產品證明書）。'},
+    {q:'被害人與有過失，法院得減輕賠償金額（§217），其違反的是：', o:['主給付義務','從給付義務','附隨義務','不真正義務'], a:3, e:'不真正義務：對自己利益應為之行為，違反時請求權減縮。'},
+    {q:'因不完全給付而生前項以外之損害（加害給付），規定於：', o:['§217','§227 II','§245-1','§259'], a:1, e:'§227 II；人格權受侵害 → §227-1。'},
+    {q:'契約成立的「要素」，例如買賣契約中的：', o:['物之瑕疵擔保','分期付款約定','標的物與價金','違約金'], a:2, e:'常素 = 瑕疵擔保；偶素 = 分期付款。'},
+    {q:'當事人對必要之點意思一致，非必要之點未表示意思者：', o:['契約不成立','視為契約成立','推定契約成立','效力未定'], a:2, e:'§153 II。'},
+    {q:'貨物標定賣價陳列者，依 §154 II：', o:['視為要約','視為要約之引誘','推定為承諾','不生效力'], a:0, e:'價目表之寄送則不視為要約。'},
+    {q:'價目表之寄送屬於：', o:['要約','要約之引誘','承諾','意思實現'], a:1, e:'§154 II 後段。'},
+    {q:'要約經拒絕者：', o:['仍有拘束力 10 日','失其拘束力','視為新要約','推定承諾'], a:1, e:'§155。'},
+    {q:'對話為要約者，非立時承諾：', o:['仍得於 3 日內承諾','即失其拘束力','視為承諾','效力未定'], a:1, e:'§156。'},
+    {q:'非對話之意思表示何時生效？', o:['發出時','到達相對人時','相對人了解時','相對人承諾時'], a:1, e:'§95 到達主義。'},
+    {q:'表意人發出非對話意思表示後死亡，該意思表示：', o:['失其效力','不因之失其效力','效力未定','由繼承人決定'], a:1, e:'§95 II。'},
+    {q:'承諾之通知依通常方法應準時到達卻遲到，要約人可得而知卻怠於發遲到通知，其承諾：', o:['視為新要約','視為未遲到','無效','得撤銷'], a:1, e:'§159 II。'},
+    {q:'將要約擴張、限制或為其他變更而承諾者：', o:['契約成立','視為拒絕原要約而為新要約','推定承諾','視為未遲到'], a:1, e:'§160 II（討價還價）。'},
+    {q:'以傳真預訂旅館，旅館將房間備妥時契約成立，此稱為：', o:['默示承諾','意思實現','要約交錯','要約引誘'], a:1, e:'§161；和默示不同。'},
+    {q:'未經消費者要約而寄送的商品，寄送後逾多久未經消費者承諾仍不取回，視為拋棄？', o:['7 日','14 日','1 個月','3 個月'], a:2, e:'消保法 §20 II。'},
+    {q:'撤回承諾之通知遲到的處理：', o:['§162 準用','§159 直接適用','依 §95 一律無效','依習慣'], a:0, e:'§163：§162 於承諾之撤回準用之。'},
+    {q:'締約過失損害賠償請求權的消滅時效為：', o:['1 年','2 年','5 年','15 年'], a:1, e:'§245-1 II。'},
+    {q:'下列何者「不屬於」§245-1 締約過失的情形？', o:['惡意隱匿重要事項','經明示保密而故意洩漏秘密','顯然違反誠信','契約成立後遲延給付'], a:3, e:'締約過失以契約未成立為前提。'},
+    {q:'債之發生原因不包括：', o:['契約','無因管理','不當得利','時效取得'], a:3, e:'契約、代理權授與、無因管理、不當得利、侵權行為。'},
+    {q:'無因管理規定於民法第幾條開始？', o:['§172','§179','§184','§199'], a:0, e:'§172–178；不當得利 §179–183；侵權 §184 起。'},
+    {q:'下列何者不成立無因管理？', o:['為出國鄰居修繕颱風毀損房屋','父母照顧未成年子女','路人急救昏倒者','代鄰居繳納稅款'], a:1, e:'父母有法定扶養義務 → 有法律上義務。'},
+    {q:'無因管理管理人開始管理時，應即通知本人，前提是：', o:['本人同意','以能通知為限','法院許可','事後補通知即可'], a:1, e:'§173 I；如無急迫情事，應俟本人指示。'},
+    {q:'無因管理準用委任的條文為：', o:['§528–530','§540–542','§545–547','§550–552'], a:1, e:'§173 II：報告、交付、利息與損害賠償。'},
+    {q:'適法無因管理，管理人支出必要費用，得請求償還費用及：', o:['自起訴時起之利息','自支出時起之利息','不得請求利息','自催告時起之利息'], a:1, e:'§176 I。'},
+    {q:'管理人違反本人明示或可得推知之意思而管理，對因管理所生之損害：', o:['有過失始負責','雖無過失亦應負賠償之責','僅負重大過失責任','不負責'], a:1, e:'§174 I。'},
+    {q:'下列何者「不是」§174 II 的例外？', o:['為本人盡公益上之義務','為本人履行法定扶養義務','本人之意思違反公序良俗','本人事後承認'], a:3, e:'承認規定於 §178。'},
+    {q:'為免除本人生命、身體或財產之急迫危險而管理，管理人對所生損害：', o:['一律免責','除惡意或重大過失外不負責','負無過失責任','負抽象輕過失責任'], a:1, e:'§175。'},
+    {q:'不適法無因管理，本人仍得享有因管理所得之利益，本人之義務：', o:['全部償還','以其所得之利益為限','不負任何義務','加倍償還'], a:1, e:'§177 I。'},
+    {q:'管理人明知為他人之事務，而為自己之利益管理之（不法管理），依：', o:['§176','§177 II 準用 I','§178','§184 II'], a:1, e:'不真正無因管理之不法管理。'},
+    {q:'誤信他人事務為自己事務而管理（誤信管理），應如何處理？', o:['§177 II','依不當得利、侵權行為','§176','§178'], a:1, e:'無明文，依 §179、§184。'},
+    {q:'管理事務經本人承認者，適用：', o:['僱傭','委任','承攬','寄託'], a:1, e:'§178，溯及管理事務開始時。'},
+    {q:'不當得利制度的目的在於：', o:['填補損害','除去受益人不當受有的利益','懲罰加害人','保護交易安全'], a:1, e:'除去所受利益功能。'},
+    {q:'不當得利是否以受益人有故意過失為要件？', o:['是','否','僅給付型需要','僅權益侵害型需要'], a:1, e:'不問主觀與違法性。'},
+    {q:'我國民法第 179 條「未」繼受德國民法 §812 的哪一部分？', o:['無法律上原因','原因嗣後不存在','給付所欲達成之結果不發生（目的不達）','以其他方法取得利益'], a:2, e:'只繼受第 1 句與第 2 句前段。'},
+    {q:'提出不當得利「非統一說」區別給付與非給付的學者為：', o:['Savigny','Windscheid','Wilburg','Pomponius'], a:2, e:'1934 奧國學者 Wilburg。'},
+    {q:'鄭玉波先生對不當得利採：', o:['非統一說','統一說之權利說','違法性說','衡平說'], a:1, e:'認 §179 為統一規定。'},
+    {q:'最高法院判斷不當得利「受利益」採：', o:['總體財產觀察法','個別財產觀察法','差額說','市場價格說'], a:1, e:'89 台上 214、99 台上 1399。'},
+    {q:'最高法院對不當得利「損害」的判斷標準為：', o:['違法性說','權益歸屬說','總體財產說','相當因果說'], a:1, e:'106 台上 2467 等。'},
+    {q:'最高法院對不當得利因果關係「基本上」採：', o:['直接因果關係說（同一原因事實）','條件說','社會觀念說','相當因果說'], a:0, e:'53 台上 2661、85 台上 2656；另有判決採相當因果。'},
+    {q:'下列何者所生財產變動「不」成立不當得利？', o:['誤匯款項','無權占用他人土地','消滅時效完成','擅用他人肖像作廣告'], a:2, e:'時效完成、取得時效、情事變更依法律特別規定處理。'},
+    {q:'依最高法院 81 台上 742，§180 ④ 所謂「不法原因」是指：', o:['違反任何強制禁止規定','違反公共秩序或善良風俗','違反行政命令','刑事犯罪'], a:1, e:'應從嚴認定。'},
+    {q:'契約終止與解除對不當得利的影響，最高法院 100 台上 2 認為：', o:['終止溯及失效','解除溯及消滅，存續期間受領之給付成為無法律上原因','兩者皆向將來失效','兩者皆不生不當得利'], a:1, e:'終止向將來；解除溯及。'},
+    {q:'同一原因事實使多數人受益時，應優先適用：', o:['權益侵害型','給付型不當得利','侵權行為','無因管理'], a:1, e:'給付不當得利的優先性。'},
+    {q:'侵權行為 §184 I 前段保護的客體為：', o:['權利','權利及利益','僅財產','純粹經濟上損失'], a:0, e:'I 後段與 II 才保護利益。'},
+    {q:'§184 I 後段的主觀要件為：', o:['故意或過失','限於故意','重大過失','無過失'], a:1, e:'故意以背於善良風俗之方法。'},
+    {q:'§184 II 違反保護他人之法律，其過失如何認定？', o:['被害人舉證','推定過失，加害人得證明無過失免責','無過失責任','不問過失'], a:1, e:'舉證責任倒置。'},
+    {q:'甲開挖地下街挖斷乙的電纜，丙因停電無法營業的損失屬於：', o:['所有權受侵害','純粹經濟上損失','人格權受侵害','債權受侵害'], a:1, e:'原則上不受 §184 I 前段保護。'},
+    {q:'下列何者原則上不屬於 §184 I 前段的「權利」？', o:['隱私權','占有','債權','肖像權'], a:2, e:'債權與純粹經濟上損失不在範圍內。'},
+    {q:'相當因果關係的判斷順序（101 台上 443）為：', o:['先相當性後條件關係','先條件關係後相當性','只看相當性','只看條件關係'], a:1, e:'條件關係 + 相當性。'},
+    {q:'為避免自己或他人生命、身體、自由或財產上急迫之危險所為之必要行為，稱為：', o:['正當防衛','緊急避難','自助行為','無因管理'], a:1, e:'§150。正當防衛 §149；自助行為 §151、§152。'},
+    {q:'攔阻正要潛逃出境的債務人，屬於：', o:['正當防衛','緊急避難','自助行為','好意施惠'], a:2, e:'官方救濟不及時的自力救濟。'},
+    {q:'預見其發生而其發生並不違背其本意，稱為：', o:['直接故意','間接故意','有認識過失','無認識過失'], a:1, e:'直接故意：明知並有意使其發生。'},
+    {q:'航空器失事致旅客死傷，航空公司負：', o:['過失責任','推定過失責任','無過失責任','衡平責任'], a:2, e:'民用航空法 §91。'},
+    {q:'消保法 §7 企業經營者的商品責任為：', o:['過失責任','無過失責任','推定過失','衡平責任'], a:1, e:'對消費者或第三人負無過失責任。'},
+    {q:'民法 §191-3 一般危險責任的舉證特徵為：', o:['推定過失','推定過失與推定因果關係','無過失責任','被害人舉證'], a:1, e:'雙重推定，被害人舉證負擔最輕。'},
+    {q:'動物加損害於他人，其占有人責任（§190）：', o:['無過失責任','推定占有人有過失','被害人須證明過失','不負責'], a:1, e:'推定過失。'},
+    {q:'我國舉證責任分配主要採：', o:['危險領域說','規範說','證據偏在說','法官裁量說'], a:1, e:'依實體法要件結構分配（48 台上 887）。'},
+    {q:'甲超速撞乙，連環事故中丙住院期間家中遭竊，丙對失竊損失向甲請求：', o:['有相當因果關係','無相當因果關係','屬純粹經濟上損失故可請求','依 §184 II 可請求'], a:1, e:'有此行為通常不生此種損害。'}
+  ]
+};
+// ===== 管理學（Robbins & Coulter） =====
+DATA.mgmt = {
+  name: '管理學', full: '管理學', hue: 'mgmt',
+  intro: 'Robbins & Coulter《Management》14/15 版。期中考 11/4（第 9 週），範圍到 Ch11 組織設計。會有申論題 → 下方「申論練習」可拍照上傳手寫答案，讓 Claude 依評分要點批改。',
+  sections: [
+  { id:'m1', t:'Ch1 管理者與職場', cards: [
+    { id:'m1a', t:'誰是管理者？三個層級', en:'Who is a manager',
+      plain:'管理者＝協調並監督他人工作、讓組織達成目標的人。分基層、中階、高階。',
+      life:'學生會：活動組組長（基層，帶組員）、部長（中階，帶組長）、會長（高階，決定整年方向）。',
+      fig:'pyramid',
+      body:'<ul><li><b>First-line managers 基層</b>：管理非管理職員工。</li><li><b>Middle managers 中階</b>：管理基層管理者。</li><li><b>Top managers 高階</b>：做全組織決策、建立計畫與目標。</li><li><b>Organization 組織</b>：為達特定目的而刻意安排的一群人；三特徵：<b>distinct purpose 明確目的、deliberate structure 刻意結構、people 人</b>。</li><li>管理者為何重要：不確定、複雜、混亂時更需要；完成事情的關鍵；影響員工生產力與忠誠（不投入的管理者因員工流動造成數十億損失）。</li></ul>' },
+    { id:'m1b', t:'效率 vs 效能', en:'Efficiency vs Effectiveness',
+      plain:'效率＝把事情做對（用最少投入得到最多產出，看手段）；效能＝做對的事情（達成目標，看結果）。',
+      life:'用最省油的方式開車（效率），但開錯目的地（沒效能）。好的管理兩者兼具。',
+      fig:'effeff',
+      body:'<ul><li><b>Efficiency: doing things right</b> — resource usage, low waste → <b>means</b></li><li><b>Effectiveness: doing the right things</b> — goal attainment, high attainment → <b>ends</b></li></ul>' },
+    { id:'m1c', t:'管理四大功能 POLC', en:'Planning, Organizing, Leading, Controlling',
+      plain:'規劃（定目標與策略）→ 組織（安排工作與結構）→ 領導（透過人完成目標）→ 控制（監督、比較、修正）。',
+      life:'辦一場畢業旅行：決定去哪、預算（規劃）；分工訂車訂房（組織）；鼓勵大家準時集合（領導）；檢查行程有沒有照計畫、預算有沒有超支（控制）。',
+      fig:'polc',
+      body:'<ul><li><b>Planning</b>: defining goals, establishing strategies, developing plans</li><li><b>Organizing</b>: arranging and structuring work</li><li><b>Leading</b>: working with and through people</li><li><b>Controlling</b>: monitoring, comparing, and correcting work</li></ul>' },
+    { id:'m1d', t:'Mintzberg 十種管理角色', en:"Mintzberg's 10 roles",
+      plain:'人際角色（代表人、領導者、聯絡人）、資訊角色（監控者、傳播者、發言人）、決策角色（企業家、問題處理者、資源分配者、談判者）。',
+      life:'班長：參加典禮代表全班（代表人）、帶大家做事（領導者）、跟別班聯絡（聯絡人）、收集同學意見（監控）、轉達老師消息（傳播）、對外發言（發言人）、提議新活動（企業家）、處理吵架（問題處理）、分配班費（資源分配）、跟老師爭取延後考試（談判）。',
+      fig:'mintz',
+      body:'<ul><li><b>Interpersonal</b>：Figurehead、Leader、Liaison（人與儀式／象徵性責任）</li><li><b>Informational</b>：Monitor、Disseminator、Spokesperson（收集、接收、傳遞資訊）</li><li><b>Decisional</b>：Entrepreneur、Disturbance handler、Resource allocator、Negotiator（做選擇）</li></ul>' },
+    { id:'m1e', t:'Katz 三種管理技能', en:"Katz's skills",
+      plain:'技術技能（專業知識）、人際技能（跟人合作）、概念技能（看全局、抽象思考）。越高階越需要概念技能；越基層越需要技術技能；人際技能各層都重要。',
+      life:'基層店員要會操作收銀機（技術）；店長要會排班安撫員工（人際）；區域總監要看懂整個商圈趨勢（概念）。',
+      fig:'katz',
+      body:'<ul><li>Technical skills：job-specific knowledge and techniques</li><li>Human skills：ability to work well with people</li><li>Conceptual skills：think and conceptualize about abstract and complex situations</li></ul>' },
+    { id:'m1f', t:'今日管理者的挑戰與為何學管理', en:'Challenges / Why study',
+      plain:'挑戰：科技、破壞式創新、社群媒體、倫理、政治不確定、顧客。學管理的理由：管理具普遍性、你不是管人就是被管、有回報也有挑戰。',
+      life:'就算你以後當工程師，也會有主管、也可能帶專案小組。',
+      body:'<ul><li>Focus on technology、disruptive innovation（汽車摧毀馬車業）、social media、ethics（藥廠漲價 500%、假收據）、political uncertainty（Brexit、USMCA、加州額外規範）、customer。</li><li><b>Universality of management</b>：所有類型、規模、層級、部門、地點的組織都需要管理。</li><li>The reality of work：you will either manage or be managed。</li><li>Rewards（Exhibit 1.9）：創造好的工作環境、發揮創意、幫他人找到意義、教練與培育、與多元的人合作、獲得認可與地位、影響組織結果、薪資獎金股票選擇權。</li><li><b>Employability Skills Matrix (ESM)</b>：Critical thinking、Communication、Collaboration、Knowledge application and analysis、Social responsibility。</li></ul>' }
+  ]},
+  { id:'m2', t:'Ch2 決策', cards: [
+    { id:'m2a', t:'決策八步驟', en:'8-step decision-making process',
+      plain:'辨識問題 → 決策準則 → 給準則權重 → 列方案 → 分析方案 → 選方案 → 執行 → 評估效果。',
+      life:'Amanda 要幫業務買筆電：問題 = 舊筆電不夠用；準則 = 記憶體、電池、重量、保固、螢幕；權重 10/8/6/4/3；列 7 台；每台評分 × 權重；選最高分（Surface Book / 14 版 Dell Inspiron 249 分）。',
+      fig:'w:decision',
+      body:'<ol><li>Identify a problem（現況與期望狀態的差距）</li><li>Identify decision criteria</li><li>Allocate weights to the criteria</li><li>Develop alternatives</li><li>Analyze alternatives</li><li>Select an alternative</li><li>Implement the alternative（傳達決策、取得承諾）</li><li>Evaluate decision effectiveness</li></ol>' },
+    { id:'m2b', t:'決策方式：理性、有限理性、直覺、證據、群眾外包', en:'Approaches',
+      plain:'理性決策假設資訊完整、目標清楚；現實是有限理性，只求「夠好」(satisfice)。也可靠直覺、靠證據、靠群眾。',
+      life:'買手機：理性 = 把所有型號比完；有限理性 = 看了三支覺得這支夠好就買；直覺 = 憑感覺；證據 = 看評測數據；群眾外包 = 上 Dcard 問網友。',
+      body:'<ul><li><b>Rational</b>：logical, consistent, maximize value。假設：決策者邏輯客觀、問題清楚明確、目標清楚且知道所有方案與後果、會選最大化方案、以組織最佳利益決策。</li><li><b>Bounded rationality</b>：受限於處理資訊的能力 → <b>Satisfice</b>。</li><li><b>Escalation of commitment 承諾升高</b>（14 版）：有證據顯示錯了仍加碼。</li><li><b>Intuitive</b>：基於經驗、感覺、累積的判斷（五面向：experienced-based、affect-initiated、cognitive-based、values or ethics-based、subconscious mental processing）。</li><li><b>Evidence-based management (EBMgt)</b>：系統化使用最佳可得證據。</li><li><b>Crowdsourcing</b>（15 版）：向傳統決策者之外的網絡徵求意見。</li></ul>' },
+    { id:'m2c', t:'問題與決策的類型', en:'Programmed vs Nonprogrammed',
+      plain:'結構化問題 → 程式化決策（用程序、規則、政策處理）；非結構化問題 → 非程式化決策（客製化、靠判斷與創意）。',
+      life:'顧客要退貨 → 照 SOP（程式化）；公司要不要進軍東南亞 → 高層要動腦（非程式化）。',
+      body:'<table class="tbl"><tr><th></th><th>Programmed</th><th>Nonprogrammed</th></tr><tr><td>問題</td><td>Structured</td><td>Unstructured</td></tr><tr><td>層級</td><td>Lower</td><td>Upper</td></tr><tr><td>頻率</td><td>Repetitive</td><td>New, unusual</td></tr><tr><td>資訊</td><td>Readily available</td><td>Ambiguous, incomplete</td></tr><tr><td>目標</td><td>Clear, specific</td><td>Vague</td></tr><tr><td>時間</td><td>Short</td><td>Relatively long</td></tr><tr><td>依靠</td><td>Procedures, rules, policies</td><td>Judgment and creativity</td></tr></table><ul><li><b>Procedure</b> 一系列步驟；<b>Rule</b> 明確告訴能/不能做什麼；<b>Policy</b> 決策的指導方針。</li></ul>' },
+    { id:'m2d', t:'決策情境：確定、風險、不確定（14 版）', en:'Certainty / Risk / Uncertainty',
+      plain:'確定＝結果都知道；風險＝能估機率 → 算期望值；不確定＝連機率都估不出 → 依個性選樂觀（maximax）、悲觀（maximin）、最小遺憾（minimax regret）。',
+      life:'買彩券：知道機率是風險；第一次去陌生國家創業，連機率都不知道是不確定。',
+      fig:'w:payoffm',
+      body:'<ul><li>期望值例：大雪 850,000×0.3、普通 725,000×0.5、小雪 350,000×0.2 → 總期望營收 687,500（講義表格中 362,000 應為 362,500）。</li><li>Visa vs MasterCard 報酬矩陣：樂觀者選最大值中的最大（S4 = 28）；悲觀者選最小值中的最大（S3 最小 15）；遺憾矩陣 → 每欄最大值（24、21、28）減各格 → 選最大遺憾最小的 S4（最大遺憾 7）。</li></ul>' },
+    { id:'m2e', t:'四種決策風格', en:'Decision-making styles',
+      plain:'兩個維度：思考方式（理性 vs 直覺）×模糊容忍度（低 vs 高）。',
+      life:'Directive：喜歡快速明確的答案；Analytic：要更多資料再決定；Conceptual：看長期大局；Behavioral：重視大家的感受與共識。',
+      fig:'styles',
+      body:'<ul><li><b>Directive</b>：低模糊容忍、理性</li><li><b>Analytic</b>：高模糊容忍、理性</li><li><b>Conceptual</b>：高模糊容忍、直覺</li><li><b>Behavioral</b>：低模糊容忍、直覺</li></ul>' },
+    { id:'m2f', t:'12 種決策偏誤', en:'Biases and errors',
+      plain:'捷思法（rule of thumb）能幫忙，也會造成偏誤。',
+      life:'沉沒成本：電影很難看但「票都買了」硬看完；錨定：店家先標原價 3000 再打 5 折，你就覺得 1500 很便宜。',
+      fig:'w:bias',
+      body:'<p>Overconfidence、Immediate gratification、Anchoring、Selective perception、Confirmation、Framing、Availability、Representation、Randomness、Sunk costs、Self-serving、Hindsight。下方互動卡可逐一翻看例子。</p>' },
+    { id:'m2g', t:'有效決策與前沿工具', en:'Effective & cutting-edge',
+      plain:'有效決策過程：聚焦重要事、邏輯一致、融合分析與直覺、資訊夠用就好、蒐集相關資訊、簡單可靠有彈性。新工具：設計思考、大數據、AI。',
+      life:'設計思考像設計師做產品：先觀察使用者、原型、測試，而不是只坐在辦公室算數字。',
+      body:'<ul><li>Guidelines（14 版）：了解文化差異、建立好決策標準、知道何時該放棄、使用有效決策流程、培養清楚思考能力。</li><li><b>Design thinking</b>：approaching management problems as designers approach design problems。</li><li><b>Big data</b>：善於找相關性，但無法說明哪些相關有意義 → 需要好的判斷。</li><li><b>AI</b>：Machine learning（自動建立分析模型）、Deep learning（多層人工神經網路模擬大腦）、Analytics（數學、統計、預測模型找模式）。</li></ul>' }
+  ]},
+  { id:'m4', t:'Ch4 全球環境中的管理', cards: [
+    { id:'m4a', t:'全球觀：三種態度', en:'Ethnocentric / Polycentric / Geocentric',
+      plain:'民族中心（母國做法最好）、多元中心（地主國經理最懂當地）、全球中心（全世界最好的做法都拿來用）。',
+      life:'台灣老闆去日本開店：堅持台灣做法（民族中心）；全交給日本店長（多元中心）；兩邊優點都用（全球中心）。',
+      body:'<ul><li><b>Globalization</b>：在他國發展影響力或營運的過程。</li><li><b>Nationalism</b>：頌揚本國價值的愛國理想與政策。</li><li><b>Parochialism 狹隘主義</b>：只用自己的觀點看世界，無法辨識差異。</li></ul>' },
+    { id:'m4b', t:'全球化歷史與機構', en:'Mechanisms & milestones',
+      plain:'一戰後保護主義、二戰後走向全球化；WTO、IMF、世界銀行、GATT、OECD、ASEAN、EU、NAFTA→USMCA；近年鐘擺擺回民族主義。',
+      life:'鐘擺：一下全球化（大家互相買賣），一下民族主義（築高牆課關稅）。',
+      fig:'pendulum',
+      body:'<ul><li><b>WTO</b>：161 國，處理國際貿易規則，取代 GATT。</li><li><b>IMF</b>：188 國，促進國際貨幣合作，提供建議、貸款、技術協助。</li><li><b>World Bank Group</b>：對開發中國家提供財務與技術協助。</li><li><b>GATT</b>：1948 年減少或消除貿易障礙的協定。</li><li><b>OECD</b>：協助 34 會員國永續成長與就業。</li><li><b>ASEAN</b>：10 個東南亞國家貿易聯盟。<b>EU</b>：28 國、歐元。<b>NAFTA</b>：墨、加、美 → <b>USMCA</b>（2018）。</li><li>里程碑：World Economic Forum（1974）、柴契爾（1979）與雷根（1980）支持自由貿易、蘇聯解體（1991）、上海合作組織（2003）、We are the 99%（2011）、中國製造 2025（2015）、Brexit、川普 America First、TPP 瓦解（2016）、USMCA（2018）。</li></ul>' },
+    { id:'m4c', t:'支持與反對全球化', en:'For and against',
+      plain:'支持：比較利益法則 → 每個國家都贏（水漲船高）。反對：工作流向低工資國、中產階級薪資停滯、貧富不均擴大。管理意涵：全球化會持續，基礎建設已在，失業主因是科技。',
+      life:'台灣專心做晶片、越南專心做成衣，再互相交換，兩邊都更有效率；但台灣成衣工人可能失業。',
+      body:'<ul><li>The Win-Win Argument：law of comparative advantage — 專注於機會成本最低的產品再交易。</li><li>The Downside：jobs leaving high-labor-cost nations、wage stagnation、wealth inequality。</li></ul>' },
+    { id:'m4d', t:'國際組織類型與走向國際的方式', en:'Types & going global',
+      plain:'MNC（多國營運）→ 多國內（權力下放當地）、全球（集中母國）、跨國／無疆界（去除地理界線）。進入方式由低到高投入：全球採購 → 進出口 → 授權、加盟 → 策略聯盟、合資 → 海外子公司。',
+      life:'珍奶店出海：只進口原料（全球採購）、出口茶葉（出口）、讓外國人用你的品牌開店（加盟）、跟當地公司合開新公司（合資）、自己去設分公司（子公司）。',
+      fig:'goglobal',
+      body:'<ul><li>Multidomestic：decentralizes to local country；Global：centralizes in home country；Transnational/borderless：eliminated artificial geographical barriers。</li><li><b>Licensing</b>：給他人製造或銷售產品的權利（技術、規格）— 常見於製造業；<b>Franchising</b>：給他人使用名稱與營運方法 — 常見於服務業。</li><li><b>Strategic alliance</b>：共享資源與知識；<b>Joint venture</b>：成立獨立新組織；<b>Foreign subsidiary</b>：直接投資設立獨立廠房或辦公室。</li></ul>' },
+    { id:'m4e', t:'政治法律、經濟、文化環境', en:'PEST-like environments',
+      plain:'要懂當地法律與政治穩定性；經濟是自由市場還是計畫經濟（匯率、通膨、稅）；文化用 Hofstede 五構面或 GLOBE 九構面分析。',
+      life:'入境隨俗（When in Rome, do as the Romans do）。',
+      fig:'hofstede',
+      body:'<ul><li>Free market economy（私部門擁有控制）vs Planned economy（中央政府規劃）。</li><li><b>National culture</b>：一國人民共享的價值與態度。Exhibit 4.4 美國人特質：非正式、直接、競爭、成就導向、獨立個人主義、重視個人空間、討厭沉默、守時、重視清潔。</li><li><b>Hofstede 五構面</b>：Individualism–Collectivism、Power distance、Uncertainty avoidance、Achievement–Nurturing（masculinity）、Long-term vs Short-term orientation。</li><li><b>GLOBE 九構面</b>：Power distance、Uncertainty avoidance、Assertiveness、Humane orientation、Future orientation、Institutional collectivism、Gender differentiation、In-group collectivism、Performance orientation。</li></ul>' }
+  ]},
+  { id:'m7', t:'Ch7 變革與破壞式創新', cards: [
+    { id:'m7a', t:'變革的理由與力量', en:'Forces for change',
+      plain:'組織變革＝人、結構、技術的任何改變。變革推手（change agent）負責管理過程。外部力量：顧客、法律、科技、經濟；內部力量：新策略、人力組成、新設備、員工態度。',
+      life:'VUCA：Volatility、Uncertainty、Complexity、Ambiguity — 現在唯一不變的就是變。',
+      body:'<ul><li>External：consumer needs and wants、new governmental laws、technology、the economy</li><li>Internal：new organizational strategy、composition of the workforce、new equipment、employee attitudes</li></ul>' },
+    { id:'m7b', t:'平靜水域 vs 激流泛舟；Lewin 三步驟', en:'Calm waters vs White-water',
+      plain:'平靜水域：變革是偶發事件 → 解凍、改變、再凍結。激流泛舟：環境一直變，要持續適應。',
+      life:'平靜水域像搬家（一次搬完再安頓）；激流泛舟像在急流中划船，每一秒都要調整。',
+      fig:'lewin',
+      body:'<ul><li><b>Lewin</b>：Unfreezing the status quo（增加驅動力、減少抑制力）→ Changing → Refreezing。</li><li>White-water rapids：lack of stability and predictability requires continual adaptation。</li></ul>' },
+    { id:'m7c', t:'四種變革領域', en:'Strategy / Structure / Technology / People',
+      plain:'策略（成功的方法）、結構（設計）、技術（流程設備、自動化、電腦化）、人（態度、行為；組織發展 OD）。',
+      life:'餐廳轉型：改賣外送（策略）、合併廚房與外場（結構）、導入點餐 App（技術）、訓練員工服務態度（人）。',
+      body:'<ul><li><b>Organizational development (OD)</b>：聚焦人與人際工作關係的變革方法（Exhibit 7.4：survey feedback、process consultation、team-building、intergroup development 等）。</li></ul>' },
+    { id:'m7d', t:'抗拒變革與降低抗拒的六種方法', en:'Resistance to change',
+      plain:'人抗拒變革因為：不確定、習慣、怕失去、認為違反組織目標。降低方法：教育溝通、參與、協助支持、談判、操縱與收編、強制。',
+      life:'學校要改用新系統：開說明會（教育）、讓學生代表一起規劃（參與）、開教學課程（協助）、給早鳥優惠（談判）、找人氣學長背書（收編）、直接規定期限（強制）。',
+      body:'<table class="tbl"><tr><th>方法</th><th>何時用</th><th>優點</th><th>缺點</th></tr><tr><td>Education &amp; communication</td><td>抗拒源於錯誤資訊</td><td>澄清誤解</td><td>缺乏信任時無效</td></tr><tr><td>Participation</td><td>抗拒者有專業可貢獻</td><td>增加投入與接受</td><td>耗時、可能產生差方案</td></tr><tr><td>Facilitation &amp; support</td><td>抗拒者恐懼焦慮</td><td>協助調適</td><td>昂貴、不保證成功</td></tr><tr><td>Negotiation</td><td>抗拒來自有力群體</td><td>可「買到」承諾</td><td>成本高、他人也會施壓</td></tr><tr><td>Manipulation &amp; co-optation</td><td>需要有力群體背書</td><td>便宜容易</td><td>可能反噬、失去信用</td></tr><tr><td>Coercion</td><td>需要有力群體背書</td><td>便宜容易</td><td>可能違法、損害信用</td></tr></table>' },
+    { id:'m7e', t:'改變組織文化；員工壓力', en:'Culture & Stress',
+      plain:'文化穩定難改，但在危機、領導更替、組織年輕小、文化弱時較容易。壓力來源：任務、角色（衝突、過載、模糊）、人際、結構、領導；個人因素 A 型 vs B 型性格。',
+      life:'公司換新 CEO 正是改變文化的好時機。',
+      body:'<ul><li>Exhibit 7.6：高層以身作則、新故事符號儀式、選拔升遷支持新價值者、重新設計社會化、改變獎酬、明確期望取代潛規則、輪調打散次文化、參與與高度信任。</li><li><b>Stress</b>：對過度壓力的不良反應；<b>Stressors</b>：造成壓力的因素。症狀：生理、心理、行為。</li><li>減壓：甄選時的實際工作預覽、績效規劃（MBO）、工作再設計、諮商、時間管理、健康計畫。</li></ul>' },
+    { id:'m7f', t:'創意 vs 創新；激發創新的三類變數', en:'Creativity & Innovation',
+      plain:'創意＝把想法用獨特方式組合；創新＝把創意變成有用的產品或方法。激發創新：結構、文化、人力資源三類變數。',
+      life:'想到「可以邊走邊喝的湯」是創意；做出能量產的杯湯是創新。',
+      fig:'innov',
+      body:'<ul><li>Structural：organic structures、abundant resources、high interunit communication、minimal time pressure、work and nonwork support。</li><li>Cultural：acceptance of ambiguity、tolerance of the impractical、low external controls、tolerance of risks、tolerance of conflict、focus on ends、open-system focus、positive feedback。</li><li>HR：<b>idea champion</b>（積極支持新想法、建立支持、克服抗拒、確保落實）。</li><li>最創新企業：Apple、Netflix、Square、Tencent、Amazon。</li></ul>' },
+    { id:'m7g', t:'破壞式創新 vs 維持式創新', en:'Disruptive vs Sustaining',
+      plain:'破壞式創新徹底改變產業遊戲規則；維持式創新只是小幅改良。大型、成熟、高獲利的企業最脆弱，因為最捨不得現有市場。',
+      life:'Netflix 打敗百視達、Uber 衝擊計程車、Wikipedia 取代百科全書。',
+      body:'<ul><li>Exhibit 7.9：CD → iTunes、複寫紙 → Xerox、帆布鞋 → Nike、收音機 → Walkman → iPod、打字機 → IBM PC、週刊 → CNN、電視台 → 有線/Netflix、旅行社 → Expedia、股票經紀 → eTrade、旅行支票 → ATM/Visa、百科全書 → Wikipedia、分類廣告 → Craigslist、AM/FM → Sirius XM、報稅服務 → TurboTax、黃頁 → Google、紙地圖 → Garmin GPS、平裝書 → Kindle、律師 → LegalZoom、計程車 → Uber。</li><li>Implications：創業者、企業管理者（<b>Skunk works</b>：大組織中高度自主、不受官僚束縛的小團隊，專做激進創新）、生涯規劃。</li></ul>' }
+  ]},
+  { id:'m9', t:'Ch9 策略管理', cards: [
+    { id:'m9a', t:'策略管理六步驟', en:'Strategic management process',
+      plain:'確認使命目標策略 → 外部分析（機會威脅）→ 內部分析（優勢劣勢）→ 擬定策略 → 執行 → 評估結果。前三步合起來就是 SWOT。',
+      life:'準備考研究所：先確認目標學校（使命）、看今年錄取率與題型（外部）、評估自己強弱科（內部）、排讀書計畫（擬定）、照表操課（執行）、模擬考檢討（評估）。',
+      fig:'swot',
+      body:'<ul><li><b>Strategic management</b>：管理者發展組織策略所做的事。<b>Strategies</b>：如何經營、競爭、吸引滿足顧客的計畫。<b>Business model</b>：公司如何賺錢。</li><li>重要性：正面影響績效、幫助面對變化與不確定、讓複雜多元的組織協同。</li><li>Mission：組織的目的。</li><li>Resources（資產）、Capabilities（能力）、<b>Core competencies</b>（主要創造價值的能力 = 競爭武器）。</li></ul>' },
+    { id:'m9b', t:'三層策略與公司層級策略', en:'Corporate / Competitive / Functional',
+      plain:'公司層級：要做哪些事業（成長、穩定、更新）。競爭層級：每個事業怎麼競爭。功能層級：各部門如何支援。',
+      life:'統一集團：決定要不要經營超商、藥妝、物流（公司層級）；7-11 用便利性競爭（競爭層級）；行銷部辦集點活動（功能層級）。',
+      body:'<ul><li><b>Growth</b>：Concentration 集中（本業擴大）、Vertical integration 垂直整合（向上游供應商或下游通路）、Horizontal integration 水平整合（併購同業）、Diversification 多角化（相關或非相關）。</li><li><b>Stability</b>：維持現狀。</li><li><b>Renewal</b>：績效衰退時 — Retrenchment 緊縮（小問題）、Turnaround 轉型（嚴重問題）。</li></ul>' },
+    { id:'m9c', t:'BCG 矩陣', en:'BCG matrix',
+      plain:'用「市場成長率」×「市場占有率」把事業單位分成明星、金牛、問號、狗。',
+      life:'明星 = 當紅偶像（高成長高市佔，要繼續投資）；金牛 = 長青老店（低成長高市佔，提供現金）；問號 = 新人（高成長低市佔，要決定培養或放棄）；狗 = 過氣（低成長低市佔，考慮出售）。',
+      fig:'bcg',
+      body:'<p>BCG matrix：a strategy tool that guides resource allocation decisions on the basis of market share and growth rate of SBUs。</p>' },
+    { id:'m9d', t:'競爭優勢、經濟護城河、Porter 五力', en:'Competitive advantage',
+      plain:'競爭優勢＝讓你與眾不同的獨特優勢（品質、低成本、技術）。護城河（巴菲特）＝長期保護利潤與市佔的方法。五力決定產業吸引力。',
+      life:'台積電的先進製程就是護城河：別人很難追上。',
+      fig:'five',
+      body:'<ul><li>Porter 五力：Threat of new entrants、Threat of substitutes、Bargaining power of buyers、Bargaining power of suppliers、Current rivalry。</li><li><b>SBU</b>：組織中各自擬定競爭策略的獨立事業單位。</li></ul>' },
+    { id:'m9e', t:'Porter 三大競爭策略', en:'Generic strategies',
+      plain:'成本領導（全產業最低成本）、差異化（獨特、顧客願意多付）、集中（專攻某個利基市場，再用成本或差異化）。兩頭不到岸 = stuck in the middle。',
+      life:'全聯（成本領導）、星巴克（差異化）、專做左撇子文具的店（集中）。',
+      body:'<ul><li>差異化例子：Quality、Innovation（技術移轉、R&amp;D、流程改善、<b>First mover</b>）、Customer service、Mass customization、Social media。</li><li><b>First mover 優點</b>：品牌聲譽、技術領先、搶占資源、建立轉換成本、學習曲線；<b>缺點</b>：不確定市場方向、高開發成本、技術被模仿或被新技術取代、需教育市場。</li><li>Functional strategies：支援競爭策略的部門策略。</li></ul>' }
+  ]},
+  { id:'m10', t:'Ch10 創業', cards: [
+    { id:'m10a', t:'創業 vs 小企業 vs 自僱', en:'Entrepreneurship',
+      plain:'創業＝回應機會開新事業，追求創新、成長與獲利。小企業主想「謀生」，看到風險；創業家想「改變世界」，看到機會。自僱＝為自己的事業工作賺錢。',
+      life:'開巷口早餐店（小企業）vs 做出全台連鎖早餐 App 平台（創業）。',
+      body:'<ul><li>重要性：Innovation、Economic growth、Job creation、Global entrepreneurship。</li><li>創業流程：探索創業情境 → 辨識機會與競爭優勢 → 開始創業 → 管理事業。</li><li>Hybrid path：保留正職、副業開始創業 → 壓力小、存活率高（過半新創 4 年內失敗）。</li></ul>' },
+    { id:'m10b', t:'機會來源與可行性研究', en:'Opportunities & Feasibility',
+      plain:'Drucker 七大機會來源：意外、不一致、流程需求、產業市場結構、人口變化、認知改變、新知識。找點子要看：現有限制、新方法、突破、未滿足利基、趨勢。',
+      life:'疫情（意外）帶來外送平台機會；高齡化（人口）帶來長照商機。',
+      body:'<ul><li>Exhibit 10.1：個人考量（能力、準備、情緒、面對失敗、努力、實際認知、持續分析）、市場考量（顧客、產品特色、通路、定價、推廣、融資）。</li><li><b>Feasibility study</b>：分析新事業各面向以判斷可行性。競爭者分析：產品、優缺點、行銷定價通路、差異化。</li><li>融資：<b>Venture capitalists</b>（專業管理的投資資金池，外部股權）、<b>Angel investors</b>（私人投資者換股權）、<b>IPO</b>（首次公開發行）。</li><li><b>Business plan</b>：Executive summary、Analysis of opportunity、Analysis of the context、Description of the business、Financial data and projections、Supporting documentation。</li></ul>' },
+    { id:'m10c', t:'六種法律組織形式', en:'Legal forms',
+      plain:'獨資、普通合夥、有限責任合夥（LLP）、C 公司、S 公司、有限責任公司（LLC）。主要考量：稅與法律責任。',
+      life:'自己擺攤（獨資，賠了要拿自己的房子還）vs 開公司（有限責任，最多賠掉投資的錢）。',
+      body:'<table class="tbl"><tr><th>形式</th><th>責任</th><th>稅</th><th>重點</th></tr><tr><td>Sole proprietorship</td><td>無限</td><td>穿透，個人稅率</td><td>成本低、完全控制、易退出</td></tr><tr><td>General partnership</td><td>無限</td><td>穿透</td><td>資源人才合併；決策分歧、衝突</td></tr><tr><td>LLP</td><td>有限（至少一人無限）</td><td>穿透</td><td>向有限合夥人籌資；有限合夥人不能經營</td></tr><tr><td>C corporation</td><td>有限</td><td><b>雙重課稅</b></td><td>可轉讓、永續存在；設立貴、管制多</td></tr><tr><td>S corporation</td><td>有限</td><td>穿透（像合夥）</td><td>最多 75 名股東</td></tr><tr><td>LLC</td><td>有限</td><td>穿透</td><td>彈性大；需 operating agreement</td></tr></table><p>Closely held corporation：少數人擁有、不公開交易股票。</p>' },
+    { id:'m10d', t:'創業者的組織、領導與控制', en:'Organizing / Leading / Controlling',
+      plain:'組織設計六要素；人資：招募與留才。領導：主動人格、賦權員工；三階段：新創 → 轉型（要學授權）→ 擴張。控制：看數字、盯競爭、聯繫顧客、監控員工績效與負荷。退場：收割（harvesting）。',
+      life:'早餐店從老闆一人包辦（新創）到請店長管理（轉型）到開分店（擴張）。',
+      body:'<ul><li><b>Proactive personality</b>：傾向採取行動影響環境。</li><li>Exhibit 10.3 優勢：Risk、Knowledge、Independence、Confidence、Delegation、Determination、Relationships、Selling、Profitability、Disruption。</li><li>五種退場：併購、賣給友好買家、IPO、當金牛、清算。</li><li>估值方法：Asset、Earnings、Cash-flow valuations。</li></ul>' }
+  ]},
+  { id:'m11', t:'Ch11 組織結構設計', cards: [
+    { id:'m11a', t:'組織設計六要素', en:'Six elements',
+      plain:'工作專業化、部門化、指揮鏈、控制幅度、集權/分權、正式化。',
+      life:'手搖飲店：有人專門封膜（專業化）、分外場內場（部門化）、店員向店長報告（指揮鏈）、一個店長管 8 人（控制幅度）、新品由總部決定（集權）、SOP 寫得很細（正式化）。',
+      fig:'org6',
+      body:'<ul><li><b>Work specialization</b>：分工；有經濟性也有不經濟性（過度 → 無聊、疲勞、壓力、品質差、缺勤）。</li><li><b>Departmentalization</b> 五種：Functional、Geographic、Product、Process、Customer。趨勢：<b>cross-functional teams</b>、customer departmentalization。</li><li><b>Chain of command</b>；<b>Authority</b>（line authority 直線職權 vs staff authority 幕僚職權）；<b>Responsibility</b>；<b>Unity of command</b>：每人只向一位主管報告。</li><li><b>Span of control</b>：一位主管能有效管理的人數。幅度 4 vs 8：較寬者少兩層、約少 800 位管理者。</li><li><b>Centralization</b> vs <b>Decentralization</b>；<b>Employee empowerment</b>。</li><li><b>Formalization</b>：工作標準化程度、受規則程序引導程度。</li></ul>' },
+    { id:'m11b', t:'集權 vs 分權的時機', en:'When centralize',
+      plain:'環境穩定、基層能力不足或不想參與、決策小、危機、公司大 → 集權。環境複雜不確定、基層有能力且想參與、決策重大、文化開放、地理分散 → 分權。',
+      life:'颱風來襲停班停課 → 由上面統一決定（集權）；各分店自行決定當天促銷品（分權）。',
+      body:'<p>Exhibit 11.5 對照：More centralization — stable environment、lower-level managers not as capable、do not want a say、minor decisions、crisis、large company、strategy depends on top retaining say。More decentralization — complex uncertain environment、capable、want a voice、significant decisions、open culture、geographically dispersed、strategy depends on managers’ involvement。</p>' },
+    { id:'m11c', t:'機械式 vs 有機式組織', en:'Mechanistic vs Organic',
+      plain:'機械式：僵硬、嚴格控制（高專業化、部門僵固、指揮鏈清楚、窄幅度、集權、高正式化）。有機式：高度彈性（跨職能團隊、跨層級、資訊自由流動、寬幅度、分權、低正式化）。',
+      life:'機械式像軍隊或麥當勞廚房；有機式像新創公司或設計工作室。',
+      fig:'mechorg',
+      body:'<ul><li>權變因素：<b>策略</b>（創新 → 有機；成本 → 機械）、<b>規模</b>（大 → 機械，但超過某規模影響變小）、<b>技術</b>、<b>環境不確定性</b>（穩定簡單 → 機械；越不確定 → 有機）。</li><li><b>Woodward</b>：Unit production（小批量）→ 有機；Mass production（大量）→ 機械；Process production（連續流程）→ 有機。</li></ul><table class="tbl"><tr><th></th><th>Unit</th><th>Mass</th><th>Process</th></tr><tr><td>垂直分化</td><td>低</td><td>中</td><td>高</td></tr><tr><td>水平分化</td><td>低</td><td>高</td><td>低</td></tr><tr><td>正式化</td><td>低</td><td>高</td><td>低</td></tr><tr><td>最有效</td><td>Organic</td><td>Mechanistic</td><td>Organic</td></tr></table>' },
+    { id:'m11d', t:'傳統與現代組織設計', en:'Design options',
+      plain:'傳統：簡單結構、功能結構、事業部結構。現代：團隊結構、矩陣與專案結構、虛擬組織；彈性工作：遠距、壓縮工時、彈性工時、工作分享、臨時人力。',
+      life:'矩陣結構：你同時屬於「設計部」又屬於「A 專案」，有兩個主管（違反指揮統一）。',
+      fig:'matrix',
+      body:'<ul><li><b>Simple</b>：少部門化、寬幅度、集權於一人、低正式化（快速彈性、責任清楚；成長後不適用、依賴一人）。</li><li><b>Functional</b>：依職能分組（專業化成本優勢；部門本位、看不見整體目標）。</li><li><b>Divisional</b>：半自主事業部（聚焦結果；活動資源重複、成本高、效率低）。</li><li><b>Team</b>：整個組織由工作團隊組成。<b>Matrix</b>：把不同職能部門的專家指派到專案。<b>Project</b>：員工持續在專案間工作。</li><li><b>Virtual (network/modular)</b>：小核心全職員工＋依需求臨時聘外部專家。</li><li><b>Telecommuting</b>、<b>Compressed workweek</b>（每天工時長、天數少）、<b>Flextime</b>（固定總時數、時段可變）、<b>Job sharing</b>（兩人以上分擔一份全職）、<b>Contingent workers</b>（臨時、自由接案、約聘）。</li></ul>' }
+  ]}
+  ],
+  essays: [
+    {q:'請說明「效率」與「效能」的差異，並以一個你熟悉的組織為例，說明管理者如何同時兼顧兩者。', ch:'Ch1', pts:['效率 = doing things right，手段，資源使用、低浪費','效能 = doing the right things，目的，目標達成','兩者關係：好的管理同時兼具；可能有效率卻無效能','具體例子並說明管理者的做法']},
+    {q:'試述 Mintzberg 的十種管理角色，並舉例說明一位店長在一天中如何扮演這些角色。', ch:'Ch1', pts:['三大類：人際、資訊、決策','人際：代表人、領導者、聯絡人','資訊：監控者、傳播者、發言人','決策：企業家、問題處理者、資源分配者、談判者','每類至少有對應的店長例子']},
+    {q:'Katz 提出管理者需具備哪三種技能？不同層級管理者對這些技能的需求有何不同？', ch:'Ch1', pts:['技術、人際、概念技能的定義','基層最需技術技能、高層最需概念技能','人際技能各層級都同等重要','舉例或圖示']},
+    {q:'請說明決策制定的八個步驟，並以一個實際決策（例如選擇實習公司）逐步應用。', ch:'Ch2', pts:['八步驟順序正確','權重與評分的計算邏輯','執行與評估回饋','例子完整貫穿']},
+    {q:'比較理性決策與有限理性決策，並說明「滿意解（satisficing）」與「承諾升高（escalation of commitment）」的意義。', ch:'Ch2', pts:['理性決策的假設（問題清楚、目標明確、知道所有方案、選最大化）','有限理性：受資訊處理能力限制','Satisfice：接受夠好的方案','承諾升高：有錯誤證據仍加碼，例子']},
+    {q:'比較程式化決策與非程式化決策，並說明程序、規則、政策三者的差異。', ch:'Ch2', pts:['結構化 vs 非結構化問題','層級、頻率、資訊、目標、時間、依靠的差異','Procedure、Rule、Policy 定義與例子']},
+    {q:'選擇三種你認為最常見的決策偏誤，說明其意義、舉例，並提出管理者如何避免。', ch:'Ch2', pts:['偏誤名稱與正確定義','生活或企業例子','具體的避免方法（如找反方意見、設停損點）']},
+    {q:'說明管理者對外國市場的三種態度（民族中心、多元中心、全球中心），並評論何者較適合今日的跨國企業。', ch:'Ch4', pts:['三種態度定義','各自優缺點','論證全球中心的適用性與限制']},
+    {q:'企業走向國際化有哪些方式？請依投入程度由低至高說明，並比較授權與加盟。', ch:'Ch4', pts:['全球採購、進出口、授權、加盟、策略聯盟、合資、海外子公司','投入與風險遞增','Licensing（技術、製造）vs Franchising（名稱、營運方法、服務業）']},
+    {q:'請說明支持與反對全球化的論點，並討論近年民族主義回潮（如 Brexit、USMCA）對管理者的意涵。', ch:'Ch4', pts:['比較利益法則、雙贏','工作外移、薪資停滯、不均','鐘擺效應與具體事件','管理意涵（全球化仍持續、需全球管理技能）']},
+    {q:'以 Hofstede 的文化構面比較台灣與美國，說明一位美籍主管來台灣管理時可能遇到的問題。', ch:'Ch4', pts:['五構面名稱正確','台美差異（如權力距離、個人主義）','具體管理問題與建議']},
+    {q:'比較「平靜水域」與「激流泛舟」兩種變革觀點，並說明 Lewin 的三步驟變革模型。', ch:'Ch7', pts:['平靜水域：變革是偶發中斷','激流泛舟：持續變動需不斷適應','解凍、改變、再凍結','驅動力與抑制力']},
+    {q:'員工為何抗拒變革？請說明六種降低抗拒的方法，並各說明其適用時機與缺點。', ch:'Ch7', pts:['四個抗拒原因','六種方法完整','適用時機','優缺點']},
+    {q:'何謂破壞式創新？為何大型成熟企業最容易受威脅？請舉例並說明企業可如何因應（如 skunk works）。', ch:'Ch7', pts:['定義與維持式創新的差異','大型企業最捨不得既有市場與技術','具體例子','因應方法']},
+    {q:'說明組織中刺激創新的結構、文化與人力資源變數。', ch:'Ch7', pts:['結構：有機、資源充足、跨單位溝通、時間壓力低、支持','文化：接受模糊、容忍不切實際、低外部控制、容忍風險與衝突、重結果、開放系統、正向回饋','人資：idea champion']},
+    {q:'說明策略管理的六個步驟，並以一家企業為例進行 SWOT 分析。', ch:'Ch9', pts:['六步驟','核心能力、資源與能力','SWOT 四象限具體內容','導出策略']},
+    {q:'說明公司層級的三種策略，並解釋 BCG 矩陣如何協助資源分配。', ch:'Ch9', pts:['成長（集中、垂直、水平、多角化）、穩定、更新（緊縮、轉型）','BCG 四象限定義','各象限的資源處置']},
+    {q:'說明 Porter 的五力分析與三種競爭策略，並以一個產業為例說明。', ch:'Ch9', pts:['五力名稱','成本領導、差異化、集中','stuck in the middle','產業例子連結']},
+    {q:'比較創業與經營小企業的差異，並說明創業者在規劃新事業時需做哪些可行性研究。', ch:'Ch10', pts:['機會 vs 風險、改變世界 vs 謀生','機會來源','可行性：點子、競爭者、融資（VC、天使、IPO）','營運計畫書要項']},
+    {q:'比較獨資、合夥、C 公司、LLC 的責任與課稅，並建議一位剛畢業的創業者應選哪一種。', ch:'Ch10', pts:['責任：無限 vs 有限','稅：穿透 vs 雙重課稅','優缺點','合理建議']},
+    {q:'說明組織設計的六大要素，並比較機械式與有機式組織。', ch:'Ch11', pts:['六要素正確','機械式特徵','有機式特徵','權變因素（策略、規模、技術、環境）']},
+    {q:'依 Woodward 的研究，技術如何影響組織結構？', ch:'Ch11', pts:['單件、大量、流程生產','垂直、水平分化、正式化差異','最有效結構']},
+    {q:'說明矩陣式結構的優缺點，以及虛擬組織、彈性工時等 21 世紀的彈性安排。', ch:'Ch11', pts:['矩陣：專家跨部門到專案、雙重指揮','優缺點（彈性 vs 違反指揮統一、衝突）','虛擬組織','遠距、壓縮工時、彈性工時、工作分享、臨時人力']}
+  ],
+  mcq: [
+    {q:'"Doing the right things" refers to:', o:['Efficiency','Effectiveness','Productivity','Planning'], a:1, e:'Effectiveness = ends；Efficiency = means（doing things right）。'},
+    {q:'Which is NOT one of the four management functions?', o:['Planning','Organizing','Staffing','Controlling'], a:2, e:'POLC：Planning、Organizing、Leading、Controlling。'},
+    {q:'Mintzberg 的 "disseminator" 屬於哪一類角色？', o:['Interpersonal','Informational','Decisional','Technical'], a:1, e:'Informational：monitor、disseminator、spokesperson。'},
+    {q:'"Negotiator" 屬於：', o:['Interpersonal','Informational','Decisional','Conceptual'], a:2, e:'Decisional：entrepreneur、disturbance handler、resource allocator、negotiator。'},
+    {q:'"Liaison" 屬於：', o:['Interpersonal','Informational','Decisional','Human skill'], a:0, e:'Interpersonal：figurehead、leader、liaison。'},
+    {q:'高階管理者最需要的技能是：', o:['Technical','Human','Conceptual','Physical'], a:2, e:'Katz：越高層越需要概念技能。'},
+    {q:'組織的三個共同特徵不包括：', o:['Distinct purpose','Deliberate structure','People','Profit'], a:3, e:'目的、結構、人。'},
+    {q:'決策過程的第 3 步是：', o:['Identify decision criteria','Allocate weights to the criteria','Develop alternatives','Analyze alternatives'], a:1, e:'問題 → 準則 → 權重 → 方案 → 分析 → 選擇 → 執行 → 評估。'},
+    {q:'Accepting solutions that are "good enough" is called:', o:['Maximizing','Satisficing','Escalation','Framing'], a:1, e:'有限理性下的滿意解。'},
+    {q:'Increased commitment to a previous decision despite evidence it may have been wrong:', o:['Sunk cost','Escalation of commitment','Anchoring','Hindsight'], a:1, e:'14 版。'},
+    {q:'程式化決策最常用於：', o:['高階、非結構化問題','基層、結構化問題','新的、不尋常的問題','資訊模糊的問題'], a:1, e:'Exhibit 2.7。'},
+    {q:'"A guideline for making decisions" 是：', o:['Procedure','Rule','Policy','Program'], a:2, e:'Procedure = 步驟；Rule = 能/不能；Policy = 指導方針。'},
+    {q:'Low tolerance for ambiguity + rational way of thinking =', o:['Directive','Analytic','Conceptual','Behavioral'], a:0, e:'Analytic = 高容忍＋理性；Conceptual = 高容忍＋直覺；Behavioral = 低容忍＋直覺。'},
+    {q:'Fixating on initial information as a starting point is:', o:['Anchoring effect','Availability bias','Framing bias','Confirmation bias'], a:0, e:'錨定效應。'},
+    {q:'Seeking out information that reaffirms past choices:', o:['Selective perception','Confirmation bias','Self-serving bias','Representation bias'], a:1, e:'確認偏誤。'},
+    {q:'Focusing on the most recent events is:', o:['Availability bias','Randomness bias','Hindsight bias','Overconfidence'], a:0, e:'可得性偏誤。'},
+    {q:'Mistakenly believing an event could have been predicted after the outcome is known:', o:['Hindsight bias','Self-serving bias','Sunk cost','Framing'], a:0, e:'後見之明。'},
+    {q:'Expected value 計算：大雪 $850,000×0.3、普通 $725,000×0.5、小雪 $350,000×0.2，總期望營收為？', o:['$641,667','$687,500','$725,000','$850,000'], a:1, e:'255,000 + 362,500 + 70,000 = 687,500。'},
+    {q:'悲觀的管理者在不確定情境下會選擇：', o:['maximax','maximin','minimax regret','expected value'], a:1, e:'選「最小報酬中最大」者。'},
+    {q:'A world-oriented view that focuses on using the best approaches from around the globe:', o:['Ethnocentric','Polycentric','Geocentric','Parochial'], a:2, e:'全球中心態度。'},
+    {q:'Viewing the world solely through your own perspectives:', o:['Nationalism','Parochialism','Globalization','Polycentrism'], a:1, e:'狹隘主義。'},
+    {q:'WTO 實質上取代了：', o:['IMF','GATT','OECD','ASEAN'], a:1, e:'GATT 為 1948 年協定。'},
+    {q:'An MNC that decentralizes management decisions to the local country:', o:['Global company','Multidomestic corporation','Transnational','Borderless'], a:1, e:'Global = 集中母國；Transnational = 去除地理界線。'},
+    {q:'Giving another organization the right to use your name and operating methods:', o:['Licensing','Franchising','Joint venture','Exporting'], a:1, e:'Licensing 是技術與產品規格。'},
+    {q:'A strategic alliance that forms a separate, independent organization:', o:['Joint venture','Foreign subsidiary','Franchise','Global sourcing'], a:0, e:'合資。'},
+    {q:'Hofstede 的五構面不包括：', o:['Power distance','Uncertainty avoidance','Humane orientation','Long-term orientation'], a:2, e:'Humane orientation 是 GLOBE 的構面。'},
+    {q:'支持全球化的主要理論基礎：', o:['Law of comparative advantage','Law of diminishing returns','Mercantilism','Protectionism'], a:0, e:'每個國家都贏。'},
+    {q:"Lewin's three-step process：", o:['Plan, do, check','Unfreeze, change, refreeze','Identify, analyze, act','Start, scale, exit'], a:1, e:'Calm waters metaphor。'},
+    {q:'環境缺乏穩定與可預測性，必須持續適應的觀點：', o:['Calm waters','White-water rapids','Status quo','Lewin model'], a:1, e:'激流泛舟。'},
+    {q:'當抗拒來自有力群體時，最適合的降低抗拒方法是：', o:['Education','Participation','Negotiation','Facilitation'], a:2, e:'可「買到」承諾，但成本高。'},
+    {q:'當抗拒源於錯誤資訊時：', o:['Education and communication','Coercion','Manipulation','Negotiation'], a:0, e:'澄清誤解。'},
+    {q:'Taking creative ideas and turning them into useful products is:', o:['Creativity','Innovation','Invention','Design'], a:1, e:'創意 vs 創新。'},
+    {q:'Individuals who actively support new ideas and ensure innovations are implemented:', o:['Change agents','Idea champions','Skunk works','Stressors'], a:1, e:'人力資源變數。'},
+    {q:'哪一種組織最容易受破壞式創新威脅？', o:['新創公司','大型、成熟、高獲利企業','非營利組織','小型家族企業'], a:1, e:'最捨不得現有市場與技術。'},
+    {q:'A small autonomous group within a large organization developing radical innovation:', o:['Matrix team','Skunk works','Cross-functional team','Virtual team'], a:1, e:'臭鼬工廠。'},
+    {q:'Type A personality 的特徵：', o:['Relaxed and easygoing','Chronic sense of urgency, excessive competitive drive','Accepts change easily','Low stress'], a:1, e:'Type B 相反。'},
+    {q:'策略管理過程中，「內部分析」主要找出：', o:['Opportunities and threats','Strengths and weaknesses','Mission','Competitors'], a:1, e:'外部 = O、T；內部 = S、W。'},
+    {q:"An organization's major value-creating capabilities:", o:['Resources','Core competencies','Mission','Business model'], a:1, e:'核心能力 = 競爭武器。'},
+    {q:'併購同業競爭者屬於：', o:['Vertical integration','Horizontal integration','Concentration','Diversification'], a:1, e:'垂直整合 = 上下游。'},
+    {q:'BCG 矩陣中「低成長、高市佔」為：', o:['Star','Cash cow','Question mark','Dog'], a:1, e:'金牛提供現金。'},
+    {q:'BCG 矩陣中「高成長、低市佔」為：', o:['Star','Cash cow','Question mark','Dog'], a:2, e:'問號：決定投資或放棄。'},
+    {q:'"Economic moat" 一詞由誰推廣？', o:['Michael Porter','Warren Buffett','Peter Drucker','Henry Mintzberg'], a:1, e:'保護長期利潤與市佔。'},
+    {q:'Porter 五力不包括：', o:['Threat of new entrants','Bargaining power of suppliers','Government regulation','Threat of substitutes'], a:2, e:'另兩項：買方議價力、現有競爭。'},
+    {q:'Seeking a cost or differentiation advantage in a narrow segment:', o:['Cost leadership','Differentiation','Focus','Stuck in the middle'], a:2, e:'集中策略。'},
+    {q:'Private investor offering financial backing in return for equity:', o:['Venture capitalist','Angel investor','IPO','Bank loan'], a:1, e:'VC 是專業管理的資金池。'},
+    {q:'哪一種法律形式有雙重課稅？', o:['Sole proprietorship','General partnership','C corporation','LLC'], a:2, e:'公司層級與股東層級皆課稅。'},
+    {q:'S corporation 股東人數上限：', o:['35','75','100','無上限'], a:1, e:'Exhibit 10.2。'},
+    {q:'Exiting a venture to capitalize financially on the investment:', o:['Liquidation','Harvesting','Turnaround','Retrenchment'], a:1, e:'收割。'},
+    {q:'Each person should report to only one manager:', o:['Span of control','Unity of command','Chain of command','Line authority'], a:1, e:'指揮統一。'},
+    {q:'Positions created to support, assist, and advise those holding line authority:', o:['Line authority','Staff authority','Responsibility','Empowerment'], a:1, e:'幕僚職權。'},
+    {q:'控制幅度越寬，組織通常：', o:['層級越多','層級越少、管理者越少','成本越高','越集權'], a:1, e:'Exhibit 11.4：幅度 8 比 4 少兩層、少約 800 位管理者。'},
+    {q:'下列何種情況較適合集權？', o:['環境複雜不確定','公司地理分散','組織面臨危機','基層主管有能力且想參與'], a:2, e:'Exhibit 11.5。'},
+    {q:'依 Woodward，大量生產（mass production）最有效的結構是：', o:['Organic','Mechanistic','Matrix','Virtual'], a:1, e:'Unit 與 Process → Organic。'},
+    {q:'Little departmentalization, wide spans of control, centralized authority, little formalization:', o:['Simple structure','Functional structure','Divisional structure','Matrix structure'], a:0, e:'簡單結構。'},
+    {q:'A small core of full-time employees plus outside specialists hired as needed:', o:['Team structure','Virtual organization','Project structure','Divisional structure'], a:1, e:'又稱 network 或 modular。'},
+    {q:'Employees work a specific number of hours a week but are free to vary those hours:', o:['Compressed workweek','Flextime','Job sharing','Telecommuting'], a:1, e:'彈性工時。'},
+    {q:'Two or more people split a full-time job:', o:['Job sharing','Flextime','Contingent work','Job rotation'], a:0, e:'工作分享。'}
+  ]
+};
+// ===== 衍金：觀念選擇題 + 隨機變化題產生器 =====
+DATA.deriv.mcq = [
+  {q:'期貨與遠期最主要的差異之一是：', o:['期貨在到期才結算','期貨每日結算','遠期在交易所交易','遠期幾乎沒有信用風險'], a:1, e:'期貨標準化、交易所、每日結算、幾乎無信用風險。'},
+  {q:'保證金帳戶餘額低於維持保證金時，投資人必須補足到：', o:['維持保證金','原始保證金','零','結算價'], a:1, e:'Margin call 補到 initial margin。'},
+  {q:'一筆交易中買方開新倉、賣方平倉，OI 會：', o:['增加','減少','不變','視成交價而定'], a:2, e:'一開一平 → OI 不變。'},
+  {q:'交割有選擇（品質、地點、時間）時由誰決定？', o:['多方','空方','交易所','結算所'], a:1, e:'由 short position 選擇；這些選擇使期貨價格偏低（2.5）。'},
+  {q:'「一次整批成交，否則取消」的委託是：', o:['IOC','FOK','ROD','Market order'], a:1, e:'IOC 可部分成交；FOK 必須全部。'},
+  {q:'台股期貨的最後交易日是交割月份的：', o:['第一個星期一','第三個星期三','最後一個星期五','15 日'], a:1, e:'講義：第三個星期三。'},
+  {q:'台股期貨每個交易日有幾個月份契約流通？', o:['3','4','6','12'], a:2, e:'三個近月＋三個季月。'},
+  {q:'下列哪一種貨幣的遠期與即期報價「不是」以美元/外幣表示？', o:['英鎊','歐元','日圓','澳幣'], a:2, e:'GBP、EUR、AUD、NZD 報 USD/外幣；JPY、CAD 等報外幣/USD。'},
+  {q:'航空公司擔心未來燃油上漲，應：', o:['Short futures','Long futures','買 put','不做任何事'], a:1, e:'未來要買 → long hedge。'},
+  {q:'基差（basis）的定義為：', o:['F − S','S − F','S − K','F − K'], a:1, e:'要避險資產的現貨價 − 所用期貨價。'},
+  {q:'Short hedger 在何時有利？', o:['基差意外變強','基差意外變弱','期貨價格上漲','現貨價格下跌'], a:0, e:'實際賣價 = F₁ + b₂。'},
+  {q:'避險在 4 月結束，可選合約月份為 3、6、9、12 月，應選：', o:['3 月','6 月','9 月','12 月'], a:1, e:'最接近但晚於避險結束的月份。'},
+  {q:'若現貨與期貨價格變動相關係數為 0，最小變異避險比率為：', o:['0','0.5','1','無法計算'], a:0, e:'h* = ρσS/σF = 0。'},
+  {q:'ρ=0.9、σS=0.6、σF=0.9，h* 為：', o:['0.6','0.9','1.35','0.54'], a:0, e:'0.9 × 0.6 / 0.9 = 0.6。'},
+  {q:'用指數期貨將 β 從 1.5 降到 0.75，應：', o:['Long 期貨','Short 期貨','買進更多股票','不需調整'], a:1, e:'β > β* → short (β−β*)V_A/V_F。'},
+  {q:'為什麼期貨需要 tailing the hedge 而遠期不需要？', o:['期貨有每日結算','遠期有保證金','期貨沒有到期日','遠期是標準化合約'], a:0, e:'每日結算的現金流使口數需要調整。'},
+  {q:'下列哪一項是「反對避險」的理由？', o:['公司應專注本業','競爭者沒有避險時，避險可能增加風險','降低利率風險','鎖定成本'], a:1, e:'另有：股東可自行分散、避險虧損難解釋。'},
+  {q:'Stack and roll 的主要風險是：', o:['基差為零','流動性（保證金追繳造成現金壓力）','無法交割','價格漲跌幅限制'], a:1, e:'Metallgesellschaft 案例。'},
+  {q:'Put 的到期收益（payoff）為：', o:['max(S−K,0)','max(K−S,0)','S−K','K−S−premium'], a:1, e:'Profit 才要扣權利金。'},
+  {q:'Short call 的最大可能損失：', o:['權利金','執行價','無限','零'], a:2, e:'股價無上限 → 損失無上限；最大利潤為權利金。'},
+  {q:'美式選擇權與歐式選擇權的差別：', o:['美式只能到期執行','美式可在到期前任何時候執行','歐式可隨時執行','兩者相同'], a:1, e:''},
+  {q:'若到期時 F > S，套利者應：', o:['買現貨、short futures、交割','long futures、賣現貨','什麼都不做','買 put'], a:0, e:'賺 F − S。'},
+  {q:'每日結算價（台灣）是：', o:['收盤價','收盤前 1 分鐘成交量加權平均價','開盤價','當日最高最低平均'], a:1, e:'最後結算價則是收盤前 30 分鐘標的指數簡單平均。'},
+  {q:'成交量可能大於未平倉量的原因是：', o:['當沖','保證金不足','價格限制','交割'], a:0, e:'當天開又平，不增加 OI。'}
+];
+
+const R = (a, b, step = 1) => { const n = Math.round((b - a) / step); return +(a + step * Math.floor(Math.random() * (n + 1))).toFixed(6); };
+const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+const f2 = (x, d = 2) => (+x).toLocaleString('en-US', { maximumFractionDigits: d, minimumFractionDigits: 0 });
+
+DATA.deriv.gens = [
+  { id: 'gm', t: '保證金追繳價格', base: '2.1／2.7／2.24', make() {
+      const side = pick(['long', 'short']); const size = pick([1000, 5000, 15000, 40000]); const n = pick([1, 2, 3]);
+      const F = size === 5000 ? R(15, 30, 0.1) : size === 15000 ? R(120, 180, 1) : size === 40000 ? R(90, 140, 0.5) : R(60, 90, 0.5);
+      const im = pick([2000, 3000, 4000, 5000, 6000]); const mm = im - pick([500, 1000, 1500]);
+      const loss = im - mm; const dp = loss / size; const ans = side === 'long' ? F - dp : F + dp;
+      return { q: `你 ${side === 'long' ? '買進（long）' : '賣出（short）'} ${n} 口期貨，每口 ${f2(size)} 單位，價格 $${f2(F)}。原始保證金每口 $${f2(im)}、維持保證金每口 $${f2(mm)}。價格到多少（$/單位）會收到保證金追繳？`,
+        ans, tol: 0.006, unit: '$/單位',
+        sol: [`每口可虧 ${f2(im)} − ${f2(mm)} = $${f2(loss)}（口數不影響每單位的價格變動）`, `每單位價格變動 = ${f2(loss)} / ${f2(size)} = ${f2(dp, 4)}`, `${side === 'long' ? '多頭怕跌' : '空頭怕漲'} → ${f2(F)} ${side === 'long' ? '−' : '+'} ${f2(dp, 4)} = <b>${f2(ans, 4)}</b>`] };
+  } },
+  { id: 'gw', t: '可提領金額的價格（進階）', base: '2.7 進階', make() {
+      const side = pick(['long', 'short']); const size = pick([5000, 15000, 100]); const n = pick([2, 3, 4]);
+      const F = size === 100 ? R(1400, 1900, 10) : size === 5000 ? R(15, 30, 0.1) : R(120, 180, 1);
+      const w = pick([1000, 1500, 2000, 3000]); const per = w / n; const dp = per / size; const ans = side === 'long' ? F + dp : F - dp;
+      return { q: `${side === 'long' ? 'Long' : 'Short'} ${n} 口，每口 ${f2(size)} 單位，價格 $${f2(F)}。價格變動到多少時，可以從保證金帳戶提領 $${f2(w)}（總額）？`,
+        ans, tol: 0.006, unit: '$/單位',
+        sol: [`需總獲利 $${f2(w)} → 每口 ${f2(w)}/${n} = $${f2(per)}`, `每單位 = ${f2(per)}/${f2(size)} = ${f2(dp, 4)}`, `${side === 'long' ? '多頭要漲' : '空頭要跌'} → <b>${f2(ans, 4)}</b>`] };
+  } },
+  { id: 'gp', t: '多日價格路徑的追繳金額（進階）', base: 'Table 2.1 進階', make() {
+      const n = pick([1, 2, 3]); const size = 100; const F0 = R(1700, 1800, 10); const im = pick([6000, 5000]) ; const mm = im * 0.75;
+      let p = F0; const path = []; for (let i = 0; i < 4; i++) { p = +(p + R(-20, 8, 0.1)).toFixed(1); path.push(p); }
+      let bal = im * n, prev = F0, calls = [];
+      path.forEach((x, i) => { bal += (x - prev) * size * n; prev = x; if (bal < mm * n) { calls.push([i + 1, im * n - bal]); bal = im * n; } });
+      const total = calls.reduce((s, c) => s + c[1], 0);
+      return { q: `Long ${n} 口黃金期貨（每口 100 oz），成交價 $${F0}。原始保證金每口 $${f2(im)}、維持每口 $${f2(mm)}。接下來四天結算價：${path.join('、')}。四天合計需補繳多少保證金？（沒有追繳就填 0）`,
+        ans: total, tol: 0.6, unit: '$',
+        sol: [`總原始 ${f2(im * n)}、總維持 ${f2(mm * n)}`, ...(() => { let b = im * n, pv = F0; return path.map((x, i) => { const g = (x - pv) * size * n; pv = x; b += g; let s = `第 ${i + 1} 天：(${x}−${(i ? path[i - 1] : F0)})×100×${n} = ${f2(g)} → 餘額 ${f2(b)}`; if (b < mm * n) { s += ` &lt; ${f2(mm * n)} → 補 <b>${f2(im * n - b)}</b> 回到 ${f2(im * n)}`; b = im * n; } return s; }); })(), `合計補繳 <b>${f2(total)}</b>`] };
+  } },
+  { id: 'go', t: '未平倉量變化', base: '2.23', make() {
+      const vol = R(1000, 5000, 100); const a = R(100, vol - 100, 50); const c = R(100, vol - 100, 50); const b = vol - a, d = vol - c;
+      return { q: `某日成交 ${vol} 口。買方中 ${a} 口開新倉、${b} 口平倉；賣方中 ${c} 口開新倉、${d} 口平倉。OI 變化為多少？（減少請填負數）`,
+        ans: a - d, tol: 0.1, unit: '口',
+        sol: ['口訣：買方開 − 賣方平', `${a} − ${d} = <b>${a - d}</b>`, `驗算：賣方開 − 買方平 = ${c} − ${b} = ${c - b}`] };
+  } },
+  { id: 'gh', t: '最小變異避險口數', base: '3.3／3.13', make() {
+      const rho = R(0.6, 0.98, 0.01); const sS = R(0.4, 1.5, 0.01); const sF = R(0.4, 1.5, 0.01);
+      const what = pick([['活牛', 40000, '磅'], ['航空燃油（用加熱油期貨）', 42000, '加侖'], ['玉米', 5000, '蒲式耳']]);
+      const Q = what[1] * R(3, 60, 1) * pick([0.9, 1, 1.1]); const h = rho * sS / sF; const N = h * Q / what[1];
+      return { q: `要避險 ${f2(Q)} ${what[2]}的${what[0]}。現貨價格變動標準差 ${sS}、期貨 ${sF}，相關係數 ${rho}。每口期貨 ${f2(what[1])} ${what[2]}。最適口數（不四捨五入，到小數第二位）？`,
+        ans: N, tol: 0.02, unit: '口',
+        sol: [`h* = ${rho} × ${sS} / ${sF} = ${f2(h, 4)}`, `N* = ${f2(h, 4)} × ${f2(Q)} / ${f2(what[1])} = <b>${f2(N, 2)}</b> ≈ ${Math.round(N)} 口`] };
+  } },
+  { id: 'gb', t: '用指數期貨調整 β', base: '3.4／3.25', make() {
+      const V = R(5, 200, 5) * 1e6; const b = R(0.6, 1.8, 0.05); let bs = R(0, 2.2, 0.05); if (Math.abs(bs - b) < 0.1) bs = 0;
+      const F = R(1000, 6000, 50); const m = pick([50, 250]); const N = (bs - b) * V / (F * m);
+      return { q: `投資組合價值 $${f2(V)}、β = ${f2(b)}。指數期貨價格 ${f2(F)}，每口 $${m} × 指數。要把 β 調到 ${f2(bs)}，需要幾口？（long 填正數、short 填負數，到小數第一位）`,
+        ans: N, tol: 0.06, unit: '口',
+        sol: [`V<sub>F</sub> = ${f2(F)} × ${m} = ${f2(F * m)}`, `(β* − β) × V<sub>A</sub>/V<sub>F</sub> = (${f2(bs)} − ${f2(b)}) × ${f2(V)} / ${f2(F * m)} = <b>${f2(N, 2)}</b>`, N < 0 ? '負數 → short' : '正數 → long'] };
+  } },
+  { id: 'gx', t: '交叉避險：曝險換算成口數', base: '3.23', make() {
+      const rho = R(0.5, 0.9, 0.05); const ratio = R(1.1, 1.8, 0.1); const loss = pick([0.5, 1, 2]) * 1e6; const size = 42000;
+      const h = rho * ratio; const Q = loss / 0.01; const N = h * Q / size;
+      return { q: `新燃料價格變動與汽油期貨相關係數 ${rho}，標準差是汽油期貨的 ${ratio} 倍。新燃料每加侖每漲 1 美分，公司損失 $${f2(loss)}。每口汽油期貨 42,000 加侖。需要幾口？（小數第一位）`,
+        ans: N, tol: 0.06, unit: '口',
+        sol: [`h* = ${rho} × ${ratio} = ${f2(h, 4)}`, `0.01 × Q = ${f2(loss)} → Q = ${f2(Q)} 加侖`, `期貨部位 = ${f2(h * Q)} 加侖`, `N = ${f2(h * Q)} / 42,000 = <b>${f2(N, 2)}</b>（long）`] };
+  } },
+  { id: 'gs', t: '基差：實際買賣價格', base: '3.7／3.21', make() {
+      const side = pick(['賣出', '買進']); const F1 = R(20, 80, 0.1); const F2 = +(F1 + R(-6, 6, 0.1)).toFixed(2); const b2 = R(-1.5, 1.5, 0.05); const S2 = +(F2 + b2).toFixed(2);
+      const ans = F1 + b2;
+      return { q: `公司未來要${side}某資產，現在以 $${F1} ${side === '賣出' ? 'short' : 'long'} 期貨避險（h=1）。平倉時期貨 $${F2}、現貨 $${S2}。實際每單位${side === '賣出' ? '收到' : '支付'}的價格？`,
+        ans, tol: 0.006, unit: '$',
+        sol: [`b₂ = S₂ − F₂ = ${S2} − ${F2} = ${f2(b2, 2)}`, side === '賣出' ? `收到 = S₂ + (F₁ − F₂) = F₁ + b₂` : `支付 = S₂ − (F₂ − F₁) = F₁ + b₂`, `= ${F1} + (${f2(b2, 2)}) = <b>${f2(ans, 2)}</b>`] };
+  } },
+  { id: 'gc', t: '選擇權利潤', base: 'Ch1 payoff', make() {
+      const type = pick(['long call', 'short call', 'long put', 'short put']); const K = R(40, 120, 5); const c = R(2, 10, 0.5); const ST = +(K + R(-30, 30, 1)).toFixed(0);
+      const call = Math.max(ST - K, 0), put = Math.max(K - ST, 0);
+      const ans = type === 'long call' ? call - c : type === 'short call' ? c - call : type === 'long put' ? put - c : c - put;
+      return { q: `${type}，執行價 K = $${K}，權利金 $${c}。到期股價 S<sub>T</sub> = $${ST}。每股利潤（profit）？`, ans, tol: 0.006, unit: '$',
+        sol: [type.includes('call') ? `Call payoff = max(${ST}−${K}, 0) = ${call}` : `Put payoff = max(${K}−${ST}, 0) = ${put}`, type.startsWith('long') ? `Long：payoff − 權利金 = <b>${f2(ans)}</b>` : `Short：權利金 − payoff = <b>${f2(ans)}</b>`] };
+  } },
+  { id: 'gt', t: 'Tailing the hedge（進階）', base: '3.22(d)', make() {
+      const rho = R(0.8, 0.98, 0.01); const r = R(0.9, 1.3, 0.01); const units = R(20, 120, 5) * 1000; const S = R(20, 60, 0.5); const F = +(S * R(0.94, 1.04, 0.01)).toFixed(2); const size = 5000;
+      const VA = units * S, VF = size * F; const N = rho * r * VA / VF;
+      return { q: `用期貨避險 ${f2(units)} 單位資產，現貨 $${S}、期貨 $${F}、每口 5,000 單位。一天報酬率的相關係數 ${rho}，σ̂<sub>S</sub>/σ̂<sub>F</sub> = ${r}。考慮每日結算（tailing）的最適口數？（小數第二位）`,
+        ans: N, tol: 0.02, unit: '口',
+        sol: [`V<sub>A</sub> = ${f2(units)} × ${S} = ${f2(VA)}`, `V<sub>F</sub> = 5,000 × ${F} = ${f2(VF)}`, `N = ${rho} × ${r} × ${f2(VA)} / ${f2(VF)} = <b>${f2(N, 2)}</b>`] };
+  } },
+  { id: 'gf', t: '外匯報價換算', base: '2.13', make() {
+      const fwd = R(0.82, 1.25, 0.0005); const fut = +(1 / fwd * R(0.97, 1.03, 0.001)).toFixed(4);
+      const conv = 1 / fwd; const sellFwd = conv > fut;
+      return { q: `瑞郎遠期報價 ${fwd.toFixed(4)}（CHF/USD），期貨報價 ${fut}（USD/CHF）。把遠期換成期貨的報價方式是多少 USD/CHF？（四位小數）想賣瑞郎選哪個市場？`,
+        ans: conv, tol: 0.00015, unit: 'USD/CHF',
+        sol: [`1 / ${fwd.toFixed(4)} = <b>${conv.toFixed(4)}</b>`, `${conv.toFixed(4)} ${sellFwd ? '&gt;' : '&lt;'} ${fut} → 瑞郎在${sellFwd ? '遠期' : '期貨'}市場較值錢 → 想賣選<b>${sellFwd ? '遠期' : '期貨'}</b>`] };
+  } }
+];
+// ===== Static diagrams (SVG strings, themed via CSS classes) =====
+const S = (w, h, inner, label) => `<svg class="fig" viewBox="0 0 ${w} ${h}" role="img" aria-label="${label||'示意圖'}"><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ahd"/></marker></defs>${inner}</svg>`;
+const T = (x, y, t, c = '', a = 'middle') => `<text x="${x}" y="${y}" text-anchor="${a}" class="${c}">${t}</text>`;
+const B = (x, y, w, h, t, c = '') => {
+  const lines = String(t).split('\n'); const lh = 14; const y0 = y + h / 2 - (lines.length - 1) * lh / 2 + 4;
+  return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="6" class="bx ${c}"/>` + lines.map((l, i) => T(x + w / 2, y0 + i * lh, l, 'bt ' + c)).join('');
+};
+const A = (x1, y1, x2, y2, c = '') => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="ar ${c}" marker-end="url(#ah)"/>`;
+const L = (x1, y1, x2, y2, c = 'ax') => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="${c}"/>`;
+const P = (d, c = 'ln') => `<path d="${d}" class="${c}"/>`;
+
+const FIGS = {
+  triad: () => S(340, 150, B(10, 50, 95, 50, '避險 Hedging\n買保險', 'c1') + B(122, 50, 95, 50, '投機 Speculation\n賭方向', 'c2') + B(235, 50, 95, 50, '套利 Arbitrage\n無本生意', 'c3') + T(57, 125, '降低風險', 'sm') + T(170, 125, '承擔風險', 'sm') + T(282, 125, '無風險獲利', 'sm') + T(170, 25, '同一工具，三種目的', 'hd'), '避險投機套利'),
+  fwdpayoff: () => S(340, 170, L(20, 90, 160, 90) + L(90, 20, 90, 160) + P('M30,150 L150,30', 'ln a1') + T(90, 104, 'K', 'sm') + T(150, 25, 'Long', 'sm a1') + T(150, 160, 'S_T', 'sm') + L(190, 90, 330, 90) + L(260, 20, 260, 160) + P('M200,30 L320,150', 'ln a2') + T(260, 104, 'K', 'sm') + T(320, 160, 'Short', 'sm a2') + T(90, 14, '多頭收益 S_T − K', 'sm') + T(260, 14, '空頭收益 K − S_T', 'sm'), '遠期收益'),
+  converge: () => S(340, 160, L(30, 140, 320, 140) + L(30, 20, 30, 140) + P('M30,40 C120,55 220,95 300,90', 'ln a1') + P('M30,110 C120,100 220,92 300,90', 'ln a2') + `<circle cx="300" cy="90" r="4" class="dot"/>` + T(300, 78, '到期收斂', 'sm') + T(80, 38, '期貨價 F', 'sm a1') + T(80, 122, '現貨價 S', 'sm a2') + T(175, 155, '時間 → 交割', 'sm'), '收斂'),
+  hedge: () => S(340, 160, B(10, 20, 90, 40, '現貨部位', 'c2') + B(10, 100, 90, 40, '期貨部位', 'c1') + B(240, 60, 90, 40, '鎖定價格', 'c3') + A(100, 40, 238, 75) + A(100, 120, 238, 88) + T(170, 40, '價格跌：現貨虧', 'sm') + T(170, 132, '價格跌：期貨賺', 'sm') + T(170, 86, '一賺一賠互消', 'hd'), '避險抵銷'),
+  basis: () => S(340, 170, L(30, 150, 320, 150) + L(30, 20, 30, 150) + P('M40,45 C110,60 190,95 290,105', 'ln a2') + P('M40,75 C110,85 190,110 290,115', 'ln a1') + L(60, 50, 60, 77, 'br') + L(270, 103, 270, 114, 'br') + T(60, 40, 'b₁=S₁−F₁', 'sm') + T(270, 95, 'b₂=?', 'sm') + T(60, 165, 't₁ 開始避險', 'sm') + T(270, 165, 't₂ 平倉', 'sm') + T(320, 100, 'S', 'sm a2', 'end') + T(320, 128, 'F', 'sm a1', 'end'), '基差'),
+  roll: () => S(340, 120, L(20, 90, 330, 90) + [0, 1, 2, 3].map(i => B(20 + i * 75, 30 + (i % 2) * 6, 70, 30, '合約 ' + (i + 1), 'c' + (i % 3 + 1))).join('') + T(175, 112, '避險期間 T ── 每份到期前平倉、換下一份', 'sm'), '展期'),
+  finflow: () => S(340, 170, B(10, 65, 80, 40, '投資人\n存款人', 'c2') + B(250, 65, 80, 40, '企業', 'c3') + B(130, 15, 80, 36, '證券市場', 'c1') + B(130, 120, 80, 36, '金融機構', 'c1') + A(90, 75, 128, 38) + A(210, 38, 248, 75) + A(90, 95, 128, 135) + A(210, 135, 248, 98) + T(170, 66, '直接金融', 'sm') + T(170, 112, '間接金融', 'sm'), '金融流動'),
+  emh: () => S(340, 180, `<circle cx="170" cy="95" r="80" class="bx c3"/><circle cx="170" cy="110" r="55" class="bx c2"/><circle cx="170" cy="125" r="30" class="bx c1"/>` + T(170, 30, '強式：所有資訊（含內線）', 'sm') + T(170, 70, '半強式：公開資訊', 'sm') + T(170, 122, '弱式', 'sm') + T(170, 136, '歷史價量', 'sm'), 'EMH'),
+  cmlsml: () => S(340, 160, L(25, 140, 160, 140) + L(25, 15, 25, 140) + P('M25,110 L150,35', 'ln a1') + T(92, 155, 'σ 總風險', 'sm') + T(115, 40, 'CML', 'sm a1') + L(190, 140, 325, 140) + L(190, 15, 190, 140) + P('M190,110 L315,35', 'ln a2') + T(257, 155, 'β 系統風險', 'sm') + T(282, 40, 'SML', 'sm a2') + T(18, 112, 'Rf', 'sm', 'end') + T(183, 112, 'Rf', 'sm', 'end'), 'CML SML'),
+  bubbles: () => { const ev = [['1593','鬱金香'],['1720','南海'],['1929','華爾街'],['1990','日本'],['2000','網路'],['2006','房市']]; return S(340, 120, L(15, 60, 325, 60) + ev.map((e, i) => `<circle cx="${30 + i * 56}" cy="60" r="6" class="dot"/>` + T(30 + i * 56, 45, e[0], 'sm') + T(30 + i * 56, 85, e[1], 'bt')).join(''), '泡沫時間軸'); },
+  securitize: () => S(340, 110, B(5, 35, 60, 40, '借款人\n次貸', 'c2') + B(90, 35, 60, 40, '銀行\n放貸', 'c1') + B(175, 35, 70, 40, '打包\nMBS/CDO', 'c3') + B(270, 35, 65, 40, '全球\n投資人', 'c2') + A(65, 55, 88, 55) + A(150, 55, 173, 55) + A(245, 55, 268, 55) + T(170, 100, 'Originate and distribute：風險被賣出去 → 放貸變鬆', 'sm'), '證券化'),
+  contrary: () => S(340, 110, `<rect x="20" y="45" width="300" height="20" rx="10" class="grad"/>` + T(20, 35, '極度悲觀', 'sm', 'start') + T(320, 35, '極度樂觀', 'sm', 'end') + T(40, 90, '→ 買進', 'hd a2', 'start') + T(300, 90, '賣出 ←', 'hd a1', 'end') + T(170, 90, '反著做', 'sm'), '反向'),
+  dow: () => S(340, 160, L(20, 140, 330, 140) + P('M20,130 C60,120 70,140 100,110 C130,80 140,110 170,85 C200,60 210,85 240,60 C270,35 280,55 320,30', 'ln a1') + P('M20,135 L320,40', 'ln dash') + T(300, 70, '主要趨勢（潮汐）', 'sm', 'end') + T(150, 120, '次級趨勢（波浪）', 'sm') + T(260, 100, '短期波動（漣漪）', 'sm'), '道氏'),
+  elliott: () => { const p = [[20,140],[70,95],[95,115],[175,40],[200,70],[245,20],[270,60],[290,45],[320,95]]; const lb = ['','1','2','3','4','5','a','b','c']; return S(340, 160, P('M' + p.map(q => q.join(',')).join(' L'), 'ln a1') + p.map((q, i) => i ? T(q[0], q[1] + (i % 2 ? -8 : 16), lb[i], 'hd') : '').join('') + T(120, 155, '推動 5 浪', 'sm') + T(285, 155, '修正 3 浪', 'sm'), '艾略特'); },
+  granville: () => S(340, 170, P('M15,130 C80,128 120,110 170,80 C220,50 270,60 330,100', 'ln a2') + P('M15,140 C40,145 55,120 70,118 C100,100 120,100 130,90 C150,108 160,90 175,70 C200,40 230,30 245,55 C260,78 280,90 300,95 C315,110 320,120 330,120', 'ln a1') + [[70,118,'買1'],[140,95,'買2'],[160,92,'買3'],[245,30,'賣8'],[290,92,'賣5'],[40,145,'買4']].map(d => `<circle cx="${d[0]}" cy="${d[1]}" r="4" class="dot"/>` + T(d[0], d[1] - 9, d[2], 'sm')).join('') + T(330, 95, 'MA', 'sm a2', 'end') + T(20, 160, '灰線：股價　彩色線：移動平均線 MA', 'sm', 'start'), '葛蘭碧'),
+  kline: () => S(340, 170, L(70, 20, 70, 150, 'wick') + `<rect x="55" y="45" width="30" height="70" class="kred"/>` + T(100, 24, '最高 High', 'sm', 'start') + T(100, 49, '收盤 Close', 'sm', 'start') + T(100, 115, '開盤 Open', 'sm', 'start') + T(100, 150, '最低 Low', 'sm', 'start') + T(70, 165, '紅 K 收>開', 'sm') + L(240, 20, 240, 150, 'wick') + `<rect x="225" y="45" width="30" height="70" class="kblk"/>` + T(270, 49, '開盤', 'sm', 'start') + T(270, 115, '收盤', 'sm', 'start') + T(240, 165, '黑 K 收<開', 'sm'), 'K線'),
+  cross: () => S(340, 140, P('M15,110 C80,110 120,100 170,70 C220,40 260,50 325,90', 'ln a1') + P('M15,90 C90,92 130,85 170,72 C210,60 260,60 325,70', 'ln a2') + `<circle cx="165" cy="73" r="5" class="dot"/>` + `<circle cx="290" cy="74" r="5" class="dot"/>` + T(150, 100, '黃金交叉', 'sm') + T(290, 98, '死亡交叉', 'sm') + T(25, 130, '灰線：短天期 MA　彩色線：長天期 MA', 'sm', 'start'), '交叉'),
+  civil5: () => S(340, 120, B(120, 10, 100, 34, '總則', 'c3') + ['債', '物權', '親屬', '繼承'].map((t, i) => B(10 + i * 82, 75, 72, 34, t, 'c' + (i % 2 + 1)) + A(170, 44, 46 + i * 82, 73)).join(''), '民法五編'),
+  source: () => S(340, 90, B(10, 25, 90, 40, '① 法律', 'c1') + B(125, 25, 90, 40, '② 習慣', 'c2') + B(240, 25, 90, 40, '③ 法理', 'c3') + A(100, 45, 123, 45) + A(215, 45, 238, 45) + T(170, 85, '§1：前一層沒規定才往下找', 'sm'), '法源'),
+  capacity: () => S(340, 110, L(20, 55, 320, 55) + `<rect x="20" y="40" width="70" height="30" class="seg s1"/><rect x="90" y="40" width="140" height="30" class="seg s2"/><rect x="230" y="40" width="90" height="30" class="seg s3"/>` + T(20, 90, '0', 'sm') + T(90, 90, '7 歲', 'sm') + T(230, 90, '18 歲', 'sm') + T(55, 60, '無', 'bt') + T(160, 60, '限制行為能力', 'bt') + T(275, 60, '完全', 'bt') + T(170, 25, '權利能力：出生即有（全程）', 'sm'), '行為能力'),
+  duties: () => S(340, 170, B(110, 8, 120, 32, '主給付義務', 'c1') + B(15, 70, 100, 32, '從給付義務', 'c2') + B(225, 70, 100, 32, '附隨義務', 'c3') + B(110, 130, 120, 32, '不真正義務', '') + T(65, 118, '可訴請履行', 'sm') + T(275, 118, '誠信原則', 'sm') + T(170, 60, '債之關係', 'hd'), '義務'),
+  offer: () => S(340, 150, B(10, 20, 80, 36, '要約', 'c1') + B(130, 20, 80, 36, '承諾', 'c2') + B(250, 20, 80, 36, '契約成立', 'c3') + A(90, 38, 128, 38) + A(210, 38, 248, 38) + B(130, 95, 80, 36, '變更/遲到', '') + A(170, 56, 170, 93) + A(130, 113, 50, 58) + T(70, 125, '視為新要約', 'sm') + T(270, 75, '§153', 'sm'), '要約承諾'),
+  gestio: () => S(340, 190, B(120, 8, 100, 30, '無因管理', 'c3') + B(20, 65, 130, 30, '真正（為本人）', 'c1') + B(190, 65, 130, 30, '不真正（為自己）', 'c2') + A(150, 38, 85, 63) + A(190, 38, 255, 63) + B(5, 130, 75, 44, '適法\n§176', 'c1') + B(85, 130, 75, 44, '不適法\n§177 I', 'c1') + B(180, 130, 75, 44, '不法管理\n§177 II', 'c2') + B(260, 130, 75, 44, '誤信管理\n§179/184', 'c2') + A(70, 95, 42, 128) + A(100, 95, 122, 128) + A(240, 95, 217, 128) + A(270, 95, 297, 128), '無因管理體系'),
+  enrich: () => S(340, 170, B(110, 8, 120, 30, '不當得利 §179', 'c3') + B(20, 65, 120, 30, '給付型', 'c1') + B(200, 65, 120, 30, '非給付型', 'c2') + A(150, 38, 80, 63) + A(190, 38, 260, 63) + B(180, 120, 60, 36, '權益\n侵害', 'c2') + B(245, 120, 45, 36, '支出\n費用', 'c2') + B(295, 120, 40, 36, '求償', 'c2') + T(80, 120, '有意識有目的', 'sm') + T(80, 136, '但原因不存在', 'sm') + A(260, 95, 210, 118) + A(260, 95, 267, 118) + A(260, 95, 314, 118), '不當得利類型'),
+  tort3: () => S(340, 150, `<rect x="20" y="20" width="300" height="34" rx="6" class="bx c1"/><rect x="20" y="60" width="300" height="34" rx="6" class="bx c2"/><rect x="20" y="100" width="300" height="34" rx="6" class="bx c3"/>` + T(170, 42, '184 I 前：故意/過失 × 權利（被害人舉證）', 'bt') + T(170, 82, '184 I 後：故意 + 背俗 × 權利＋利益', 'bt') + T(170, 122, '184 II：違反保護法律 × 權利＋利益（推定過失）', 'bt'), '侵權三類'),
+  pyramid: () => S(340, 160, P('M170,10 L320,150 L20,150 Z', 'bx c0') + L(118, 58, 222, 58, 'ax') + L(70, 104, 270, 104, 'ax') + T(170, 45, '高階 Top', 'bt') + T(170, 88, '中階 Middle', 'bt') + T(170, 132, '基層 First-line', 'bt') + T(330, 150, '非管理職員工在最下層', 'sm', 'end'), '管理層級'),
+  effeff: () => S(340, 110, B(10, 30, 150, 50, 'Efficiency 效率\nmeans 手段：資源', 'c1') + B(180, 30, 150, 50, 'Effectiveness 效能\nends 結果：目標', 'c2') + T(170, 100, '管理要兩者兼顧：低浪費 × 高達成', 'sm'), '效率效能'),
+  polc: () => S(340, 170, B(125, 5, 90, 34, 'Planning', 'c1') + B(250, 68, 85, 34, 'Organizing', 'c2') + B(125, 130, 90, 34, 'Leading', 'c3') + B(5, 68, 85, 34, 'Controlling', '') + A(215, 25, 270, 66) + A(290, 102, 217, 140) + A(125, 147, 50, 104) + A(50, 66, 123, 25) + T(170, 90, '達成目標', 'hd'), 'POLC'),
+  mintz: () => S(340, 150, B(5, 10, 105, 30, '人際 Interpersonal', 'c1') + B(118, 10, 105, 30, '資訊 Informational', 'c2') + B(231, 10, 105, 30, '決策 Decisional', 'c3') + ['代表人', '領導者', '聯絡人'].map((t, i) => T(57, 62 + i * 18, t, 'sm')).join('') + ['監控者', '傳播者', '發言人'].map((t, i) => T(170, 62 + i * 18, t, 'sm')).join('') + ['企業家', '問題處理者', '資源分配者', '談判者'].map((t, i) => T(283, 62 + i * 18, t, 'sm')).join(''), 'Mintzberg'),
+  katz: () => S(340, 150, ['高階', '中階', '基層'].map((t, i) => T(40, 35 + i * 42, t, 'bt')).join('') + [[60, 35, 25], [45, 35, 40], [30, 35, 55]].map((r, i) => `<rect x="65" y="${20 + i * 42}" width="${r[0] * 2.6}" height="24" class="seg s3"/><rect x="${65 + r[0] * 2.6}" y="${20 + i * 42}" width="${r[1] * 2.6}" height="24" class="seg s2"/><rect x="${65 + (r[0] + r[1]) * 2.6}" y="${20 + i * 42}" width="${r[2] * 2.6}" height="24" class="seg s1"/>`).join('') + T(100, 145, '概念', 'sm') + T(190, 145, '人際', 'sm') + T(290, 145, '技術', 'sm'), 'Katz'),
+  styles: () => S(340, 170, L(170, 15, 170, 155) + L(30, 85, 310, 85) + B(45, 25, 110, 45, 'Analytic', 'c2') + B(185, 25, 110, 45, 'Conceptual', 'c3') + B(45, 100, 110, 45, 'Directive', 'c1') + B(185, 100, 110, 45, 'Behavioral', '') + T(100, 166, '理性 Rational', 'sm') + T(240, 166, '直覺 Intuitive', 'sm') + T(25, 50, '高', 'sm', 'end') + T(25, 125, '低', 'sm', 'end') + T(25, 90, '模糊容忍', 'sm', 'end'), '決策風格'),
+  pendulum: () => S(340, 140, L(170, 10, 170, 20) + P('M70,110 Q170,150 270,110', 'ln dash') + L(170, 15, 90, 110, 'ln a1') + `<circle cx="90" cy="114" r="10" class="dot"/>` + T(50, 135, '民族主義', 'sm') + T(290, 135, '全球化', 'sm') + T(170, 135, '鐘擺來回', 'sm'), '鐘擺'),
+  goglobal: () => S(340, 160, L(20, 140, 320, 140) + P('M20,140 L320,20', 'ln a1') + ['採購', '進出口', '授權/加盟', '聯盟/合資', '子公司'].map((t, i) => `<circle cx="${45 + i * 65}" cy="${130 - i * 26}" r="5" class="dot"/>` + T(45 + i * 65, 120 - i * 26, t, 'sm')).join('') + T(320, 155, '投入與風險 →', 'sm', 'end'), '國際化'),
+  hofstede: () => S(340, 150, ['個人 vs 集體', '權力距離', '不確定性規避', '成就 vs 養育', '長期 vs 短期'].map((t, i) => B(10 + (i % 3) * 110, 15 + Math.floor(i / 3) * 65, 100, 50, t, 'c' + (i % 3 + 1))).join(''), 'Hofstede'),
+  lewin: () => S(340, 110, B(10, 30, 95, 44, '解凍\nUnfreeze', 'c1') + B(122, 30, 95, 44, '改變\nChange', 'c2') + B(235, 30, 95, 44, '再凍結\nRefreeze', 'c3') + A(105, 52, 120, 52) + A(217, 52, 233, 52) + T(170, 100, '平靜水域觀點', 'sm'), 'Lewin'),
+  innov: () => S(340, 130, B(10, 15, 100, 40, '結構變數', 'c1') + B(120, 15, 100, 40, '文化變數', 'c2') + B(230, 15, 100, 40, '人資變數', 'c3') + B(110, 85, 120, 36, '創新', '') + A(60, 55, 140, 83) + A(170, 55, 170, 83) + A(280, 55, 200, 83), '創新變數'),
+  swot: () => S(340, 170, B(20, 10, 145, 70, 'S 優勢\n內部', 'c1') + B(175, 10, 145, 70, 'W 劣勢\n內部', 'c2') + B(20, 90, 145, 70, 'O 機會\n外部', 'c3') + B(175, 90, 145, 70, 'T 威脅\n外部', ''), 'SWOT'),
+  bcg: () => S(340, 180, B(40, 10, 140, 70, '★ Stars\n明星', 'c1') + B(190, 10, 140, 70, '? Question marks\n問號', 'c2') + B(40, 88, 140, 70, '$ Cash cows\n金牛', 'c3') + B(190, 88, 140, 70, 'Dogs\n狗', '') + T(110, 174, '高市佔', 'sm') + T(260, 174, '低市佔', 'sm') + T(30, 48, '高成長', 'sm', 'end') + T(30, 126, '低成長', 'sm', 'end'), 'BCG'),
+  five: () => S(340, 190, B(120, 75, 100, 40, '現有競爭', 'c3') + B(120, 8, 100, 36, '新進入者', 'c1') + B(120, 148, 100, 36, '替代品', 'c1') + B(5, 75, 95, 40, '供應商議價', 'c2') + B(240, 75, 95, 40, '買方議價', 'c2') + A(170, 44, 170, 73) + A(170, 146, 170, 117) + A(100, 95, 118, 95) + A(240, 95, 222, 95), '五力'),
+  org6: () => S(340, 130, ['專業化', '部門化', '指揮鏈', '控制幅度', '集權/分權', '正式化'].map((t, i) => B(10 + (i % 3) * 110, 10 + Math.floor(i / 3) * 60, 100, 48, t, 'c' + (i % 3 + 1))).join(''), '六要素'),
+  mechorg: () => S(340, 160, B(10, 10, 150, 140, '機械式\n高專業化\n僵固部門\n清楚指揮鏈\n窄控制幅度\n集權\n高正式化', 'c1') + B(180, 10, 150, 140, '有機式\n跨職能團隊\n跨層級團隊\n資訊自由流通\n寬控制幅度\n分權\n低正式化', 'c3'), '機械有機'),
+  matrix: () => S(340, 170, ['設計', '工程', '財務'].map((t, i) => B(90 + i * 82, 8, 74, 28, t, 'c1')).join('') + ['專案 A', '專案 B', '專案 C'].map((t, i) => B(5, 50 + i * 40, 75, 30, t, 'c2')).join('') + [0, 1, 2].map(r => [0, 1, 2].map(c => `<circle cx="${127 + c * 82}" cy="${65 + r * 40}" r="6" class="dot"/>`).join('')).join('') + T(220, 166, '每個人同時向職能主管與專案經理報告', 'sm'), '矩陣')
+};
+// ===== Interactive widgets =====
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+let WID = 0;
+const nid = p => p + (++WID);
+
+const WIDGETS = {
+  payoff(el) {
+    const id = nid('po');
+    el.innerHTML = `<div class="wg"><div class="wg-row"><label>部位 <select id="${id}t"><option value="lc">Long call 買入買權</option><option value="sc">Short call 賣出買權</option><option value="lp">Long put 買入賣權</option><option value="sp">Short put 賣出賣權</option></select></label>
+      <label>執行價 K <input id="${id}k" type="range" min="60" max="140" step="5" value="100"><b id="${id}kv">100</b></label>
+      <label>權利金 <input id="${id}c" type="range" min="0" max="20" step="1" value="5"><b id="${id}cv">5</b></label></div>
+      <div id="${id}g"></div><p class="wg-out" id="${id}o"></p></div>`;
+    const draw = () => {
+      const t = $('#' + id + 't').value, K = +$('#' + id + 'k').value, c = +$('#' + id + 'c').value;
+      $('#' + id + 'kv').textContent = K; $('#' + id + 'cv').textContent = c;
+      const pay = s => t === 'lc' ? Math.max(s - K, 0) : t === 'sc' ? -Math.max(s - K, 0) : t === 'lp' ? Math.max(K - s, 0) : -Math.max(K - s, 0);
+      const prof = s => pay(s) + (t[0] === 'l' ? -c : c);
+      const W = 340, H = 190, x0 = 30, x1 = 330, sMin = 40, sMax = 160, yMin = -45, yMax = 45;
+      const X = s => x0 + (s - sMin) / (sMax - sMin) * (x1 - x0), Y = v => 10 + (yMax - v) / (yMax - yMin) * (H - 40);
+      const pts = f => { let d = ''; for (let s = sMin; s <= sMax; s += 1) d += (d ? 'L' : 'M') + X(s).toFixed(1) + ',' + Y(f(s)).toFixed(1); return d; };
+      const be = t.includes('c') ? K + c : K - c;
+      let ticks = ''; for (let s = 40; s <= 160; s += 20) ticks += `<text x="${X(s)}" y="${H - 14}" text-anchor="middle" class="sm">${s}</text>`;
+      for (let v = -40; v <= 40; v += 20) ticks += `<text x="${x0 - 4}" y="${Y(v) + 4}" text-anchor="end" class="sm">${v}</text><line x1="${x0}" x2="${x1}" y1="${Y(v)}" y2="${Y(v)}" class="grid"/>`;
+      $('#' + id + 'g').innerHTML = `<svg class="fig" viewBox="0 0 ${W} ${H}" role="img" aria-label="選擇權損益圖"><defs><clipPath id="${id}cp"><rect x="${x0}" y="6" width="${x1 - x0}" height="${H - 32}"/></clipPath></defs>${ticks}<g clip-path="url(#${id}cp)"><line x1="${x0}" x2="${x1}" y1="${Y(0)}" y2="${Y(0)}" class="ax"/><path d="${pts(pay)}" class="ln dash"/><path d="${pts(prof)}" class="ln a2 thick"/></g><line x1="${X(K)}" x2="${X(K)}" y1="10" y2="${H - 30}" class="grid"/><circle cx="${X(be)}" cy="${Y(0)}" r="4" class="dot"/><text x="${x1}" y="${H - 2}" text-anchor="end" class="sm">到期股價 S_T</text></svg>`;
+      const maxP = t === 'lc' ? '無限' : t === 'lp' ? (K - c) : c;
+      const maxL = t === 'lc' || t === 'lp' ? c : t === 'sc' ? '無限' : (K - c);
+      $('#' + id + 'o').innerHTML = `虛線 = payoff 收益；彩色粗線 = profit 利潤。損益兩平點 S<sub>T</sub> = <b>${be}</b>；最大利潤 <b>${maxP}</b>；最大損失 <b>${maxL}</b>。`;
+    };
+    $$('select,input', el).forEach(i => i.addEventListener('input', draw)); draw();
+  },
+
+  margin(el) {
+    const id = nid('mg');
+    el.innerHTML = `<div class="wg"><div class="wg-row">
+      <label>方向 <select id="${id}s"><option value="1">Long</option><option value="-1">Short</option></select></label>
+      <label>口數 <input id="${id}n" type="number" value="2" min="1" step="1"></label>
+      <label>每口數量 <input id="${id}z" type="number" value="100"></label>
+      <label>原始/口 <input id="${id}i" type="number" value="6000"></label>
+      <label>維持/口 <input id="${id}m" type="number" value="4500"></label></div>
+      <label class="full">價格路徑（第一個是成交價，用逗號分隔）<input id="${id}p" type="text" value="1450,1441,1438.3,1444.6,1441.3,1440.1,1436.2,1429.9,1430.8,1425.4,1428.1,1411,1411,1414.3,1416.1,1423,1426.9"></label>
+      <div class="tblwrap"><table class="tbl num" id="${id}t"></table></div><p class="wg-out" id="${id}o"></p></div>`;
+    const run = () => {
+      const s = +$('#' + id + 's').value, n = +$('#' + id + 'n').value, z = +$('#' + id + 'z').value, im = +$('#' + id + 'i').value * n, mm = +$('#' + id + 'm').value * n;
+      const p = $('#' + id + 'p').value.split(/[,，\s]+/).map(Number).filter(x => !isNaN(x));
+      let bal = im, cum = 0, calls = 0, rows = `<tr><th>日</th><th>結算價</th><th>當日損益</th><th>累積</th><th>保證金餘額</th><th>追繳</th></tr><tr><td>0</td><td>${p[0]}</td><td></td><td></td><td>${f2(im)}</td><td></td></tr>`;
+      for (let i = 1; i < p.length; i++) {
+        const g = (p[i] - p[i - 1]) * z * n * s; cum += g; bal += g; let call = '';
+        if (bal < mm) { call = f2(im - bal); calls += im - bal; rows += `<tr class="hit"><td>${i}</td><td>${p[i]}</td><td>${f2(g)}</td><td>${f2(cum)}</td><td>${f2(bal)}</td><td><b>${call}</b></td></tr>`; bal = im; }
+        else rows += `<tr><td>${i}</td><td>${p[i]}</td><td>${f2(g)}</td><td>${f2(cum)}</td><td>${f2(bal)}</td><td></td></tr>`;
+      }
+      $('#' + id + 't').innerHTML = rows;
+      $('#' + id + 'o').innerHTML = `維持線 ${f2(mm)}；追繳總額 <b>${f2(calls)}</b>；最後平倉時帳面 ${f2(bal)} − 原始 ${f2(im)} = ${f2(bal - im)} → 淨損益 = ${f2(bal - im)} − ${f2(calls)} = <b>${f2(cum)}</b>（= 累積損益）`;
+    };
+    $$('select,input', el).forEach(i => i.addEventListener('input', run)); run();
+  },
+
+  oi(el) {
+    const id = nid('oi');
+    el.innerHTML = `<div class="wg"><div class="wg-row"><label>成交量 <input id="${id}v" type="number" value="2000"></label><label>買方開倉 a <input id="${id}a" type="number" value="600"></label><label>賣方開倉 c <input id="${id}c" type="number" value="800"></label></div><div id="${id}g"></div><p class="wg-out" id="${id}o"></p></div>`;
+    const run = () => {
+      const v = +$('#' + id + 'v').value, a = +$('#' + id + 'a').value, c = +$('#' + id + 'c').value, b = v - a, d = v - c;
+      const w = x => Math.max(0, x / v * 250);
+      $('#' + id + 'g').innerHTML = `<svg class="fig" viewBox="0 0 340 100" role="img" aria-label="OI"><text x="5" y="30" class="sm">買方</text><rect x="45" y="15" width="${w(a)}" height="22" class="seg s1"/><rect x="${45 + w(a)}" y="15" width="${w(b)}" height="22" class="seg s2"/><text x="5" y="72" class="sm">賣方</text><rect x="45" y="57" width="${w(c)}" height="22" class="seg s1"/><rect x="${45 + w(c)}" y="57" width="${w(d)}" height="22" class="seg s2"/><text x="50" y="96" class="sm">■ 開倉　■ 平倉</text></svg>`;
+      $('#' + id + 'o').innerHTML = b < 0 || d < 0 ? '開倉數不能大於成交量' : `買方平倉 b = ${b}、賣方平倉 d = ${d}。OI 變化 = a − d = ${a} − ${d} = <b>${a - d > 0 ? '+' : ''}${a - d}</b>（也 = c − b = ${c - b}）`;
+    };
+    $$('input', el).forEach(i => i.addEventListener('input', run)); run();
+  },
+
+  hedge(el) {
+    const id = nid('hg');
+    el.innerHTML = `<div class="wg"><div class="wg-row"><label>ρ <input id="${id}r" type="range" min="0" max="1" step="0.001" value="0.928"><b id="${id}rv"></b></label><label>σ<sub>S</sub> <input id="${id}s" type="number" step="0.001" value="0.0263"></label><label>σ<sub>F</sub> <input id="${id}f" type="number" step="0.001" value="0.0313"></label></div><div class="wg-row"><label>要避險數量 Q<sub>A</sub> <input id="${id}q" type="number" value="2000000"></label><label>每口 Q<sub>F</sub> <input id="${id}z" type="number" value="42000"></label></div><div id="${id}g"></div><p class="wg-out" id="${id}o"></p></div>`;
+    const run = () => {
+      const r = +$('#' + id + 'r').value, s = +$('#' + id + 's').value, f = +$('#' + id + 'f').value, q = +$('#' + id + 'q').value, z = +$('#' + id + 'z').value;
+      $('#' + id + 'rv').textContent = r.toFixed(2);
+      const h = r * s / f, N = h * q / z, left = Math.sqrt(Math.max(0, 1 - r * r));
+      $('#' + id + 'g').innerHTML = `<svg class="fig" viewBox="0 0 340 70" role="img" aria-label="剩餘風險"><text x="5" y="22" class="sm">未避險</text><rect x="70" y="10" width="250" height="16" class="seg s3"/><text x="5" y="54" class="sm">避險後</text><rect x="70" y="42" width="${250 * left}" height="16" class="seg s1"/></svg>`;
+      $('#' + id + 'o').innerHTML = `h* = ${r.toFixed(3)} × ${s} / ${f} = <b>${h.toFixed(4)}</b>；N* = h* × ${f2(q)} / ${f2(z)} = <b>${N.toFixed(2)}</b> ≈ ${Math.round(N)} 口。最適避險後剩下的標準差只有原本的 √(1−ρ²) = ${(left * 100).toFixed(1)}%。（預設值為課本航空燃油例）`;
+    };
+    $$('input', el).forEach(i => i.addEventListener('input', run)); run();
+  },
+
+  beta(el) {
+    const id = nid('bt');
+    el.innerHTML = `<div class="wg"><div class="wg-row"><label>組合 V<sub>A</sub> <input id="${id}v" type="number" value="5000000"></label><label>β <input id="${id}b" type="number" step="0.05" value="1.5"></label><label>目標 β* <input id="${id}t" type="range" min="0" max="3" step="0.05" value="0"><b id="${id}tv"></b></label></div><div class="wg-row"><label>期貨價格 <input id="${id}f" type="number" value="1000"></label><label>乘數 <input id="${id}m" type="number" value="250"></label></div><div id="${id}g"></div><p class="wg-out" id="${id}o"></p></div>`;
+    const run = () => {
+      const v = +$('#' + id + 'v').value, b = +$('#' + id + 'b').value, t = +$('#' + id + 't').value, f = +$('#' + id + 'f').value, m = +$('#' + id + 'm').value;
+      $('#' + id + 'tv').textContent = t.toFixed(2);
+      const N = (t - b) * v / (f * m); const X = x => 20 + x / 3 * 300;
+      $('#' + id + 'g').innerHTML = `<svg class="fig" viewBox="0 0 340 60" role="img" aria-label="beta"><line x1="20" x2="320" y1="30" y2="30" class="ax"/>${[0, 1, 2, 3].map(x => `<text x="${X(x)}" y="52" text-anchor="middle" class="sm">${x}</text>`).join('')}<line x1="${X(b)}" x2="${X(t)}" y1="30" y2="30" class="ar a2 thick" marker-end="url(#ah)"/><circle cx="${X(b)}" cy="30" r="5" class="dot"/><text x="${X(b)}" y="18" text-anchor="middle" class="sm">β</text></svg>`;
+      $('#' + id + 'o').innerHTML = `(β* − β) × V<sub>A</sub>/V<sub>F</sub> = (${t.toFixed(2)} − ${b}) × ${f2(v)} / ${f2(f * m)} = <b>${N.toFixed(2)}</b> → <b>${N < 0 ? 'Short' : N > 0 ? 'Long' : '不需'} ${Math.abs(Math.round(N))} 口</b>`;
+    };
+    $$('input', el).forEach(i => i.addEventListener('input', run)); run();
+  },
+
+  fib(el) {
+    const id = nid('fb');
+    el.innerHTML = `<div class="wg"><div class="wg-row"><label>基準價 <input id="${id}p" type="number" value="10"></label><label>方向 <select id="${id}d"><option value="up">上漲壓力區</option><option value="dn">下跌支撐區</option></select></label></div><div id="${id}g"></div></div>`;
+    const run = () => {
+      const p = +$('#' + id + 'p').value, up = $('#' + id + 'd').value === 'up';
+      const rs = [0.191, 0.382, 0.5, 0.618, 0.809];
+      const rows = rs.map(r => [r, up ? p * (1 + r) : p * (1 - r)]);
+      $('#' + id + 'g').innerHTML = `<div class="tblwrap"><table class="tbl num"><tr><th>比例</th><th>價位</th><th>算式</th></tr>${rows.map(x => `<tr${x[0] === 0.618 ? ' class="hit"' : ''}><td>${x[0]}</td><td><b>${x[1].toFixed(2)}</b></td><td>${p} × (1 ${up ? '+' : '−'} ${x[0]})</td></tr>`).join('')}</table></div>`;
+    };
+    $$('input,select', el).forEach(i => i.addEventListener('input', run)); run();
+  },
+
+  ind(el) {
+    const id = nid('in');
+    el.innerHTML = `<div class="wg"><label class="full">收盤價序列（逗號分隔，舊 → 新）<input id="${id}p" type="text" value="50,51,52.5,51.8,53,54.2,55,54.1,56,57.5,58.2,57,59,60.5,61"></label><div class="wg-row"><label>MA/RSI 天數 <input id="${id}n" type="number" value="6" min="2"></label><label>KD 天數 <input id="${id}k" type="number" value="9" min="2"></label></div><p class="wg-out" id="${id}o"></p></div>`;
+    const run = () => {
+      const p = $('#' + id + 'p').value.split(/[,，\s]+/).map(Number).filter(x => !isNaN(x)); const n = +$('#' + id + 'n').value, kn = +$('#' + id + 'k').value;
+      if (p.length < Math.max(n, kn) + 1) { $('#' + id + 'o').textContent = '價格數量太少'; return; }
+      const last = p[p.length - 1]; const ma = p.slice(-n).reduce((a, b) => a + b, 0) / n; const bias = (last - ma) / ma;
+      let up = 0, dn = 0; for (let i = p.length - n; i < p.length; i++) { const d = p[i] - p[i - 1]; if (d > 0) up += d; else dn -= d; }
+      const rsi = up + dn ? 100 * up / (up + dn) : 50;
+      let K = 50, D = 50; for (let i = kn - 1; i < p.length; i++) { const w = p.slice(i - kn + 1, i + 1); const H = Math.max(...w), L = Math.min(...w); const rsv = H === L ? 50 : (p[i] - L) / (H - L) * 100; K = rsv / 3 + K * 2 / 3; D = K / 3 + D * 2 / 3; }
+      const tag = (v, hi, lo) => v >= hi ? '<span class="pill bad">過熱 → 賣</span>' : v <= lo ? '<span class="pill good">超賣 → 買</span>' : '<span class="pill">中性</span>';
+      $('#' + id + 'o').innerHTML = `MA${n} = ${ma.toFixed(2)}；乖離率 = (${last} − ${ma.toFixed(2)})/${ma.toFixed(2)} = <b>${(bias * 100).toFixed(2)}%</b> ${tag(bias * 100, 7, -7)}<br>RSI${n} = 上漲 ${up.toFixed(2)} /(上漲 ${up.toFixed(2)} + 下跌 ${dn.toFixed(2)}) × 100 = <b>${rsi.toFixed(1)}</b> ${tag(rsi, 80, 20)}<br>K${kn} = <b>${K.toFixed(1)}</b>、D${kn} = <b>${D.toFixed(1)}</b>（起始 K、D = 50）${K > D ? '，K 在 D 之上' : '，K 在 D 之下'} ${tag(K, 80, 20)}`;
+    };
+    $$('input', el).forEach(i => i.addEventListener('input', run)); run();
+  },
+
+  decision(el) {
+    const id = nid('dc');
+    const crit = ['Memory & storage', 'Battery life', 'Carrying weight', 'Warranty', 'Display quality'];
+    const w0 = [10, 8, 6, 4, 3];
+    const laps = [['Acer Aspire E', 10, 3, 10, 8, 5], ['Apple MacBook Pro', 8, 5, 7, 10, 10], ['Dell XPS 13', 8, 7, 7, 8, 7], ['Lenovo ThinkPad', 7, 8, 7, 8, 7], ['Lenovo Yoga', 8, 3, 6, 10, 8], ['Microsoft Surface Book', 10, 7, 8, 6, 7], ['Razer Blade Stealth', 4, 10, 4, 8, 10]];
+    el.innerHTML = `<div class="wg"><p class="sm-p">步驟 3：調整權重，看看最佳選擇會不會改變（Exhibit 2.2–2.4）。</p><div class="wg-row">${crit.map((c, i) => `<label>${c} <input id="${id}w${i}" type="number" value="${w0[i]}" min="0" max="10"></label>`).join('')}</div><div class="tblwrap"><table class="tbl num" id="${id}t"></table></div></div>`;
+    const run = () => {
+      const w = crit.map((_, i) => +$('#' + id + 'w' + i).value);
+      const tot = laps.map(l => l.slice(1).reduce((s, v, i) => s + v * w[i], 0)); const best = Math.max(...tot);
+      $('#' + id + 't').innerHTML = `<tr><th>Laptop</th>${crit.map(c => `<th>${c.split(' ')[0]}</th>`).join('')}<th>Total</th></tr>` + laps.map((l, k) => `<tr${tot[k] === best ? ' class="hit"' : ''}><td>${l[0]}</td>${l.slice(1).map((v, i) => `<td>${v}×${w[i]}=${v * w[i]}</td>`).join('')}<td><b>${tot[k]}</b></td></tr>`).join('');
+    };
+    $$('input', el).forEach(i => i.addEventListener('input', run)); run();
+  },
+
+  payoffm(el) {
+    const id = nid('pm');
+    const M = [[13, 14, 11], [9, 15, 18], [24, 21, 15], [18, 14, 28]];
+    el.innerHTML = `<div class="wg"><p class="sm-p">Visa 策略 × MasterCard 競爭行動（百萬美元）。可修改數字。</p><div class="tblwrap"><table class="tbl num" id="${id}m"><tr><th></th><th>CA1</th><th>CA2</th><th>CA3</th></tr>${M.map((r, i) => `<tr><td>S${i + 1}</td>${r.map((v, j) => `<td><input class="cell" id="${id}c${i}${j}" type="number" value="${v}"></td>`).join('')}</tr>`).join('')}</table></div><div class="tblwrap"><table class="tbl num" id="${id}r"></table></div><p class="wg-out" id="${id}o"></p></div>`;
+    const run = () => {
+      const m = M.map((r, i) => r.map((_, j) => +$('#' + id + 'c' + i + j).value));
+      const colMax = [0, 1, 2].map(j => Math.max(...m.map(r => r[j])));
+      const reg = m.map(r => r.map((v, j) => colMax[j] - v)); const maxReg = reg.map(r => Math.max(...r));
+      const mx = m.map(r => Math.max(...r)), mn = m.map(r => Math.min(...r));
+      const iMaxMax = mx.indexOf(Math.max(...mx)), iMaxMin = mn.indexOf(Math.max(...mn)), iMinReg = maxReg.indexOf(Math.min(...maxReg));
+      $('#' + id + 'r').innerHTML = `<tr><th>遺憾矩陣</th><th>CA1</th><th>CA2</th><th>CA3</th><th>最大遺憾</th></tr>` + reg.map((r, i) => `<tr${i === iMinReg ? ' class="hit"' : ''}><td>S${i + 1}</td>${r.map(v => `<td>${v}</td>`).join('')}<td><b>${maxReg[i]}</b></td></tr>`).join('');
+      $('#' + id + 'o').innerHTML = `樂觀 maximax：各列最大 ${mx.join('、')} → 選 <b>S${iMaxMax + 1}</b>（${mx[iMaxMax]}）<br>悲觀 maximin：各列最小 ${mn.join('、')} → 選 <b>S${iMaxMin + 1}</b>（${mn[iMaxMin]}）<br>最小遺憾 minimax regret：每欄最高 ${colMax.join('、')} 減各格 → 選 <b>S${iMinReg + 1}</b>（最多後悔 ${maxReg[iMinReg]}）`;
+    };
+    $$('input', el).forEach(i => i.addEventListener('input', run)); run();
+  },
+
+  bias(el) {
+    const B = [['Overconfidence 過度自信', '高估自己和自己的表現', '覺得自己不用複習也能考 90 分'], ['Immediate gratification 立即滿足', '選立即有回報、避開立即成本的方案', '先追劇，報告明天再說'], ['Anchoring 錨定效應', '執著於最初的資訊，忽略後來的資訊', '原價 3000 打 5 折就覺得很划算'], ['Selective perception 選擇性知覺', '依自己的偏見挑選、組織、解讀事件', '只注意到討厭的同事犯的錯'], ['Confirmation 確認偏誤', '找支持過去選擇的資訊，忽略相反資訊', '買了某股票後只看看多的新聞'], ['Framing 框架偏誤', '凸顯某些面向、忽略其他面向', '「90% 存活率」vs「10% 死亡率」感受不同'], ['Availability 可得性', '只看最近、最容易想到的事件', '剛看到空難新聞就不敢搭飛機'], ['Representation 代表性', '把不相同的情況看成一樣', '上一個台大實習生很強，所以這個也一定很強'], ['Randomness 隨機性', '從隨機事件中硬找出意義', '穿紅襪子那天考很好，所以考試都穿紅襪'], ['Sunk costs 沉沒成本', '忘記過去的成本無法挽回，只該看未來', '電影很難看但票都買了只好看完'], ['Self-serving 自利偏誤', '成功歸功自己，失敗怪外在因素', '考好是我聰明，考差是老師出太難'], ['Hindsight 後見之明', '事後誤以為結果早可預測', '「我就知道會跌！」']];
+    el.innerHTML = `<div class="flipgrid">${B.map(b => `<button class="flip" type="button"><span class="f1"><b>${b[0]}</b></span><span class="f2"><b>${b[1]}</b><br><i>例：${b[2]}</i></span></button>`).join('')}</div>`;
+    $$('.flip', el).forEach(b => b.addEventListener('click', () => b.classList.toggle('on')));
+  }
+};
+// ===== App =====
+const ORDER = ['deriv', 'invest', 'law', 'mgmt'];
+const store = {
+  k: 'rv26autumn',
+  get() { try { return JSON.parse(localStorage.getItem(this.k)) || {}; } catch (e) { return {}; } },
+  set(v) { try { localStorage.setItem(this.k, JSON.stringify(v)); } catch (e) { } }
+};
+let ST = Object.assign({ done: {}, wrong: {}, subj: 'home', tab: {} }, store.get());
+const save = () => store.set(ST);
+const strip = h => h.replace(/<[^>]+>/g, ' ').replace(/&nbsp;|&lt;|&gt;|&amp;/g, ' ').replace(/\s+/g, ' ').trim();
+
+const LAWART = [
+  ['§1', '民事：法律 → 習慣 → 法理'], ['§2', '習慣不背於公序良俗'], ['§12', '滿 18 歲為成年'], ['§13', '未滿 7 歲無行為能力；7 歲以上未成年人限制行為能力'], ['§15', '受監護宣告之人無行為能力'], ['§15-2', '受輔助宣告：重要行為需輔助人同意'], ['§16', '權利能力、行為能力不得拋棄'], ['§17', '自由不得拋棄；限制不得背公序良俗'],
+  ['§68', '從物；主物之處分及於從物'], ['§71–74', '標的合法妥當'], ['§75–85', '行為能力'], ['§86–98', '意思表示'], ['§95', '非對話意思表示：到達時生效'], ['§124 II', '推定 7/1 出生；知月不知日推定 15 日'],
+  ['§148', '權利行使不得違反公益、不得以損害他人為主要目的'], ['§149', '正當防衛'], ['§150', '緊急避難'], ['§151–152', '自助行為'],
+  ['§153', '意思一致契約成立；必要之點一致推定成立'], ['§154', '要約拘束力；標價陳列視為要約、價目表寄送不視為要約'], ['§155', '要約經拒絕失其拘束力'], ['§156', '對話要約非立時承諾失效'], ['§157', '非對話要約，可期待期間內未承諾失效'], ['§158', '定有承諾期限，逾期失效'], ['§159', '承諾通知遲到 → 應即發遲到通知，怠於通知視為未遲到'], ['§160', '遲到之承諾視為新要約；變更承諾視為拒絕原要約而為新要約'], ['§161', '意思實現'], ['§162', '撤回要約通知遲到'], ['§163', '承諾之撤回準用 §162'],
+  ['§172', '無因管理定義'], ['§173', '通知義務；準用 §540–542'], ['§174', '違反本人意思 → 無過失亦應賠償；II 例外'], ['§175', '急迫危險：除惡意重大過失外不負責'], ['§176', '適法無因管理：費用＋利息、清償債務、賠償損害'], ['§177', '不適法管理：以所得利益為限；II 不法管理準用'], ['§178', '本人承認 → 溯及適用委任'],
+  ['§179', '不當得利'], ['§180 ④', '不法原因給付不得請求返還'], ['§184 I 前', '故意過失侵害權利'], ['§184 I 後', '故意以背於善良風俗方法加損害'], ['§184 II', '違反保護他人之法律，推定過失'], ['§187', '無/限制行為能力人侵權與法定代理人責任'], ['§190', '動物占有人（推定過失）'], ['§191', '工作物所有人（推定過失）'], ['§191-1', '商品製造人（推定過失、因果）'], ['§191-2', '動力車輛駕駛人（推定過失）'], ['§191-3', '一般危險責任（推定過失、因果）'],
+  ['§199', '債權人得請求給付；給付不限財產價格；不作為亦得為給付'], ['§207', '禁止複利（商業習慣例外）'], ['§217', '與有過失'], ['§221', '無/限制行為能力債務人責任依 §187'], ['§227 II', '加害給付'], ['§227-1', '債務不履行侵害人格權'], ['§245-1', '締約過失，2 年時效'], ['§1064', '生父母結婚 → 視為婚生子女'], ['消保 §20', '未經要約寄送商品：不負保管義務；逾 1 個月視為拋棄'], ['法組 §57-1', '無全文判例停止適用（2018/12/7）']
+];
+
+function cardHTML(c, subj) {
+  const done = !!ST.done[c.id];
+  let fig = '';
+  if (c.fig) fig = c.fig.startsWith('w:') ? `<div class="wmount" data-w="${c.fig.slice(2)}"></div>` : (FIGS[c.fig] ? `<figure>${FIGS[c.fig]()}</figure>` : '');
+  return `<article class="card${done ? ' done' : ''}" id="c-${c.id}" data-search="${esc((c.t + ' ' + (c.en || '') + ' ' + c.plain + ' ' + c.life + ' ' + strip(c.body || '')).toLowerCase())}">
+    <header><h4>${c.t}</h4>${c.en ? `<span class="en">${c.en}</span>` : ''}</header>
+    <div class="duo"><div class="plain"><span class="lbl">白話</span><p>${c.plain}</p></div><div class="life"><span class="lbl">生活比喻</span><p>${c.life}</p></div></div>
+    ${fig}
+    <details${done ? '' : ' open'}><summary>完整重點</summary><div class="body">${c.body || ''}</div>
+    ${c.terms ? `<dl class="terms">${c.terms.map(t => `<dt>${t[0]}</dt><dd>${t[1]}</dd>`).join('')}</dl>` : ''}</details>
+    <label class="chk"><input type="checkbox" data-done="${c.id}"${done ? ' checked' : ''}> 我懂了，可以講給別人聽</label>
+  </article>`;
+}
+
+function subjCards(s) { return s.sections.reduce((a, x) => a.concat(x.cards), []); }
+
+function renderLearn(key, root) {
+  const s = DATA[key];
+  root.innerHTML = `<div class="learn"><nav class="toc" aria-label="章節">${s.sections.map(x => `<a href="#sec-${x.id}">${x.t}<span class="cnt" data-sec="${x.id}"></span></a>`).join('')}</nav>
+    <div class="cards"><div class="searchbar"><input type="search" id="q-${key}" placeholder="搜尋名詞或關鍵字（例：基差、要約、BCG）" aria-label="搜尋"></div>
+    ${s.sections.map(x => `<section class="sec" id="sec-${x.id}"><h3>${x.t}</h3>${x.cards.map(c => cardHTML(c, key)).join('')}</section>`).join('')}
+    ${key === 'law' ? `<section class="sec" id="sec-art"><h3>條文速記表</h3><p class="sm-p">選擇題常考「第幾條」。點一下遮住右欄自我測驗。</p><button class="btn ghost" id="arthide" type="button">遮住內容</button><div class="tblwrap"><table class="tbl arts">${LAWART.map(a => `<tr><td><b>${a[0]}</b></td><td class="artc">${a[1]}</td></tr>`).join('')}</table></div></section>` : ''}
+    </div></div>`;
+  $$('.wmount', root).forEach(m => WIDGETS[m.dataset.w] && WIDGETS[m.dataset.w](m));
+  $$('[data-done]', root).forEach(cb => cb.addEventListener('change', () => { ST.done[cb.dataset.done] = cb.checked; if (!cb.checked) delete ST.done[cb.dataset.done]; save(); cb.closest('.card').classList.toggle('done', cb.checked); updateCounts(); }));
+  const q = $('#q-' + key, root);
+  q.addEventListener('input', () => { const v = q.value.trim().toLowerCase(); $$('.card', root).forEach(c => c.hidden = v && !c.dataset.search.includes(v)); $$('.sec', root).forEach(sec => sec.hidden = v && !$$('.card', sec).some(c => !c.hidden)); });
+  const ah = $('#arthide', root); if (ah) ah.addEventListener('click', () => { const t = root.querySelector('.arts'); t.classList.toggle('masked'); ah.textContent = t.classList.contains('masked') ? '顯示內容' : '遮住內容'; });
+  $$('.arts tr', root).forEach(tr => tr.addEventListener('click', () => tr.classList.toggle('peek')));
+  updateCounts();
+}
+
+function updateCounts() {
+  ORDER.forEach(k => {
+    const s = DATA[k]; const all = subjCards(s); const d = all.filter(c => ST.done[c.id]).length;
+    $$(`[data-prog="${k}"]`).forEach(e => { e.style.setProperty('--p', (d / all.length * 100).toFixed(1) + '%'); e.title = `${d}/${all.length}`; });
+    $$(`[data-progt="${k}"]`).forEach(e => e.textContent = `${d}/${all.length}`);
+    s.sections.forEach(x => $$(`[data-sec="${x.id}"]`).forEach(e => e.textContent = `${x.cards.filter(c => ST.done[c.id]).length}/${x.cards.length}`));
+  });
+}
+
+// ---- MCQ ----
+function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; }
+function renderMCQ(key, root) {
+  const bank = DATA[key].mcq.map((m, i) => Object.assign({ i }, m));
+  root.innerHTML = `<div class="quizbar"><span class="sm-p">題庫 ${bank.length} 題</span><button class="btn" data-m="10" type="button">隨機 10 題</button><button class="btn" data-m="all" type="button">全部（亂序）</button><button class="btn ghost" data-m="wrong" type="button">只練錯題 <span class="wc"></span></button></div><div class="quiz"></div>`;
+  const wc = () => { const w = (ST.wrong[key] || []).length; $('.wc', root).textContent = `(${w})`; };
+  wc();
+  const start = mode => {
+    let list = mode === 'wrong' ? bank.filter(b => (ST.wrong[key] || []).includes(b.i)) : shuffle(bank);
+    if (mode === '10') list = list.slice(0, 10);
+    if (!list.length) { $('.quiz', root).innerHTML = '<p class="empty">目前沒有錯題。先做一輪隨機 10 題吧。</p>'; return; }
+    let idx = 0, score = 0;
+    const show = () => {
+      if (idx >= list.length) { $('.quiz', root).innerHTML = `<div class="result"><p class="big">${score} / ${list.length}</p><p>${score === list.length ? '全對！' : '答錯的題目已加入錯題本。'}</p><button class="btn" type="button" id="again">再來一輪</button></div>`; $('#again', root).onclick = () => start(mode); wc(); return; }
+      const m = list[idx]; const ord = shuffle(m.o.map((t, j) => [t, j]));
+      $('.quiz', root).innerHTML = `<div class="qcard"><div class="qmeta">第 ${idx + 1} / ${list.length} 題　得分 ${score}</div><p class="qtext">${m.q}</p><div class="opts">${ord.map(o => `<button class="opt" data-j="${o[1]}" type="button">${o[0]}</button>`).join('')}</div><div class="exp" hidden></div><button class="btn next" type="button" hidden>下一題</button></div>`;
+      $$('.opt', root).forEach(b => b.onclick = () => {
+        const ok = +b.dataset.j === m.a; $$('.opt', root).forEach(x => { x.disabled = true; if (+x.dataset.j === m.a) x.classList.add('right'); }); if (!ok) b.classList.add('wrongc');
+        const w = new Set(ST.wrong[key] || []); if (ok) { score++; if (mode === 'wrong') w.delete(m.i); } else w.add(m.i); ST.wrong[key] = [...w]; save();
+        const e = $('.exp', root); e.hidden = false; e.innerHTML = `<b>${ok ? '答對' : '答錯'}</b>　${m.e || ''}`; const n = $('.next', root); n.hidden = false; n.focus(); n.onclick = () => { idx++; show(); };
+      });
+    };
+    show();
+  };
+  $$('[data-m]', root).forEach(b => b.onclick = () => start(b.dataset.m));
+  start('10');
+}
+
+// ---- Textbook problems ----
+function renderProblems(root) {
+  const P = DATA.deriv.problems;
+  root.innerHTML = `<div class="quizbar"><button class="btn on" data-f="all" type="button">全部</button><button class="btn" data-f="課本" type="button">老師勾選（11版）</button><button class="btn" data-f="類題" type="button">課本類似題</button></div><div class="plist">${P.map(p => `<div class="prob" data-l="${p.lvl}"><div class="psrc"><span class="pill ${p.lvl === '課本' ? 'good' : ''}">${p.lvl}</span> ${p.src}</div><p class="qtext">${p.q}</p><ol class="steps">${p.steps.map(s => `<li hidden>${s}</li>`).join('')}</ol><p class="ans" hidden><b>答：</b>${p.ans}</p><div class="pbtn"><button class="btn ghost hint" type="button">下一步提示</button><button class="btn ghost reveal" type="button">看完整解答</button></div></div>`).join('')}</div>`;
+  $$('.prob', root).forEach(pb => {
+    const steps = $$('.steps li', pb);
+    $('.hint', pb).onclick = () => { const h = steps.find(s => s.hidden); if (h) h.hidden = false; else $('.ans', pb).hidden = false; };
+    $('.reveal', pb).onclick = () => { steps.forEach(s => s.hidden = false); $('.ans', pb).hidden = false; };
+  });
+  $$('[data-f]', root).forEach(b => b.onclick = () => { $$('[data-f]', root).forEach(x => x.classList.toggle('on', x === b)); $$('.prob', root).forEach(p => p.hidden = b.dataset.f !== 'all' && p.dataset.l !== b.dataset.f); });
+}
+
+// ---- Generators ----
+function renderGens(root) {
+  const G = DATA.deriv.gens;
+  root.innerHTML = `<p class="sm-p">每按一次都會換新的數字。題型對應老師勾選的習題，「進階」是更難的延伸版。小考可開書，但考試時間有限，這裡練的是速度與正確率。</p><div class="quizbar"><label>題型 <select id="gsel"><option value="rand">隨機題型</option>${G.map(g => `<option value="${g.id}">${g.t}（${g.base}）</option>`).join('')}</select></label><button class="btn" id="gnew" type="button">出一題</button><span class="sm-p" id="gscore"></span></div><div id="gbox"></div>`;
+  let ok = 0, tot = 0;
+  const make = () => {
+    const sel = $('#gsel', root).value; const g = sel === 'rand' ? pick(G) : G.find(x => x.id === sel); const p = g.make();
+    $('#gbox', root).innerHTML = `<div class="qcard"><div class="qmeta">${g.t}　<span class="pill">對應 ${g.base}</span></div><p class="qtext">${p.q}</p><div class="ansrow"><input type="text" inputmode="decimal" id="gin" placeholder="輸入數字" aria-label="你的答案"><span class="unit">${p.unit || ''}</span><button class="btn" id="gchk" type="button">對答案</button><button class="btn ghost" id="gshow" type="button">直接看解法</button></div><div class="exp" hidden></div></div>`;
+    const showSol = (msg) => { const e = $('.exp', root); e.hidden = false; e.innerHTML = (msg || '') + `<ol class="steps">${p.sol.map(s => `<li>${s}</li>`).join('')}</ol><p>正解：<b>${f2(p.ans, 4)}</b></p>`; };
+    $('#gchk', root).onclick = () => { const v = parseFloat($('#gin', root).value.replace(/,/g, '')); if (isNaN(v)) return; tot++; const good = Math.abs(v - p.ans) <= Math.max(p.tol, Math.abs(p.ans) * 0.002); if (good) ok++; $('#gscore', root).textContent = `本次答對 ${ok}/${tot}`; showSol(`<b>${good ? '答對' : '再檢查一下'}</b>`); };
+    $('#gin', root).addEventListener('keydown', e => { if (e.key === 'Enter') $('#gchk', root).click(); });
+    $('#gshow', root).onclick = () => showSol('');
+  };
+  $('#gnew', root).onclick = make; make();
+}
+
+// ---- Flashcards (投資學講義問題) ----
+function renderFlash(root) {
+  const F = DATA.invest.flash;
+  root.innerHTML = `<p class="sm-p">講義上每一個「問題」都在這裡（共 ${F.length} 題）。先自己講出答案，再點卡片翻面核對。</p><div class="quizbar"><button class="btn" id="fshuf" type="button">打亂順序</button><button class="btn ghost" id="fall" type="button">全部翻開</button></div><div class="flashlist"></div>`;
+  const draw = list => { $('.flashlist', root).innerHTML = list.map((f, i) => `<button class="fcard" type="button"><span class="fq"><span class="num">${i + 1}</span>${f.q}</span><span class="fa">${f.a}</span></button>`).join(''); $$('.fcard', root).forEach(c => c.onclick = () => c.classList.toggle('on')); };
+  draw(F); $('#fshuf', root).onclick = () => draw(shuffle(F)); $('#fall', root).onclick = () => $$('.fcard', root).forEach(c => c.classList.add('on'));
+}
+
+// ---- Essay grading (管理學) ----
+function renderEssay(root) {
+  const E = DATA.mgmt.essays;
+  root.innerHTML = `<div class="essay"><div class="estep"><span class="n">1</span><div><label for="esel" class="lblb">選題目</label><select id="esel">${E.map((e, i) => `<option value="${i}">[${e.ch}] ${e.q.slice(0, 40)}…</option>`).join('')}<option value="custom">自訂題目（例如老師上課出的題）</option></select><p class="qtext" id="eq"></p><textarea id="ecustom" rows="3" placeholder="貼上題目" hidden></textarea><details class="rub"><summary>看評分要點（先別偷看，寫完再看）</summary><ul id="epts"></ul></details></div></div>
+    <div class="estep"><span class="n">2</span><div><span class="lblb">手寫作答後拍照上傳</span><label class="drop" id="edrop"><input type="file" id="efile" accept="image/jpeg,image/png,image/webp,image/gif" multiple><span>點這裡選照片，或拖曳照片進來（可多張）</span></label><div class="thumbs" id="ethumbs"></div><details><summary>沒有手寫？也可以直接打字</summary><textarea id="etext" rows="6" placeholder="打字作答"></textarea></details></div></div>
+    <div class="estep"><span class="n">3</span><div><button class="btn big" id="ego" type="button">請 Claude 批改</button><button class="btn ghost" id="estop" type="button" hidden>停止</button><p class="sm-p" id="enote"></p><div class="feedback" id="eout"></div></div></div></div>`;
+  let files = [];
+  const sel = $('#esel', root);
+  const syncQ = () => { const c = sel.value === 'custom'; $('#ecustom', root).hidden = !c; $('#eq', root).textContent = c ? '' : E[+sel.value].q; $('#epts', root).innerHTML = c ? '<li>自訂題目沒有預設要點，Claude 會依課本內容判斷。</li>' : E[+sel.value].pts.map(p => `<li>${p}</li>`).join(''); };
+  sel.onchange = syncQ; syncQ();
+  const addFiles = fl => { [...fl].forEach(f => { if (/^image\//.test(f.type)) files.push(f); }); drawThumbs(); };
+  const drawThumbs = () => { $('#ethumbs', root).innerHTML = files.map((f, i) => `<figure class="th"><img alt="作答照片 ${i + 1}" src="${URL.createObjectURL(f)}"><button type="button" data-x="${i}" aria-label="移除">×</button></figure>`).join(''); $$('[data-x]', root).forEach(b => b.onclick = () => { files.splice(+b.dataset.x, 1); drawThumbs(); }); };
+  $('#efile', root).onchange = e => addFiles(e.target.files);
+  const dz = $('#edrop', root); dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('over'); }); dz.addEventListener('dragleave', () => dz.classList.remove('over')); dz.addEventListener('drop', e => { e.preventDefault(); dz.classList.remove('over'); addFiles(e.dataTransfer.files); });
+  const note = $('#enote', root), out = $('#eout', root), go = $('#ego', root), stop = $('#estop', root);
+  let sample = null, lim = null, ctl = null;
+  note.textContent = '連線中…';
+  (async () => {
+    try { sample = window.claude ? await window.claude.use('sample') : null; } catch (e) { sample = null; }
+    if (!sample) { note.innerHTML = '這個檢視無法使用 AI 批改（需要在 claude.ai 登入後開啟）。你也可以把手寫照片直接傳到對話裡請 Claude 批改。'; go.disabled = true; return; }
+    try { lim = await sample.limits(); } catch (e) { lim = null; }
+    note.textContent = lim && lim.images ? `可上傳最多 ${lim.images.maxCount} 張照片。第一次使用會詢問你是否允許。` : '此檢視只能批改打字作答（無法傳送圖片）。';
+    if (!(lim && lim.images)) $('#edrop', root).hidden = true;
+  })();
+  stop.onclick = () => ctl && ctl.abort();
+  go.onclick = async () => {
+    if (!sample) return;
+    const q = sel.value === 'custom' ? $('#ecustom', root).value.trim() : E[+sel.value].q;
+    const pts = sel.value === 'custom' ? [] : E[+sel.value].pts;
+    const typed = $('#etext', root).value.trim();
+    if (!q) { note.textContent = '請先輸入題目。'; return; }
+    if (!files.length && !typed) { note.textContent = '請上傳作答照片或打字作答。'; return; }
+    const ch = sel.value === 'custom' ? null : E[+sel.value].ch;
+    const ref = DATA.mgmt.sections.filter(s => !ch || s.t.startsWith(ch)).map(s => s.t + '\n' + s.cards.map(c => c.t + '：' + c.plain + ' ' + strip(c.body)).join('\n')).join('\n\n').slice(0, 14000);
+    const imgs = lim && lim.images ? files.slice(0, lim.images.maxCount) : [];
+    const prompt = `你是大學「管理學」（Robbins & Coulter《Management》）的助教，請用繁體中文批改學生的申論題作答。\n\n【題目】\n${q}\n\n${pts.length ? '【評分要點】\n' + pts.map((p, i) => (i + 1) + '. ' + p).join('\n') + '\n\n' : ''}【課程講義重點（供你核對內容正確性）】\n${ref}\n\n【學生作答】\n${imgs.length ? `附上 ${imgs.length} 張手寫作答照片，請先辨識內容。` : ''}${typed ? '\n打字部分：\n' + typed : ''}\n\n請依下列格式回覆（使用 Markdown 標題與條列）：\n## 辨識出的作答內容\n（若有照片，簡短轉錄；看不清楚的地方標註「(難辨識)」）\n## 分數\n滿分 10 分，給出分數與一句話總評。\n## 逐項評分\n依評分要點逐條說明：有寫到／部分／缺漏，並指出觀念錯誤。\n## 漏掉的關鍵字\n列出應出現的英文專有名詞與中文。\n## 參考答案架構\n用條列寫出一份高分答案的骨架（含定義、比較、例子）。\n## 下次怎麼寫更好\n2–3 點具體建議（結構、舉例、時間分配）。`;
+    out.innerHTML = '<p class="thinking">批改中…（看照片與思考可能要 30–90 秒）</p>'; go.disabled = true; stop.hidden = false; ctl = new AbortController();
+    try {
+      const opt = { signal: ctl.signal, cache: false, onText: ({ text }) => { out.innerHTML = md(text); } };
+      if (imgs.length) opt.images = imgs;
+      const r = await sample(prompt, opt); out.innerHTML = md(r.text); if (r.truncated) note.textContent = '回覆被截斷，可以縮短作答或分段再試。';
+    } catch (e) {
+      out.innerHTML = e && e.text ? md(e.text) : '';
+      const msg = { not_granted: '你沒有允許這個頁面使用 Claude，所以無法批改。', rate_limited: '用量太頻繁，請稍後再試。', image_rejected: '照片格式或大小不符，請換一張（JPG/PNG）。', images_unavailable: '這個檢視無法傳送圖片，請改用打字作答。', cancelled: '已停止。', session_expired: '登入已過期，請重新登入 claude.ai。', refused: '這次無法批改，請調整內容後再試。' }[e && e.code] || '批改時發生錯誤，可以再按一次。';
+      note.textContent = msg;
+    } finally { go.disabled = false; stop.hidden = true; }
+  };
+}
+function md(t) {
+  const L = esc(t).split('\n'); let o = '', inl = false; const close = () => { if (inl) { o += '</ul>'; inl = false; } };
+  for (const raw of L) {
+    const l = raw.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+    if (/^#{1,4}\s/.test(l)) { close(); o += '<h4>' + l.replace(/^#+\s/, '') + '</h4>'; }
+    else if (/^\s*([-*•]|\d+[.)])\s/.test(l)) { if (!inl) { o += '<ul>'; inl = true; } o += '<li>' + l.replace(/^\s*([-*•]|\d+[.)])\s/, '') + '</li>'; }
+    else if (!l.trim()) close();
+    else { close(); o += '<p>' + l + '</p>'; }
+  }
+  close(); return o;
+}
+
+// ---- Overview ----
+function renderHome(root) {
+  root.innerHTML = `<div class="home"><div class="hero"><h2>26 秋季 期中複習</h2><p>四科的講義我都讀過並整理成卡片。每張卡片都有<b>白話解釋</b>、<b>生活比喻</b>，重要觀念配圖或互動工具。勾選「我懂了」會記錄進度（只存在這台裝置的瀏覽器）。</p></div>
+    <div class="subjgrid">${ORDER.map(k => { const s = DATA[k]; const n = subjCards(s).length; const extra = k === 'deriv' ? `${s.problems.length} 題課本與類題、${s.gens.length} 種隨機變化題、${s.mcq.length} 題觀念選擇題` : k === 'invest' ? `${s.flash.length} 題講義問題翻卡、${s.mcq.length} 題選擇題` : k === 'law' ? `${s.mcq.length} 題選擇題、${LAWART.length} 條條文速記` : `${s.essays.length} 題申論（拍照批改）、${s.mcq.length} 題選擇題`; return `<button class="sg ${s.hue}" data-go="${k}" type="button"><span class="sgn">${s.full}</span><span class="sgm">${n} 個知識點 · ${extra}</span><span class="bar" data-prog="${k}"><i></i></span><span class="sgp" data-progt="${k}"></span><span class="sgi">${s.intro}</span></button>`; }).join('')}</div>
+    <div class="dates"><h3>考試日程（依課程大綱）</h3><ul><li><b>管理學期中</b>：11/4（第 9 週）· 期末 12/23</li><li><b>衍金期中</b>：2026/11/16 · 期末 12/21 · A4 手抄小抄＋計算機</li><li><b>衍金小考</b>：每單元結束後勾選習題，隔週考其中一題或類題（可開書）</li></ul></div></div>`;
+  $$('[data-go]', root).forEach(b => b.onclick = () => go(b.dataset.go));
+  updateCounts();
+}
+
+// ---- Routing ----
+const PANES = {
+  deriv: [['learn', '知識點'], ['prob', '課本習題＋類題'], ['gen', '變化題（隨機）'], ['mcq', '觀念選擇題']],
+  invest: [['learn', '知識點'], ['flash', '講義問題'], ['mcq', '選擇題']],
+  law: [['learn', '知識點＋條文'], ['mcq', '選擇題']],
+  mgmt: [['learn', '知識點'], ['essay', '申論批改'], ['mcq', '選擇題']]
+};
+function go(k, tab) {
+  ST.subj = k; save();
+  $$('.stab').forEach(b => b.setAttribute('aria-current', b.dataset.s === k ? 'page' : 'false'));
+  document.body.dataset.subj = k;
+  const main = $('#main');
+  if (k === 'home') { renderHome(main); window.scrollTo(0, 0); return; }
+  const s = DATA[k]; tab = tab || ST.tab[k] || 'learn';
+  main.innerHTML = `<div class="shead"><div><h2>${s.full}</h2><p class="intro">${s.intro}</p></div><div class="prog"><span class="bar" data-prog="${k}"><i></i></span><span data-progt="${k}"></span> 已掌握</div></div><div class="ptabs" role="tablist">${PANES[k].map(p => `<button role="tab" class="ptab" data-p="${p[0]}" aria-selected="${p[0] === tab}" type="button">${p[1]}</button>`).join('')}</div><div id="pane"></div>`;
+  $$('.ptab', main).forEach(b => b.onclick = () => go(k, b.dataset.p));
+  ST.tab[k] = tab; save();
+  const pane = $('#pane');
+  ({ learn: () => renderLearn(k, pane), mcq: () => renderMCQ(k, pane), prob: () => renderProblems(pane), gen: () => renderGens(pane), flash: () => renderFlash(pane), essay: () => renderEssay(pane) })[tab]();
+  updateCounts();
+}
+
+function boot() {
+  $('#stabs').innerHTML = `<button class="stab home" data-s="home" type="button">總覽</button>` + ORDER.map(k => `<button class="stab ${DATA[k].hue}" data-s="${k}" type="button">${DATA[k].name}<span class="bar mini" data-prog="${k}"><i></i></span></button>`).join('');
+  $$('.stab').forEach(b => b.onclick = () => go(b.dataset.s));
+  const h = (location.hash || '').slice(1);
+  go(ORDER.includes(h) || h === 'home' ? h : (ST.subj || 'home'));
+}
+boot();
+</script>
