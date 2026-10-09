@@ -315,12 +315,13 @@ function renderHome(root) {
   const hello = new Date().getHours() < 12 ? '早安' : new Date().getHours() < 18 ? '午安' : '晚安';
   root.innerHTML = `<div class="home"><div class="hero">${PIG('happy', 120)}<div><h2>${hello}！我是豬豬老師</h2><p>今天也一起存一點知識吧。看卡片、玩遊戲、打怪物都會得到 XP，升級後會換新稱號。你已經連續 <b>${FUN.streak()}</b> 天來複習了！</p><p class="stats"><span>Lv.${FUN.level()}</span><span>${ST.xp} XP</span><span>${Object.keys(ST.badges).length}/${BADGES.length} 徽章</span></p></div></div>
     <div class="subjgrid">${ORDER.map(k => { const s = DATA[k]; const n = subjCards(s).length; const lang = k === 'basic' ? '<span class="pill en-pill">先備知識</span>' : k === 'deriv' || k === 'mgmt' ? '<span class="pill en-pill">英文考試</span>' : ''; return `<button class="sg ${s.hue}" data-go="${k}" type="button"><span class="sgn">${s.full} ${lang}</span><span class="sgm">${n} 個知識點${s.formulas ? ` · ${s.formulas.length} 個公式` : ''}</span><span class="bar" data-prog="${k}"><i></i></span><span class="sgp" data-progt="${k}"></span><span class="sgi">${s.intro}</span></button>`; }).join('')}</div>
+    ${planTodayHTML()}
     <div class="homelinks"><button class="btn big" type="button" id="tomile">看我的里程碑（徽章 ${Object.keys(ST.badges).length}/${BADGES.length}）</button><button class="btn big ghost" type="button" id="toset">設定與備份</button></div>
     <button type="button" class="cfahome" id="tocfa"><span class="cfahi">${navIcon('cfa')}</span><span><b>CFA 特區</b><span>Level I 完整筆記（93 個學習單元）、考試指南、費用與日程、打怪題庫</span></span><span class="cfago">→</span></button>
     <div class="dates"><h3>考試日程（依課程大綱）</h3><ul><li><b>管理學期中</b>：11/4（第 9 週）· 期末 12/23 · <b>英文作答</b></li><li><b>衍金期中</b>：2026/11/16 · 期末 12/21 · A4 手抄小抄＋計算機 · <b>英文作答</b></li><li><b>衍金小考</b>：每單元結束後勾選習題，隔週考其中一題或類題（可開書）</li></ul></div></div>`;
   $$('[data-go]', root).forEach(b => b.onclick = () => go(b.dataset.go));
   $('#tomile', root).onclick = () => go('milestones'); $('#toset', root).onclick = () => go('settings');
-  $('#tocfa', root).onclick = () => go('cfa');
+  $('#tocfa', root).onclick = () => go('cfa'); $('#toplan', root).onclick = () => go('plan');
   updateCounts();
 }
 
@@ -345,6 +346,7 @@ function go(k, tab) {
   if (k === 'home') { renderHome(main); window.scrollTo(0, 0); return; }
   if (k === 'settings') { renderSettings(main); window.scrollTo(0, 0); return; }
   if (k === 'milestones') { renderMilestones(main); window.scrollTo(0, 0); return; }
+  if (k === 'plan') { renderPlan(main); window.scrollTo(0, 0); return; }
   const s = DATA[k]; tab = tab || ST.tab[k] || PANES[k][0][0]; CUR = [k, tab];
   main.innerHTML = `<div class="shead"><div><h2>${s.full}</h2><p class="intro">${s.intro}</p></div><div class="prog"><span class="bar" data-prog="${k}"><i></i></span><span data-progt="${k}"></span> 已掌握</div></div><div class="ptabs" role="tablist">${PANES[k].map(p => `<button role="tab" class="ptab" data-p="${p[0]}" aria-selected="${p[0] === tab}" type="button">${p[1]}</button>`).join('')}</div><div id="pane"></div>`;
   $$('.ptab', main).forEach(b => b.onclick = () => go(k, b.dataset.p));
@@ -360,6 +362,7 @@ const NAVI = {
   deriv: '<path d="M3 19 L9 12 L13 15 L21 6"/><path d="M16 6 H21 V11"/>',
   invest: '<rect x="4" y="12" width="4" height="8" rx="1"/><rect x="10" y="8" width="4" height="12" rx="1"/><rect x="16" y="4" width="4" height="16" rx="1"/>',
   law: '<path d="M12 4 V20 M7 20 H17 M5 7 H19"/><path d="M5 7 L2.5 13 H7.5 Z M19 7 L16.5 13 H21.5 Z"/>',
+  plan: '<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10 H20 M9 3 V7 M15 3 V7 M8 14 L10.5 16.5 L16 12"/>',
   cfa: '<circle cx="12" cy="9" r="5"/><path d="M9 13.5 L7 21 L12 18.5 L17 21 L15 13.5"/>',
   mgmt: '<circle cx="9" cy="8" r="3"/><circle cx="16.5" cy="9" r="2.5"/><path d="M3 20 C3 15 15 15 15 20 M14 15.5 C17 14.5 21 15.5 21 19"/>'
 };
