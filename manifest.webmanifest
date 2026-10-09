@@ -1,0 +1,17 @@
+{
+  "name": "26 秋季複習本",
+  "short_name": "複習本",
+  "description": "衍金、投資學、民商法、管理學的互動複習本",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#eef5ff",
+  "theme_color": "#4f8ff7",
+  "lang": "zh-Hant",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

@@ -40,7 +40,7 @@ function cardHTML(c) {
   let fig = '';
   if (c.fig) fig = c.fig.startsWith('w:') ? `<div class="wmount" data-w="${c.fig.slice(2)}"></div>` : (FIGS[c.fig] ? `<figure>${FIGS[c.fig]()}</figure>` : '');
   return `<article class="card${done ? ' done' : ''}" id="c-${c.id}" data-search="${esc((c.t + ' ' + (c.en || '') + ' ' + c.plain + ' ' + c.life + ' ' + strip(c.body || '') + ' ' + (c.ex || '')).toLowerCase())}">
-    <header><h4>${c.t}</h4>${c.en ? `<span class="en">${c.en}</span>` : ''}${c.cfa ? `<span class="cfa" title="CFA 相關">CFA · ${c.cfa}</span>` : ''}</header>
+    <header><h4>${c.t}</h4>${c.en ? `<span class="en">${c.en}</span>` : ''}${c.cfa ? `<span class="cfa" title="CFA 相關">${/^CFA/.test(c.cfa) ? c.cfa : "CFA · " + c.cfa}</span>` : ''}</header>
     <div class="duo"><div class="plain"><span class="lbl">白話</span><p>${c.plain}</p></div><div class="life"><span class="lbl">生活比喻</span><p>${c.life}</p></div></div>
     ${c.pre ? `<div class="pre"><span class="lbl">看不懂？需要先懂這些基礎</span>${c.pre.map(p => { const b = subjCards(DATA.basic).find(x => x.id === p); return b ? `<button type="button" class="prechip" data-pre="${p}">${b.t}</button>` : ''; }).join('')}</div>` : ''}
     ${fig}
@@ -85,7 +85,7 @@ function updateCounts() {
 function renderFormulas(key, root) {
   const F = DATA[key].formulas;
   root.innerHTML = `<div class="tipbox"></div><div class="fnav">${F.map(f => `<a href="#f-${f.id}" class="fchip">${f.t.replace(/<[^>]+>/g, '')}</a>`).join('')}</div><div class="flist">${F.map(f => `
-    <article class="fcardx" id="f-${f.id}"><header><h4>${f.t}</h4><span class="en">${f.en}</span>${f.cfa ? `<span class="cfa">CFA · ${f.cfa}</span>` : ''}</header>
+    <article class="fcardx" id="f-${f.id}"><header><h4>${f.t}</h4><span class="en">${f.en}</span>${f.cfa ? `<span class="cfa">${/^CFA/.test(f.cfa) ? f.cfa : "CFA · " + f.cfa}</span>` : ''}</header>
     <p class="fqq"><span class="lbl">這個公式在回答</span>${f.q}</p>
     <div class="ftex">${f.tex.replace(/<v s="(\w+)">/g, '<button type="button" class="sym" data-k="$1">').replace(/<\/v>/g, '</button>')}</div>
     <div class="sympop" hidden></div>
@@ -350,9 +350,18 @@ function go(k, tab) {
   updateCounts();
 }
 window.rerender = () => go(CUR[0], CUR[1]);
+const NAVI = {
+  home: '<path d="M4 11 L12 4 L20 11 V20 H14 V14 H10 V20 H4 Z"/>',
+  basic: '<rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/><rect x="8.5" y="4" width="7" height="7" rx="1.5"/>',
+  deriv: '<path d="M3 19 L9 12 L13 15 L21 6"/><path d="M16 6 H21 V11"/>',
+  invest: '<rect x="4" y="12" width="4" height="8" rx="1"/><rect x="10" y="8" width="4" height="12" rx="1"/><rect x="16" y="4" width="4" height="16" rx="1"/>',
+  law: '<path d="M12 4 V20 M7 20 H17 M5 7 H19"/><path d="M5 7 L2.5 13 H7.5 Z M19 7 L16.5 13 H21.5 Z"/>',
+  mgmt: '<circle cx="9" cy="8" r="3"/><circle cx="16.5" cy="9" r="2.5"/><path d="M3 20 C3 15 15 15 15 20 M14 15.5 C17 14.5 21 15.5 21 19"/>'
+};
+const navIcon = k => `<svg class="navi" viewBox="0 0 24 24" aria-hidden="true">${NAVI[k]}</svg>`;
 function boot() {
   FUN.init();
-  $('#stabs').innerHTML = `<button class="stab home" data-s="home" type="button">首頁</button>` + ORDER.map(k => `<button class="stab ${DATA[k].hue}" data-s="${k}" type="button">${DATA[k].name}<span class="bar mini" data-prog="${k}"><i></i></span></button>`).join('');
+  $('#stabs').innerHTML = `<button class="stab home" data-s="home" type="button">${navIcon('home')}<span>首頁</span></button>` + ORDER.map(k => `<button class="stab ${DATA[k].hue}" data-s="${k}" type="button">${navIcon(k)}<span>${DATA[k].name}</span><span class="bar mini" data-prog="${k}"><i></i></span></button>`).join('');
   $$('.stab').forEach(b => b.onclick = () => go(b.dataset.s));
   FUN.hud();
   const h = (location.hash || '').slice(1);

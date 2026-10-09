@@ -35,7 +35,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 #hud .lv{font-family:var(--f-display);font-weight:700;background:var(--gold);color:#22264a;border:2px solid var(--line);border-radius:8px;padding:0 7px}
 #hud .ttl{font-family:var(--f-zh);font-weight:700} .xpbar{width:90px;height:12px;border:2px solid var(--line);border-radius:8px;overflow:hidden;background:var(--soft)} .xpbar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--pigd))}
 .streak{display:flex;align-items:center;gap:2px;font-weight:700} .flm{fill:#ff6b3d}
-.snd,.lang button{border:2px solid var(--line);background:var(--panel);border-radius:8px;padding:0 8px;cursor:pointer;font-size:12px;font-weight:700}
+.snd,.lang button{white-space:nowrap;border:2px solid var(--line);background:var(--panel);border-radius:8px;padding:0 8px;cursor:pointer;font-size:12px;font-weight:700}
 .lang{display:inline-flex;gap:0} .lang button{border-radius:0;margin-left:-2px} .lang button:first-child{border-radius:8px 0 0 8px;margin:0} .lang button:last-child{border-radius:0 8px 8px 0}
 .lang button[aria-pressed="true"],.snd[aria-pressed="true"]{background:var(--acc);color:#fff}
 .bar{display:block;height:8px;border-radius:5px;background:var(--soft);overflow:hidden;--p:0%;border:1.5px solid var(--line)}
@@ -176,5 +176,35 @@ details summary{cursor:pointer;font-weight:700;color:var(--acc)} .body{max-width
 .pre{display:flex;flex-wrap:wrap;gap:6px;align-items:center;background:color-mix(in srgb,var(--basic) 10%,var(--panel));border:2px dashed var(--basic);border-radius:14px;padding:8px 12px} .pre .lbl{width:100%} .prechip{border:2px solid var(--line);background:var(--panel);border-radius:999px;padding:1px 12px;cursor:pointer;font-size:13.5px;font-weight:700;box-shadow:2px 2px 0 var(--line)} .prechip:hover{background:var(--basic);color:#fff}
 @keyframes floatup{to{transform:translate(-50%,-50px);opacity:0}} @keyframes pop{0%{transform:scale(.92)}60%{transform:scale(1.04)}100%{transform:scale(1)}} @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-@media (max-width:560px){#hud{margin-left:0;width:100%}.ftex{font-size:18px}.mgame{grid-template-columns:1fr 1fr;gap:8px}.mt{font-size:13px;padding:8px}}
+.navi{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-3px;margin-right:4px}
+/* Phone: subject tabs become a thumb-reachable bottom bar; everything else tightens up */
+@media (max-width:760px){
+  body{font-size:15px}
+  .topin{padding:6px 12px;gap:6px;flex-wrap:nowrap}
+  .brand{font-size:16px} .brand .pig{width:28px;height:28px}
+  #hud{margin-left:auto;gap:5px;font-size:12px;flex-wrap:nowrap} #hud .ttl{display:none} .xpbar{width:44px} .snd{display:none}
+  #stabs{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--panel);border-top:3px solid var(--line);display:grid;grid-template-columns:repeat(6,1fr);gap:0;padding:4px 2px calc(4px + env(safe-area-inset-bottom,0px))}
+  .stab{border:0;box-shadow:none;border-radius:12px;padding:4px 0 6px;display:flex;flex-direction:column;align-items:center;gap:1px;font-size:11.5px;background:transparent}
+  .stab:hover{transform:none} .stab .navi{width:22px;height:22px;margin:0}
+  .stab[aria-current="page"]{color:#fff} .bar.mini{left:10px;right:10px;bottom:1px}
+  main{padding-block:12px calc(96px + env(safe-area-inset-bottom,0px));padding-inline:12px}
+  .shead{gap:8px;padding-bottom:8px} .shead h2{font-size:26px} .intro{font-size:13.5px} .prog .bar{width:100px}
+  .ptabs{position:sticky;top:calc(env(safe-area-inset-top,0px) + 50px);z-index:15;background:var(--bg);margin:0 -12px 12px;padding:6px 12px 8px;gap:6px}
+  .ptab{padding:5px 11px;font-size:14px;box-shadow:2px 2px 0 var(--line)}
+  .toc{flex-wrap:nowrap;overflow-x:auto;padding-bottom:6px;-webkit-overflow-scrolling:touch} .toc a{white-space:nowrap;flex:none}
+  .card,.fcardx{padding:14px;border-radius:16px;box-shadow:3px 3px 0 var(--line)} .card h4,.fcardx h4{font-size:19px}
+  .sec>h3{font-size:20px}
+  .ftex{font-size:17px;padding:10px;line-height:2.2} .sym{padding:0 5px}
+  .symtable dl{grid-template-columns:1fr} .cvars input[type=range]{width:100%} .cvars label{flex:1 1 140px}
+  .modes{grid-template-columns:1fr 1fr;gap:8px} .mode{padding:10px} .mode b{font-size:16px}
+  .qcard,.prob,.win{padding:14px;border-radius:16px} .qtext{font-size:16px}
+  .bossbox{gap:10px;padding:10px} .mon{width:72px}
+  .mgame{gap:8px} .mt{font-size:13px;padding:8px}
+  .home .hero{gap:10px} .home .hero .pig{width:84px;height:84px} .home h2{font-size:26px}
+  .subjgrid{grid-template-columns:1fr} .badges{grid-template-columns:repeat(3,1fr)} .flashlist{grid-template-columns:1fr}
+  .estep{grid-template-columns:1fr} .estep .n{width:30px;height:30px}
+  #toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+  .wg input[type=range]{width:100%}
+}
+@media (max-width:380px){.lang button{padding:0 5px} .stab{font-size:10.5px}}
 </style>

@@ -1,4 +1,15 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body>
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#4f8ff7">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="複習本">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png">
+<link rel="manifest" href="manifest.webmanifest">
+<style>body{margin:0}:root{padding-top:env(safe-area-inset-top,0px)}</style>
+</head><body>
 <title>26 秋季複習本</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -36,7 +47,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 #hud .lv{font-family:var(--f-display);font-weight:700;background:var(--gold);color:#22264a;border:2px solid var(--line);border-radius:8px;padding:0 7px}
 #hud .ttl{font-family:var(--f-zh);font-weight:700} .xpbar{width:90px;height:12px;border:2px solid var(--line);border-radius:8px;overflow:hidden;background:var(--soft)} .xpbar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--pigd))}
 .streak{display:flex;align-items:center;gap:2px;font-weight:700} .flm{fill:#ff6b3d}
-.snd,.lang button{border:2px solid var(--line);background:var(--panel);border-radius:8px;padding:0 8px;cursor:pointer;font-size:12px;font-weight:700}
+.snd,.lang button{white-space:nowrap;border:2px solid var(--line);background:var(--panel);border-radius:8px;padding:0 8px;cursor:pointer;font-size:12px;font-weight:700}
 .lang{display:inline-flex;gap:0} .lang button{border-radius:0;margin-left:-2px} .lang button:first-child{border-radius:8px 0 0 8px;margin:0} .lang button:last-child{border-radius:0 8px 8px 0}
 .lang button[aria-pressed="true"],.snd[aria-pressed="true"]{background:var(--acc);color:#fff}
 .bar{display:block;height:8px;border-radius:5px;background:var(--soft);overflow:hidden;--p:0%;border:1.5px solid var(--line)}
@@ -177,7 +188,37 @@ details summary{cursor:pointer;font-weight:700;color:var(--acc)} .body{max-width
 .pre{display:flex;flex-wrap:wrap;gap:6px;align-items:center;background:color-mix(in srgb,var(--basic) 10%,var(--panel));border:2px dashed var(--basic);border-radius:14px;padding:8px 12px} .pre .lbl{width:100%} .prechip{border:2px solid var(--line);background:var(--panel);border-radius:999px;padding:1px 12px;cursor:pointer;font-size:13.5px;font-weight:700;box-shadow:2px 2px 0 var(--line)} .prechip:hover{background:var(--basic);color:#fff}
 @keyframes floatup{to{transform:translate(-50%,-50px);opacity:0}} @keyframes pop{0%{transform:scale(.92)}60%{transform:scale(1.04)}100%{transform:scale(1)}} @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-@media (max-width:560px){#hud{margin-left:0;width:100%}.ftex{font-size:18px}.mgame{grid-template-columns:1fr 1fr;gap:8px}.mt{font-size:13px;padding:8px}}
+.navi{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-3px;margin-right:4px}
+/* Phone: subject tabs become a thumb-reachable bottom bar; everything else tightens up */
+@media (max-width:760px){
+  body{font-size:15px}
+  .topin{padding:6px 12px;gap:6px;flex-wrap:nowrap}
+  .brand{font-size:16px} .brand .pig{width:28px;height:28px}
+  #hud{margin-left:auto;gap:5px;font-size:12px;flex-wrap:nowrap} #hud .ttl{display:none} .xpbar{width:44px} .snd{display:none}
+  #stabs{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--panel);border-top:3px solid var(--line);display:grid;grid-template-columns:repeat(6,1fr);gap:0;padding:4px 2px calc(4px + env(safe-area-inset-bottom,0px))}
+  .stab{border:0;box-shadow:none;border-radius:12px;padding:4px 0 6px;display:flex;flex-direction:column;align-items:center;gap:1px;font-size:11.5px;background:transparent}
+  .stab:hover{transform:none} .stab .navi{width:22px;height:22px;margin:0}
+  .stab[aria-current="page"]{color:#fff} .bar.mini{left:10px;right:10px;bottom:1px}
+  main{padding-block:12px calc(96px + env(safe-area-inset-bottom,0px));padding-inline:12px}
+  .shead{gap:8px;padding-bottom:8px} .shead h2{font-size:26px} .intro{font-size:13.5px} .prog .bar{width:100px}
+  .ptabs{position:sticky;top:calc(env(safe-area-inset-top,0px) + 50px);z-index:15;background:var(--bg);margin:0 -12px 12px;padding:6px 12px 8px;gap:6px}
+  .ptab{padding:5px 11px;font-size:14px;box-shadow:2px 2px 0 var(--line)}
+  .toc{flex-wrap:nowrap;overflow-x:auto;padding-bottom:6px;-webkit-overflow-scrolling:touch} .toc a{white-space:nowrap;flex:none}
+  .card,.fcardx{padding:14px;border-radius:16px;box-shadow:3px 3px 0 var(--line)} .card h4,.fcardx h4{font-size:19px}
+  .sec>h3{font-size:20px}
+  .ftex{font-size:17px;padding:10px;line-height:2.2} .sym{padding:0 5px}
+  .symtable dl{grid-template-columns:1fr} .cvars input[type=range]{width:100%} .cvars label{flex:1 1 140px}
+  .modes{grid-template-columns:1fr 1fr;gap:8px} .mode{padding:10px} .mode b{font-size:16px}
+  .qcard,.prob,.win{padding:14px;border-radius:16px} .qtext{font-size:16px}
+  .bossbox{gap:10px;padding:10px} .mon{width:72px}
+  .mgame{gap:8px} .mt{font-size:13px;padding:8px}
+  .home .hero{gap:10px} .home .hero .pig{width:84px;height:84px} .home h2{font-size:26px}
+  .subjgrid{grid-template-columns:1fr} .badges{grid-template-columns:repeat(3,1fr)} .flashlist{grid-template-columns:1fr}
+  .estep{grid-template-columns:1fr} .estep .n{width:30px;height:30px}
+  #toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+  .wg input[type=range]{width:100%}
+}
+@media (max-width:380px){.lang button{padding:0 5px} .stab{font-size:10.5px}}
 </style>
 <header class="top"><div class="topin"><span class="brand" id="brand">26 秋季複習本</span><nav id="stabs" aria-label="科目"></nav><div id="hud"></div></div></header>
 <main id="main"></main>
@@ -2300,7 +2341,7 @@ function cardHTML(c) {
   let fig = '';
   if (c.fig) fig = c.fig.startsWith('w:') ? `<div class="wmount" data-w="${c.fig.slice(2)}"></div>` : (FIGS[c.fig] ? `<figure>${FIGS[c.fig]()}</figure>` : '');
   return `<article class="card${done ? ' done' : ''}" id="c-${c.id}" data-search="${esc((c.t + ' ' + (c.en || '') + ' ' + c.plain + ' ' + c.life + ' ' + strip(c.body || '') + ' ' + (c.ex || '')).toLowerCase())}">
-    <header><h4>${c.t}</h4>${c.en ? `<span class="en">${c.en}</span>` : ''}${c.cfa ? `<span class="cfa" title="CFA 相關">CFA · ${c.cfa}</span>` : ''}</header>
+    <header><h4>${c.t}</h4>${c.en ? `<span class="en">${c.en}</span>` : ''}${c.cfa ? `<span class="cfa" title="CFA 相關">${/^CFA/.test(c.cfa) ? c.cfa : "CFA · " + c.cfa}</span>` : ''}</header>
     <div class="duo"><div class="plain"><span class="lbl">白話</span><p>${c.plain}</p></div><div class="life"><span class="lbl">生活比喻</span><p>${c.life}</p></div></div>
     ${c.pre ? `<div class="pre"><span class="lbl">看不懂？需要先懂這些基礎</span>${c.pre.map(p => { const b = subjCards(DATA.basic).find(x => x.id === p); return b ? `<button type="button" class="prechip" data-pre="${p}">${b.t}</button>` : ''; }).join('')}</div>` : ''}
     ${fig}
@@ -2345,7 +2386,7 @@ function updateCounts() {
 function renderFormulas(key, root) {
   const F = DATA[key].formulas;
   root.innerHTML = `<div class="tipbox"></div><div class="fnav">${F.map(f => `<a href="#f-${f.id}" class="fchip">${f.t.replace(/<[^>]+>/g, '')}</a>`).join('')}</div><div class="flist">${F.map(f => `
-    <article class="fcardx" id="f-${f.id}"><header><h4>${f.t}</h4><span class="en">${f.en}</span>${f.cfa ? `<span class="cfa">CFA · ${f.cfa}</span>` : ''}</header>
+    <article class="fcardx" id="f-${f.id}"><header><h4>${f.t}</h4><span class="en">${f.en}</span>${f.cfa ? `<span class="cfa">${/^CFA/.test(f.cfa) ? f.cfa : "CFA · " + f.cfa}</span>` : ''}</header>
     <p class="fqq"><span class="lbl">這個公式在回答</span>${f.q}</p>
     <div class="ftex">${f.tex.replace(/<v s="(\w+)">/g, '<button type="button" class="sym" data-k="$1">').replace(/<\/v>/g, '</button>')}</div>
     <div class="sympop" hidden></div>
@@ -2610,9 +2651,18 @@ function go(k, tab) {
   updateCounts();
 }
 window.rerender = () => go(CUR[0], CUR[1]);
+const NAVI = {
+  home: '<path d="M4 11 L12 4 L20 11 V20 H14 V14 H10 V20 H4 Z"/>',
+  basic: '<rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/><rect x="8.5" y="4" width="7" height="7" rx="1.5"/>',
+  deriv: '<path d="M3 19 L9 12 L13 15 L21 6"/><path d="M16 6 H21 V11"/>',
+  invest: '<rect x="4" y="12" width="4" height="8" rx="1"/><rect x="10" y="8" width="4" height="12" rx="1"/><rect x="16" y="4" width="4" height="16" rx="1"/>',
+  law: '<path d="M12 4 V20 M7 20 H17 M5 7 H19"/><path d="M5 7 L2.5 13 H7.5 Z M19 7 L16.5 13 H21.5 Z"/>',
+  mgmt: '<circle cx="9" cy="8" r="3"/><circle cx="16.5" cy="9" r="2.5"/><path d="M3 20 C3 15 15 15 15 20 M14 15.5 C17 14.5 21 15.5 21 19"/>'
+};
+const navIcon = k => `<svg class="navi" viewBox="0 0 24 24" aria-hidden="true">${NAVI[k]}</svg>`;
 function boot() {
   FUN.init();
-  $('#stabs').innerHTML = `<button class="stab home" data-s="home" type="button">首頁</button>` + ORDER.map(k => `<button class="stab ${DATA[k].hue}" data-s="${k}" type="button">${DATA[k].name}<span class="bar mini" data-prog="${k}"><i></i></span></button>`).join('');
+  $('#stabs').innerHTML = `<button class="stab home" data-s="home" type="button">${navIcon('home')}<span>首頁</span></button>` + ORDER.map(k => `<button class="stab ${DATA[k].hue}" data-s="${k}" type="button">${navIcon(k)}<span>${DATA[k].name}</span><span class="bar mini" data-prog="${k}"><i></i></span></button>`).join('');
   $$('.stab').forEach(b => b.onclick = () => go(b.dataset.s));
   FUN.hud();
   const h = (location.hash || '').slice(1);
@@ -2621,4 +2671,5 @@ function boot() {
 boot();
 document.getElementById("brand").insertAdjacentHTML("afterbegin", PIG("happy", 34));
 </script>
+<script>if('serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceWorker.register('sw.js').catch(function(){});</script>
 </body></html>

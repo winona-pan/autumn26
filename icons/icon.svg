@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8fd3ff"/><stop offset="1" stop-color="#4f8ff7"/></linearGradient>
+    <radialGradient id="body" cx="0.4" cy="0.35" r="0.75"><stop offset="0" stop-color="#ffd3e0"/><stop offset="1" stop-color="#ff9fbd"/></radialGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#bg)"/>
+  <g fill="#ffffff" opacity="0.35"><circle cx="70" cy="80" r="10"/><circle cx="440" cy="120" r="14"/><circle cx="420" cy="60" r="6"/><circle cx="90" cy="430" r="8"/><circle cx="60" cy="300" r="5"/></g>
+  <g stroke="#22264a" stroke-width="12" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M150,170 L168,82 L232,140 Z" fill="#ff9fbd"/>
+    <path d="M362,170 L344,82 L280,140 Z" fill="#ff9fbd"/>
+    <rect x="160" y="370" width="54" height="70" rx="22" fill="#ff9fbd"/>
+    <rect x="298" y="370" width="54" height="70" rx="22" fill="#ff9fbd"/>
+    <ellipse cx="256" cy="276" rx="178" ry="152" fill="url(#body)"/>
+    <rect x="218" y="124" width="76" height="14" rx="7" fill="#22264a"/>
+    <ellipse cx="256" cy="290" rx="58" ry="42" fill="#e8799a"/>
+  </g>
+  <circle cx="234" cy="290" r="10" fill="#22264a"/><circle cx="278" cy="290" r="10" fill="#22264a"/>
+  <circle cx="186" cy="232" r="18" fill="#22264a"/><circle cx="326" cy="232" r="18" fill="#22264a"/>
+  <circle cx="192" cy="225" r="6" fill="#fff"/><circle cx="332" cy="225" r="6" fill="#fff"/>
+  <ellipse cx="146" cy="300" rx="24" ry="15" fill="#ff7fa3" opacity="0.6"/><ellipse cx="366" cy="300" rx="24" ry="15" fill="#ff7fa3" opacity="0.6"/>
+  <path d="M226,350 Q256,374 286,350" fill="none" stroke="#22264a" stroke-width="11" stroke-linecap="round"/>
+  <g transform="translate(398,368) rotate(-12)">
+    <circle r="62" fill="#ffcf3a" stroke="#22264a" stroke-width="12"/>
+    <circle r="40" fill="none" stroke="#e8a800" stroke-width="7"/>
+    <text y="24" text-anchor="middle" font-family="Helvetica Neue, Arial" font-weight="800" font-size="70" fill="#22264a">$</text>
+  </g>
+</svg>
