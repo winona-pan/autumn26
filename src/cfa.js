@@ -141,7 +141,7 @@ function renderCFA(root) {
   const soon = CFA_WIN.flatMap(w => w.dl.map(d => [w.n, d[0], d[1]])).filter(x => cfaDays(x[2]) >= 0).sort((a, b) => a[2] < b[2] ? -1 : 1)[0];
   ST.cfaWin = ST.cfaWin || next.id; ST.cfaHrs = ST.cfaHrs || 15;
 
-  root.innerHTML = `<div class="pagehead"><h2>CFA 特區</h2><p class="intro">CFA（Chartered Financial Analyst，特許金融分析師）是投資界最有名的證照。這一頁整理考試內容、費用、日程和讀書方法，也把你在其他科已經學到的 CFA 觀念集中在這裡。</p></div>
+  root.innerHTML = `<button type="button" class="cfahome cfatonotes" id="tonotes"><span class="cfahi">${navIcon('cfa')}</span><span><b>Level I 完整筆記</b><span>10 科、93 個學習單元整理成 ${subjCards(DATA.cfa).length} 張知識卡，已掌握 ${subjCards(DATA.cfa).filter(c => ST.done[c.id]).length} 張</span></span><span class="cfago">→</span></button>
   <nav class="cfanav" aria-label="本頁目錄">${[['cfa-what', 'CFA 是什麼'], ['cfa-lv', '三個級別'], ['cfa-l1', 'Level I 十科'], ['cfa-mine', '你已學到的'], ['cfa-l23', 'Level II／III'], ['cfa-reg', '報名與費用'], ['cfa-cal', '考試日程'], ['cfa-rule', '考試規則'], ['cfa-charter', '拿到證照'], ['cfa-plan', '讀書計畫'], ['cfa-quiz', '小測驗'], ['cfa-link', '官方連結']].map(([id, t]) => `<a href="#${id}" data-to="${id}">${t}</a>`).join('')}</nav>
   ${soon ? `<p class="cfaalert"><b>最近的截止日：</b>${soon[0]}考期的「${soon[1]}」是 <b>${cfaDate(soon[2])}</b>（${cfaDays(soon[2]) === 0 ? '就是今天' : `還有 ${cfaDays(soon[2])} 天`}，美東時間晚上 11:59，約台灣隔天中午）</p>` : ''}
 
@@ -239,6 +239,7 @@ function renderCFA(root) {
     <ul class="cfalinks">${[['CFA Program 總覽', 'home'], ['Level I 考試說明（含 2026／2027 權重）', 'l1'], ['Level II 考試說明', 'l2'], ['Level III 考試說明（三條路徑）', 'l3'], ['考期與費用 Dates & Fees', 'fees'], ['課程內容 Curriculum', 'cur'], ['報名資格與規定 Policies', 'pol'], ['獎學金 Scholarships', 'sch'], ['道德規範與專業準則 Code & Standards', 'eth'], ['CFA Society Taiwan', 'tw']].map(([t, k]) => `<li><a href="${CFA_LINK[k]}" target="_blank" rel="noopener">${t}</a></li>`).join('')}</ul>
     <p class="sm-p">資料整理於 2026 年 10 月。考期、費用和規定可能變動，一律以 CFA Institute 官網為準。</p></section>`;
 
+  $('#tonotes', root).onclick = () => go('cfa', 'learn');
   $$('[data-to]', root).forEach(a => a.onclick = e => { e.preventDefault(); const el = $('#' + a.dataset.to); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
   $$('[data-j]', root).forEach(b => b.onclick = () => { const [k, id, ty] = b.dataset.j.split('|'); ty === 'c' ? jumpCard(k, id) : jumpFormula(k, id); });
 
@@ -276,3 +277,6 @@ function renderCFA(root) {
     draw();
   };
 }
+
+// 打怪＆選擇題題庫：小測驗題目＋完整題庫
+DATA.cfa.mcq = CFA_Q.concat(CFA_Q2).map(m => ({ q: `<span class="pill">${m.t}</span> ${m.q}`, o: m.o, a: m.a, e: m.e }));
