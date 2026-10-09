@@ -1,133 +1,189 @@
 <title>26 秋季複習本</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&family=Noto+Sans+TC:wght@400;500;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=LXGW+WenKai+TC:wght@400;700&family=Noto+Sans+TC:wght@400;500;700&display=swap">
 <style>
-/* Layout: a study binder — sticky subject tabs on top, a section index on the left, cards stacked like index cards. Each subject recolors the accent. */
+/* Layout: a sticker-book study app — chunky outlined cards with offset "sticker" shadows on a dotted sky page, a piggy-bank mascot, and a candy accent per subject. */
 :root{
-  --bg:#eef1f5; --panel:#ffffff; --ink:#1b2230; --mute:#5b6577; --line:#d5dbe4; --soft:#e4e9f0;
-  --deriv:#0b7a74; --invest:#b45f06; --law:#b3264c; --mgmt:#3f6b2a; --acc:var(--deriv);
-  --plain:#e7f3f2; --life:#fbf1e3; --good:#2e7d4f; --bad:#b3341f; --hit:#fff4c7;
-  --f-display:"LXGW WenKai TC","Kaiti TC","STKaiti",serif; --f-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --bg:#eef5ff; --dot:#d6e4fb; --panel:#ffffff; --ink:#22264a; --mute:#5d6386; --line:#22264a; --soft:#e8eefb; --hair:#cfd8ee;
+  --deriv:#0fa89a; --invest:#f07a12; --law:#e0407a; --mgmt:#7556f0; --acc:var(--deriv);
+  --plain:#dff7f3; --life:#fff0d9; --exam:#ece6ff; --why:#fff7c7; --good:#1f9d55; --bad:#d9412b; --hit:#fff3a6;
+  --pig:#ffb3c8; --pigd:#e8799a; --gold:#ffcf3a;
+  --f-display:"Fredoka","LXGW WenKai TC","PingFang TC",sans-serif; --f-zh:"LXGW WenKai TC","Kaiti TC",serif; --f-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --sh:4px 4px 0 var(--line);
 }
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
-  --bg:#11151c; --panel:#1a2029; --ink:#e4e8ef; --mute:#9aa4b5; --line:#2e3644; --soft:#232a35;
-  --deriv:#3cc1b7; --invest:#f0a24a; --law:#f0708f; --mgmt:#8cc46a; --plain:#173230; --life:#33281a; --good:#5fc48a; --bad:#f08470; --hit:#3a3415; color-scheme:dark }}
+  --bg:#151a33; --dot:#212a4d; --panel:#1f2547; --ink:#f1f2ff; --mute:#b1b6da; --line:#0a0d1f; --soft:#2a3160; --hair:#39417a;
+  --deriv:#3fe0cf; --invest:#ffa64d; --law:#ff7aa6; --mgmt:#a68cff; --plain:#173b3d; --life:#3d3020; --exam:#2f2a5a; --why:#3b3718; --good:#5ee09a; --bad:#ff8a73; --hit:#4a4316; --pig:#f2a0ba; --pigd:#c95f80; color-scheme:dark }}
 :root[data-theme="dark"]{
-  --bg:#11151c; --panel:#1a2029; --ink:#e4e8ef; --mute:#9aa4b5; --line:#2e3644; --soft:#232a35;
-  --deriv:#3cc1b7; --invest:#f0a24a; --law:#f0708f; --mgmt:#8cc46a; --plain:#173230; --life:#33281a; --good:#5fc48a; --bad:#f08470; --hit:#3a3415; color-scheme:dark }
-body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.7}
-body[data-subj="invest"]{--acc:var(--invest)} body[data-subj="law"]{--acc:var(--law)} body[data-subj="mgmt"]{--acc:var(--mgmt)}
+  --bg:#151a33; --dot:#212a4d; --panel:#1f2547; --ink:#f1f2ff; --mute:#b1b6da; --line:#0a0d1f; --soft:#2a3160; --hair:#39417a;
+  --deriv:#3fe0cf; --invest:#ffa64d; --law:#ff7aa6; --mgmt:#a68cff; --plain:#173b3d; --life:#3d3020; --exam:#2f2a5a; --why:#3b3718; --good:#5ee09a; --bad:#ff8a73; --hit:#4a4316; --pig:#f2a0ba; --pigd:#c95f80; color-scheme:dark }
 *{box-sizing:border-box}
-h1,h2,h3,h4{font-family:var(--f-display);text-wrap:balance;line-height:1.3;margin:0}
+body{background:var(--bg) radial-gradient(var(--dot) 1.5px,transparent 1.6px) 0 0/22px 22px;color:var(--ink);font-family:var(--f-body);font-size:15.5px;line-height:1.75}
+body[data-subj="invest"]{--acc:var(--invest)} body[data-subj="law"]{--acc:var(--law)} body[data-subj="mgmt"]{--acc:var(--mgmt)}
+h1,h2,h3,h4{font-family:var(--f-display);text-wrap:balance;line-height:1.3;margin:0;font-weight:600}
 button,input,select,textarea{font:inherit;color:inherit}
-:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
-.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--bg);border-bottom:1px solid var(--line)}
-.topin{max-width:1180px;margin:0 auto;padding:10px 16px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
-.brand{font-family:var(--f-display);font-size:20px;font-weight:700;white-space:nowrap}
-.brand small{font-family:var(--f-mono);font-size:11px;color:var(--mute);margin-left:6px;letter-spacing:.06em}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--panel);border-bottom:3px solid var(--line)}
+.topin{max-width:1200px;margin:0 auto;padding:8px 16px;display:flex;gap:10px 14px;align-items:center;flex-wrap:wrap}
+.brand{font-family:var(--f-display);font-size:20px;font-weight:700;white-space:nowrap;display:flex;align-items:center;gap:6px}
 #stabs{display:flex;gap:6px;flex-wrap:wrap}
-.stab{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:5px 14px 7px;cursor:pointer;position:relative;font-weight:500}
-.stab[aria-current="page"]{color:#fff;border-color:transparent}
-.stab.deriv[aria-current="page"]{background:var(--deriv)} .stab.invest[aria-current="page"]{background:var(--invest)} .stab.law[aria-current="page"]{background:var(--law)} .stab.mgmt[aria-current="page"]{background:var(--mgmt)} .stab.home[aria-current="page"]{background:var(--ink);color:var(--bg)}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .stab[aria-current="page"]{color:#11151c}}
-:root[data-theme="dark"] .stab[aria-current="page"]{color:#11151c}
-.bar{display:block;height:6px;border-radius:3px;background:var(--soft);overflow:hidden;--p:0%}
-.bar i{display:block;height:100%;width:var(--p);background:var(--acc);transition:width .3s}
-.bar.mini{position:absolute;left:12px;right:12px;bottom:2px;height:2px;background:transparent}
-.stab.deriv .bar i{background:var(--deriv)} .stab.invest .bar i{background:var(--invest)} .stab.law .bar i{background:var(--law)} .stab.mgmt .bar i{background:var(--mgmt)}
-.stab[aria-current="page"] .bar i{background:currentColor;opacity:.7}
-main{max-width:1180px;margin:0 auto;padding-block:20px 60px;padding-inline:16px}
-.shead{display:flex;justify-content:space-between;gap:20px;align-items:flex-end;flex-wrap:wrap;padding-bottom:14px}
-.shead h2{font-size:30px;color:var(--acc)}
-.intro{color:var(--mute);max-width:68ch;margin:6px 0 0}
-.prog{display:flex;align-items:center;gap:8px;font-family:var(--f-mono);font-size:13px;color:var(--mute)} .prog .bar{width:140px}
-.ptabs{display:flex;gap:4px;border-bottom:2px solid var(--line);margin-bottom:18px;overflow-x:auto}
-.ptab{border:0;background:none;padding:8px 14px;cursor:pointer;color:var(--mute);border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap;font-weight:500}
-.ptab[aria-selected="true"]{color:var(--acc);border-bottom-color:var(--acc)}
-.learn{display:grid;grid-template-columns:220px minmax(0,1fr);gap:24px}
-.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 76px);align-self:start;display:flex;flex-direction:column;gap:2px;max-height:calc(100vh - 100px);overflow:auto}
-.toc a{color:var(--ink);text-decoration:none;padding:6px 10px;border-radius:6px;font-size:14px;display:flex;justify-content:space-between;gap:8px}
-.toc a:hover{background:var(--soft)} .cnt{font-family:var(--f-mono);font-size:11px;color:var(--mute)}
-@media (max-width:820px){.learn{grid-template-columns:minmax(0,1fr)}.toc{position:static;flex-direction:row;flex-wrap:wrap;max-height:none}.toc a{background:var(--panel);border:1px solid var(--line)}}
-.cards{min-width:0;display:flex;flex-direction:column;gap:18px}
-.searchbar input{width:100%;padding:10px 14px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
-.sec{display:flex;flex-direction:column;gap:14px;scroll-margin-top:90px}
-.sec>h3{font-size:22px;padding-top:8px;border-top:1px dashed var(--line)}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px 18px;display:flex;flex-direction:column;gap:12px;min-width:0}
-.card.done{border-color:color-mix(in srgb,var(--acc) 45%,var(--line))}
-.card header{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
-.card h4{font-size:19px} .en{font-family:var(--f-mono);font-size:12px;color:var(--mute)}
-.duo{display:grid;grid-template-columns:1fr 1fr;gap:10px} @media (max-width:640px){.duo{grid-template-columns:1fr}}
-.duo>div{border-radius:8px;padding:10px 12px;min-width:0} .duo p{margin:2px 0 0}
-.plain{background:var(--plain)} .life{background:var(--life)}
-.lbl{font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--mute)}
+.stab{border:2.5px solid var(--line);background:var(--panel);border-radius:999px;padding:3px 14px 6px;cursor:pointer;position:relative;font-weight:700;font-family:var(--f-display);box-shadow:2px 2px 0 var(--line);transition:transform .12s}
+.stab:hover{transform:translateY(-2px)}
+.stab[aria-current="page"]{color:#fff} .stab.deriv[aria-current="page"]{background:var(--deriv)} .stab.invest[aria-current="page"]{background:var(--invest)} .stab.law[aria-current="page"]{background:var(--law)} .stab.mgmt[aria-current="page"]{background:var(--mgmt)} .stab.home[aria-current="page"]{background:var(--pigd)}
+#hud{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-left:auto;font-size:13px}
+#hud .lv{font-family:var(--f-display);font-weight:700;background:var(--gold);color:#22264a;border:2px solid var(--line);border-radius:8px;padding:0 7px}
+#hud .ttl{font-family:var(--f-zh);font-weight:700} .xpbar{width:90px;height:12px;border:2px solid var(--line);border-radius:8px;overflow:hidden;background:var(--soft)} .xpbar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--pigd))}
+.streak{display:flex;align-items:center;gap:2px;font-weight:700} .flm{fill:#ff6b3d}
+.snd,.lang button{border:2px solid var(--line);background:var(--panel);border-radius:8px;padding:0 8px;cursor:pointer;font-size:12px;font-weight:700}
+.lang{display:inline-flex;gap:0} .lang button{border-radius:0;margin-left:-2px} .lang button:first-child{border-radius:8px 0 0 8px;margin:0} .lang button:last-child{border-radius:0 8px 8px 0}
+.lang button[aria-pressed="true"],.snd[aria-pressed="true"]{background:var(--acc);color:#fff}
+.bar{display:block;height:8px;border-radius:5px;background:var(--soft);overflow:hidden;--p:0%;border:1.5px solid var(--line)}
+.bar i{display:block;height:100%;width:var(--p);background:var(--acc);transition:width .4s}
+.bar.mini{position:absolute;left:14px;right:14px;bottom:2px;height:3px;border:0;background:transparent}
+.stab.deriv .bar i{background:var(--deriv)} .stab.invest .bar i{background:var(--invest)} .stab.law .bar i{background:var(--law)} .stab.mgmt .bar i{background:var(--mgmt)} .stab[aria-current="page"] .bar i{background:#fff}
+main{max-width:1200px;margin:0 auto;padding-block:20px 80px;padding-inline:16px}
+.shead{display:flex;justify-content:space-between;gap:20px;align-items:flex-end;flex-wrap:wrap;padding-bottom:12px}
+.shead h2{font-size:34px;color:var(--acc);font-family:var(--f-zh);font-weight:700}
+.intro{color:var(--mute);max-width:70ch;margin:4px 0 0}
+.prog{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--mute)} .prog .bar{width:150px}
+.ptabs{display:flex;gap:6px;margin-bottom:18px;overflow-x:auto;padding:4px 4px 8px}
+.ptab{border:2.5px solid var(--line);background:var(--panel);padding:6px 14px;cursor:pointer;border-radius:12px;white-space:nowrap;font-weight:700;box-shadow:3px 3px 0 var(--line)}
+.ptab[aria-selected="true"]{background:var(--acc);color:#fff;transform:translate(2px,2px);box-shadow:1px 1px 0 var(--line)}
+.tipbox{margin-bottom:14px}
+.mascot{display:flex;gap:10px;align-items:center} .mascot .pig{flex:none}
+.bubble{position:relative;margin:0;background:var(--panel);border:2.5px solid var(--line);border-radius:16px;padding:8px 14px;box-shadow:3px 3px 0 var(--line);max-width:640px}
+.bubble::before{content:"";position:absolute;left:-11px;top:50%;margin-top:-8px;border:8px solid transparent;border-right-color:var(--line)}
+.pig .pk-b{fill:var(--pig);stroke:var(--line);stroke-width:2.5} .pig .pk-s{fill:var(--pigd);stroke:var(--line);stroke-width:2} .pig .pk-d{fill:var(--line)} .pig .pk-e{fill:#22264a} .pig .pk-w{fill:#fff} .pig .pk-c{fill:#ff8fae;opacity:.7} .pig .pk-m{fill:none;stroke:#22264a;stroke-width:2.5;stroke-linecap:round} .pig .pk-coin{fill:var(--gold);stroke:var(--line);stroke-width:2} .pig .pk-ct{font:700 11px var(--f-display);fill:#22264a}
+.learn{display:grid;grid-template-columns:230px minmax(0,1fr);gap:24px}
+.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 90px);align-self:start;display:flex;flex-direction:column;gap:6px;max-height:calc(100vh - 110px);overflow:auto;padding:2px 6px 6px 2px}
+.toc a{color:var(--ink);text-decoration:none;padding:6px 10px;border-radius:10px;font-size:14px;display:flex;justify-content:space-between;gap:8px;background:var(--panel);border:2px solid var(--line);font-weight:500}
+.toc a:hover{background:var(--soft)} .cnt{font-size:11px;color:var(--mute);font-weight:700}
+@media (max-width:820px){.learn{grid-template-columns:minmax(0,1fr)}.toc{position:static;flex-direction:row;flex-wrap:wrap;max-height:none}}
+.cards{min-width:0;display:flex;flex-direction:column;gap:20px}
+.searchbar input{width:100%;padding:10px 14px;border:2.5px solid var(--line);border-radius:14px;background:var(--panel);box-shadow:3px 3px 0 var(--line)}
+.sec{display:flex;flex-direction:column;gap:18px;scroll-margin-top:100px}
+.sec>h3{font-size:24px;font-family:var(--f-zh);display:inline-block;align-self:flex-start;background:var(--acc);color:#fff;padding:2px 14px;border-radius:10px;border:2.5px solid var(--line);transform:rotate(-1deg)}
+.card,.fcardx{background:var(--panel);border:2.5px solid var(--line);border-radius:18px;padding:18px 20px;display:flex;flex-direction:column;gap:12px;min-width:0;box-shadow:var(--sh)}
+.card.done{background:linear-gradient(var(--panel),var(--panel)) padding-box;border-color:var(--good)} .card.flash{animation:pop .8s 2}
+.card header,.fcardx header{display:flex;gap:6px 10px;align-items:baseline;flex-wrap:wrap}
+.card h4,.fcardx h4{font-size:21px;font-family:var(--f-zh);font-weight:700} .en{font-family:var(--f-display);font-size:13px;color:var(--mute);font-weight:500}
+.cfa{font-size:11.5px;font-weight:700;background:var(--gold);color:#22264a;border:2px solid var(--line);border-radius:999px;padding:0 9px}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:12px} @media (max-width:640px){.duo{grid-template-columns:1fr}}
+.duo>div,.exam,.why,.stepsbox,.oops,.fqq,.symtable,.calc{border-radius:14px;padding:10px 14px;min-width:0;border:2px dashed var(--hair)} .duo p{margin:2px 0 0}
+.plain{background:var(--plain)} .life{background:var(--life)} .exam{background:var(--exam);position:relative} .exam p{margin:2px 0;font-family:Georgia,"Times New Roman",serif;font-size:15.5px;padding-right:56px}
+.why{background:var(--why)} .why p{margin:2px 0} .oops{background:color-mix(in srgb,var(--bad) 9%,var(--panel))} .oops ul,.stepsbox ol{margin:4px 0;padding-left:1.4em}
+.mini{position:absolute;right:10px;top:10px;border:2px solid var(--line);background:var(--panel);border-radius:8px;font-size:12px;padding:0 8px;cursor:pointer;font-weight:700}
+.en-ans{position:relative;padding-right:56px}
+.lbl{display:block;font-size:12px;font-weight:700;letter-spacing:.08em;color:var(--mute)}
 figure{margin:0;overflow-x:auto} .fig{width:100%;max-width:560px;height:auto;display:block;margin:0 auto}
 .fig text{fill:var(--ink);font-family:var(--f-body);font-size:11px} .fig .sm{font-size:10px;fill:var(--mute)} .fig .hd{font-size:12px;font-weight:700;fill:var(--ink)} .fig .bt{font-size:11px;fill:var(--ink)}
-.fig .bx{fill:var(--soft);stroke:var(--line)} .fig .bx.c1{fill:color-mix(in srgb,var(--acc) 18%,var(--panel));stroke:var(--acc)} .fig .bx.c2{fill:var(--plain);stroke:var(--line)} .fig .bx.c3{fill:var(--life);stroke:var(--line)} .fig .bx.c0{fill:color-mix(in srgb,var(--acc) 10%,var(--panel));stroke:var(--acc)}
-.fig .ax,.fig .grid{stroke:var(--line);stroke-width:1} .fig .grid{stroke-dasharray:2 3}
-.fig .ln{fill:none;stroke:var(--mute);stroke-width:2} .fig .ln.a1{stroke:var(--mute)} .fig .ln.a2,.fig .ar.a2{stroke:var(--acc)} .fig .thick{stroke-width:3} .fig .dash{stroke-dasharray:5 4;stroke:var(--mute);fill:none;stroke-width:1.5}
-.fig .ar{stroke:var(--mute);stroke-width:1.5;fill:none} .fig .ahd{fill:var(--mute)} .fig .dot{fill:var(--acc)} .fig .br{stroke:var(--acc);stroke-width:2} .fig .wick{stroke:var(--ink);stroke-width:2}
-.fig .kred{fill:#d33c3c} .fig .kblk{fill:#2a6e4a} .fig .grad{fill:var(--soft);stroke:var(--line)}
-.fig .seg.s1{fill:var(--acc)} .fig .seg.s2{fill:color-mix(in srgb,var(--acc) 45%,var(--panel))} .fig .seg.s3{fill:var(--soft);stroke:var(--line)}
-.fig text.a1{fill:var(--mute)} .fig text.a2{fill:var(--acc)}
-details summary{cursor:pointer;font-weight:700;color:var(--acc)} .body{max-width:72ch} .body ul,.body ol{padding-left:1.3em;margin:6px 0} .body li{margin:3px 0}
-.note{font-size:14px;color:var(--mute);border-left:3px solid var(--line);padding-left:10px}
-.formula{font-family:var(--f-mono);font-size:16px;background:var(--soft);padding:8px 12px;border-radius:6px;display:inline-block}
+.fig .bx{fill:var(--soft);stroke:var(--line);stroke-width:2} .fig .bx.c1{fill:color-mix(in srgb,var(--acc) 22%,var(--panel))} .fig .bx.c2{fill:var(--plain)} .fig .bx.c3{fill:var(--life)} .fig .bx.c0{fill:color-mix(in srgb,var(--acc) 12%,var(--panel))}
+.fig .ax,.fig .grid{stroke:var(--hair);stroke-width:1.2} .fig .grid{stroke-dasharray:2 3}
+.fig .ln{fill:none;stroke:var(--mute);stroke-width:2.5;stroke-linecap:round} .fig .ln.a2,.fig .ar.a2{stroke:var(--acc)} .fig .thick{stroke-width:3.5} .fig .dash{stroke-dasharray:5 4;stroke:var(--mute);fill:none;stroke-width:1.8}
+.fig .ar{stroke:var(--mute);stroke-width:1.8;fill:none} .fig .ahd{fill:var(--mute)} .fig .dot{fill:var(--acc);stroke:var(--line);stroke-width:1.5} .fig .br{stroke:var(--acc);stroke-width:2.5} .fig .wick{stroke:var(--ink);stroke-width:2}
+.fig .kred{fill:#e5484d;stroke:var(--line);stroke-width:1.5} .fig .kblk{fill:#2f9e6b;stroke:var(--line);stroke-width:1.5} .fig .grad{fill:var(--soft);stroke:var(--line)}
+.fig .seg.s1{fill:var(--acc)} .fig .seg.s2{fill:color-mix(in srgb,var(--acc) 45%,var(--panel))} .fig .seg.s3{fill:var(--soft);stroke:var(--line)} .fig text.a2{fill:var(--acc)}
+details summary{cursor:pointer;font-weight:700;color:var(--acc)} .body{max-width:74ch} .body ul,.body ol{padding-left:1.3em;margin:6px 0} .body li{margin:3px 0}
+.note{font-size:14px;color:var(--mute);border-left:4px solid var(--acc);padding-left:10px}
+.formula{font-family:var(--f-display);font-size:17px;background:var(--why);padding:6px 14px;border-radius:10px;display:inline-block;border:2px solid var(--line)}
 .terms{display:grid;grid-template-columns:max-content 1fr;gap:4px 14px;font-size:14px;margin:8px 0 0} .terms dt{font-weight:700} .terms dd{margin:0;color:var(--mute)}
-.chk{display:flex;gap:8px;align-items:center;font-size:14px;color:var(--mute);cursor:pointer} .chk input{accent-color:var(--acc);width:18px;height:18px}
+.chk{display:flex;gap:8px;align-items:center;font-size:14px;cursor:pointer;font-weight:500} .chk input{accent-color:var(--good);width:20px;height:20px}
+.xpchip{font-size:11px;background:var(--gold);color:#22264a;border-radius:999px;padding:0 6px;font-weight:700;border:1.5px solid var(--line)}
 .tblwrap{overflow-x:auto;max-width:100%}
-.tbl{border-collapse:collapse;font-size:14px;margin:6px 0;min-width:100%} .tbl th,.tbl td{border:1px solid var(--line);padding:5px 9px;text-align:left;vertical-align:top} .tbl th{background:var(--soft)}
+.tbl{border-collapse:collapse;font-size:14px;margin:6px 0;min-width:100%} .tbl th,.tbl td{border:1.5px solid var(--hair);padding:5px 9px;text-align:left;vertical-align:top} .tbl th{background:var(--soft)}
 .tbl.num td{font-variant-numeric:tabular-nums} .tbl tr.hit td{background:var(--hit)}
-.arts td:first-child{white-space:nowrap;font-family:var(--f-mono)} .arts.masked .artc{color:transparent;background:var(--soft)} .arts.masked tr.peek .artc{color:inherit;background:none} .arts tr{cursor:pointer}
-.wg{border:1px dashed var(--acc);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:10px;background:color-mix(in srgb,var(--acc) 4%,var(--panel))}
-.wg-row{display:flex;flex-wrap:wrap;gap:10px 16px} .wg label{display:flex;flex-direction:column;font-size:13px;color:var(--mute);gap:2px} .wg label b{font-family:var(--f-mono);color:var(--ink)}
-.wg label.full{width:100%} .wg input[type=number],.wg input[type=text],.wg select{border:1px solid var(--line);border-radius:6px;padding:5px 8px;background:var(--panel);min-width:0;width:100%;max-width:200px} .wg label.full input{max-width:none}
-.wg input[type=range]{accent-color:var(--acc);width:160px} .wg-out{margin:0;font-size:14px} .sm-p{font-size:14px;color:var(--mute);margin:0}
-.cell{width:64px!important;border:1px solid var(--line);border-radius:4px;padding:2px 4px;background:var(--panel)}
-.pill{display:inline-block;font-size:12px;padding:1px 8px;border-radius:999px;background:var(--soft);color:var(--mute)} .pill.good{background:color-mix(in srgb,var(--good) 18%,var(--panel));color:var(--good)} .pill.bad{background:color-mix(in srgb,var(--bad) 18%,var(--panel));color:var(--bad)}
-.flipgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px}
-.flip{border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:10px;text-align:left;cursor:pointer;min-height:78px;font-size:14px}
-.flip .f2{display:none} .flip.on .f1{display:none} .flip.on .f2{display:block} .flip.on{background:var(--plain)}
-.btn{border:1px solid var(--acc);background:var(--acc);color:var(--panel);border-radius:8px;padding:7px 14px;cursor:pointer;font-weight:500}
-.btn.ghost{background:var(--panel);color:var(--acc)} .btn.on{outline:2px solid var(--ink)} .btn:disabled{opacity:.5;cursor:not-allowed} .btn.big{padding:10px 22px;font-size:16px}
-.quizbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:14px} .quizbar select{border:1px solid var(--line);border-radius:6px;padding:6px;background:var(--panel);max-width:100%}
-.quizbar label{display:flex;gap:6px;align-items:center;flex-wrap:wrap;min-width:0}
-.qcard,.prob,.result{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px 18px;max-width:780px}
-.qmeta{font-family:var(--f-mono);font-size:12px;color:var(--mute)} .qtext{font-size:17px;margin:8px 0 12px}
-.opts{display:flex;flex-direction:column;gap:8px} .opt{text-align:left;border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:10px 14px;cursor:pointer}
-.opt:hover:not(:disabled){border-color:var(--acc)} .opt.right{border-color:var(--good);background:color-mix(in srgb,var(--good) 14%,var(--panel))} .opt.wrongc{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 14%,var(--panel))}
-.exp{margin-top:12px;padding:10px 12px;border-radius:8px;background:var(--soft);font-size:15px} .next{margin-top:12px}
-.result .big{font-family:var(--f-display);font-size:42px;margin:0;color:var(--acc)} .empty{color:var(--mute)}
-.plist{display:flex;flex-direction:column;gap:14px} .psrc{font-size:13px;color:var(--mute)} .steps{padding-left:1.4em} .steps li{margin:4px 0} .ans{background:var(--hit);padding:8px 12px;border-radius:6px} .pbtn{display:flex;gap:8px;flex-wrap:wrap}
-.ansrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap} .ansrow input{border:1px solid var(--line);border-radius:6px;padding:8px 10px;width:160px;background:var(--bg);font-family:var(--f-mono)} .unit{color:var(--mute);font-size:13px}
-.flashlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
-.fcard{text-align:left;border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:14px;cursor:pointer;display:flex;flex-direction:column;gap:8px;min-height:110px}
-.fcard .fa{display:none;color:var(--ink);font-size:14px;border-top:1px dashed var(--line);padding-top:8px} .fcard.on .fa{display:block} .fcard.on{background:var(--plain)}
-.fq{font-weight:700} .num{font-family:var(--f-mono);font-size:12px;color:var(--acc);margin-right:8px}
-.essay{display:flex;flex-direction:column;gap:16px;max-width:820px}
-.estep{display:grid;grid-template-columns:34px minmax(0,1fr);gap:12px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px}
-.estep .n{width:30px;height:30px;border-radius:50%;background:var(--acc);color:var(--panel);display:grid;place-items:center;font-family:var(--f-mono)}
-.lblb{display:block;font-weight:700;margin-bottom:6px} .estep select,.estep textarea{width:100%;border:1px solid var(--line);border-radius:6px;padding:8px;background:var(--bg)}
-.drop{display:block;border:2px dashed var(--line);border-radius:10px;padding:22px;text-align:center;color:var(--mute);cursor:pointer} .drop.over{border-color:var(--acc)} .drop input{position:absolute;opacity:0;width:1px;height:1px}
-.thumbs{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0} .th{position:relative;margin:0} .th img{width:96px;height:96px;object-fit:cover;border-radius:6px;border:1px solid var(--line)} .th button{position:absolute;top:-6px;right:-6px;border:0;border-radius:50%;width:22px;height:22px;background:var(--ink);color:var(--bg);cursor:pointer}
-.rub{margin-top:8px} .feedback{margin-top:12px} .feedback h4{font-size:17px;color:var(--acc);margin-top:14px} .feedback ul{padding-left:1.3em} .thinking{color:var(--mute)}
-.home .hero{padding:10px 0 20px} .home h2{font-size:34px} .home .hero p{max-width:66ch;color:var(--mute)}
-.subjgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
-.sg{text-align:left;border:1px solid var(--line);border-top:5px solid var(--acc);background:var(--panel);border-radius:10px;padding:16px;cursor:pointer;display:flex;flex-direction:column;gap:8px}
-.sg.deriv{--acc:var(--deriv)} .sg.invest{--acc:var(--invest)} .sg.law{--acc:var(--law)} .sg.mgmt{--acc:var(--mgmt)}
-.sgn{font-family:var(--f-display);font-size:24px;color:var(--acc)} .sgm{font-size:13px;color:var(--mute)} .sgp{font-family:var(--f-mono);font-size:12px;color:var(--mute)} .sgi{font-size:13px}
-.dates{margin-top:24px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 18px;max-width:780px} .dates h3{font-size:18px}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.arts td:first-child{white-space:nowrap;font-family:var(--f-display)} .arts.masked .artc{color:transparent;background:repeating-linear-gradient(45deg,var(--soft),var(--soft) 6px,var(--panel) 6px,var(--panel) 12px)} .arts.masked tr.peek .artc{color:inherit;background:none} .arts tr{cursor:pointer}
+.wg{border:2.5px dashed var(--acc);border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:10px;background:color-mix(in srgb,var(--acc) 6%,var(--panel))}
+.wg-row{display:flex;flex-wrap:wrap;gap:10px 16px} .wg label{display:flex;flex-direction:column;font-size:13px;color:var(--mute);gap:2px} .wg label b{font-family:var(--f-display);color:var(--ink)}
+.wg label.full{width:100%} .wg input[type=number],.wg input[type=text],.wg select{border:2px solid var(--line);border-radius:8px;padding:5px 8px;background:var(--panel);min-width:0;width:100%;max-width:200px} .wg label.full input{max-width:none}
+.wg input[type=range],.calc input[type=range]{accent-color:var(--acc);width:150px} .wg-out{margin:0;font-size:14px} .sm-p{font-size:14px;color:var(--mute);margin:0}
+.cell{width:64px!important;border:1.5px solid var(--line);border-radius:6px;padding:2px 4px;background:var(--panel)}
+.pill{display:inline-block;font-size:12px;padding:0 9px;border-radius:999px;background:var(--soft);color:var(--ink);border:1.5px solid var(--line);font-weight:700} .pill.good{background:color-mix(in srgb,var(--good) 25%,var(--panel))} .pill.bad{background:color-mix(in srgb,var(--bad) 25%,var(--panel))} .en-pill{background:var(--exam);font-size:11px;vertical-align:middle}
+.flipgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.flip{border:2.5px solid var(--line);background:var(--panel);border-radius:14px;padding:10px;text-align:left;cursor:pointer;min-height:84px;font-size:14px;box-shadow:3px 3px 0 var(--line);transition:transform .15s}
+.flip:hover{transform:rotate(-1deg)} .flip .f2{display:none} .flip.on .f1{display:none} .flip.on .f2{display:block} .flip.on{background:var(--plain)}
+.btn{border:2.5px solid var(--line);background:var(--acc);color:#fff;border-radius:12px;padding:6px 16px;cursor:pointer;font-weight:700;box-shadow:3px 3px 0 var(--line);transition:transform .1s,box-shadow .1s}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--line)} .btn.ghost{background:var(--panel);color:var(--ink)} .btn.on{background:var(--acc);color:#fff} .btn:disabled{opacity:.5;cursor:not-allowed} .btn.big{padding:10px 24px;font-size:17px}
+.quizbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:16px} .quizbar select{border:2px solid var(--line);border-radius:10px;padding:6px;background:var(--panel);max-width:100%}
+.quizbar label{display:flex;gap:6px;align-items:center;flex-wrap:wrap;min-width:0;font-weight:700}
+.modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:14px}
+.mode{border:2.5px solid var(--line);border-radius:16px;padding:12px 14px;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:2px;box-shadow:var(--sh);transition:transform .12s;color:#22264a}
+.mode:hover{transform:translateY(-3px) rotate(-.6deg)} .mode b{font-family:var(--f-zh);font-size:19px} .mode span{font-size:13px}
+.mode.boss{background:#ffc9d6} .mode.speed{background:#ffe08a} .mode.prac{background:#bdf0e4} .mode.wrong{background:#d9ccff}
+.arena{min-height:200px}
+.qcard,.prob,.win{background:var(--panel);border:2.5px solid var(--line);border-radius:18px;padding:18px 20px;max-width:800px;box-shadow:var(--sh)}
+.win{text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px} .win h3{font-size:26px;font-family:var(--f-zh)}
+.qmeta{font-size:12.5px;color:var(--mute);font-weight:700} .qtext{font-size:17px;margin:8px 0 12px} .qtext p{margin:0 0 6px}
+.zhsub{display:block;font-size:14px;color:var(--mute);border-left:3px solid var(--hair);padding-left:8px;margin-top:4px}
+.opts{display:flex;flex-direction:column;gap:10px} .opt{text-align:left;border:2.5px solid var(--line);background:var(--bg);border-radius:14px;padding:10px 14px;cursor:pointer;display:flex;gap:10px;align-items:baseline;transition:transform .1s}
+.opt .key{font-family:var(--f-display);font-weight:700;background:var(--panel);border:2px solid var(--line);border-radius:8px;padding:0 7px;flex:none}
+.opt:hover:not(:disabled){transform:translateX(4px);background:var(--soft)} .opt.right{background:color-mix(in srgb,var(--good) 30%,var(--panel));animation:pop .35s} .opt.wrongc{background:color-mix(in srgb,var(--bad) 30%,var(--panel));animation:shake .4s}
+.exp{margin-top:12px;padding:10px 14px;border-radius:12px;background:var(--why);border:2px dashed var(--hair);font-size:15px} .next{margin-top:12px}
+.battle{display:flex;flex-direction:column;gap:14px;max-width:800px} .bossbox{display:flex;gap:16px;align-items:center;background:var(--panel);border:2.5px solid var(--line);border-radius:18px;padding:12px 16px;box-shadow:var(--sh)}
+.mon{width:96px;flex:none} .mon .mn-b{fill:#a6e36b;stroke:var(--line);stroke-width:3} body[data-subj="invest"] .mon .mn-b{fill:#ffb36b} body[data-subj="law"] .mon .mn-b{fill:#c9a6ff} body[data-subj="mgmt"] .mon .mn-b{fill:#7fd0ff}
+.mon .mn-w{fill:#fff;stroke:var(--line);stroke-width:2.5} .mon .mn-e{fill:#22264a} .mon .mn-m{fill:none;stroke:#22264a;stroke-width:3;stroke-linecap:round} .mon.hurt{animation:shake .45s}
+.hp{width:220px;max-width:100%;height:14px;border:2.5px solid var(--line);border-radius:8px;overflow:hidden;background:var(--soft);margin:4px 0} .hp i{display:block;height:100%;background:linear-gradient(90deg,#ff5d5d,#ffb13b);transition:width .4s}
+.hearts .h{font-size:20px;color:var(--hair);margin-right:2px} .hearts .h.on{color:#ff4d6d}
+.speedbar{display:flex;gap:16px;align-items:center;margin-bottom:10px;font-weight:700} .clock{font-family:var(--f-display);font-size:28px;background:var(--gold);color:#22264a;border:2.5px solid var(--line);border-radius:12px;padding:0 12px}
+.missed{text-align:left;max-width:640px;font-size:14px} .right-t{color:var(--good);font-weight:700}
+.mgame{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:760px} .mcol{display:flex;flex-direction:column;gap:10px}
+.mt{border:2.5px solid var(--line);background:var(--panel);border-radius:14px;padding:10px 12px;cursor:pointer;text-align:left;box-shadow:3px 3px 0 var(--line);font-weight:500;transition:transform .15s,opacity .3s}
+.mt.l{font-family:var(--f-display)} .mt.sel{background:var(--gold);color:#22264a;transform:scale(1.03)} .mt.gone{opacity:0;transform:scale(.6);pointer-events:none} .shake{animation:shake .4s}
+.sgame{max-width:640px;display:flex;flex-direction:column;gap:14px;align-items:stretch} .scard{background:var(--panel);border:3px solid var(--line);border-radius:18px;padding:22px;font-size:19px;text-align:center;box-shadow:var(--sh);animation:pop .3s;font-weight:700}
+.buckets{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px} .bk{border:2.5px solid var(--line);border-radius:14px;padding:12px;cursor:pointer;font-weight:700;background:var(--soft);box-shadow:3px 3px 0 var(--line)} .bk.right{background:color-mix(in srgb,var(--good) 35%,var(--panel))} .bk.wrongc{background:color-mix(in srgb,var(--bad) 35%,var(--panel))}
+.sfb{min-height:1.6em;font-weight:700;text-align:center;margin:0}
+.sortres{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;width:100%;text-align:left} .bucket{border:2px dashed var(--hair);border-radius:12px;padding:8px;display:flex;flex-direction:column;gap:4px;font-size:13px} .bucket .miss{color:var(--bad);text-decoration:underline wavy}
+.plist{display:flex;flex-direction:column;gap:16px} .psrc{font-size:13px;color:var(--mute)} .steps{padding-left:1.4em} .steps li{margin:4px 0} .ans{background:var(--hit);padding:8px 12px;border-radius:12px;border:2px dashed var(--hair)} .pbtn{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.ansrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap} .ansrow input{border:2.5px solid var(--line);border-radius:10px;padding:8px 10px;width:170px;background:var(--bg);font-family:var(--f-display);font-size:17px} .unit{color:var(--mute);font-size:13px}
+.flashlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.fcard{text-align:left;border:2.5px solid var(--line);background:var(--panel);border-radius:16px;padding:14px;cursor:pointer;display:flex;flex-direction:column;gap:8px;min-height:120px;box-shadow:3px 3px 0 var(--line);transition:transform .15s}
+.fcard:hover{transform:rotate(-.8deg)} .fcard .fa{display:none;font-size:14px;border-top:2px dashed var(--hair);padding-top:8px} .fcard.on .fa{display:block;animation:pop .3s} .fcard.on{background:var(--plain)}
+.fq{font-weight:700} .num{font-family:var(--f-display);font-size:13px;background:var(--acc);color:#fff;border-radius:8px;padding:0 6px;margin-right:8px}
+.fnav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px} .fchip{text-decoration:none;color:var(--ink);background:var(--panel);border:2px solid var(--line);border-radius:999px;padding:2px 12px;font-size:13px;font-weight:700} .fchip:hover{background:var(--why)}
+.flist{display:flex;flex-direction:column;gap:22px;max-width:900px} .fcardx{scroll-margin-top:100px}
+.fqq{background:var(--soft);margin:0}
+.ftex{font-family:var(--f-display);font-size:22px;line-height:2.1;background:var(--panel);border:3px solid var(--line);border-radius:16px;padding:14px 18px;text-align:center;overflow-x:auto;box-shadow:inset 0 0 0 4px var(--why)}
+.sym{font:inherit;border:2.5px solid var(--line);background:var(--why);border-radius:10px;padding:0 8px;margin:0 2px;cursor:pointer;color:var(--ink);box-shadow:2px 2px 0 var(--line);transition:transform .1s}
+.sym:hover,.sym.on{background:var(--acc);color:#fff;transform:translateY(-2px)}
+.sympop{display:flex;gap:10px;align-items:center;background:var(--exam);border:2.5px solid var(--line);border-radius:14px;padding:8px 12px;animation:pop .25s}
+.symtable dl{display:grid;grid-template-columns:max-content 1fr;gap:8px 12px;margin:6px 0 0;align-items:start} .symtable dt .sym{font-family:var(--f-display);font-size:15px} .symtable dd{margin:0;font-size:14px} .symtable i{color:var(--mute)}
+.calc{background:color-mix(in srgb,var(--acc) 8%,var(--panel));border-style:solid;border-color:var(--acc)} .cvars{display:flex;flex-wrap:wrap;gap:10px 18px;margin:6px 0} .cvars label{display:flex;flex-direction:column;gap:2px;font-size:13px;font-weight:700} .cvars input[type=number]{width:120px;border:2px solid var(--line);border-radius:8px;padding:3px 6px;background:var(--panel);font-family:var(--f-display)}
+.cout{font-family:var(--f-display);font-size:16px;background:var(--panel);border:2px solid var(--line);border-radius:12px;padding:8px 12px;margin:6px 0 0}
+.essay{display:flex;flex-direction:column;gap:16px;max-width:840px}
+.estep{display:grid;grid-template-columns:40px minmax(0,1fr);gap:12px;background:var(--panel);border:2.5px solid var(--line);border-radius:18px;padding:14px;box-shadow:var(--sh)}
+.estep .n{width:36px;height:36px;border-radius:50%;background:var(--acc);color:#fff;display:grid;place-items:center;font-family:var(--f-display);font-weight:700;border:2.5px solid var(--line)}
+.lblb{display:block;font-weight:700;margin-bottom:6px} .estep select,.estep textarea{width:100%;border:2px solid var(--line);border-radius:10px;padding:8px;background:var(--bg)}
+.drop{display:flex;flex-direction:column;align-items:center;gap:4px;border:3px dashed var(--acc);border-radius:16px;padding:18px;text-align:center;color:var(--mute);cursor:pointer;position:relative} .drop.over{background:var(--why)} .drop input{position:absolute;opacity:0;width:1px;height:1px}
+.thumbs{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0} .th{position:relative;margin:0} .th img{width:96px;height:96px;object-fit:cover;border-radius:10px;border:2px solid var(--line)} .th button{position:absolute;top:-6px;right:-6px;border:2px solid var(--line);border-radius:50%;width:24px;height:24px;background:var(--panel);cursor:pointer}
+.rub{margin-top:8px} .feedback{margin-top:12px} .feedback h4{font-size:18px;color:var(--acc);margin-top:14px;font-family:var(--f-zh)} .feedback ul{padding-left:1.3em} .thinking{color:var(--mute)}
+.home .hero{display:flex;gap:18px;align-items:center;padding:6px 0 20px;flex-wrap:wrap} .home .hero>div{flex:1;min-width:240px} .home h2{font-size:34px;font-family:var(--f-zh);font-weight:700} .home .hero p{max-width:66ch;margin:6px 0}
+.stats{display:flex;gap:8px;flex-wrap:wrap} .stats span{background:var(--panel);border:2px solid var(--line);border-radius:10px;padding:0 10px;font-family:var(--f-display);font-weight:600;box-shadow:2px 2px 0 var(--line)}
+.subjgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}
+.sg{text-align:left;border:2.5px solid var(--line);background:var(--panel);border-radius:18px;padding:16px;cursor:pointer;display:flex;flex-direction:column;gap:8px;box-shadow:var(--sh);transition:transform .15s;border-top:12px solid var(--acc)}
+.sg:hover{transform:translateY(-4px) rotate(-.5deg)} .sg.deriv{--acc:var(--deriv)} .sg.invest{--acc:var(--invest)} .sg.law{--acc:var(--law)} .sg.mgmt{--acc:var(--mgmt)}
+.sgn{font-family:var(--f-zh);font-size:25px;font-weight:700;color:var(--acc)} .sgm{font-size:13px;color:var(--mute)} .sgp{font-size:12px;color:var(--mute);font-weight:700} .sgi{font-size:13px}
+.hh{font-family:var(--f-zh);font-size:24px;margin:28px 0 10px}
+.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+.badge{background:var(--panel);border:2.5px solid var(--line);border-radius:14px;padding:8px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:2px;opacity:.45;filter:grayscale(1)} .badge.got{opacity:1;filter:none;box-shadow:3px 3px 0 var(--line)}
+.badge .medal svg{width:40px;height:40px} .badge .md{fill:var(--gold);stroke:var(--line);stroke-width:2.5} .badge .mr{fill:none;stroke:var(--law);stroke-width:4} .badge .mt2{font-size:14px;fill:#22264a} .badge b{font-size:13px} .badge small{font-size:11px;color:var(--mute);line-height:1.3}
+.cfalist{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;margin-top:8px} .cfai{text-align:left;border:2px solid var(--line);background:var(--panel);border-radius:12px;padding:8px 10px;cursor:pointer;display:flex;flex-direction:column;border-left:8px solid var(--acc)} .cfai.deriv{--acc:var(--deriv)} .cfai.invest{--acc:var(--invest)} .cfai.mgmt{--acc:var(--mgmt)} .cfai span{font-size:12px;color:var(--mute)}
+.dates{margin-top:24px;background:var(--panel);border:2.5px solid var(--line);border-radius:18px;padding:14px 18px;max-width:800px;box-shadow:var(--sh)} .dates h3{font-size:19px;font-family:var(--f-zh)}
+#toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translate(-50%,140%);background:var(--panel);border:3px solid var(--line);border-radius:18px;padding:6px 16px 6px 8px;display:flex;align-items:center;gap:8px;box-shadow:var(--sh);z-index:50;transition:transform .3s;font-weight:700;max-width:calc(100vw - 32px)} #toast.show{transform:translate(-50%,0)}
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:60}
+.xpfloat{position:absolute;z-index:55;transform:translateX(-50%);font-family:var(--f-display);font-weight:700;color:#22264a;background:var(--gold);border:2px solid var(--line);border-radius:999px;padding:0 8px;animation:floatup 1.1s forwards;pointer-events:none}
+@keyframes floatup{to{transform:translate(-50%,-50px);opacity:0}} @keyframes pop{0%{transform:scale(.92)}60%{transform:scale(1.04)}100%{transform:scale(1)}} @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media (max-width:560px){#hud{margin-left:0;width:100%}.ftex{font-size:18px}.mgame{grid-template-columns:1fr 1fr;gap:8px}.mt{font-size:13px;padding:8px}}
 </style>
-<header class="top"><div class="topin"><span class="brand">26 秋季複習本<small>AUTUMN 2026</small></span><nav id="stabs" aria-label="科目"></nav></div></header>
+<header class="top"><div class="topin"><span class="brand" id="brand">26 秋季複習本</span><nav id="stabs" aria-label="科目"></nav><div id="hud"></div></div></header>
 <main id="main"></main>
 <script>
 const DATA = {};
 // ===== 衍生性金融市場 (Hull, Ch1–3) =====
 DATA.deriv = {
   name: '衍金', full: '衍生性金融市場', hue: 'deriv',
-  intro: '課本：Hull《Options, Futures & Other Derivatives》11版。小考：從老師勾選習題中出一題或類題（可開書）。期中考 2026/11/16，可帶 A4 手抄小抄＋計算機。',
+  intro: '課本：Hull《Options, Futures & Other Derivatives》11版。小考：從老師勾選習題中出一題或類題（可開書）。期中考 2026/11/16，可帶 A4 手抄小抄＋計算機。考試用英文作答 → 右上角切換「EN」或「雙語」練英文題目，每張卡也有 Exam English 句子。',
   sections: [
   { id: 'ch1', t: 'Ch1 衍生性商品入門', cards: [
     { id: 'd1', t: '衍生性商品是什麼？', en: 'Derivative',
@@ -770,7 +826,7 @@ DATA.law = {
 // ===== 管理學（Robbins & Coulter） =====
 DATA.mgmt = {
   name: '管理學', full: '管理學', hue: 'mgmt',
-  intro: 'Robbins & Coulter《Management》14/15 版。期中考 11/4（第 9 週），範圍到 Ch11 組織設計。會有申論題 → 下方「申論練習」可拍照上傳手寫答案，讓 Claude 依評分要點批改。',
+  intro: 'Robbins & Coulter《Management》14/15 版。期中考 11/4（第 9 週），範圍到 Ch11 組織設計。考試用英文作答，會有申論題 → 「申論批改」可拍照上傳手寫答案，讓 Claude 依評分要點批改。',
   sections: [
   { id:'m1', t:'Ch1 管理者與職場', cards: [
     { id:'m1a', t:'誰是管理者？三個層級', en:'Who is a manager',
@@ -1082,7 +1138,7 @@ DATA.deriv.gens = [
       const F = size === 5000 ? R(15, 30, 0.1) : size === 15000 ? R(120, 180, 1) : size === 40000 ? R(90, 140, 0.5) : R(60, 90, 0.5);
       const im = pick([2000, 3000, 4000, 5000, 6000]); const mm = im - pick([500, 1000, 1500]);
       const loss = im - mm; const dp = loss / size; const ans = side === 'long' ? F - dp : F + dp;
-      return { q: `你 ${side === 'long' ? '買進（long）' : '賣出（short）'} ${n} 口期貨，每口 ${f2(size)} 單位，價格 $${f2(F)}。原始保證金每口 $${f2(im)}、維持保證金每口 $${f2(mm)}。價格到多少（$/單位）會收到保證金追繳？`,
+      return { qe: `You take a ${side} position in ${n} futures contract(s). Each contract is for ${f2(size)} units and the futures price is $${f2(F)}. The initial margin is $${f2(im)} per contract and the maintenance margin is $${f2(mm)} per contract. At what futures price will there be a margin call?`, q: `你 ${side === 'long' ? '買進（long）' : '賣出（short）'} ${n} 口期貨，每口 ${f2(size)} 單位，價格 $${f2(F)}。原始保證金每口 $${f2(im)}、維持保證金每口 $${f2(mm)}。價格到多少（$/單位）會收到保證金追繳？`,
         ans, tol: 0.006, unit: '$/單位',
         sol: [`每口可虧 ${f2(im)} − ${f2(mm)} = $${f2(loss)}（口數不影響每單位的價格變動）`, `每單位價格變動 = ${f2(loss)} / ${f2(size)} = ${f2(dp, 4)}`, `${side === 'long' ? '多頭怕跌' : '空頭怕漲'} → ${f2(F)} ${side === 'long' ? '−' : '+'} ${f2(dp, 4)} = <b>${f2(ans, 4)}</b>`] };
   } },
@@ -1090,7 +1146,7 @@ DATA.deriv.gens = [
       const side = pick(['long', 'short']); const size = pick([5000, 15000, 100]); const n = pick([2, 3, 4]);
       const F = size === 100 ? R(1400, 1900, 10) : size === 5000 ? R(15, 30, 0.1) : R(120, 180, 1);
       const w = pick([1000, 1500, 2000, 3000]); const per = w / n; const dp = per / size; const ans = side === 'long' ? F + dp : F - dp;
-      return { q: `${side === 'long' ? 'Long' : 'Short'} ${n} 口，每口 ${f2(size)} 單位，價格 $${f2(F)}。價格變動到多少時，可以從保證金帳戶提領 $${f2(w)}（總額）？`,
+      return { qe: `A trader is ${side} ${n} contracts, each for ${f2(size)} units, at $${f2(F)}. At what futures price could the trader withdraw $${f2(w)} (in total) from the margin account?`, q: `${side === 'long' ? 'Long' : 'Short'} ${n} 口，每口 ${f2(size)} 單位，價格 $${f2(F)}。價格變動到多少時，可以從保證金帳戶提領 $${f2(w)}（總額）？`,
         ans, tol: 0.006, unit: '$/單位',
         sol: [`需總獲利 $${f2(w)} → 每口 ${f2(w)}/${n} = $${f2(per)}`, `每單位 = ${f2(per)}/${f2(size)} = ${f2(dp, 4)}`, `${side === 'long' ? '多頭要漲' : '空頭要跌'} → <b>${f2(ans, 4)}</b>`] };
   } },
@@ -1100,13 +1156,13 @@ DATA.deriv.gens = [
       let bal = im * n, prev = F0, calls = [];
       path.forEach((x, i) => { bal += (x - prev) * size * n; prev = x; if (bal < mm * n) { calls.push([i + 1, im * n - bal]); bal = im * n; } });
       const total = calls.reduce((s, c) => s + c[1], 0);
-      return { q: `Long ${n} 口黃金期貨（每口 100 oz），成交價 $${F0}。原始保證金每口 $${f2(im)}、維持每口 $${f2(mm)}。接下來四天結算價：${path.join('、')}。四天合計需補繳多少保證金？（沒有追繳就填 0）`,
+      return { qe: `An investor takes a long position in ${n} gold futures contract(s) (100 oz each) at $${F0}. The initial margin is $${f2(im)} and the maintenance margin is $${f2(mm)} per contract. The settlement prices over the next four days are ${path.join(', ')}. What is the total amount of margin calls over the four days? (Enter 0 if none.)`, q: `Long ${n} 口黃金期貨（每口 100 oz），成交價 $${F0}。原始保證金每口 $${f2(im)}、維持每口 $${f2(mm)}。接下來四天結算價：${path.join('、')}。四天合計需補繳多少保證金？（沒有追繳就填 0）`,
         ans: total, tol: 0.6, unit: '$',
         sol: [`總原始 ${f2(im * n)}、總維持 ${f2(mm * n)}`, ...(() => { let b = im * n, pv = F0; return path.map((x, i) => { const g = (x - pv) * size * n; pv = x; b += g; let s = `第 ${i + 1} 天：(${x}−${(i ? path[i - 1] : F0)})×100×${n} = ${f2(g)} → 餘額 ${f2(b)}`; if (b < mm * n) { s += ` &lt; ${f2(mm * n)} → 補 <b>${f2(im * n - b)}</b> 回到 ${f2(im * n)}`; b = im * n; } return s; }); })(), `合計補繳 <b>${f2(total)}</b>`] };
   } },
   { id: 'go', t: '未平倉量變化', base: '2.23', make() {
       const vol = R(1000, 5000, 100); const a = R(100, vol - 100, 50); const c = R(100, vol - 100, 50); const b = vol - a, d = vol - c;
-      return { q: `某日成交 ${vol} 口。買方中 ${a} 口開新倉、${b} 口平倉；賣方中 ${c} 口開新倉、${d} 口平倉。OI 變化為多少？（減少請填負數）`,
+      return { qe: `On a particular day there were ${vol} trades. Of the buyers, ${a} entered new positions and ${b} closed out; of the sellers, ${c} entered new positions and ${d} closed out. What is the change in open interest? (Use a negative number for a decrease.)`, q: `某日成交 ${vol} 口。買方中 ${a} 口開新倉、${b} 口平倉；賣方中 ${c} 口開新倉、${d} 口平倉。OI 變化為多少？（減少請填負數）`,
         ans: a - d, tol: 0.1, unit: '口',
         sol: ['口訣：買方開 − 賣方平', `${a} − ${d} = <b>${a - d}</b>`, `驗算：賣方開 − 買方平 = ${c} − ${b} = ${c - b}`] };
   } },
@@ -1114,28 +1170,28 @@ DATA.deriv.gens = [
       const rho = R(0.6, 0.98, 0.01); const sS = R(0.4, 1.5, 0.01); const sF = R(0.4, 1.5, 0.01);
       const what = pick([['活牛', 40000, '磅'], ['航空燃油（用加熱油期貨）', 42000, '加侖'], ['玉米', 5000, '蒲式耳']]);
       const Q = what[1] * R(3, 60, 1) * pick([0.9, 1, 1.1]); const h = rho * sS / sF; const N = h * Q / what[1];
-      return { q: `要避險 ${f2(Q)} ${what[2]}的${what[0]}。現貨價格變動標準差 ${sS}、期貨 ${sF}，相關係數 ${rho}。每口期貨 ${f2(what[1])} ${what[2]}。最適口數（不四捨五入，到小數第二位）？`,
+      return { qe: `A company must hedge ${f2(Q)} ${what[2] === '磅' ? 'pounds' : what[2] === '加侖' ? 'gallons' : 'bushels'} of ${what[0].startsWith('活牛') ? 'live cattle' : what[0].startsWith('航空') ? 'jet fuel (using heating oil futures)' : 'corn'}. The standard deviation of spot price changes is ${sS}, of futures price changes is ${sF}, and the correlation is ${rho}. Each contract covers ${f2(what[1])} units. What is the optimal number of contracts (two decimals, before rounding)?`, q: `要避險 ${f2(Q)} ${what[2]}的${what[0]}。現貨價格變動標準差 ${sS}、期貨 ${sF}，相關係數 ${rho}。每口期貨 ${f2(what[1])} ${what[2]}。最適口數（不四捨五入，到小數第二位）？`,
         ans: N, tol: 0.02, unit: '口',
         sol: [`h* = ${rho} × ${sS} / ${sF} = ${f2(h, 4)}`, `N* = ${f2(h, 4)} × ${f2(Q)} / ${f2(what[1])} = <b>${f2(N, 2)}</b> ≈ ${Math.round(N)} 口`] };
   } },
   { id: 'gb', t: '用指數期貨調整 β', base: '3.4／3.25', make() {
       const V = R(5, 200, 5) * 1e6; const b = R(0.6, 1.8, 0.05); let bs = R(0, 2.2, 0.05); if (Math.abs(bs - b) < 0.1) bs = 0;
       const F = R(1000, 6000, 50); const m = pick([50, 250]); const N = (bs - b) * V / (F * m);
-      return { q: `投資組合價值 $${f2(V)}、β = ${f2(b)}。指數期貨價格 ${f2(F)}，每口 $${m} × 指數。要把 β 調到 ${f2(bs)}，需要幾口？（long 填正數、short 填負數，到小數第一位）`,
+      return { qe: `A portfolio is worth $${f2(V)} with a beta of ${f2(b)}. The index futures price is ${f2(F)} and the multiplier is $${m}. How many contracts are needed to change the beta to ${f2(bs)}? (Positive = long, negative = short; one decimal.)`, q: `投資組合價值 $${f2(V)}、β = ${f2(b)}。指數期貨價格 ${f2(F)}，每口 $${m} × 指數。要把 β 調到 ${f2(bs)}，需要幾口？（long 填正數、short 填負數，到小數第一位）`,
         ans: N, tol: 0.06, unit: '口',
         sol: [`V<sub>F</sub> = ${f2(F)} × ${m} = ${f2(F * m)}`, `(β* − β) × V<sub>A</sub>/V<sub>F</sub> = (${f2(bs)} − ${f2(b)}) × ${f2(V)} / ${f2(F * m)} = <b>${f2(N, 2)}</b>`, N < 0 ? '負數 → short' : '正數 → long'] };
   } },
   { id: 'gx', t: '交叉避險：曝險換算成口數', base: '3.23', make() {
       const rho = R(0.5, 0.9, 0.05); const ratio = R(1.1, 1.8, 0.1); const loss = pick([0.5, 1, 2]) * 1e6; const size = 42000;
       const h = rho * ratio; const Q = loss / 0.01; const N = h * Q / size;
-      return { q: `新燃料價格變動與汽油期貨相關係數 ${rho}，標準差是汽油期貨的 ${ratio} 倍。新燃料每加侖每漲 1 美分，公司損失 $${f2(loss)}。每口汽油期貨 42,000 加侖。需要幾口？（小數第一位）`,
+      return { qe: `Price changes of a new fuel have a correlation of ${rho} with gasoline futures price changes, and their standard deviation is ${ratio} times as large. The company loses $${f2(loss)} for each 1 cent increase in the price per gallon. Each gasoline futures contract is on 42,000 gallons. How many contracts should be traded? (one decimal)`, q: `新燃料價格變動與汽油期貨相關係數 ${rho}，標準差是汽油期貨的 ${ratio} 倍。新燃料每加侖每漲 1 美分，公司損失 $${f2(loss)}。每口汽油期貨 42,000 加侖。需要幾口？（小數第一位）`,
         ans: N, tol: 0.06, unit: '口',
         sol: [`h* = ${rho} × ${ratio} = ${f2(h, 4)}`, `0.01 × Q = ${f2(loss)} → Q = ${f2(Q)} 加侖`, `期貨部位 = ${f2(h * Q)} 加侖`, `N = ${f2(h * Q)} / 42,000 = <b>${f2(N, 2)}</b>（long）`] };
   } },
   { id: 'gs', t: '基差：實際買賣價格', base: '3.7／3.21', make() {
       const side = pick(['賣出', '買進']); const F1 = R(20, 80, 0.1); const F2 = +(F1 + R(-6, 6, 0.1)).toFixed(2); const b2 = R(-1.5, 1.5, 0.05); const S2 = +(F2 + b2).toFixed(2);
       const ans = F1 + b2;
-      return { q: `公司未來要${side}某資產，現在以 $${F1} ${side === '賣出' ? 'short' : 'long'} 期貨避險（h=1）。平倉時期貨 $${F2}、現貨 $${S2}。實際每單位${side === '賣出' ? '收到' : '支付'}的價格？`,
+      return { qe: `A company will ${side === '賣出' ? 'sell' : 'buy'} an asset and hedges by ${side === '賣出' ? 'shorting' : 'buying'} futures at $${F1} (h = 1). When the hedge is closed out the futures price is $${F2} and the spot price is $${S2}. What is the effective price ${side === '賣出' ? 'received' : 'paid'} per unit?`, q: `公司未來要${side}某資產，現在以 $${F1} ${side === '賣出' ? 'short' : 'long'} 期貨避險（h=1）。平倉時期貨 $${F2}、現貨 $${S2}。實際每單位${side === '賣出' ? '收到' : '支付'}的價格？`,
         ans, tol: 0.006, unit: '$',
         sol: [`b₂ = S₂ − F₂ = ${S2} − ${F2} = ${f2(b2, 2)}`, side === '賣出' ? `收到 = S₂ + (F₁ − F₂) = F₁ + b₂` : `支付 = S₂ − (F₂ − F₁) = F₁ + b₂`, `= ${F1} + (${f2(b2, 2)}) = <b>${f2(ans, 2)}</b>`] };
   } },
@@ -1143,20 +1199,20 @@ DATA.deriv.gens = [
       const type = pick(['long call', 'short call', 'long put', 'short put']); const K = R(40, 120, 5); const c = R(2, 10, 0.5); const ST = +(K + R(-30, 30, 1)).toFixed(0);
       const call = Math.max(ST - K, 0), put = Math.max(K - ST, 0);
       const ans = type === 'long call' ? call - c : type === 'short call' ? c - call : type === 'long put' ? put - c : c - put;
-      return { q: `${type}，執行價 K = $${K}，權利金 $${c}。到期股價 S<sub>T</sub> = $${ST}。每股利潤（profit）？`, ans, tol: 0.006, unit: '$',
+      return { qe: `An investor has a ${type} with strike K = $${K} and premium $${c}. At expiration S<sub>T</sub> = $${ST}. What is the profit per share?`, q: `${type}，執行價 K = $${K}，權利金 $${c}。到期股價 S<sub>T</sub> = $${ST}。每股利潤（profit）？`, ans, tol: 0.006, unit: '$',
         sol: [type.includes('call') ? `Call payoff = max(${ST}−${K}, 0) = ${call}` : `Put payoff = max(${K}−${ST}, 0) = ${put}`, type.startsWith('long') ? `Long：payoff − 權利金 = <b>${f2(ans)}</b>` : `Short：權利金 − payoff = <b>${f2(ans)}</b>`] };
   } },
   { id: 'gt', t: 'Tailing the hedge（進階）', base: '3.22(d)', make() {
       const rho = R(0.8, 0.98, 0.01); const r = R(0.9, 1.3, 0.01); const units = R(20, 120, 5) * 1000; const S = R(20, 60, 0.5); const F = +(S * R(0.94, 1.04, 0.01)).toFixed(2); const size = 5000;
       const VA = units * S, VF = size * F; const N = rho * r * VA / VF;
-      return { q: `用期貨避險 ${f2(units)} 單位資產，現貨 $${S}、期貨 $${F}、每口 5,000 單位。一天報酬率的相關係數 ${rho}，σ̂<sub>S</sub>/σ̂<sub>F</sub> = ${r}。考慮每日結算（tailing）的最適口數？（小數第二位）`,
+      return { qe: `A company hedges ${f2(units)} units of an asset. The spot price is $${S}, the futures price is $${F}, and each contract is on 5,000 units. The correlation between one-day percentage returns is ${rho} and σ̂<sub>S</sub>/σ̂<sub>F</sub> = ${r}. What is the optimal number of contracts when daily settlement is considered (tailing)? (two decimals)`, q: `用期貨避險 ${f2(units)} 單位資產，現貨 $${S}、期貨 $${F}、每口 5,000 單位。一天報酬率的相關係數 ${rho}，σ̂<sub>S</sub>/σ̂<sub>F</sub> = ${r}。考慮每日結算（tailing）的最適口數？（小數第二位）`,
         ans: N, tol: 0.02, unit: '口',
         sol: [`V<sub>A</sub> = ${f2(units)} × ${S} = ${f2(VA)}`, `V<sub>F</sub> = 5,000 × ${F} = ${f2(VF)}`, `N = ${rho} × ${r} × ${f2(VA)} / ${f2(VF)} = <b>${f2(N, 2)}</b>`] };
   } },
   { id: 'gf', t: '外匯報價換算', base: '2.13', make() {
       const fwd = R(0.82, 1.25, 0.0005); const fut = +(1 / fwd * R(0.97, 1.03, 0.001)).toFixed(4);
       const conv = 1 / fwd; const sellFwd = conv > fut;
-      return { q: `瑞郎遠期報價 ${fwd.toFixed(4)}（CHF/USD），期貨報價 ${fut}（USD/CHF）。把遠期換成期貨的報價方式是多少 USD/CHF？（四位小數）想賣瑞郎選哪個市場？`,
+      return { qe: `The forward price of the Swiss franc is quoted as ${fwd.toFixed(4)} (CHF per USD) and the futures price is ${fut} (USD per CHF). Convert the forward quote to USD per CHF (four decimals). Which market is better for selling francs?`, q: `瑞郎遠期報價 ${fwd.toFixed(4)}（CHF/USD），期貨報價 ${fut}（USD/CHF）。把遠期換成期貨的報價方式是多少 USD/CHF？（四位小數）想賣瑞郎選哪個市場？`,
         ans: conv, tol: 0.00015, unit: 'USD/CHF',
         sol: [`1 / ${fwd.toFixed(4)} = <b>${conv.toFixed(4)}</b>`, `${conv.toFixed(4)} ${sellFwd ? '&gt;' : '&lt;'} ${fut} → 瑞郎在${sellFwd ? '遠期' : '期貨'}市場較值錢 → 想賣選<b>${sellFwd ? '遠期' : '期貨'}</b>`] };
   } }
@@ -1376,6 +1432,509 @@ const WIDGETS = {
     $$('.flip', el).forEach(b => b.addEventListener('click', () => b.classList.toggle('on')));
   }
 };
+// ===== 公式教室：每個公式拆到每個符號 =====
+// tex 用 <v s="key">顯示</v> 標記可點的符號；syms[key] = [中文, English, 白話]
+const fx = (n, d = 4) => (Math.round(n * 10 ** d) / 10 ** d).toLocaleString('en-US', { maximumFractionDigits: d });
+
+DATA.deriv.formulas = [
+  { id:'F1', t:'遠期／期貨到期收益', en:'Payoff of a forward (or futures) at maturity',
+    q:'到期那天，我這張「約好價格」的合約賺多少、賠多少？',
+    tex:'多頭 Long：<v s="pay">Payoff</v> = <v s="ST">S<sub>T</sub></v> − <v s="K">K</v>　　空頭 Short：<v s="pay">Payoff</v> = <v s="K">K</v> − <v s="ST">S<sub>T</sub></v>',
+    syms:{ pay:['收益（每單位）','payoff (per unit)','到期那天這張合約讓你多賺或少付的錢'], ST:['到期時的現貨價格','spot price at maturity T','到期那天東西「真正」的市價'], K:['交割價／約定價','delivery price','當初講好要用多少錢買賣'] },
+    why:'你約好用 K 買。到期時東西值 S<sub>T</sub>。如果 S<sub>T</sub> 比 K 貴，你用便宜的 K 買到值 S<sub>T</sub> 的東西 → 賺 S<sub>T</sub> − K。如果 S<sub>T</sub> 比 K 便宜，你還是得用 K 買 → 虧（數字變負的）。空頭剛好相反，所以兩個人的收益加起來永遠 = 0（零和遊戲）。',
+    steps:['先決定你是買方（long）還是賣方（short）','買方：拿「到期市價」減「約定價」','賣方：拿「約定價」減「到期市價」','再乘上合約數量（例如 100 盎司）就是總金額'],
+    vars:[{k:'K',s:'K',v:1400,min:1000,max:1800,step:10},{k:'ST',s:'S<sub>T</sub>',v:1300,min:1000,max:1800,step:10},{k:'q',s:'數量',v:100,min:1,max:1000,step:1}],
+    calc:v=>`Long：(${v.ST} − ${v.K}) × ${v.q} = <b>${fx((v.ST-v.K)*v.q)}</b><br>Short：(${v.K} − ${v.ST}) × ${v.q} = <b>${fx((v.K-v.ST)*v.q)}</b>`,
+    oops:['把 long 和 short 的順序弄反：記「買方希望漲 → S<sub>T</sub> 放前面」','忘了乘合約規模（一口 100 oz）'],
+    exam:'The payoff from a long forward position is S<sub>T</sub> − K, and the payoff from a short position is K − S<sub>T</sub>, where K is the delivery price and S<sub>T</sub> is the spot price at maturity.',
+    cfa:'CFA Level I Derivatives：forward 的 payoff 與 value 是必考基礎。' },
+  { id:'F2', t:'買權 Call 的收益與利潤', en:'Call option payoff and profit',
+    q:'買了一個「可以用 K 買」的權利，到期賺多少？',
+    tex:'<v s="pay">Payoff</v> = max(<v s="ST">S<sub>T</sub></v> − <v s="K">K</v>, 0)　　<v s="pr">Profit</v> = Payoff − <v s="c">c</v>',
+    syms:{ pay:['收益','payoff','到期執行權利拿到的錢（還沒扣成本）'], ST:['到期股價','stock price at expiration','到期那天股票值多少'], K:['執行價','strike / exercise price','你有權用多少錢買'], c:['買權權利金','call premium','買這個權利一開始付的錢'], pr:['利潤','profit','真正賺的：收益扣掉權利金'] },
+    why:'<b>max(A, 0)</b> 的意思是「A 和 0 選比較大的那個」。為什麼？因為你是「有權利、沒義務」：股價比 K 高 → 執行，賺 S<sub>T</sub>−K；股價比 K 低 → 不執行，收益就是 0，不會變負的。但當初付的權利金 c 是拿不回來的，所以利潤 = 收益 − c。最多只會虧 c。',
+    steps:['算 S<sub>T</sub> − K','如果是負數 → 改成 0（不執行）','收益 − 權利金 = 利潤','損益兩平點：S<sub>T</sub> = K + c'],
+    vars:[{k:'K',s:'K',v:100,min:50,max:150,step:5},{k:'ST',s:'S<sub>T</sub>',v:115,min:50,max:160,step:1},{k:'c',s:'c',v:5,min:0,max:20,step:0.5}],
+    calc:v=>{const p=Math.max(v.ST-v.K,0);return `max(${v.ST} − ${v.K}, 0) = max(${fx(v.ST-v.K)}, 0) = <b>${fx(p)}</b>${v.ST<v.K?'（不執行）':'（執行）'}<br>Profit = ${fx(p)} − ${v.c} = <b>${fx(p-v.c)}</b>；損益兩平 = ${v.K} + ${v.c} = ${fx(v.K+v.c)}`;},
+    oops:['payoff 和 profit 搞混：題目問 profit 才要扣權利金','賣方（short call）的利潤 = c − max(S<sub>T</sub>−K, 0)，最大損失無限'],
+    exam:'A long call has a payoff of max(S<sub>T</sub> − K, 0); its profit equals the payoff minus the premium paid. The maximum loss is limited to the premium.',
+    cfa:'CFA Level I：option payoff/profit diagrams、breakeven 每年都考。' },
+  { id:'F3', t:'賣權 Put 的收益與利潤', en:'Put option payoff and profit',
+    q:'買了一個「可以用 K 賣」的權利，到期賺多少？',
+    tex:'<v s="pay">Payoff</v> = max(<v s="K">K</v> − <v s="ST">S<sub>T</sub></v>, 0)　　<v s="pr">Profit</v> = Payoff − <v s="p">p</v>',
+    syms:{ pay:['收益','payoff','執行賣權拿到的錢'], K:['執行價','strike price','你有權用多少錢賣'], ST:['到期股價','price at expiration','到期那天的市價'], p:['賣權權利金','put premium','買這個保險付的錢'], pr:['利潤','profit','收益扣權利金'] },
+    why:'賣權像「保價險」。市價跌到 S<sub>T</sub>，你卻能用比較高的 K 賣出 → 賺 K − S<sub>T</sub>。市價比 K 高的話，你自己去市場賣比較好，不用這個權利 → 收益 0。老師的大頭菜例：保證能 99 鈴錢賣出，就是 K = 99 的 put。',
+    steps:['算 K − S<sub>T</sub>','負數 → 0','減掉權利金','損益兩平：S<sub>T</sub> = K − p','最大利潤 = K − p（股價跌到 0）'],
+    vars:[{k:'K',s:'K',v:70,min:40,max:120,step:5},{k:'ST',s:'S<sub>T</sub>',v:55,min:0,max:130,step:1},{k:'p',s:'p',v:7,min:0,max:20,step:0.5}],
+    calc:v=>{const x=Math.max(v.K-v.ST,0);return `max(${v.K} − ${v.ST}, 0) = <b>${fx(x)}</b><br>Profit = ${fx(x)} − ${v.p} = <b>${fx(x-v.p)}</b>；損益兩平 = ${v.K} − ${v.p} = ${fx(v.K-v.p)}`;},
+    oops:['把 K 和 S<sub>T</sub> 順序寫成 call 的樣子','以為 put 是「賣出選擇權」：put 是「賣的權利」，買 put 的人是 long put'],
+    exam:'A long put has a payoff of max(K − S<sub>T</sub>, 0). It is used to protect against a fall in the price of the underlying asset.',
+    cfa:'CFA：protective put = 股票 + long put，是重要策略。' },
+  { id:'F4', t:'每日結算的損益', en:'Daily settlement gain',
+    q:'今天收盤後，我的保證金帳戶要加減多少錢？',
+    tex:'<v s="g">當日損益</v> = (<v s="Ft">F<sub>t</sub></v> − <v s="F0">F<sub>t−1</sub></v>) × <v s="z">合約規模</v> × <v s="n">口數</v>　（空頭再乘 −1）',
+    syms:{ g:['當日損益','daily gain/loss','今天被加進或扣出帳戶的錢'], Ft:['今天結算價','today’s settlement price','今天收盤時大家同意的期貨價'], F0:['昨天結算價','previous settlement price','昨天的結算價（第一天用成交價）'], z:['合約規模','contract size','一口等於多少單位（黃金 100 oz）'], n:['口數','number of contracts','你買了幾口'] },
+    why:'期貨不是等到到期才算帳，而是「每天」把今天跟昨天的價差結清（marking to market）。多頭希望價格上漲，所以今天比昨天高就賺；空頭相反。',
+    steps:['今天價 − 昨天價（每單位變動）','× 每口幾單位','× 幾口','多頭直接用；空頭變號','加到保證金餘額上'],
+    vars:[{k:'F0',s:'F<sub>t−1</sub>',v:1450,min:1300,max:1900,step:0.1},{k:'Ft',s:'F<sub>t</sub>',v:1441,min:1300,max:1900,step:0.1},{k:'z',s:'規模',v:100,min:1,max:5000,step:1},{k:'n',s:'口數',v:2,min:1,max:20,step:1}],
+    calc:v=>`Long：(${v.Ft} − ${v.F0}) × ${v.z} × ${v.n} = <b>${fx((v.Ft-v.F0)*v.z*v.n,2)}</b>；Short：<b>${fx(-(v.Ft-v.F0)*v.z*v.n,2)}</b>`,
+    oops:['忘記乘口數','把「累積損益」當成「當日損益」'],
+    exam:'Futures contracts are marked to market daily: the gain or loss is (F<sub>t</sub> − F<sub>t−1</sub>) × contract size × number of contracts, and it is credited to or debited from the margin account.',
+    cfa:'CFA：futures 的 mark-to-market 與 margin 機制。' },
+  { id:'F5', t:'保證金追繳的價格', en:'Price that triggers a margin call',
+    q:'價格跑到哪裡，我會被叫去補錢？',
+    tex:'多頭：<v s="P">P*</v> = <v s="F">F<sub>0</sub></v> − (<v s="IM">IM</v> − <v s="MM">MM</v>) ÷ <v s="z">每口規模</v><br>空頭：<v s="P">P*</v> = <v s="F">F<sub>0</sub></v> + (<v s="IM">IM</v> − <v s="MM">MM</v>) ÷ <v s="z">每口規模</v>',
+    syms:{ P:['追繳觸發價','margin call price','價格碰到這裡就要補錢'], F:['成交價','initial futures price','你進場時的期貨價'], IM:['原始保證金（每口）','initial margin','進場要押的錢'], MM:['維持保證金（每口）','maintenance margin','帳戶最低不能低於這條線'], z:['每口規模','contract size','一口幾單位'] },
+    why:'IM − MM 是「緩衝墊」：你最多能虧多少錢才會碰到維持線。把這筆錢除以每口的單位數，就變成「每單位價格能動多少」。多頭怕跌，所以從成交價往下扣；空頭怕漲，所以往上加。<br><b>重點</b>：用「每口」的 IM、MM 和「每口」的規模算，口數會被約掉，不影響答案！',
+    steps:['緩衝 = IM − MM（例：4,000 − 3,000 = 1,000）','每單位價格緩衝 = 緩衝 ÷ 每口規模（1,000 ÷ 5,000 = 0.20）','判斷方向：long 減、short 加','17.20 + 0.20 = 17.40（課本 2.1，short）','被追繳後要補到「原始」保證金，不是補到維持！'],
+    vars:[{k:'F',s:'F<sub>0</sub>',v:17.2,min:1,max:200,step:0.1},{k:'IM',s:'IM',v:4000,min:500,max:20000,step:100},{k:'MM',s:'MM',v:3000,min:0,max:20000,step:100},{k:'z',s:'規模',v:5000,min:1,max:50000,step:100}],
+    calc:v=>{const d=(v.IM-v.MM)/v.z;return `緩衝每單位 = (${v.IM} − ${v.MM}) ÷ ${v.z} = ${fx(d)}<br>Long：${v.F} − ${fx(d)} = <b>${fx(v.F-d)}</b>；Short：${v.F} + ${fx(d)} = <b>${fx(v.F+d)}</b>`;},
+    oops:['補繳金額補到維持保證金（錯！要補到原始）','用「總」保證金除以「每口」規模（兩邊單位要一致）','多空方向搞反'],
+    exam:'A margin call occurs when the balance falls below the maintenance margin. For a short position this happens when the futures price rises by (initial margin − maintenance margin) / contract size.',
+    cfa:'CFA：variation margin 的計算題型。' },
+  { id:'F6', t:'未平倉量的變化', en:'Change in open interest',
+    q:'今天交易完，市場上「還沒平倉的合約」多了還是少了？',
+    tex:'Δ<v s="OI">OI</v> = <v s="a">買方開倉</v> − <v s="d">賣方平倉</v> = <v s="c">賣方開倉</v> − <v s="b">買方平倉</v>',
+    syms:{ OI:['未平倉量','open interest','市場上還活著的合約數（只算一邊）'], a:['買方開倉','new longs','買的人中，建立新部位的'], b:['買方平倉','longs closing… 其實是空方買回','買的人中，買回來平掉舊空單的'], c:['賣方開倉','new shorts','賣的人中，建立新部位的'], d:['賣方平倉','longs closing out','賣的人中，賣掉平掉舊多單的'] },
+    why:'把每筆成交想成「一個買方配一個賣方」。兩個都是新人 → 多一張合約（OI+1）；兩個都在退場 → 少一張（OI−1）；一個進一個出 → 合約換手，數量不變。把所有配對加總，算出來剛好等於「買方開倉 − 賣方平倉」。',
+    steps:['成交量 = 買方開 + 買方平 = 賣方開 + 賣方平','代公式：買方開 − 賣方平','驗算：賣方開 − 買方平，答案應該一樣','負數 = OI 減少'],
+    vars:[{k:'a',s:'買方開',v:600,min:0,max:5000,step:50},{k:'c',s:'賣方開',v:800,min:0,max:5000,step:50},{k:'vol',s:'成交量',v:2000,min:0,max:10000,step:100}],
+    calc:v=>{const b=v.vol-v.a,d=v.vol-v.c;return `買方平 = ${v.vol} − ${v.a} = ${b}；賣方平 = ${v.vol} − ${v.c} = ${d}<br>ΔOI = ${v.a} − ${d} = <b>${v.a-d}</b>（驗算 ${v.c} − ${b} = ${v.c-b}）`;},
+    oops:['把成交量直接當 OI 變化','用「買方開 − 買方平」（錯，要交叉：買方開配賣方平）'],
+    exam:'Open interest is the total number of contracts outstanding. It went down by 600 because 1,200 longs closed out while only 600 new longs were opened.',
+    cfa:'CFA：open interest vs. trading volume 的觀念題。' },
+  { id:'F7', t:'基差與避險後的實際價格', en:'Basis and effective hedged price',
+    q:'用期貨避險後，我最後實際買到／賣到的價格是多少？',
+    tex:'<v s="b">b</v> = <v s="S">S</v> − <v s="F">F</v>　　實際價格 = <v s="F1">F<sub>1</sub></v> + <v s="b2">b<sub>2</sub></v>',
+    syms:{ b:['基差','basis','現貨跟期貨的價差'], S:['現貨價','spot price','要避險的那個東西現在的價格'], F:['期貨價','futures price','所用期貨的價格'], F1:['開始避險時的期貨價','futures price when hedge is set up','你鎖定的價格'], b2:['平倉時的基差','basis when hedge is closed out','平倉那天 S<sub>2</sub> − F<sub>2</sub>，事先不知道 → 風險來源'] },
+    why:'以 short hedge 為例：你在市場用 S<sub>2</sub> 賣掉東西，期貨部位賺 F<sub>1</sub> − F<sub>2</sub>。加起來 S<sub>2</sub> + F<sub>1</sub> − F<sub>2</sub> = F<sub>1</sub> + (S<sub>2</sub> − F<sub>2</sub>) = <b>F<sub>1</sub> + b<sub>2</sub></b>。F<sub>1</sub> 是已知的，只有 b<sub>2</sub> 不知道，所以叫「基差風險」。到期日平倉時 b<sub>2</sub> = 0（收斂），就能完全鎖在 F<sub>1</sub>。',
+    steps:['b<sub>2</sub> = S<sub>2</sub> − F<sub>2</sub>','實際價格 = F<sub>1</sub> + b<sub>2</sub>（買方、賣方都一樣）','賣方：b<sub>2</sub> 越大越好（基差變強有利）','買方：b<sub>2</sub> 越小越好'],
+    vars:[{k:'F1',s:'F<sub>1</sub>',v:2.2,min:0,max:100,step:0.05},{k:'S2',s:'S<sub>2</sub>',v:2.0,min:0,max:100,step:0.05},{k:'F2',s:'F<sub>2</sub>',v:1.9,min:0,max:100,step:0.05}],
+    calc:v=>`b<sub>2</sub> = ${v.S2} − ${v.F2} = ${fx(v.S2-v.F2)}<br>實際價格 = ${v.F1} + ${fx(v.S2-v.F2)} = <b>${fx(v.F1+v.S2-v.F2)}</b>`,
+    oops:['寫成 F − S（定義是 S − F）','以為 long hedge 的公式不一樣：其實也是 F<sub>1</sub> + b<sub>2</sub>'],
+    exam:'Basis = spot price − futures price. The effective price obtained with a hedge is F<sub>1</sub> + b<sub>2</sub>; uncertainty about b<sub>2</sub> is called basis risk.',
+    cfa:'CFA：basis、convergence、hedging 的概念。' },
+  { id:'F8', t:'最小變異避險比率 h*', en:'Minimum variance hedge ratio',
+    q:'每 1 單位的現貨，要配多少單位的期貨，風險才最小？',
+    tex:'<v s="h">h*</v> = <v s="r">ρ</v> × <v s="sS">σ<sub>S</sub></v> ÷ <v s="sF">σ<sub>F</sub></v>',
+    syms:{ h:['最適避險比率','minimum variance hedge ratio','期貨數量 ÷ 現貨數量的最佳比例'], r:['相關係數（rho）','correlation coefficient','現貨與期貨「一起動」的程度，−1 到 1'], sS:['現貨價格變動的標準差（sigma S）','standard deviation of ΔS','現貨價格每期大概晃多大'], sF:['期貨價格變動的標準差','standard deviation of ΔF','期貨價格每期大概晃多大'] },
+    why:'想像你用「玩具車」去平衡「真車」的晃動。<br>① 如果兩個完全同步（ρ=1）、晃動一樣大，就 1 比 1。<br>② 期貨晃得比較大（σ<sub>F</sub> 大）→ 少用一點期貨就夠（除以 σ<sub>F</sub>）。<br>③ 現貨晃得比較大 → 要多用一點（乘 σ<sub>S</sub>）。<br>④ 兩者不太同步（ρ 小）→ 期貨幫不了太多，用少一點（乘 ρ）；ρ = 0 時完全不用避險。<br>數學上：讓 ΔS − hΔF 的變異數最小，對 h 微分 = 0 就得到這個公式。',
+    steps:['找出三個數：ρ、σ<sub>S</sub>、σ<sub>F</sub>（題目會給）','相乘再相除：ρ × σ<sub>S</sub> ÷ σ<sub>F</sub>','例 3.13：0.7 × 1.2 ÷ 1.4 = 0.6','意思：每 1 磅現貨配 0.6 磅期貨'],
+    vars:[{k:'r',s:'ρ',v:0.7,min:0,max:1,step:0.01},{k:'sS',s:'σ<sub>S</sub>',v:1.2,min:0.01,max:5,step:0.01},{k:'sF',s:'σ<sub>F</sub>',v:1.4,min:0.01,max:5,step:0.01}],
+    calc:v=>`h* = ${v.r} × ${v.sS} ÷ ${v.sF} = <b>${fx(v.r*v.sS/v.sF)}</b>　剩餘風險 = √(1−ρ²) = ${fx(Math.sqrt(1-v.r*v.r)*100,1)}% 的原本風險`,
+    oops:['σ<sub>S</sub>、σ<sub>F</sub> 放反','h*=1 不代表完美避險（3.10）'],
+    exam:'The minimum variance hedge ratio is h* = ρσ<sub>S</sub>/σ<sub>F</sub>, where ρ is the correlation between changes in the spot and futures prices.',
+    cfa:'CFA Level II/III 會用到 hedge ratio；Level I 先懂概念。' },
+  { id:'F9', t:'最適契約口數 N*', en:'Optimal number of contracts',
+    q:'知道比例後，到底要買或賣幾口期貨？',
+    tex:'<v s="N">N*</v> = <v s="h">h*</v> × <v s="QA">Q<sub>A</sub></v> ÷ <v s="QF">Q<sub>F</sub></v>',
+    syms:{ N:['口數','number of contracts','要交易幾口'], h:['避險比率','hedge ratio','上一個公式算出來的'], QA:['要避險的數量','size of position being hedged','你手上（或未來要買賣）多少單位'], QF:['每口期貨的數量','size of one futures contract','一口期貨代表多少單位'] },
+    why:'h* × Q<sub>A</sub> = 「需要多少單位的期貨」。但期貨是一口一口賣的，所以再除以一口的大小，就知道要幾口。就像你需要 120,000 磅，一箱 40,000 磅 → 3 箱。',
+    steps:['先算 h*','需要的期貨單位 = h* × Q<sub>A</sub>','÷ 每口規模 = 口數','四捨五入到整數','方向：未來要買 → long；未來要賣 → short'],
+    vars:[{k:'h',s:'h*',v:0.6,min:0,max:2,step:0.01},{k:'QA',s:'Q<sub>A</sub>',v:200000,min:0,max:5000000,step:1000},{k:'QF',s:'Q<sub>F</sub>',v:40000,min:1,max:100000,step:100}],
+    calc:v=>`N* = ${v.h} × ${fx(v.QA)} ÷ ${fx(v.QF)} = <b>${fx(v.h*v.QA/v.QF,2)}</b> ≈ ${Math.round(v.h*v.QA/v.QF)} 口`,
+    oops:['忘記乘 h*','沒有說明 long 還是 short'],
+    exam:'The optimal number of contracts is N* = h*Q<sub>A</sub>/Q<sub>F</sub>. The beef producer should take a long position in 3 December contracts.',
+    cfa:'CFA：number of futures contracts 的計算。' },
+  { id:'F10', t:'Tailing the hedge（考慮每日結算）', en:'Tailing the hedge',
+    q:'因為期貨每天結算，口數要怎麼調整？',
+    tex:'<v s="N">N*</v> = <v s="h">ĥ</v> × <v s="VA">V<sub>A</sub></v> ÷ <v s="VF">V<sub>F</sub></v>',
+    syms:{ N:['口數','number of contracts','要幾口'], h:['用一天報酬率算的避險比率','hedge ratio from daily % returns','ρ̂ × σ̂<sub>S</sub>/σ̂<sub>F</sub>，用「百分比報酬」而不是價格變動'], VA:['現貨部位價值','dollar value of position','數量 × 現貨價'], VF:['一口期貨的價值','dollar value of one contract','期貨價 × 合約規模'] },
+    why:'差別在「用金額，不用數量」。因為每天結算是用錢算的，所以用部位的「價值」比較精準。當期貨價 ≠ 現貨價時，兩種方法答案會不一樣。遠期沒有每日結算，所以不用 tailing。',
+    steps:['V<sub>A</sub> = 數量 × 現貨價','V<sub>F</sub> = 期貨價 × 每口規模','ĥ = ρ̂ × σ̂<sub>S</sub>/σ̂<sub>F</sub>','N = ĥ × V<sub>A</sub>/V<sub>F</sub>'],
+    vars:[{k:'h',s:'ĥ',v:1.02,min:0,max:2,step:0.01},{k:'q',s:'數量',v:55000,min:0,max:500000,step:1000},{k:'S',s:'現貨價',v:28,min:1,max:200,step:0.5},{k:'F',s:'期貨價',v:27,min:1,max:200,step:0.5},{k:'z',s:'每口',v:5000,min:1,max:50000,step:100}],
+    calc:v=>`V<sub>A</sub> = ${fx(v.q)} × ${v.S} = ${fx(v.q*v.S)}；V<sub>F</sub> = ${v.F} × ${fx(v.z)} = ${fx(v.F*v.z)}<br>N = ${v.h} × ${fx(v.q*v.S)} ÷ ${fx(v.F*v.z)} = <b>${fx(v.h*v.q*v.S/(v.F*v.z),2)}</b>`,
+    oops:['V<sub>F</sub> 用現貨價算（要用期貨價）'],
+    exam:'When daily settlement is considered, N* = ĥV<sub>A</sub>/V<sub>F</sub>, where V<sub>A</sub> is the dollar value of the position and V<sub>F</sub> is the dollar value of one futures contract.',
+    cfa:'進階概念，CFA 較少直接考。' },
+  { id:'F11', t:'用指數期貨避險：N* = β V<sub>A</sub>/V<sub>F</sub>', en:'Hedging an equity portfolio with index futures',
+    q:'我有一籃子股票，要賣幾口指數期貨才能把市場風險歸零？',
+    tex:'<v s="N">N*</v> = <v s="b">β</v> × <v s="VA">V<sub>A</sub></v> ÷ <v s="VF">V<sub>F</sub></v>',
+    syms:{ N:['口數','number of contracts','要 short 幾口'], b:['貝他','beta','你的組合比大盤「放大」幾倍；β=1.5 表示大盤漲 1%，你漲約 1.5%'], VA:['組合價值','portfolio value','你的股票總共值多少錢'], VF:['一口期貨價值','futures price × multiplier','指數期貨價 × 乘數（S&P 500 是 $250）'] },
+    why:'β = 1 的組合，跟大盤一模一樣，用等值的期貨就能對沖。β = 1.5 的組合，晃動是大盤的 1.5 倍，所以要 1.5 倍的期貨。這裡 β 就是扮演 h* 的角色（因為 β = cov(r<sub>P</sub>, r<sub>M</sub>)/σ<sub>M</sub>²，跟 h* 的定義一樣）。',
+    steps:['V<sub>F</sub> = 期貨價 × 乘數（1,000 × 250 = 250,000）','V<sub>A</sub> ÷ V<sub>F</sub> = 5,000,000 ÷ 250,000 = 20','× β：1.5 × 20 = 30','結論：short 30 口'],
+    vars:[{k:'b',s:'β',v:1.5,min:0,max:3,step:0.05},{k:'VA',s:'V<sub>A</sub>',v:5000000,min:0,max:500000000,step:100000},{k:'F',s:'期貨價',v:1000,min:1,max:10000,step:10},{k:'m',s:'乘數',v:250,min:1,max:500,step:1}],
+    calc:v=>`V<sub>F</sub> = ${fx(v.F)} × ${v.m} = ${fx(v.F*v.m)}<br>N* = ${v.b} × ${fx(v.VA)} ÷ ${fx(v.F*v.m)} = <b>${fx(v.b*v.VA/(v.F*v.m),2)}</b>（short）`,
+    oops:['V<sub>F</sub> 忘記乘乘數','忘記乘 β'],
+    exam:'To hedge the systematic risk of the portfolio, the company should short N* = βV<sub>A</sub>/V<sub>F</sub> = 30 contracts.',
+    cfa:'CFA：beta、systematic risk、equity index futures 都是核心。' },
+  { id:'F12', t:'把 β 調到目標 β*', en:'Changing the beta of a portfolio',
+    q:'不想歸零，只想把 β 從 1.5 降到 0.75（或升到 2），要幾口？',
+    tex:'<v s="N">N</v> = (<v s="bs">β*</v> − <v s="b">β</v>) × <v s="VA">V<sub>A</sub></v> ÷ <v s="VF">V<sub>F</sub></v>　（正數 long、負數 short）',
+    syms:{ N:['口數','contracts','正 = 買、負 = 賣'], bs:['目標貝他','target beta','你想要的 β'], b:['目前貝他','current beta','現在的 β'], VA:['組合價值','portfolio value',''], VF:['一口期貨價值','futures price × multiplier',''] },
+    why:'每 1 口期貨 short 下去，會把組合的 β 往下拉一點點；long 會往上推。要移動的距離就是 β* − β。移動太多 → 要多一點口數。β = 0 的情況就是上一個公式（N = −β V<sub>A</sub>/V<sub>F</sub>）。',
+    steps:['β* − β（例：0.75 − 1.5 = −0.75）','× V<sub>A</sub>/V<sub>F</sub>（× 20）= −15','負數 → short 15 口','升到 2.0：(2 − 1.5) × 20 = +10 → long 10 口'],
+    vars:[{k:'b',s:'β',v:1.5,min:0,max:3,step:0.05},{k:'bs',s:'β*',v:0.75,min:0,max:3,step:0.05},{k:'VA',s:'V<sub>A</sub>',v:5000000,min:0,max:500000000,step:100000},{k:'VF',s:'V<sub>F</sub>',v:250000,min:1,max:5000000,step:1000}],
+    calc:v=>{const n=(v.bs-v.b)*v.VA/v.VF;return `(${v.bs} − ${v.b}) × ${fx(v.VA)} ÷ ${fx(v.VF)} = <b>${fx(n,2)}</b> → <b>${n<0?'short':'long'} ${Math.abs(Math.round(n))} 口</b>`;},
+    oops:['方向弄反：降 β 要賣（short）'],
+    exam:'To reduce beta from 1.5 to 0.75, the company should short (1.5 − 0.75) × 5,000,000/250,000 = 15 contracts.',
+    cfa:'CFA Level III 常考 adjusting portfolio beta。' }
+];
+
+DATA.invest.formulas = [
+  { id:'G1', t:'CAPM／證券市場線 SML', en:'Capital Asset Pricing Model',
+    q:'一支股票「應該」給我多少報酬，才配得上它的風險？',
+    tex:'<v s="E">E(R<sub>i</sub>)</v> = <v s="rf">R<sub>f</sub></v> + <v s="b">β<sub>i</sub></v> × (<v s="RM">E(R<sub>M</sub>)</v> − <v s="rf">R<sub>f</sub></v>)',
+    syms:{ E:['預期報酬','expected return','這支股票合理該賺多少 %'], rf:['無風險利率','risk-free rate','放定存／國庫券就能拿到的報酬'], b:['貝他','beta','跟著大盤晃動的倍數（系統風險）'], RM:['市場預期報酬','expected market return','整個大盤預期賺多少'] },
+    why:'把報酬想成「排隊的薪水」：<br>① 什麼都不做也拿得到的底薪 = R<sub>f</sub>。<br>② 承擔市場風險的加給 = (E(R<sub>M</sub>) − R<sub>f</sub>)，叫「市場風險溢酬」。<br>③ 你承擔多少倍的市場風險 = β。<br>所以 β = 2 的股票，加給拿 2 倍。只有「分散不掉的風險」（β）才有加給。',
+    steps:['市場風險溢酬 = E(R<sub>M</sub>) − R<sub>f</sub>（12% − 5% = 7%）','× β（0.5 × 7% = 3.5%）','+ R<sub>f</sub>（5% + 3.5% = 8.5%）'],
+    vars:[{k:'rf',s:'R<sub>f</sub> %',v:5,min:0,max:15,step:0.25},{k:'rm',s:'E(R<sub>M</sub>) %',v:12,min:0,max:30,step:0.25},{k:'b',s:'β',v:0.5,min:-1,max:3,step:0.05}],
+    calc:v=>`${v.rf}% + ${v.b} × (${v.rm}% − ${v.rf}%) = ${v.rf}% + ${fx(v.b*(v.rm-v.rf),3)}% = <b>${fx(v.rf+v.b*(v.rm-v.rf),3)}%</b>`,
+    oops:['乘 β 時忘記先減 R<sub>f</sub>','CML 用 σ、SML 用 β，別搞混'],
+    exam:'According to the CAPM, E(R<sub>i</sub>) = R<sub>f</sub> + β<sub>i</sub>[E(R<sub>M</sub>) − R<sub>f</sub>]; only systematic risk (beta) is rewarded.',
+    cfa:'CFA Level I Portfolio Management：CAPM、SML 是超級必考。' },
+  { id:'G2', t:'資本市場線 CML', en:'Capital Market Line',
+    q:'把錢分配在無風險資產和市場組合之間，風險和報酬的關係？',
+    tex:'<v s="E">E(R<sub>p</sub>)</v> = <v s="rf">R<sub>f</sub></v> + [(<v s="RM">E(R<sub>M</sub>)</v> − <v s="rf">R<sub>f</sub></v>) ÷ <v s="sM">σ<sub>M</sub></v>] × <v s="sp">σ<sub>p</sub></v>',
+    syms:{ E:['組合預期報酬','expected portfolio return',''], rf:['無風險利率','risk-free rate',''], RM:['市場報酬','market return',''], sM:['市場標準差','market standard deviation','大盤的總風險'], sp:['組合標準差','portfolio standard deviation','你這個組合的總風險'] },
+    why:'中括號裡面是「每承擔 1 單位總風險，能多拿多少報酬」，也就是市場的夏普比率（Sharpe ratio）。乘上你的風險 σ<sub>p</sub> 就是你的加給。CML 只適用「有效率的組合」（無風險資產＋市場組合），單一股票要用 SML。',
+    steps:['斜率 = (E(R<sub>M</sub>) − R<sub>f</sub>)/σ<sub>M</sub>','× σ<sub>p</sub>','+ R<sub>f</sub>'],
+    vars:[{k:'rf',s:'R<sub>f</sub> %',v:2,min:0,max:10,step:0.25},{k:'rm',s:'E(R<sub>M</sub>) %',v:10,min:0,max:30,step:0.25},{k:'sm',s:'σ<sub>M</sub> %',v:20,min:1,max:50,step:1},{k:'sp',s:'σ<sub>p</sub> %',v:10,min:0,max:60,step:1}],
+    calc:v=>{const sl=(v.rm-v.rf)/v.sm;return `斜率 = (${v.rm} − ${v.rf}) ÷ ${v.sm} = ${fx(sl)}<br>${v.rf}% + ${fx(sl)} × ${v.sp}% = <b>${fx(v.rf+sl*v.sp,3)}%</b>`;},
+    oops:['用 β 代入 CML'],
+    exam:'The CML plots expected return against total risk (σ) for efficient portfolios; its slope is the market Sharpe ratio.',
+    cfa:'CFA Level I：CML vs SML 比較題常見。' },
+  { id:'G3', t:'黃金切割率的價位', en:'Fibonacci retracement levels',
+    q:'股價可能在哪裡遇到壓力或支撐？',
+    tex:'壓力：<v s="P">P</v> × (1 + <v s="r">r</v>)　　支撐：<v s="P">P</v> × (1 − <v s="r">r</v>)',
+    syms:{ P:['基準價','base price','起漲點或高點'], r:['黃金比例','Fibonacci ratio','0.191、0.382、0.5、0.618、0.809'] },
+    why:'費波那契數列 1,1,2,3,5,8,13,21,34,55,89,144… 相鄰兩數相除會越來越接近 0.618（55/89、89/144）。隔一個相除接近 0.382（55/144）。0.191 是 0.382 的一半。大家都相信這些比例，所以價格真的常停在這附近（自我實現）。',
+    steps:['$10 上漲：10 × 1.191 = 11.91','10 × 1.382 = 13.82','10 × 1.618 = 16.18','$30 下跌：30 × (1 − 0.618) = 11.46'],
+    vars:[{k:'P',s:'P',v:10,min:1,max:1000,step:1},{k:'r',s:'r',v:0.618,min:0,max:1,step:0.001}],
+    calc:v=>`壓力 ${v.P} × ${fx(1+v.r)} = <b>${fx(v.P*(1+v.r),2)}</b>；支撐 ${v.P} × ${fx(1-v.r)} = <b>${fx(v.P*(1-v.r),2)}</b>`,
+    oops:['支撐算成 P × r（要 1 − r）'],
+    exam:'Fibonacci levels such as 38.2% and 61.8% are used to identify potential support and resistance.',
+    cfa:'技術分析在 CFA 現行課綱比重很低，了解即可。' },
+  { id:'G4', t:'移動平均 MA', en:'Moving average',
+    q:'最近 T 天的平均價格是多少？',
+    tex:'<v s="MA">MA<sub>t</sub></v> = (1/<v s="T">T</v>) × Σ<sub>j=0</sub><sup>T−1</sup> <v s="X">X<sub>t−j</sub></v>',
+    syms:{ MA:['移動平均','moving average','最近 T 天收盤價的平均'], T:['天數','number of periods','例如 5 日、20 日（月線）、60 日（季線）、200 日（年線）'], X:['第 t−j 天收盤價','closing price','今天、昨天、前天……'] },
+    why:'Σ（sigma）就是「全部加起來」。j 從 0 到 T−1 代表「今天往回數 T 天」。全部加總再除以 T 就是平均。「移動」是因為每天都換掉最舊的一天、加入最新的一天。滾動更新：MA<sub>t+1</sub> = (T × MA<sub>t</sub> + X<sub>t+1</sub> − X<sub>t−T+1</sub>) ÷ T。',
+    steps:['列出最近 T 天收盤價','加總','÷ T','明天：加新的一天、扣掉最舊的一天'],
+    vars:[{k:'a',s:'第1天',v:50,min:0,max:200,step:0.5},{k:'b',s:'第2天',v:52,min:0,max:200,step:0.5},{k:'c',s:'第3天',v:51,min:0,max:200,step:0.5},{k:'d',s:'第4天',v:54,min:0,max:200,step:0.5},{k:'e',s:'第5天',v:55,min:0,max:200,step:0.5}],
+    calc:v=>`MA5 = (${v.a} + ${v.b} + ${v.c} + ${v.d} + ${v.e}) ÷ 5 = <b>${fx((v.a+v.b+v.c+v.d+v.e)/5,2)}</b>`,
+    oops:['把 T 天以外的資料也加進來'],
+    exam:'A moving average is the average closing price over the last T periods; a golden cross occurs when a short-term MA crosses above a long-term MA.',
+    cfa:'了解即可。' },
+  { id:'G5', t:'乖離率 Bias', en:'Bias ratio',
+    q:'股價離平均線「拉」多遠了？',
+    tex:'<v s="B">Bias</v> = (<v s="S">S</v> − <v s="MA">MA<sub>t</sub></v>) ÷ <v s="MA">MA<sub>t</sub></v>',
+    syms:{ B:['乖離率','bias','用 % 表示的距離'], S:['目前股價','current price',''], MA:['移動平均','moving average','均線'] },
+    why:'像橡皮筋：S − MA 是拉開的長度，除以 MA 變成百分比，這樣高價股和低價股才能比較。拉太長（±7%）就容易彈回去。',
+    steps:['S − MA','÷ MA','× 100%','≥ +7% → 買超 → 賣；≤ −7% → 賣超 → 買'],
+    vars:[{k:'S',s:'S',v:58,min:1,max:300,step:0.5},{k:'MA',s:'MA',v:54,min:1,max:300,step:0.5}],
+    calc:v=>{const b=(v.S-v.MA)/v.MA*100;return `(${v.S} − ${v.MA}) ÷ ${v.MA} = <b>${fx(b,2)}%</b> ${b>=7?'→ 正乖離過大，考慮賣出':b<=-7?'→ 負乖離過大，考慮買進':'→ 正常範圍'}`;},
+    oops:['除以 S（要除以 MA）'], exam:'Bias = (S − MA)/MA. A bias above +7% suggests the stock is overbought.', cfa:'了解即可。' },
+  { id:'G6', t:'相對強弱指標 RSI', en:'Relative Strength Index',
+    q:'最近這幾天，漲的力量佔多少？',
+    tex:'<v s="RSI">RSI</v> = 100 − 100 ÷ (1 + <v s="RS">RS</v>)，<v s="RS">RS</v> = <v s="U">平均上漲</v> ÷ <v s="D">平均下跌</v>',
+    syms:{ RSI:['相對強弱指標','RSI','0～100'], RS:['相對強弱','relative strength','漲的力量 ÷ 跌的力量'], U:['i 日內平均上漲幅度','average gain','只算上漲的天'], D:['i 日內平均下跌幅度','average loss','只算下跌的天（取正值）'] },
+    why:'兩個寫法其實一樣：RSI = 100 × 上漲 ÷ (上漲 + 下跌)。如果這幾天都在漲，下跌 = 0 → RSI = 100；都在跌 → RSI = 0。漲久必跌、跌久必漲，所以 RSI 很高（約 80）考慮賣、很低（約 20）考慮買。',
+    steps:['算每天漲跌：今天 − 昨天','把正的加起來 = 上漲總和','把負的取絕對值加起來 = 下跌總和','RSI = 100 × 上漲 ÷ (上漲 + 下跌)'],
+    vars:[{k:'U',s:'上漲總和',v:6,min:0,max:50,step:0.1},{k:'D',s:'下跌總和',v:2,min:0,max:50,step:0.1}],
+    calc:v=>`RS = ${v.U} ÷ ${v.D} = ${v.D?fx(v.U/v.D,3):'∞'}<br>RSI = 100 × ${v.U} ÷ (${v.U} + ${v.D}) = <b>${v.U+v.D?fx(100*v.U/(v.U+v.D),1):50}</b>`,
+    oops:['下跌忘記取正值'], exam:'RSI = 100 − 100/(1 + RS). An RSI above 80 indicates overbought conditions.', cfa:'了解即可。' },
+  { id:'G7', t:'KD 隨機指標', en:'Stochastic oscillator (K and D)',
+    q:'今天的收盤價，落在最近 n 天最高和最低之間的哪個位置？',
+    tex:'<v s="RSV">RSV<sub>t</sub></v> = (<v s="C">C<sub>t</sub></v> − <v s="L">L<sub>n</sub></v>) ÷ (<v s="H">H<sub>n</sub></v> − <v s="L">L<sub>n</sub></v>) × 100<br><v s="K">K<sub>t</sub></v> = ⅓ RSV<sub>t</sub> + ⅔ K<sub>t−1</sub>　　<v s="Dd">D<sub>t</sub></v> = ⅓ K<sub>t</sub> + ⅔ D<sub>t−1</sub>',
+    syms:{ RSV:['未成熟隨機值','raw stochastic value','今天位置的百分比'], C:['今天收盤','close',''], L:['n 天最低','lowest low',''], H:['n 天最高','highest high',''], K:['快速指標 K','%K','RSV 平滑後'], Dd:['慢速指標 D','%D','K 再平滑一次'] },
+    why:'RSV 像「今天成績在最近 9 次考試中的 PR 值」：考到最高分 = 100，考到最低 = 0。但每天跳來跳去太敏感，所以 K 只拿今天的 ⅓、保留昨天 K 的 ⅔（像加權平均，讓線變平滑）。D 再對 K 做一次一樣的事，更平滑、更慢。K 從下往上穿過 D → 買；高檔 K 跌破 D → 賣。沒有前一天就用 50。',
+    steps:['RSV = (C − L) ÷ (H − L) × 100','K = RSV/3 + 昨天K × 2/3','D = K/3 + 昨天D × 2/3','判斷：KD > 80 過熱、< 20 超賣'],
+    vars:[{k:'C',s:'C',v:57,min:0,max:200,step:0.5},{k:'H',s:'H',v:60,min:0,max:200,step:0.5},{k:'L',s:'L',v:50,min:0,max:200,step:0.5},{k:'K0',s:'昨天K',v:50,min:0,max:100,step:1},{k:'D0',s:'昨天D',v:50,min:0,max:100,step:1}],
+    calc:v=>{const r=v.H===v.L?50:(v.C-v.L)/(v.H-v.L)*100;const K=r/3+v.K0*2/3;const D=K/3+v.D0*2/3;return `RSV = (${v.C} − ${v.L}) ÷ (${v.H} − ${v.L}) × 100 = ${fx(r,1)}<br>K = ${fx(r,1)}/3 + ${v.K0}×2/3 = <b>${fx(K,1)}</b>；D = ${fx(K,1)}/3 + ${v.D0}×2/3 = <b>${fx(D,1)}</b>`;},
+    oops:['K 和 D 的權重放反'], exam:'%K measures where the close lies within the recent high–low range; %D is a moving average of %K.', cfa:'了解即可。' },
+  { id:'G8', t:'本益比 P/E', en:'Price-to-earnings ratio',
+    q:'用現在的價格買，要幾年的獲利才能「回本」？',
+    tex:'<v s="PE">P/E</v> = <v s="P">股價</v> ÷ <v s="E">每股盈餘 EPS</v>',
+    syms:{ PE:['本益比','P/E ratio','股價是盈餘的幾倍'], P:['股價','price per share',''], E:['每股盈餘','earnings per share','公司一年每股賺多少'] },
+    why:'P/E = 20 代表「花 20 元買每年賺 1 元的東西」，大約 20 年回本。1990 年日本股市 P/E 超過 60、網路泡沫時那斯達克 P/E 超過 100（或根本沒有盈餘）→ 價格遠超過盈餘能支撐的程度，就是泡沫的訊號。',
+    steps:['找股價','找 EPS','相除'],
+    vars:[{k:'P',s:'股價',v:600,min:1,max:3000,step:1},{k:'E',s:'EPS',v:10,min:0.1,max:200,step:0.1}],
+    calc:v=>`${v.P} ÷ ${v.E} = <b>${fx(v.P/v.E,1)} 倍</b>`,
+    oops:['EPS 為負時 P/E 沒有意義'], exam:'A P/E ratio of 60 means investors pay 60 times current earnings, which signals extreme valuation.', cfa:'CFA Level I Equity：P/E 是最基本的估值倍數。' }
+];
+
+DATA.mgmt.formulas = [
+  { id:'H1', t:'加權評分（決策步驟 3–6）', en:'Weighted scoring of alternatives',
+    q:'有好幾個選項、好幾個標準，怎麼算出哪個最好？',
+    tex:'<v s="T">Total</v> = Σ (<v s="w">weight<sub>i</sub></v> × <v s="s">score<sub>i</sub></v>)',
+    syms:{ T:['總分','total weighted score','這個方案的最後分數'], w:['準則權重','criterion weight','這個標準有多重要（10 = 最重要）'], s:['方案在該準則的評分','rating on criterion i','這台電腦在這個項目得幾分'] },
+    why:'Σ 就是「全部加起來」。每個標準先乘上它的重要程度，再全部加總。像學期成績：期中 30%、期末 40%、作業 30%，各自乘完再加。Amanda 的筆電：Memory 10 × 10 + Battery 8 × 7 + Weight 6 × 8 + Warranty 4 × 6 + Display 3 × 7 = 249。',
+    steps:['列出準則與權重','每個方案在每個準則打分','分數 × 權重','全部加總','選最高分'],
+    vars:[{k:'s1',s:'Memory 分',v:10,min:0,max:10,step:1},{k:'s2',s:'Battery 分',v:7,min:0,max:10,step:1},{k:'s3',s:'Weight 分',v:8,min:0,max:10,step:1},{k:'s4',s:'Warranty 分',v:6,min:0,max:10,step:1},{k:'s5',s:'Display 分',v:7,min:0,max:10,step:1}],
+    calc:v=>`10×${v.s1} + 8×${v.s2} + 6×${v.s3} + 4×${v.s4} + 3×${v.s5} = <b>${10*v.s1+8*v.s2+6*v.s3+4*v.s4+3*v.s5}</b>`,
+    oops:['忘記乘權重直接加'], exam:'Each alternative is scored on each criterion, the scores are multiplied by the criterion weights, and the alternative with the highest total is selected.', cfa:'' },
+  { id:'H2', t:'期望值 Expected value', en:'Expected value (decision under risk)',
+    q:'結果不確定、但知道機率時，平均能賺多少？',
+    tex:'<v s="EV">EV</v> = Σ (<v s="p">p<sub>i</sub></v> × <v s="x">x<sub>i</sub></v>)',
+    syms:{ EV:['期望值','expected value','長期平均下來會得到多少'], p:['機率','probability','這種情況發生的機會，全部加起來 = 1'], x:['報酬','payoff / revenue','這種情況發生時賺多少'] },
+    why:'想像同一件事重複發生 10 次：3 次大雪、5 次普通、2 次小雪。平均每次賺 = (3×850,000 + 5×725,000 + 2×350,000)/10 = 687,500。這就是每種結果「乘上機率」再加總。',
+    steps:['確認機率加總 = 1','每個結果 × 機率','加總'],
+    vars:[{k:'x1',s:'大雪營收',v:850000,min:0,max:2000000,step:5000},{k:'p1',s:'大雪機率',v:0.3,min:0,max:1,step:0.05},{k:'x2',s:'普通營收',v:725000,min:0,max:2000000,step:5000},{k:'p2',s:'普通機率',v:0.5,min:0,max:1,step:0.05},{k:'x3',s:'小雪營收',v:350000,min:0,max:2000000,step:5000}],
+    calc:v=>{const p3=+(1-v.p1-v.p2).toFixed(2);return `小雪機率 = 1 − ${v.p1} − ${v.p2} = ${p3}<br>EV = ${fx(v.x1)}×${v.p1} + ${fx(v.x2)}×${v.p2} + ${fx(v.x3)}×${p3} = <b>${fx(v.x1*v.p1+v.x2*v.p2+v.x3*p3,0)}</b>`;},
+    oops:['機率加總不是 1'], exam:'Under risk, managers calculate expected value by multiplying each outcome by its probability and summing the results.', cfa:'CFA Quant：expected value 是機率的基礎。' },
+  { id:'H3', t:'遺憾值 Regret（不確定情境）', en:'Regret matrix (minimax regret)',
+    q:'如果選錯了，最多會後悔多少？',
+    tex:'<v s="R">Regret<sub>ij</sub></v> = <v s="M">max<sub>i</sub> payoff<sub>ij</sub></v> − <v s="x">payoff<sub>ij</sub></v>',
+    syms:{ R:['遺憾值','regret','早知道對手會這樣做，你本來可以多賺多少'], M:['該欄最大報酬','best payoff for that state','對手採取行動 j 時，最好的策略能賺多少'], x:['你的策略報酬','payoff of strategy i','你選的策略在那種情況賺多少'] },
+    why:'對每一種「對手的行動」（每一欄），先找出最好的結果，再看你的選擇跟最好差多少。每個策略找出「最多後悔多少」，最後選那個「最大後悔最小」的。Visa 例：每欄最大 24、21、28 → S4 最大遺憾只有 7 → 選 S4。',
+    steps:['每欄找最大值','最大值 − 每格 = 遺憾','每列找最大遺憾','選最大遺憾最小的那列'],
+    vars:[{k:'m',s:'該欄最大',v:28,min:0,max:100,step:1},{k:'x',s:'你的報酬',v:11,min:0,max:100,step:1}],
+    calc:v=>`Regret = ${v.m} − ${v.x} = <b>${v.m-v.x}</b>`,
+    oops:['用「列」的最大值減（要用欄）'], exam:'A manager who wants to minimize maximum regret computes the regret for each cell and chooses the strategy with the smallest maximum regret.', cfa:'' }
+];
+// ===== English layer: exam sentences, CFA tags, English problems & questions =====
+const EX = {
+  d1:'A derivative is an instrument whose value depends on, or is derived from, the value of an underlying asset.',
+  d2:'Hedgers use derivatives to reduce risk, speculators use them to bet on the future direction of a market variable, and arbitrageurs lock in a riskless profit by trading in two or more markets.',
+  d3:'A forward contract is an agreement to buy or sell an asset at a certain future time for a certain price (the delivery price).',
+  d4:'A call option gives the holder the right, but not the obligation, to buy the underlying asset by a certain date for a certain price; a put option gives the right to sell.',
+  d5:'Futures contracts are standardized, traded on an exchange and settled daily, whereas forward contracts are private, non-standard agreements settled at maturity.',
+  d6:'The exchange must specify the asset, the contract size, where delivery will be made and when delivery can be made.',
+  d7:'As the delivery period approaches, the futures price converges to the spot price; otherwise there would be an arbitrage opportunity.',
+  d8:'If the balance in the margin account falls below the maintenance margin, the trader receives a margin call and must top up the account to the initial margin level.',
+  d9:'Open interest is the total number of contracts outstanding, while trading volume is the number of contracts traded in a day.',
+  d10:'An IOC order is executed immediately with any unfilled part cancelled; a FOK order must be filled entirely or cancelled.',
+  d11:'Futures exchange rates are quoted as US dollars per unit of foreign currency; most spot and forward rates (except GBP, EUR, AUD, NZD) are quoted as units of foreign currency per US dollar.',
+  d12:'A short hedge is appropriate when the hedger already owns an asset and expects to sell it; a long hedge is appropriate when a company knows it will have to purchase an asset in the future.',
+  d13:'Hedging may increase risk when competitors do not hedge, and it can be difficult to explain a loss on the hedge when there is a gain on the underlying exposure.',
+  d14:'Basis risk arises because the basis at the time the hedge is closed out is uncertain; a short hedger benefits from an unexpected strengthening of the basis.',
+  d15:'Choose a delivery month that is as close as possible to, but later than, the end of the life of the hedge; when no futures contract exists on the asset, use cross hedging.',
+  d16:'The minimum variance hedge ratio h* = ρσS/σF minimizes the variance of the hedged position.',
+  d17:'The optimal number of contracts is N* = h*QA/QF; when daily settlement is considered, N* = ĥVA/VF (tailing the hedge).',
+  d18:'To hedge an equity portfolio, short N* = βVA/VF index futures contracts; to change beta from β to β*, trade (β* − β)VA/VF contracts.',
+  d19:'Hedging equity returns allows a manager who believes the stocks will outperform the market to earn the risk-free rate plus the excess return over the market.',
+  d20:'In a stack and roll strategy, short-dated futures are rolled forward; the main risk is liquidity, because large margin calls may occur before gains on the underlying are realized.',
+  m1a:'A manager is someone who coordinates and oversees the work of other people so that organizational goals can be accomplished.',
+  m1b:'Efficiency means doing things right (getting the most output from the least input), while effectiveness means doing the right things (attaining organizational goals).',
+  m1c:'The four functions of management are planning, organizing, leading, and controlling.',
+  m1d:'Mintzberg identified ten managerial roles grouped into interpersonal, informational, and decisional roles.',
+  m1e:'Katz identified technical, human, and conceptual skills; conceptual skills become more important at higher managerial levels.',
+  m1f:'Management is universal: it is needed in all types and sizes of organizations, at all levels, and in all organizational areas.',
+  m2a:'The decision-making process consists of eight steps, beginning with identifying a problem and ending with evaluating the decision’s effectiveness.',
+  m2b:'Because of bounded rationality, managers often satisfice, that is, accept solutions that are good enough.',
+  m2c:'Programmed decisions handle structured, routine problems through procedures, rules, and policies; nonprogrammed decisions are unique and require custom-made solutions.',
+  m2d:'Under uncertainty, an optimistic manager follows maximax, a pessimistic manager follows maximin, and a manager who wants to minimize regret follows minimax regret.',
+  m2e:'Decision-making styles differ on two dimensions: way of thinking (rational vs intuitive) and tolerance for ambiguity.',
+  m2f:'Heuristics can lead to biases such as overconfidence, anchoring, confirmation, framing, availability, sunk costs, and hindsight bias.',
+  m2g:'Design thinking, big data, and artificial intelligence are cutting-edge tools that help managers make better decisions.',
+  m4a:'An ethnocentric attitude holds that home-country practices are best; a polycentric attitude relies on host-country managers; a geocentric attitude uses the best approaches from around the world.',
+  m4b:'Global trade is shaped by institutions such as the WTO, IMF, World Bank, and OECD, and by regional alliances such as the EU, ASEAN, and USMCA.',
+  m4c:'The case for globalization rests on the law of comparative advantage; critics argue that it causes job losses, wage stagnation, and greater inequality.',
+  m4d:'Organizations can go global through global sourcing, exporting and importing, licensing and franchising, strategic alliances and joint ventures, or foreign subsidiaries.',
+  m4e:'Hofstede’s five dimensions of national culture are individualism–collectivism, power distance, uncertainty avoidance, achievement–nurturing, and long-term vs short-term orientation.',
+  m7a:'Organizational change is any alteration of people, structure, or technology, driven by external and internal forces.',
+  m7b:'The calm waters metaphor views change as an occasional disruption (Lewin’s unfreeze–change–refreeze), while the white-water rapids metaphor views change as continuous.',
+  m7c:'Managers can change strategy, structure, technology, or people.',
+  m7d:'People resist change because of uncertainty, habit, concern over personal loss, and the belief that the change is not in the organization’s best interest.',
+  m7e:'Organizational culture is easier to change when there is a dramatic crisis, a change of leadership, a young and small organization, or a weak culture.',
+  m7f:'Creativity is the ability to combine ideas in a unique way; innovation is turning creative ideas into useful products or work methods.',
+  m7g:'Disruptive innovation radically changes an industry’s rules of the game, and large, established, profitable firms are the most vulnerable.',
+  m9a:'The strategic management process has six steps: identify mission, goals and strategies; external analysis; internal analysis; formulate, implement, and evaluate strategies.',
+  m9b:'Corporate strategies include growth (concentration, vertical integration, horizontal integration, diversification), stability, and renewal (retrenchment and turnaround).',
+  m9c:'The BCG matrix classifies business units as stars, cash cows, question marks, and dogs based on market share and market growth rate.',
+  m9d:'Competitive advantage is what sets an organization apart; Porter’s five forces determine industry attractiveness.',
+  m9e:'Porter’s three competitive strategies are cost leadership, differentiation, and focus; a firm that fails to pursue any is stuck in the middle.',
+  m10a:'Entrepreneurship is the process of starting new businesses in response to opportunities, with innovation, growth, and profitability as main goals.',
+  m10b:'Entrepreneurs research feasibility by evaluating ideas, competitors, and financing options such as venture capital, angel investors, and IPOs.',
+  m10c:'The choice of legal form depends mainly on taxes and legal liability; a C corporation offers limited liability but faces double taxation.',
+  m10d:'Entrepreneurs exit a venture through harvesting, for example a merger, a sale, an IPO, or liquidation.',
+  m11a:'The six elements of organizational design are work specialization, departmentalization, chain of command, span of control, centralization/decentralization, and formalization.',
+  m11b:'Decentralization is preferred when the environment is complex and uncertain and lower-level managers are capable and want a voice in decisions.',
+  m11c:'Mechanistic organizations are rigid and tightly controlled, whereas organic organizations are highly adaptive and flexible.',
+  m11d:'Traditional designs include simple, functional, and divisional structures; contemporary designs include team, matrix, project, and virtual structures.'
+};
+
+const CFA = {
+  d1:'Derivatives (Level I)', d3:'Derivatives：forwards', d4:'Derivatives：options payoff', d5:'Derivatives：forwards vs futures', d7:'Derivatives：arbitrage & convergence', d8:'Derivatives：margin & mark-to-market', d12:'Derivatives：hedging', d14:'Derivatives：basis', d16:'Portfolio Mgmt：hedge ratio', d18:'Portfolio Mgmt：beta & systematic risk',
+  i1c:'Equity：market efficiency（必考）', i1d:'Equity：fundamental vs technical', i1e:'Portfolio Mgmt：CAPM、CML、SML（必考）', i1f:'Portfolio Mgmt：active vs passive、asset allocation', i2a:'Behavioral finance：bubbles', i2g:'Fixed Income：securitization、MBS', i4a:'技術分析（現行課綱比重低）',
+  m2f:'Behavioral Finance：overconfidence、anchoring、framing、availability、confirmation、hindsight、sunk cost 偏誤（Level I/III）', m2d:'Quant：expected value', m10c:'Corporate Issuers：organizational forms（sole proprietorship、partnership、corporation）', m9d:'Equity：industry analysis（Porter five forces）', m9b:'Equity / Corporate Issuers：business model', m4c:'Economics：comparative advantage'
+};
+
+// English versions of the Hull problems
+const PEN = {
+  p2_1:['Suppose that you enter into a short futures contract to sell July silver for $17.20 per ounce. The size of the contract is 5,000 ounces. The initial margin is $4,000, and the maintenance margin is $3,000. What change in the futures price will lead to a margin call? What happens if you do not meet the margin call?','A margin call occurs if the price rises by $0.20 to $17.40. If the call is not met, the broker closes out the position.'],
+  p2_7:['A trader buys two July futures contracts on frozen orange juice concentrate. Each contract is for the delivery of 15,000 pounds. The current futures price is 160 cents per pound, the initial margin is $6,000 per contract, and the maintenance margin is $4,500 per contract. What price change would lead to a margin call? Under what circumstances could $2,000 be withdrawn from the margin account?','A margin call occurs if the price falls below 150 cents; $2,000 can be withdrawn if the price rises to 166.67 cents.'],
+  p2_13:['The forward price of the Swiss franc for delivery in 45 days is quoted as 1.1000. The futures price for a contract that will be delivered in 45 days is 0.9000. Explain these two quotes. Which is more favorable for a trader wanting to sell Swiss francs?','The forward quote is CHF per USD; the futures quote is USD per CHF. 1/1.1 = 0.9091 > 0.9000, so the forward market is more attractive for selling Swiss francs.'],
+  p2_19:['A cattle farmer expects to have 120,000 pounds of live cattle to sell in three months. The live cattle futures contract traded by the CME Group is for the delivery of 40,000 pounds of cattle. How can the farmer use the contract for hedging? From the farmer’s viewpoint, what are the pros and cons of hedging?','Short 3 contracts. Hedging reduces uncertainty about the price received, but the farmer no longer gains from favorable price movements.'],
+  p2_23:['Explain why open interest usually declines during the month preceding the delivery month. On a particular day, there were 2,000 trades in a futures contract. Of the 2,000 buyers, 1,400 were closing out positions and 600 were entering into new positions. Of the 2,000 sellers, 1,200 were closing out positions and 800 were entering into new positions. What is the impact of the day’s trading on open interest?','Many traders close out before delivery. Open interest fell by 600 (600 new longs − 1,200 longs closed out).'],
+  p3_7:['Explain why a short hedger’s position improves when the basis strengthens unexpectedly and worsens when the basis weakens unexpectedly.','The short hedger receives F₁ + b₂, so an unexpected increase in the basis increases the effective price received.'],
+  p3_13:['The standard deviation of monthly changes in the spot price of live cattle is 1.2 (cents per pound). The standard deviation of monthly changes in the futures price for the closest contract is 1.4. The correlation between the futures price changes and the spot price changes is 0.7. It is now October 15. A beef producer is committed to purchasing 200,000 pounds of live cattle on November 15 and wants to use December live cattle futures contracts (40,000 pounds each) to hedge. What strategy should the beef producer follow?','h* = 0.7 × 1.2/1.4 = 0.6. Long 0.6 × 200,000/40,000 = 3 December contracts, closing out on November 15.'],
+  p3_14:['A corn farmer argues: “I do not use futures contracts for hedging. My real risk is not the price of corn. It is that my whole crop gets wiped out by the weather.” Discuss this viewpoint. Should the farmer estimate his or her expected production of corn and hedge to try to lock in a price for expected production?','When production is uncertain and negatively related to price, a short hedge on expected output can make the farmer worse off; hedging must consider the big picture.'],
+  p3_15:['On July 1, an investor holds 50,000 shares of a certain stock. The market price is $30 per share. The investor wants to hedge against market movements over the next month and decides to use the September Mini S&P 500 futures contract. The index futures price is 1,500 and one contract is for delivery of $50 times the index. The beta of the stock is 1.3. What strategy should the investor follow? Under what circumstances will it be profitable?','Short 1.3 × 1,500,000/75,000 = 26 contracts. It is profitable if the stock outperforms the market (return above the CAPM prediction).'],
+  p3_23:['A company wishes to hedge its exposure to a new fuel whose price changes have a 0.6 correlation with gasoline futures price changes. The company will lose $1 million for each 1 cent increase in the price per gallon of the new fuel over the next three months. The new fuel’s price changes have a standard deviation that is 50% greater than price changes in gasoline futures prices. What should the hedge ratio be? What is the exposure in gallons? What position in gasoline futures should be taken? How many contracts (42,000 gallons each) should be traded?','h* = 0.9; exposure = 100 million gallons; long 90 million gallons; about 2,143 contracts.'],
+  p3_4:['A company has a $20 million portfolio with a beta of 1.2. The index futures price is 1,080 and each contract is for delivery of $250 times the index. What is the hedge that minimizes risk? What should the company do to reduce the beta to 0.6?','Short 89 contracts; to reduce beta to 0.6, short 44 contracts.'],
+  p3_10:['“If the minimum variance hedge ratio is calculated as 1.0, the hedge must be perfect.” Is this statement true? Explain.','False. h* = 1 when, for example, ρ = 0.5 and σS = 2σF; since ρ < 1 the hedge is not perfect.'],
+  p3_11:['“If there is no basis risk, the minimum variance hedge ratio is always 1.0.” Is this statement true? Explain.','True. With no basis risk, only h = 1 removes all uncertainty.'],
+  p3_3:['The standard deviation of quarterly changes in the price of a commodity is $0.65, the standard deviation of quarterly changes in a futures price on the commodity is $0.81, and the correlation is 0.8. What is the optimal hedge ratio for a three-month contract? What does it mean?','h* = 0.8 × 0.65/0.81 = 0.642: the futures position should be 64.2% of the exposure.'],
+  p2_24:['A company enters into a short futures contract to sell 5,000 bushels of wheat for 750 cents per bushel. The initial margin is $3,000 and the maintenance margin is $2,000. What price change would lead to a margin call? Under what circumstances could $1,500 be withdrawn?','Margin call if the price rises to 770 cents; $1,500 can be withdrawn if it falls to 720 cents.'],
+  p2_11:['At the end of one day a clearing house member is long 100 contracts, and the settlement price is $50,000 per contract. The original margin is $2,000 per contract. On the following day the member becomes responsible for clearing an additional 20 long contracts, entered into at $51,000 per contract. The settlement price at the end of this day is $50,200. How much does the member have to add to its margin account?','$40,000 − $20,000 + $16,000 = $36,000.'],
+  p3_25:['A company has a $100 million portfolio with a beta of 1.2. The index futures price is 2,000 and the multiplier is $250. What trade reduces beta to 0.5? What trade increases beta to 1.5?','Short 140 contracts; long 60 contracts.'],
+  p3_21:['A trader uses 60 silver futures contracts (5,000 oz each) to hedge. When the hedge is closed out the spot price exceeds the futures price by $0.20 per ounce. What is the effect if the trader is hedging a purchase of silver? A sale?','Purchase: loses $60,000. Sale: gains $60,000.']
+};
+DATA.deriv.problems.forEach(p => { if (PEN[p.id]) { p.qEn = PEN[p.id][0]; p.ansEn = PEN[p.id][1]; } });
+
+// English MCQs for 衍金 (exam is in English)
+DATA.deriv.mcqEn = [
+  {q:'Which of the following is true of futures but NOT of forward contracts?', o:['They are private agreements','They are settled daily','They have one delivery date','They involve significant credit risk'], a:1, e:'Futures: exchange-traded, standardized, settled daily, virtually no credit risk.'},
+  {q:'When the margin balance falls below the maintenance margin, the trader must deposit enough to bring it back to:', o:['The maintenance margin','The initial margin','Zero','The settlement price'], a:1, e:'Variation margin restores the initial margin level.'},
+  {q:'If both parties to a trade are closing out existing positions, open interest:', o:['Increases by one','Decreases by one','Stays the same','Doubles'], a:1, e:'Both closing → −1; both new → +1; one each → unchanged.'},
+  {q:'A company that will buy copper in three months should use a:', o:['Short hedge','Long hedge','Cross hedge only','Protective put on gold'], a:1, e:'Future purchase → long futures hedge.'},
+  {q:'Basis is defined as:', o:['Futures price − spot price','Spot price − futures price','Strike − spot','Spot − strike'], a:1, e:'Basis = S − F; it converges to zero at maturity.'},
+  {q:'The effective price for a hedger who closes out at time 2 is:', o:['S₁ + b₁','F₁ + b₂','F₂ − b₁','S₂ − F₁'], a:1, e:'F₁ + b₂ for both long and short hedgers.'},
+  {q:'A short hedger benefits when the basis:', o:['Strengthens unexpectedly','Weakens unexpectedly','Stays at zero','Becomes negative'], a:0, e:'Short hedger receives F₁ + b₂.'},
+  {q:'The minimum variance hedge ratio equals:', o:['σS/σF','ρσF/σS','ρσS/σF','ρ²σS/σF'], a:2, e:'h* = ρσS/σF.'},
+  {q:'If ρ = 0.8, σS = 0.65 and σF = 0.81, the optimal hedge ratio is closest to:', o:['0.52','0.64','0.80','1.00'], a:1, e:'0.8 × 0.65/0.81 = 0.642.'},
+  {q:'A $5 million portfolio with beta 1.5 is hedged with index futures priced at 1,000 with a $250 multiplier. The number of contracts to short is:', o:['15','20','30','45'], a:2, e:'1.5 × 5,000,000/250,000 = 30.'},
+  {q:'To increase a portfolio’s beta, a manager should:', o:['Short index futures','Long index futures','Buy Treasury bills','Sell call options'], a:1, e:'β* > β → long (β* − β)VA/VF contracts.'},
+  {q:'Tailing the hedge is needed for futures but not forwards because futures:', o:['Have a delivery range','Are settled daily','Are standardized','Have price limits'], a:1, e:'Daily settlement creates interim cash flows.'},
+  {q:'Choose the futures delivery month that is:', o:['Earliest available','As close as possible to, but later than, the end of the hedge','Exactly at the start of the hedge','Furthest away'], a:1, e:'Rule of thumb in Section 3.3.'},
+  {q:'Which is an argument AGAINST hedging?', o:['Companies should focus on their main business','Hedging may increase risk if competitors do not hedge','Hedging reduces cash-flow uncertainty','Hedging locks in costs'], a:1, e:'Other arguments: shareholders can diversify; explaining losses on the hedge is hard.'},
+  {q:'The payoff from a long put at expiration is:', o:['max(S − K, 0)','max(K − S, 0)','K − S − p','S − K'], a:1, e:'Profit subtracts the premium.'},
+  {q:'The maximum loss from writing (shorting) a call is:', o:['The premium','The strike price','Unlimited','Zero'], a:2, e:'The stock price has no upper bound.'},
+  {q:'An American option differs from a European option in that it:', o:['Can be exercised only at maturity','Can be exercised at any time up to maturity','Trades only in the US','Has no premium'], a:1, e:''},
+  {q:'If at delivery the futures price is above the spot price, an arbitrageur would:', o:['Buy the asset, short futures, and deliver','Go long futures and sell the asset','Do nothing','Buy a put'], a:0, e:'Profit = F − S.'},
+  {q:'When there are alternatives about what, where and when to deliver, the choice is made by:', o:['The long position','The short position','The exchange','The clearing house'], a:1, e:'This tends to reduce the futures price.'},
+  {q:'Futures exchange rates are quoted as:', o:['Foreign currency per USD','USD per unit of foreign currency','Always in euros','In basis points'], a:1, e:'Spot/forward: only GBP, EUR, AUD, NZD use USD per unit.'},
+  {q:'An order that must be filled completely or cancelled is a(n):', o:['IOC order','FOK order','ROD order','Stop order'], a:1, e:'IOC allows partial fills.'},
+  {q:'The main risk of a stack and roll hedge is:', o:['Basis is always zero','Liquidity problems from margin calls','Delivery failure','Counterparty risk on the exchange'], a:1, e:'Metallgesellschaft example.'}
+];
+
+// English essay prompts for 管理學
+const ESSEN = [
+  'Distinguish between efficiency and effectiveness, and use an organization you know to explain how a manager can achieve both.',
+  'Describe Mintzberg’s ten managerial roles and give examples of how a store manager plays these roles during a typical day.',
+  'What three skills did Katz identify as essential for managers? How does the importance of each skill change across managerial levels?',
+  'Describe the eight steps of the decision-making process and apply them step by step to a real decision (for example, choosing an internship).',
+  'Compare rational and bounded rationality decision making, and explain satisficing and escalation of commitment.',
+  'Contrast programmed and nonprogrammed decisions, and explain the differences among procedures, rules, and policies.',
+  'Choose three common decision-making biases. Define each, give an example, and suggest how managers can avoid it.',
+  'Explain ethnocentric, polycentric, and geocentric attitudes, and evaluate which is most appropriate for today’s multinational corporations.',
+  'Describe the ways an organization can go international, from lowest to highest commitment, and compare licensing with franchising.',
+  'Summarize the case for and against globalization, and discuss the managerial implications of the recent swing toward nationalism (e.g., Brexit, USMCA).',
+  'Use Hofstede’s dimensions to compare Taiwan and the United States, and explain problems an American manager might face in Taiwan.',
+  'Compare the calm waters and white-water rapids metaphors of change, and explain Lewin’s three-step change process.',
+  'Why do employees resist change? Describe six techniques for reducing resistance, including when each is used and its drawbacks.',
+  'What is disruptive innovation? Why are large established firms most vulnerable? Give examples and explain how firms can respond (e.g., skunk works).',
+  'Explain the structural, cultural, and human resource variables that stimulate innovation.',
+  'Describe the six steps of the strategic management process and conduct a SWOT analysis for a company of your choice.',
+  'Describe the three types of corporate strategy and explain how the BCG matrix guides resource allocation.',
+  'Explain Porter’s five forces model and his three competitive strategies, using an industry example.',
+  'Contrast entrepreneurship with running a small business, and explain the feasibility research an entrepreneur should conduct.',
+  'Compare sole proprietorships, partnerships, C corporations, and LLCs in terms of liability and taxation, and recommend one for a new graduate starting a business.',
+  'Describe the six elements of organizational design and contrast mechanistic and organic organizations.',
+  'According to Woodward, how does technology affect organizational structure?',
+  'Discuss the advantages and disadvantages of matrix structures, and describe flexible arrangements such as virtual organizations and flextime.'
+];
+DATA.mgmt.essays.forEach((e, i) => { e.qEn = ESSEN[i]; });
+
+DATA.deriv.sections.forEach(s => s.cards.forEach(c => { if (EX[c.id]) c.ex = EX[c.id]; if (CFA[c.id]) c.cfa = CFA[c.id]; }));
+DATA.invest.sections.forEach(s => s.cards.forEach(c => { if (CFA[c.id]) c.cfa = CFA[c.id]; }));
+DATA.mgmt.sections.forEach(s => s.cards.forEach(c => { if (EX[c.id]) c.ex = EX[c.id]; if (CFA[c.id]) c.cfa = CFA[c.id]; }));
+// ===== 遊戲題庫：配對 match、分類 sort =====
+DATA.deriv.match = [
+  ['underlying asset','標的資產'],['long position','多頭、做多'],['short position','空頭、做空'],['delivery price','交割價'],['maturity','到期日'],['premium','權利金'],['strike price','執行價'],['call option','買權'],['put option','賣權'],['European option','只能到期執行'],['American option','到期前都能執行'],['initial margin','原始保證金'],['maintenance margin','維持保證金'],['margin call','保證金追繳'],['marking to market','每日結算'],['open interest','未平倉量'],['close out','平倉'],['basis','基差 S − F'],['basis risk','基差風險'],['cross hedge','交叉避險'],['hedge ratio','避險比率'],['tailing the hedge','考慮每日結算調整口數'],['stack and roll','集中式展期'],['arbitrage','套利'],['convergence','期貨價收斂到現貨價'],['contract size','契約規模'],['price limit','漲跌幅限制'],['position limit','部位限制'],['clearing house','結算所'],['physical settlement','實物交割']
+];
+DATA.deriv.sort = [
+  { t:'Long hedge 還是 Short hedge？', b:['Long hedge（買期貨）','Short hedge（賣期貨）'], items:[['航空公司擔心油價上漲',0],['養牛戶三個月後要賣牛',1],['麵包店未來要買麵粉',0],['金礦公司預計 9 月產出黃金',1],['持有股票組合、怕大盤下跌',1],['美國公司三個月後要付歐元貨款',0],['農夫已種好玉米準備收成',1],['牛肉商 11 月要買活牛',0]] },
+  { t:'期貨還是遠期的特徵？', b:['期貨 Futures','遠期 Forwards'], items:[['交易所交易',0],['雙方私下約定',1],['標準化合約',0],['客製化',1],['每日結算',0],['到期才結算',1],['幾乎沒有信用風險',0],['有信用風險',1],['通常到期前平倉',0],['通常只有一個交割日',1]] },
+  { t:'OI 會怎麼變？', b:['增加','減少','不變'], items:[['買方開倉、賣方開倉',0],['買方平倉、賣方平倉',1],['買方開倉、賣方平倉',2],['買方平倉、賣方開倉',2],['兩個新人各自建立部位',0],['當沖：早上開、下午平（整天看）',2]] },
+  { t:'Call 還是 Put？', b:['買 Call','買 Put'], items:[['看好股價大漲',0],['怕手上股票下跌，想買保險',1],['大頭菜怕跌價，保證能賣 99 鈴錢',1],['想用少少的錢參與上漲',0],['預期股價暴跌想賺錢',1],['鬱金香狂熱時的投機工具',0]] }
+];
+DATA.invest.match = [
+  ['weak form EMH','技術分析無效'],['semi-strong form EMH','基本分析也無效'],['strong form EMH','內線也無效'],['random walk','隨機漫步'],['greater fool theory','更傻的傻瓜理論'],['castle-in-the-air','空中樓閣理論'],['firm-foundation','堅實基礎理論'],['Semper Augustus','最貴的鬱金香'],['Bubble Act','禁止公司發行股票的法案'],['investment pools','股友社'],['Babson Break','1929/9/5 暴跌'],['Black Thursday','1929/10/24'],['subprime mortgage','次級房貸'],['MBS','房貸抵押證券'],['CDS','信用違約交換'],['originate and distribute','放貸後打包賣出'],['confidence index','巴倫信心指數'],['TED spread','LIBOR − 國庫券利率'],['short interest','融券餘額'],['breadth of market','市場廣度'],['golden cross','短均線上穿長均線'],['death cross','短均線下穿長均線'],['Bias','乖離率'],['RSI','相對強弱指標'],['OBV','能量潮'],['Fibonacci','黃金切割率'],['Elliott wave','五波上升三波下降'],['Dow theory','潮汐、波浪、漣漪'],['candlestick','K 線（本間宗久）'],['P/E ratio','本益比']
+];
+DATA.invest.sort = [
+  { t:'買進還是賣出訊號？', b:['買進訊號','賣出訊號'], items:[['Put/Call ratio > 0.9',0],['Put/Call ratio < 0.7',1],['投資顧問看空 > 60%',0],['投資顧問看空 < 20%',1],['期貨交易人 70% 看多',1],['OTC/NYSE 量 > 112%',1],['負乖離達 7%',0],['正乖離達 7%',1],['低檔 K 線突破 D 線',0],['RSI 高於 80',1],['股價下跌但 OBV 上升',0],['做市商放空比例 > 50%',1]] },
+  { t:'葛蘭碧：買點還是賣點？', b:['買點','賣點'], items:[['MA 由跌走平，股價突破 MA',0],['MA 向上，股價拉回 MA 未跌破',0],['MA 由升走平，股價跌破 MA',1],['MA 向下，股價反彈至 MA 未突破',1],['MA 向上，股價跌破後又回到 MA 之上',0],['MA 向下，股價突破後立刻拉回',1],['股價在 MA 之下乖離很大',0],['股價在 MA 之上乖離很大',1]] },
+  { t:'哪一個泡沫？', b:['鬱金香','南海','1929 華爾街','日本','網路','房市'], items:[['Semper Augustus',0],['牛頓虧大錢',1],['Bubble Act',1],['股友社',2],['黑色星期四',2],['地價永不下跌的神話',3],['P/E 超過 60 倍',3],['TheGlobe.com',4],['改名 .com 漲 125%',4],['NO-DOC 貸款',5],['CDO、CDS',5],['馬賽克病毒',0]] },
+  { t:'弱式、半強式、強式？（哪一種形式下「這招」開始沒用）', b:['弱式就沒用','半強式才沒用','強式才沒用'], items:[['看 K 線型態',0],['看財報算本益比',1],['知道還沒公布的併購消息',2],['用 RSI、KD',0],['看公司公開的營收新聞',1],['董事會內部會議內容',2]] }
+];
+DATA.law.match = [
+  ['§1','法律 → 習慣 → 法理'],['§12','滿 18 歲成年'],['§13','未滿 7 歲無行為能力'],['§15','受監護宣告無行為能力'],['§16','能力不得拋棄'],['§95','到達主義'],['§124 II','推定 7/1 出生'],['§149','正當防衛'],['§150','緊急避難'],['§153','意思一致契約成立'],['§154 II','標價陳列視為要約'],['§155','拒絕 → 要約失效'],['§156','對話要約非立時承諾失效'],['§159','承諾遲到應發遲到通知'],['§160','變更承諾視為新要約'],['§161','意思實現'],['§172','無因管理定義'],['§174','違反本人意思 → 無過失亦負責'],['§175','急迫危險：惡意重大過失才負責'],['§176','適法管理請求費用＋利息'],['§177 II','不法管理'],['§178','承認 → 適用委任'],['§179','不當得利'],['§180 ④','不法原因給付不得請求返還'],['§184 I 前','故意過失侵害權利'],['§184 I 後','故意背於善良風俗'],['§184 II','違反保護他人法律（推定過失）'],['§187','法定代理人連帶責任'],['§191-3','一般危險責任（雙重推定）'],['§199','給付不以財產價格為限'],['§217','與有過失'],['§245-1','締約過失（2 年）'],['§1064','視為婚生子女']
+];
+DATA.law.sort = [
+  { t:'要約還是要約之引誘？', b:['要約','要約之引誘'], items:[['IKEA 貨架上標價的商品',0],['寄到家裡的價目表 DM',1],['店員當面說「這件 500 賣你」',0],['網路商店標錯價（多數判決）',1],['甲對乙說「我的車 50 萬賣你」',0],['徵人廣告',1]] },
+  { t:'無因管理哪一種？', b:['適法無因管理','不適法無因管理','不法管理','誤信管理'], items:[['鄰居出國，颱風前幫他修圍牆',0],['以每斤 20 元賤賣隔壁攤販的香蕉',1],['明知是別人的畫，拿去賣自己賺錢',2],['以為是爸爸遺產的畫，拿去賣',3],['擅自修好鄰居本來要拆的籬笆',1],['代鄰居繳納快逾期的稅',0]] },
+  { t:'§184 哪一種？', b:['§184 I 前段','§184 I 後段','§184 II'], items:[['不小心撞壞別人的車',0],['明知對方已婚仍與之通姦',1],['酒駕撞傷行人（違反交通法規）',2],['偷拍他人隱私',0],['唆使他人二重買賣以侵害債權',1],['違反食安法規致消費者受損',2]] },
+  { t:'能力怎麼分？', b:['無行為能力','限制行為能力','完全行為能力'], items:[['6 歲兒童',0],['15 歲國中生',1],['20 歲大學生',2],['受監護宣告之人',0],['17 歲高中生',1],['剛滿 18 歲',2]] },
+  { t:'義務的種類', b:['主給付義務','從給付義務','附隨義務','不真正義務'], items:[['賣方交付貨物',0],['出租人修繕義務',1],['賣方提供產品證明書',1],['賣方告知產品使用注意事項',2],['被害人避免損害擴大',3],['承租人繳押金（約定）',1]] }
+];
+DATA.mgmt.match = [
+  ['efficiency','doing things right'],['effectiveness','doing the right things'],['figurehead','代表人（人際角色）'],['disseminator','傳播者（資訊角色）'],['disturbance handler','問題處理者（決策角色）'],['conceptual skills','概念技能'],['satisfice','接受夠好的方案'],['escalation of commitment','承諾升高'],['programmed decision','程式化決策'],['policy','a guideline for making decisions'],['anchoring effect','錨定效應'],['sunk costs error','沉沒成本謬誤'],['hindsight bias','後見之明'],['parochialism','狹隘主義'],['geocentric','全球中心'],['franchising','加盟'],['joint venture','合資'],['power distance','權力距離'],['change agent','變革推手'],['unfreezing','解凍'],['idea champion','創意擁護者'],['skunk works','臭鼬工廠'],['core competencies','核心能力'],['cash cow','金牛'],['economic moat','經濟護城河'],['angel investor','天使投資人'],['harvesting','收割（退場）'],['unity of command','指揮統一'],['span of control','控制幅度'],['formalization','正式化'],['organic organization','有機式組織'],['matrix structure','矩陣式結構'],['flextime','彈性工時']
+];
+DATA.mgmt.sort = [
+  { t:"Mintzberg's roles", b:['Interpersonal','Informational','Decisional'], items:[['Figurehead',0],['Leader',0],['Liaison',0],['Monitor',1],['Disseminator',1],['Spokesperson',1],['Entrepreneur',2],['Disturbance handler',2],['Resource allocator',2],['Negotiator',2]] },
+  { t:'Programmed or nonprogrammed?', b:['Programmed','Nonprogrammed'], items:[['Customer returns a defective item',0],['Whether to enter a new country',1],['Reordering office supplies',0],['Responding to a new disruptive competitor',1],['Approving routine vacation requests',0],['Choosing a new corporate strategy',1]] },
+  { t:'BCG matrix', b:['Star','Cash cow','Question mark','Dog'], items:[['High growth, high share',0],['Low growth, high share',1],['High growth, low share',2],['Low growth, low share',3],['Invest heavily to keep leading',0],['Milk it for cash',1],['Decide: invest or sell',2],['Consider divesting',3]] },
+  { t:'Mechanistic or organic?', b:['Mechanistic','Organic'], items:[['High specialization',0],['Cross-functional teams',1],['Narrow span of control',0],['Decentralization',1],['High formalization',0],['Free flow of information',1],['Mass production (Woodward)',0],['Stable environment',0],['Unit production (Woodward)',1]] },
+  { t:'Which competitive strategy?', b:['Cost leadership','Differentiation','Focus'], items:[['全聯：全產業最低價',0],['Apple：設計與品牌',1],['只做左撇子文具',2],['Walmart',0],['Starbucks 體驗',1],['專攻高端寵物鮮食',2]] }
+];
+// ===== Fun layer: mascot, XP, badges, confetti, sound =====
+const PIG = (mood = 'happy', size = 86) => {
+  const mouth = mood === 'sad' ? 'M40,63 Q47,57 54,63' : mood === 'wow' ? 'M44,60 a3,4 0 1,0 6,0 a3,4 0 1,0 -6,0' : 'M39,58 Q47,67 55,58';
+  const eye = mood === 'wow' ? '<circle cx="36" cy="40" r="4.5" class="pk-e"/><circle cx="58" cy="40" r="4.5" class="pk-e"/>' : '<circle cx="36" cy="41" r="3.5" class="pk-e"/><circle cx="58" cy="41" r="3.5" class="pk-e"/><circle cx="37.3" cy="39.6" r="1.2" class="pk-w"/><circle cx="59.3" cy="39.6" r="1.2" class="pk-w"/>';
+  return `<svg class="pig" width="${size}" height="${size}" viewBox="0 0 94 94" aria-hidden="true"><path d="M20,24 L26,6 L38,20 Z" class="pk-b"/><path d="M74,24 L68,6 L56,20 Z" class="pk-b"/><ellipse cx="47" cy="50" rx="36" ry="32" class="pk-b"/><rect x="38" y="16" width="18" height="4" rx="2" class="pk-d"/><ellipse cx="26" cy="54" rx="5" ry="3.5" class="pk-c"/><ellipse cx="68" cy="54" rx="5" ry="3.5" class="pk-c"/>${eye}<ellipse cx="47" cy="51" rx="11" ry="8" class="pk-s"/><circle cx="43" cy="51" r="2" class="pk-d"/><circle cx="51" cy="51" r="2" class="pk-d"/><path d="${mouth}" class="pk-m"/><rect x="24" y="76" width="10" height="12" rx="4" class="pk-b"/><rect x="60" y="76" width="10" height="12" rx="4" class="pk-b"/><circle cx="80" cy="70" r="9" class="pk-coin"/><text x="80" y="74" text-anchor="middle" class="pk-ct">$</text></svg>`;
+};
+const MONSTER = (hpPct, hurt) => `<svg class="mon${hurt ? ' hurt' : ''}" viewBox="0 0 120 110" aria-hidden="true"><path d="M20,95 C5,60 15,15 60,12 C105,15 115,60 100,95 C90,88 80,100 70,92 C62,100 55,90 48,97 C40,89 30,100 20,95 Z" class="mn-b"/><circle cx="44" cy="48" r="11" class="mn-w"/><circle cx="78" cy="48" r="11" class="mn-w"/><circle cx="${hurt ? 41 : 46}" cy="50" r="5" class="mn-e"/><circle cx="${hurt ? 75 : 80}" cy="50" r="5" class="mn-e"/><path d="${hpPct > 0.4 ? 'M42,74 L50,68 L58,74 L66,68 L74,74 L80,68' : 'M44,76 Q61,64 78,76'}" class="mn-m"/><path d="M30,20 L22,4 L40,16 Z M90,20 L98,4 L80,16 Z" class="mn-b"/></svg>`;
+const BOSSES = { deriv: ['保證金怪', 'Margin Monster'], invest: ['泡沫怪', 'Bubble Beast'], law: ['條文龍', 'Article Dragon'], mgmt: ['偏誤魔王', 'Bias Boss'] };
+const TITLES = ['豬寶寶', '小存錢筒', '零用錢管家', '理財小鬼', '期貨學徒', '避險高手', '華爾街實習生', '分析師', 'CFA 候選人', '投資大師'];
+const CHEERS = ['好厲害！', '答對了！豬豬為你驕傲', 'Nice! 繼續保持', '你就是未來的 CFA！', '完美 ✓', '這題很難耶，你做到了', 'Correct! 💰'.replace(' 💰', '')];
+const COMFORT = ['沒關係，錯了才記得住！', '豬豬也常錯，看一下解釋就懂了', 'Almost! 再看一次說明', '加入錯題本了，下次一定會'];
+const BADGES = [
+  ['first', '第一步', '勾選第一張「我懂了」'], ['c25', '小書蟲', '掌握 25 個知識點'], ['c75', '大書蟲', '掌握 75 個知識點'], ['allderiv', '衍金通關', '衍金知識點全部掌握'], ['allinvest', '投資通關', '投資學知識點全部掌握'], ['alllaw', '民商通關', '民商法知識點全部掌握'], ['allmgmt', '管理通關', '管理學知識點全部掌握'],
+  ['combo5', '五連勝', '選擇題連續答對 5 題'], ['combo10', '十連勝', '連續答對 10 題'], ['bossderiv', '打倒保證金怪', '衍金打怪勝利'], ['bossinvest', '戳破泡沫', '投資學打怪勝利'], ['bosslaw', '屠龍者', '民商法打怪勝利'], ['bossmgmt', '擊敗偏誤魔王', '管理學打怪勝利'],
+  ['speed', '閃電手', '限時賽答對 12 題以上'], ['match', '配對王', '完成一次配對遊戲'], ['sortp', '分類達人', '分類遊戲全對'], ['calc5', '公式小玩家', '玩過 5 個公式計算器'], ['gen10', '計算機器', '變化題答對 10 題'], ['essay', '交卷了', '送出第一份申論批改'], ['s3', '三天不間斷', '連續 3 天打開複習'], ['s7', '一週全勤', '連續 7 天打開複習']
+];
+
+const FUN = {
+  init() {
+    ST.xp = ST.xp || 0; ST.badges = ST.badges || {}; ST.days = ST.days || []; ST.calc = ST.calc || {}; ST.genOk = ST.genOk || 0; ST.sound = ST.sound ?? false; ST.lang = ST.lang || 'both';
+    const today = new Date().toISOString().slice(0, 10); if (!ST.days.includes(today)) { ST.days.push(today); ST.days = ST.days.slice(-60); }
+    const st = this.streak(); if (st >= 3) this.badge('s3', true); if (st >= 7) this.badge('s7', true);
+    save();
+  },
+  streak() { let n = 0; const d = new Date(); for (; ; ) { const k = d.toISOString().slice(0, 10); if (ST.days.includes(k)) { n++; d.setDate(d.getDate() - 1); } else break; } return n; },
+  level() { return Math.floor(ST.xp / 100) + 1; },
+  xp(n, el) {
+    const lv0 = this.level(); ST.xp += n; save(); this.hud();
+    if (el) { const r = el.getBoundingClientRect(); const f = document.createElement('div'); f.className = 'xpfloat'; f.textContent = '+' + n + ' XP'; f.style.left = (r.left + r.width / 2) + 'px'; f.style.top = (r.top + window.scrollY) + 'px'; document.body.appendChild(f); setTimeout(() => f.remove(), 1100); }
+    if (this.level() > lv0) { this.toast(`升級！Lv.${this.level()}「${TITLES[Math.min(this.level() - 1, TITLES.length - 1)]}」`, 'wow'); this.confetti(80); this.beep('up'); }
+  },
+  badge(id, silent) { if (ST.badges[id]) return; ST.badges[id] = Date.now(); save(); const b = BADGES.find(x => x[0] === id); if (b && !silent) { this.toast(`獲得徽章「${b[1]}」— ${b[2]}`, 'wow'); this.confetti(60); this.beep('up'); } },
+  hud() {
+    const h = $('#hud'); if (!h) return; const lv = this.level(); const p = ST.xp % 100;
+    h.innerHTML = `<span class="lv">Lv.${lv}</span><span class="ttl">${TITLES[Math.min(lv - 1, TITLES.length - 1)]}</span><span class="xpbar" title="${ST.xp} XP"><i style="width:${p}%"></i></span><span class="streak" title="連續天數">${this.flame()}${this.streak()}</span><button class="snd" id="sndbtn" type="button" aria-pressed="${ST.sound}" title="音效">${ST.sound ? '音效開' : '音效關'}</button><span class="lang" role="group" aria-label="題目語言">${[['zh', '中'], ['both', '雙語'], ['en', 'EN']].map(l => `<button type="button" data-lang="${l[0]}" aria-pressed="${ST.lang === l[0]}">${l[1]}</button>`).join('')}</span>`;
+    $('#sndbtn').onclick = () => { ST.sound = !ST.sound; save(); this.hud(); this.beep('ok'); };
+    $$('[data-lang]', h).forEach(b => b.onclick = () => { ST.lang = b.dataset.lang; save(); this.hud(); if (window.rerender) rerender(); });
+  },
+  flame() { return '<svg width="14" height="16" viewBox="0 0 14 16" aria-hidden="true"><path d="M7,0 C9,4 13,6 13,10 A6,6 0 0,1 1,10 C1,7 3,6 4,3 C5,5 6,5 7,0 Z" class="flm"/></svg>'; },
+  toast(msg, mood = 'happy') {
+    let t = $('#toast'); if (!t) { t = document.createElement('div'); t.id = 'toast'; t.setAttribute('role', 'status'); document.body.appendChild(t); }
+    t.innerHTML = PIG(mood, 54) + `<span>${msg}</span>`; t.className = 'show'; clearTimeout(this._tt); this._tt = setTimeout(() => t.className = '', 2600);
+  },
+  confetti(n = 40) {
+    if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    let c = $('#confetti'); if (!c) { c = document.createElement('canvas'); c.id = 'confetti'; document.body.appendChild(c); }
+    const W = c.width = innerWidth, H = c.height = innerHeight, x = c.getContext('2d');
+    const cols = ['#ff7eb6', '#ffd43b', '#4dabf7', '#69db7c', '#b197fc', '#ffa94d'];
+    const ps = Array.from({ length: n }, () => ({ x: W / 2 + (Math.random() - .5) * 200, y: H * .35, vx: (Math.random() - .5) * 12, vy: -Math.random() * 12 - 4, r: Math.random() * 6 + 4, c: cols[Math.floor(Math.random() * cols.length)], a: Math.random() * 6 }));
+    let f = 0; const step = () => { x.clearRect(0, 0, W, H); ps.forEach(p => { p.vy += .35; p.x += p.vx; p.y += p.vy; p.a += .2; x.save(); x.translate(p.x, p.y); x.rotate(p.a); x.fillStyle = p.c; x.fillRect(-p.r / 2, -p.r / 4, p.r, p.r / 2); x.restore(); }); if (++f < 90) requestAnimationFrame(step); else x.clearRect(0, 0, W, H); }; step();
+  },
+  beep(kind) {
+    if (!ST.sound) return; try {
+      this.ac = this.ac || new (window.AudioContext || window.webkitAudioContext)(); const a = this.ac;
+      const seq = kind === 'ok' ? [660, 880] : kind === 'no' ? [300, 220] : kind === 'hit' ? [520, 780, 1040] : [523, 659, 784, 1046];
+      seq.forEach((f, i) => { const o = a.createOscillator(), g = a.createGain(); o.type = kind === 'no' ? 'triangle' : 'sine'; o.frequency.value = f; g.gain.setValueAtTime(.0001, a.currentTime + i * .09); g.gain.exponentialRampToValueAtTime(.15, a.currentTime + i * .09 + .02); g.gain.exponentialRampToValueAtTime(.0001, a.currentTime + i * .09 + .16); o.connect(g).connect(a.destination); o.start(a.currentTime + i * .09); o.stop(a.currentTime + i * .09 + .18); });
+    } catch (e) { }
+  },
+  checkCards() {
+    const n = Object.keys(ST.done).length; if (n >= 1) this.badge('first'); if (n >= 25) this.badge('c25'); if (n >= 75) this.badge('c75');
+    ORDER.forEach(k => { const all = subjCards(DATA[k]); if (all.every(c => ST.done[c.id])) this.badge('all' + k); });
+  },
+  say(el, msg, mood) { el.innerHTML = `<div class="mascot">${PIG(mood || 'happy', 64)}<p class="bubble">${msg}</p></div>`; }
+};
+const LG = (zh, en) => ST.lang === 'en' ? (en || zh) : ST.lang === 'zh' ? zh : (en ? `${en}<span class="zhsub">${zh}</span>` : zh);
 // ===== App =====
 const ORDER = ['deriv', 'invest', 'law', 'mgmt'];
 const store = {
@@ -1383,9 +1942,12 @@ const store = {
   get() { try { return JSON.parse(localStorage.getItem(this.k)) || {}; } catch (e) { return {}; } },
   set(v) { try { localStorage.setItem(this.k, JSON.stringify(v)); } catch (e) { } }
 };
-let ST = Object.assign({ done: {}, wrong: {}, subj: 'home', tab: {} }, store.get());
+let ST = Object.assign({ done: {}, wrong2: {}, subj: 'home', tab: {}, best: {} }, store.get());
 const save = () => store.set(ST);
 const strip = h => h.replace(/<[^>]+>/g, ' ').replace(/&nbsp;|&lt;|&gt;|&amp;/g, ' ').replace(/\s+/g, ' ').trim();
+function subjCards(s) { return s.sections.reduce((a, x) => a.concat(x.cards), []); }
+function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; }
+const speak = t => { try { const u = new SpeechSynthesisUtterance(strip(t)); u.lang = 'en-US'; u.rate = .92; speechSynthesis.cancel(); speechSynthesis.speak(u); } catch (e) { } };
 
 const LAWART = [
   ['§1', '民事：法律 → 習慣 → 法理'], ['§2', '習慣不背於公序良俗'], ['§12', '滿 18 歲為成年'], ['§13', '未滿 7 歲無行為能力；7 歲以上未成年人限制行為能力'], ['§15', '受監護宣告之人無行為能力'], ['§15-2', '受輔助宣告：重要行為需輔助人同意'], ['§16', '權利能力、行為能力不得拋棄'], ['§17', '自由不得拋棄；限制不得背公序良俗'],
@@ -1397,38 +1959,54 @@ const LAWART = [
   ['§199', '債權人得請求給付；給付不限財產價格；不作為亦得為給付'], ['§207', '禁止複利（商業習慣例外）'], ['§217', '與有過失'], ['§221', '無/限制行為能力債務人責任依 §187'], ['§227 II', '加害給付'], ['§227-1', '債務不履行侵害人格權'], ['§245-1', '締約過失，2 年時效'], ['§1064', '生父母結婚 → 視為婚生子女'], ['消保 §20', '未經要約寄送商品：不負保管義務；逾 1 個月視為拋棄'], ['法組 §57-1', '無全文判例停止適用（2018/12/7）']
 ];
 
-function cardHTML(c, subj) {
+const TIPS = {
+  learn: ['每張卡先看「白話」和「生活比喻」，懂了再打開完整重點。勾「我懂了」+10 XP！', '看不懂的英文專有名詞，用上面的搜尋框找找看。'],
+  formula: ['點公式裡<b>有顏色的符號</b>，我會告訴你它是什麼意思！再拉拉看下面的計算機。', '公式不用死背：先懂「它在回答什麼問題」，再記長相。'],
+  prob: ['先自己算，卡住再按「下一步提示」。小考會從這裡出題或類題喔！'],
+  gen: ['每題數字都不一樣，答對 +15 XP。可以用上面切換成英文題目，練英文考試。'],
+  game: ['配對：先點左邊、再點右邊。分類：看到卡片就按它屬於哪一組。越快越好！'],
+  boss: ['打怪模式：答對就打怪物一下，答錯會掉一顆心。3 顆心用完就輸了，加油！'],
+  flash: ['先大聲說出你的答案，再點卡片翻面。講義上的每個問題都在這裡。'],
+  essay: ['寫完拍照上傳，我會用老師的眼光幫你改。考試是英文，記得用英文寫！']
+};
+const tip = k => pick(TIPS[k] || TIPS.learn);
+
+// ---------- Knowledge cards ----------
+function cardHTML(c) {
   const done = !!ST.done[c.id];
   let fig = '';
   if (c.fig) fig = c.fig.startsWith('w:') ? `<div class="wmount" data-w="${c.fig.slice(2)}"></div>` : (FIGS[c.fig] ? `<figure>${FIGS[c.fig]()}</figure>` : '');
-  return `<article class="card${done ? ' done' : ''}" id="c-${c.id}" data-search="${esc((c.t + ' ' + (c.en || '') + ' ' + c.plain + ' ' + c.life + ' ' + strip(c.body || '')).toLowerCase())}">
-    <header><h4>${c.t}</h4>${c.en ? `<span class="en">${c.en}</span>` : ''}</header>
+  return `<article class="card${done ? ' done' : ''}" id="c-${c.id}" data-search="${esc((c.t + ' ' + (c.en || '') + ' ' + c.plain + ' ' + c.life + ' ' + strip(c.body || '') + ' ' + (c.ex || '')).toLowerCase())}">
+    <header><h4>${c.t}</h4>${c.en ? `<span class="en">${c.en}</span>` : ''}${c.cfa ? `<span class="cfa" title="CFA 相關">CFA · ${c.cfa}</span>` : ''}</header>
     <div class="duo"><div class="plain"><span class="lbl">白話</span><p>${c.plain}</p></div><div class="life"><span class="lbl">生活比喻</span><p>${c.life}</p></div></div>
     ${fig}
+    ${c.ex ? `<div class="exam"><span class="lbl">Exam English 考試這樣寫</span><p>${c.ex}</p><button class="mini" type="button" data-say="${esc(c.ex)}">朗讀</button></div>` : ''}
     <details${done ? '' : ' open'}><summary>完整重點</summary><div class="body">${c.body || ''}</div>
     ${c.terms ? `<dl class="terms">${c.terms.map(t => `<dt>${t[0]}</dt><dd>${t[1]}</dd>`).join('')}</dl>` : ''}</details>
-    <label class="chk"><input type="checkbox" data-done="${c.id}"${done ? ' checked' : ''}> 我懂了，可以講給別人聽</label>
+    <label class="chk"><input type="checkbox" data-done="${c.id}"${done ? ' checked' : ''}> 我懂了，可以講給別人聽 <span class="xpchip">+10 XP</span></label>
   </article>`;
 }
-
-function subjCards(s) { return s.sections.reduce((a, x) => a.concat(x.cards), []); }
-
 function renderLearn(key, root) {
   const s = DATA[key];
-  root.innerHTML = `<div class="learn"><nav class="toc" aria-label="章節">${s.sections.map(x => `<a href="#sec-${x.id}">${x.t}<span class="cnt" data-sec="${x.id}"></span></a>`).join('')}</nav>
-    <div class="cards"><div class="searchbar"><input type="search" id="q-${key}" placeholder="搜尋名詞或關鍵字（例：基差、要約、BCG）" aria-label="搜尋"></div>
-    ${s.sections.map(x => `<section class="sec" id="sec-${x.id}"><h3>${x.t}</h3>${x.cards.map(c => cardHTML(c, key)).join('')}</section>`).join('')}
-    ${key === 'law' ? `<section class="sec" id="sec-art"><h3>條文速記表</h3><p class="sm-p">選擇題常考「第幾條」。點一下遮住右欄自我測驗。</p><button class="btn ghost" id="arthide" type="button">遮住內容</button><div class="tblwrap"><table class="tbl arts">${LAWART.map(a => `<tr><td><b>${a[0]}</b></td><td class="artc">${a[1]}</td></tr>`).join('')}</table></div></section>` : ''}
+  root.innerHTML = `<div class="tipbox"></div><div class="learn"><nav class="toc" aria-label="章節">${s.sections.map(x => `<a href="#sec-${x.id}">${x.t}<span class="cnt" data-sec="${x.id}"></span></a>`).join('')}${key === 'law' ? '<a href="#sec-art">條文速記表</a>' : ''}</nav>
+    <div class="cards"><div class="searchbar"><input type="search" id="q-${key}" placeholder="搜尋名詞或關鍵字（例：basis、要約、BCG）" aria-label="搜尋"></div>
+    ${s.sections.map(x => `<section class="sec" id="sec-${x.id}"><h3>${x.t}</h3>${x.cards.map(cardHTML).join('')}</section>`).join('')}
+    ${key === 'law' ? `<section class="sec" id="sec-art"><h3>條文速記表</h3><p class="sm-p">選擇題常考「第幾條」。按「遮住內容」後，點每一列偷看答案。</p><button class="btn ghost" id="arthide" type="button">遮住內容</button><div class="tblwrap"><table class="tbl arts">${LAWART.map(a => `<tr><td><b>${a[0]}</b></td><td class="artc">${a[1]}</td></tr>`).join('')}</table></div></section>` : ''}
     </div></div>`;
+  FUN.say($('.tipbox', root), tip('learn'));
   $$('.wmount', root).forEach(m => WIDGETS[m.dataset.w] && WIDGETS[m.dataset.w](m));
-  $$('[data-done]', root).forEach(cb => cb.addEventListener('change', () => { ST.done[cb.dataset.done] = cb.checked; if (!cb.checked) delete ST.done[cb.dataset.done]; save(); cb.closest('.card').classList.toggle('done', cb.checked); updateCounts(); }));
+  $$('[data-say]', root).forEach(b => b.onclick = () => speak(b.dataset.say));
+  $$('[data-done]', root).forEach(cb => cb.addEventListener('change', () => {
+    const id = cb.dataset.done;
+    if (cb.checked) { if (!ST.done[id]) { ST.done[id] = true; FUN.xp(10, cb); FUN.beep('ok'); } } else delete ST.done[id];
+    save(); cb.closest('.card').classList.toggle('done', cb.checked); updateCounts(); FUN.checkCards();
+  }));
   const q = $('#q-' + key, root);
   q.addEventListener('input', () => { const v = q.value.trim().toLowerCase(); $$('.card', root).forEach(c => c.hidden = v && !c.dataset.search.includes(v)); $$('.sec', root).forEach(sec => sec.hidden = v && !$$('.card', sec).some(c => !c.hidden)); });
   const ah = $('#arthide', root); if (ah) ah.addEventListener('click', () => { const t = root.querySelector('.arts'); t.classList.toggle('masked'); ah.textContent = t.classList.contains('masked') ? '顯示內容' : '遮住內容'; });
   $$('.arts tr', root).forEach(tr => tr.addEventListener('click', () => tr.classList.toggle('peek')));
   updateCounts();
 }
-
 function updateCounts() {
   ORDER.forEach(k => {
     const s = DATA[k]; const all = subjCards(s); const d = all.filter(c => ST.done[c.id]).length;
@@ -1438,79 +2016,184 @@ function updateCounts() {
   });
 }
 
-// ---- MCQ ----
-function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; }
-function renderMCQ(key, root) {
-  const bank = DATA[key].mcq.map((m, i) => Object.assign({ i }, m));
-  root.innerHTML = `<div class="quizbar"><span class="sm-p">題庫 ${bank.length} 題</span><button class="btn" data-m="10" type="button">隨機 10 題</button><button class="btn" data-m="all" type="button">全部（亂序）</button><button class="btn ghost" data-m="wrong" type="button">只練錯題 <span class="wc"></span></button></div><div class="quiz"></div>`;
-  const wc = () => { const w = (ST.wrong[key] || []).length; $('.wc', root).textContent = `(${w})`; };
-  wc();
-  const start = mode => {
-    let list = mode === 'wrong' ? bank.filter(b => (ST.wrong[key] || []).includes(b.i)) : shuffle(bank);
-    if (mode === '10') list = list.slice(0, 10);
-    if (!list.length) { $('.quiz', root).innerHTML = '<p class="empty">目前沒有錯題。先做一輪隨機 10 題吧。</p>'; return; }
-    let idx = 0, score = 0;
-    const show = () => {
-      if (idx >= list.length) { $('.quiz', root).innerHTML = `<div class="result"><p class="big">${score} / ${list.length}</p><p>${score === list.length ? '全對！' : '答錯的題目已加入錯題本。'}</p><button class="btn" type="button" id="again">再來一輪</button></div>`; $('#again', root).onclick = () => start(mode); wc(); return; }
-      const m = list[idx]; const ord = shuffle(m.o.map((t, j) => [t, j]));
-      $('.quiz', root).innerHTML = `<div class="qcard"><div class="qmeta">第 ${idx + 1} / ${list.length} 題　得分 ${score}</div><p class="qtext">${m.q}</p><div class="opts">${ord.map(o => `<button class="opt" data-j="${o[1]}" type="button">${o[0]}</button>`).join('')}</div><div class="exp" hidden></div><button class="btn next" type="button" hidden>下一題</button></div>`;
-      $$('.opt', root).forEach(b => b.onclick = () => {
-        const ok = +b.dataset.j === m.a; $$('.opt', root).forEach(x => { x.disabled = true; if (+x.dataset.j === m.a) x.classList.add('right'); }); if (!ok) b.classList.add('wrongc');
-        const w = new Set(ST.wrong[key] || []); if (ok) { score++; if (mode === 'wrong') w.delete(m.i); } else w.add(m.i); ST.wrong[key] = [...w]; save();
-        const e = $('.exp', root); e.hidden = false; e.innerHTML = `<b>${ok ? '答對' : '答錯'}</b>　${m.e || ''}`; const n = $('.next', root); n.hidden = false; n.focus(); n.onclick = () => { idx++; show(); };
-      });
-    };
-    show();
-  };
-  $$('[data-m]', root).forEach(b => b.onclick = () => start(b.dataset.m));
-  start('10');
+// ---------- Formula classroom ----------
+function renderFormulas(key, root) {
+  const F = DATA[key].formulas;
+  root.innerHTML = `<div class="tipbox"></div><div class="fnav">${F.map(f => `<a href="#f-${f.id}" class="fchip">${f.t.replace(/<[^>]+>/g, '')}</a>`).join('')}</div><div class="flist">${F.map(f => `
+    <article class="fcardx" id="f-${f.id}"><header><h4>${f.t}</h4><span class="en">${f.en}</span>${f.cfa ? `<span class="cfa">CFA · ${f.cfa}</span>` : ''}</header>
+    <p class="fqq"><span class="lbl">這個公式在回答</span>${f.q}</p>
+    <div class="ftex">${f.tex.replace(/<v s="(\w+)">/g, '<button type="button" class="sym" data-k="$1">').replace(/<\/v>/g, '</button>')}</div>
+    <div class="sympop" hidden></div>
+    <div class="symtable"><span class="lbl">符號小字典（點上面的符號也可以）</span><dl>${Object.entries(f.syms).map(([k, v]) => `<dt><button type="button" class="sym" data-k="${k}">${(f.tex.match(new RegExp('<v s="' + k + '">(.*?)</v>')) || [, k])[1]}</button></dt><dd><b>${v[0]}</b> <i>${v[1]}</i>${v[2] ? '<br>' + v[2] : ''}</dd>`).join('')}</dl></div>
+    <div class="why"><span class="lbl">為什麼長這樣？（故事版）</span><p>${f.why}</p></div>
+    <div class="stepsbox"><span class="lbl">一步一步算</span><ol>${f.steps.map(s => `<li>${s}</li>`).join('')}</ol></div>
+    <div class="calc"><span class="lbl">動手玩：拉拉看數字怎麼變</span><div class="cvars">${f.vars.map(v => `<label><span>${v.s}</span><input type="range" min="${v.min}" max="${v.max}" step="${v.step}" value="${v.v}" data-k="${v.k}"><input type="number" step="${v.step}" value="${v.v}" data-n="${v.k}" aria-label="${strip(v.s)}"></label>`).join('')}</div><p class="cout"></p></div>
+    <div class="oops"><span class="lbl">常見錯誤</span><ul>${f.oops.map(o => `<li>${o}</li>`).join('')}</ul></div>
+    <div class="exam"><span class="lbl">Exam English 考試這樣寫</span><p>${f.exam}</p><button class="mini" type="button" data-say="${esc(f.exam)}">朗讀</button></div>
+    </article>`).join('')}</div>`;
+  FUN.say($('.tipbox', root), tip('formula'));
+  $$('[data-say]', root).forEach(b => b.onclick = () => speak(b.dataset.say));
+  F.forEach(f => {
+    const el = $('#f-' + f.id, root); const pop = $('.sympop', el);
+    $$('.sym', el).forEach(b => b.onclick = () => { const v = f.syms[b.dataset.k]; $$('.sym', el).forEach(x => x.classList.toggle('on', x.dataset.k === b.dataset.k)); pop.hidden = false; pop.innerHTML = `${PIG('wow', 40)}<div><b>${b.innerHTML}</b> = ${v[0]}<br><i>${v[1]}</i>${v[2] ? '<br>' + v[2] : ''}</div>`; FUN.beep('ok'); });
+    const run = () => { const v = {}; f.vars.forEach(x => v[x.k] = +$(`[data-n="${x.k}"]`, el).value); try { $('.cout', el).innerHTML = f.calc(v); } catch (e) { $('.cout', el).textContent = '—'; } };
+    $$('input[type=range]', el).forEach(r => r.addEventListener('input', () => { $(`[data-n="${r.dataset.k}"]`, el).value = r.value; run(); touch(); }));
+    $$('input[type=number]', el).forEach(n => n.addEventListener('input', () => { const r = $(`input[type=range][data-k="${n.dataset.n}"]`, el); r.value = n.value; run(); touch(); }));
+    const touch = () => { if (!ST.calc[f.id]) { ST.calc[f.id] = 1; save(); FUN.xp(3); if (Object.keys(ST.calc).length >= 5) FUN.badge('calc5'); } };
+    run();
+  });
 }
 
-// ---- Textbook problems ----
+// ---------- MCQ: boss / speed / practice / wrong ----------
+function bankFor(key) {
+  const b = [];
+  if (key === 'deriv') { if (ST.lang !== 'en') DATA.deriv.mcq.forEach((m, i) => b.push(Object.assign({ id: 'z' + i }, m))); if (ST.lang !== 'zh') DATA.deriv.mcqEn.forEach((m, i) => b.push(Object.assign({ id: 'e' + i }, m))); }
+  else DATA[key].mcq.forEach((m, i) => b.push(Object.assign({ id: 'z' + i }, m)));
+  return b;
+}
+function renderMCQ(key, root) {
+  const bank = bankFor(key); const wrong = () => new Set(ST.wrong2[key] || []);
+  root.innerHTML = `<div class="tipbox"></div><div class="modes">
+    <button class="mode boss" data-m="boss" type="button"><b>打怪模式</b><span>10 題 · 3 顆心</span></button>
+    <button class="mode speed" data-m="speed" type="button"><b>60 秒限時賽</b><span>能答幾題就幾題</span></button>
+    <button class="mode prac" data-m="prac" type="button"><b>慢慢練習</b><span>每題都有解釋</span></button>
+    <button class="mode wrong" data-m="wrong" type="button"><b>錯題本</b><span class="wc"></span></button></div>
+    <p class="sm-p">題庫 ${bank.length} 題${key === 'deriv' ? '（右上角可切換中文、英文或雙語題目）' : ''}</p><div class="arena"></div>`;
+  FUN.say($('.tipbox', root), tip('boss'));
+  const wc = () => $('.wc', root).textContent = `${wrong().size} 題待複習`; wc();
+  const arena = $('.arena', root);
+  const mark = (m, ok) => { const w = wrong(); ok ? w.delete(m.id) : w.add(m.id); ST.wrong2[key] = [...w]; save(); wc(); };
+  let combo = 0;
+  const qhtml = (m, meta) => { const ord = shuffle(m.o.map((t, j) => [t, j])); return `<div class="qmeta">${meta}</div><p class="qtext">${m.q}</p><div class="opts">${ord.map((o, n) => `<button class="opt" data-j="${o[1]}" type="button"><span class="key">${'ABCD'[n]}</span>${o[0]}</button>`).join('')}</div>`; };
+  const answer = (m, b, then) => {
+    const ok = +b.dataset.j === m.a; $$('.opt', arena).forEach(x => { x.disabled = true; if (+x.dataset.j === m.a) x.classList.add('right'); }); if (!ok) b.classList.add('wrongc');
+    mark(m, ok); if (ok) { combo++; FUN.beep('ok'); FUN.xp(5 + Math.min(combo, 10), b); if (combo === 5) FUN.badge('combo5'); if (combo === 10) FUN.badge('combo10'); if (combo % 3 === 0) FUN.confetti(25); } else { combo = 0; FUN.beep('no'); }
+    then(ok);
+  };
+  const start = mode => {
+    combo = 0;
+    if (mode === 'boss') {
+      const list = shuffle(bank).slice(0, 10); let i = 0, hp = list.length, hearts = 3; const [bn, be] = BOSSES[key];
+      const draw = (hurt) => {
+        if (hp <= 0) { arena.innerHTML = `<div class="win">${PIG('wow', 110)}<h3>你打倒了${bn}！</h3><p>+50 XP</p><button class="btn big" id="again" type="button">再打一隻</button></div>`; FUN.xp(50); FUN.badge('boss' + key); FUN.confetti(140); FUN.beep('up'); $('#again', root).onclick = () => start('boss'); return; }
+        if (hearts <= 0 || i >= list.length) { arena.innerHTML = `<div class="win">${PIG('sad', 110)}<h3>${bn}還剩 ${hp} 滴血⋯</h3><p>錯的題目已放進錯題本，練一練再來挑戰！</p><button class="btn big" id="again" type="button">再挑戰</button></div>`; $('#again', root).onclick = () => start('boss'); return; }
+        const m = list[i];
+        arena.innerHTML = `<div class="battle"><div class="bossbox">${MONSTER(hp / list.length, hurt)}<div><b>${bn}</b> <span class="en">${be}</span><div class="hp"><i style="width:${hp / list.length * 100}%"></i></div><div class="hearts">${'<span class="h on">♥</span>'.repeat(hearts)}${'<span class="h">♥</span>'.repeat(3 - hearts)}</div></div></div><div class="qcard">${qhtml(m, `第 ${i + 1} 題 · combo ${combo}`)}<div class="exp" hidden></div><button class="btn next" type="button" hidden>繼續攻擊</button></div></div>`;
+        $$('.opt', arena).forEach(b => b.onclick = () => answer(m, b, ok => { if (ok) { hp--; FUN.beep('hit'); $('.mon', arena).classList.add('hurt'); } else hearts--; const e = $('.exp', arena); e.hidden = false; e.innerHTML = `<b>${ok ? FUN_CHEER() : FUN_COMFORT()}</b> ${m.e || ''}`; const n = $('.next', arena); n.hidden = false; n.focus(); n.onclick = () => { i++; draw(false); }; }));
+      };
+      draw(false);
+    } else if (mode === 'speed') {
+      const list = shuffle(bank); let i = 0, score = 0, t = 60; const missed = []; let timer;
+      const end = () => { clearInterval(timer); if (score >= 12) FUN.badge('speed'); const best = Math.max(ST.best['sp' + key] || 0, score); ST.best['sp' + key] = best; save();
+        arena.innerHTML = `<div class="win">${PIG(score >= 8 ? 'wow' : 'happy', 100)}<h3>答對 ${score} 題！</h3><p>個人最佳：${best} 題</p>${missed.length ? `<div class="missed"><b>答錯的題目</b>${missed.map(m => `<p>${m.q}<br><span class="right-t">✓ ${m.o[m.a]}</span>　${m.e || ''}</p>`).join('')}</div>` : ''}<button class="btn big" id="again" type="button">再跑一次</button></div>`; $('#again', root).onclick = () => start('speed'); };
+      const draw = () => { if (i >= list.length) return end(); const m = list[i]; arena.innerHTML = `<div class="speedbar"><span class="clock">${t}s</span><span>答對 ${score}</span></div><div class="qcard">${qhtml(m, `第 ${i + 1} 題 · combo ${combo}`)}</div>`;
+        $$('.opt', arena).forEach(b => b.onclick = () => answer(m, b, ok => { if (ok) score++; else missed.push(m); setTimeout(() => { i++; draw(); }, ok ? 350 : 900); })); };
+      timer = setInterval(() => { t--; const c = $('.clock', arena); if (c) c.textContent = t + 's'; if (t <= 0) end(); }, 1000);
+      draw();
+    } else {
+      let list = mode === 'wrong' ? bank.filter(b => wrong().has(b.id)) : shuffle(bank);
+      if (!list.length) { arena.innerHTML = `<div class="win">${PIG('happy', 90)}<p>錯題本是空的，太棒了！</p></div>`; return; }
+      let i = 0, score = 0;
+      const draw = () => { if (i >= list.length) { arena.innerHTML = `<div class="win">${PIG('wow', 100)}<h3>${score} / ${list.length}</h3><button class="btn big" id="again" type="button">再來一輪</button></div>`; $('#again', root).onclick = () => start(mode); return; }
+        const m = list[i]; arena.innerHTML = `<div class="qcard">${qhtml(m, `第 ${i + 1} / ${list.length} 題 · 答對 ${score} · combo ${combo}`)}<div class="exp" hidden></div><button class="btn next" type="button" hidden>下一題</button></div>`;
+        $$('.opt', arena).forEach(b => b.onclick = () => answer(m, b, ok => { if (ok) score++; const e = $('.exp', arena); e.hidden = false; e.innerHTML = `<b>${ok ? FUN_CHEER() : FUN_COMFORT()}</b> ${m.e || ''}`; const n = $('.next', arena); n.hidden = false; n.focus(); n.onclick = () => { i++; draw(); }; })); };
+      draw();
+    }
+  };
+  $$('[data-m]', root).forEach(b => b.onclick = () => start(b.dataset.m));
+  arena.innerHTML = `<div class="win">${PIG('happy', 100)}<p>選一個模式開始吧！</p></div>`;
+}
+const FUN_CHEER = () => pick(CHEERS), FUN_COMFORT = () => pick(COMFORT);
+
+// ---------- Games: match & sort ----------
+function renderGames(key, root) {
+  const S = DATA[key].sort;
+  root.innerHTML = `<div class="tipbox"></div><div class="modes"><button class="mode prac" data-g="match" type="button"><b>配對遊戲</b><span>${key === 'law' ? '條號 ↔ 內容' : '英文 ↔ 意思'}</span></button>${S.map((s, i) => `<button class="mode speed" data-g="s${i}" type="button"><b>分類</b><span>${s.t}</span></button>`).join('')}</div><div class="arena"></div>`;
+  FUN.say($('.tipbox', root), tip('game'));
+  const arena = $('.arena', root);
+  const match = () => {
+    const pairs = shuffle(DATA[key].match).slice(0, 6); const L = shuffle(pairs.map((p, i) => [p[0], i])), Rr = shuffle(pairs.map((p, i) => [p[1], i]));
+    let sel = null, left = pairs.length, t0 = Date.now(), miss = 0;
+    arena.innerHTML = `<div class="mgame"><div class="mcol">${L.map(x => `<button class="mt l" data-i="${x[1]}" type="button">${x[0]}</button>`).join('')}</div><div class="mcol">${Rr.map(x => `<button class="mt r" data-i="${x[1]}" type="button">${x[0]}</button>`).join('')}</div></div><p class="sm-p" id="mstat">還剩 ${left} 組</p>`;
+    $$('.mt', arena).forEach(b => b.onclick = () => {
+      if (b.classList.contains('l')) { $$('.mt.l', arena).forEach(x => x.classList.remove('sel')); b.classList.add('sel'); sel = b; return; }
+      if (!sel) { b.classList.add('shake'); setTimeout(() => b.classList.remove('shake'), 400); return; }
+      if (sel.dataset.i === b.dataset.i) { sel.classList.add('gone'); b.classList.add('gone'); sel.disabled = b.disabled = true; sel = null; left--; FUN.beep('ok');
+        if (!left) { const sec = ((Date.now() - t0) / 1000).toFixed(1); const best = Math.min(ST.best['m' + key] || 999, +sec); ST.best['m' + key] = best; save(); FUN.xp(20); FUN.badge('match'); FUN.confetti(90);
+          arena.innerHTML = `<div class="win">${PIG('wow', 100)}<h3>${sec} 秒完成！</h3><p>答錯 ${miss} 次 · 最佳紀錄 ${best} 秒</p><button class="btn big" id="again" type="button">再玩一次</button></div>`; $('#again', root).onclick = match; }
+        else $('#mstat', arena).textContent = `還剩 ${left} 組`; }
+      else { miss++; FUN.beep('no'); b.classList.add('shake'); sel.classList.add('shake'); const s = sel; setTimeout(() => { b.classList.remove('shake'); s.classList.remove('shake'); }, 400); }
+    });
+  };
+  const sort = (si) => {
+    const g = S[si]; const items = shuffle(g.items); let i = 0, ok = 0; const res = [];
+    const draw = () => {
+      if (i >= items.length) { const perfect = ok === items.length; FUN.xp(perfect ? 20 : 8); if (perfect) { FUN.badge('sortp'); FUN.confetti(90); }
+        arena.innerHTML = `<div class="win">${PIG(perfect ? 'wow' : 'happy', 100)}<h3>${ok} / ${items.length}</h3><div class="sortres">${g.b.map((bn, bi) => `<div class="bucket"><b>${bn}</b>${items.filter(x => x[1] === bi).map(x => `<span class="${res.find(r => r[0] === x[0])[1] ? '' : 'miss'}">${x[0]}</span>`).join('')}</div>`).join('')}</div><button class="btn big" id="again" type="button">再玩一次</button></div>`; $('#again', root).onclick = () => sort(si); return; }
+      const it = items[i];
+      arena.innerHTML = `<div class="sgame"><p class="sm-p">${g.t}　(${i + 1}/${items.length})</p><div class="scard">${it[0]}</div><div class="buckets">${g.b.map((bn, bi) => `<button class="bk" data-b="${bi}" type="button">${bn}</button>`).join('')}</div><p class="sfb" aria-live="polite"></p></div>`;
+      $$('.bk', arena).forEach(b => b.onclick = () => { const good = +b.dataset.b === it[1]; res.push([it[0], good]); if (good) { ok++; FUN.beep('ok'); b.classList.add('right'); } else { FUN.beep('no'); b.classList.add('wrongc'); $$('.bk', arena)[it[1]].classList.add('right'); }
+        $$('.bk', arena).forEach(x => x.disabled = true); $('.sfb', arena).textContent = good ? pick(CHEERS) : `正確答案：${g.b[it[1]]}`; setTimeout(() => { i++; draw(); }, good ? 500 : 1300); });
+    };
+    draw();
+  };
+  $$('[data-g]', root).forEach(b => b.onclick = () => b.dataset.g === 'match' ? match() : sort(+b.dataset.g.slice(1)));
+  match();
+}
+
+// ---------- 衍金 textbook problems ----------
 function renderProblems(root) {
   const P = DATA.deriv.problems;
-  root.innerHTML = `<div class="quizbar"><button class="btn on" data-f="all" type="button">全部</button><button class="btn" data-f="課本" type="button">老師勾選（11版）</button><button class="btn" data-f="類題" type="button">課本類似題</button></div><div class="plist">${P.map(p => `<div class="prob" data-l="${p.lvl}"><div class="psrc"><span class="pill ${p.lvl === '課本' ? 'good' : ''}">${p.lvl}</span> ${p.src}</div><p class="qtext">${p.q}</p><ol class="steps">${p.steps.map(s => `<li hidden>${s}</li>`).join('')}</ol><p class="ans" hidden><b>答：</b>${p.ans}</p><div class="pbtn"><button class="btn ghost hint" type="button">下一步提示</button><button class="btn ghost reveal" type="button">看完整解答</button></div></div>`).join('')}</div>`;
+  root.innerHTML = `<div class="tipbox"></div><div class="quizbar"><button class="btn on" data-f="all" type="button">全部</button><button class="btn ghost" data-f="課本" type="button">老師勾選（11版）</button><button class="btn ghost" data-f="類題" type="button">課本類似題</button></div><div class="plist">${P.map(p => `<div class="prob" data-l="${p.lvl}"><div class="psrc"><span class="pill ${p.lvl === '課本' ? 'good' : ''}">${p.lvl}</span> ${p.src}</div><div class="qtext">${ST.lang === 'zh' || !p.qEn ? p.q : ST.lang === 'en' ? p.qEn : `<p>${p.qEn}</p><p class="zhsub">${p.q}</p>`}</div><ol class="steps">${p.steps.map(s => `<li hidden>${s}</li>`).join('')}</ol><div class="ans" hidden><b>答：</b>${p.ans}${p.ansEn && ST.lang !== 'zh' ? `<p class="en-ans"><b>English answer:</b> ${p.ansEn} <button class="mini" type="button" data-say="${esc(p.ansEn)}">朗讀</button></p>` : ''}</div><div class="pbtn"><button class="btn ghost hint" type="button">下一步提示</button><button class="btn ghost reveal" type="button">看完整解答</button><label class="chk"><input type="checkbox" data-pd="${p.id}"${ST.done['P' + p.id] ? ' checked' : ''}> 我會了</label></div></div>`).join('')}</div>`;
+  FUN.say($('.tipbox', root), tip('prob'));
+  $$('[data-say]', root).forEach(b => b.onclick = () => speak(b.dataset.say));
   $$('.prob', root).forEach(pb => {
     const steps = $$('.steps li', pb);
     $('.hint', pb).onclick = () => { const h = steps.find(s => s.hidden); if (h) h.hidden = false; else $('.ans', pb).hidden = false; };
     $('.reveal', pb).onclick = () => { steps.forEach(s => s.hidden = false); $('.ans', pb).hidden = false; };
   });
-  $$('[data-f]', root).forEach(b => b.onclick = () => { $$('[data-f]', root).forEach(x => x.classList.toggle('on', x === b)); $$('.prob', root).forEach(p => p.hidden = b.dataset.f !== 'all' && p.dataset.l !== b.dataset.f); });
+  $$('[data-pd]', root).forEach(cb => cb.onchange = () => { const k = 'P' + cb.dataset.pd; if (cb.checked && !ST.done[k]) { ST.done[k] = true; FUN.xp(10, cb); } else if (!cb.checked) delete ST.done[k]; save(); });
+  $$('[data-f]', root).forEach(b => b.onclick = () => { $$('[data-f]', root).forEach(x => { x.classList.toggle('on', x === b); x.classList.toggle('ghost', x !== b); }); $$('.prob', root).forEach(p => p.hidden = b.dataset.f !== 'all' && p.dataset.l !== b.dataset.f); });
 }
 
-// ---- Generators ----
+// ---------- 衍金 generators ----------
 function renderGens(root) {
   const G = DATA.deriv.gens;
-  root.innerHTML = `<p class="sm-p">每按一次都會換新的數字。題型對應老師勾選的習題，「進階」是更難的延伸版。小考可開書，但考試時間有限，這裡練的是速度與正確率。</p><div class="quizbar"><label>題型 <select id="gsel"><option value="rand">隨機題型</option>${G.map(g => `<option value="${g.id}">${g.t}（${g.base}）</option>`).join('')}</select></label><button class="btn" id="gnew" type="button">出一題</button><span class="sm-p" id="gscore"></span></div><div id="gbox"></div>`;
+  root.innerHTML = `<div class="tipbox"></div><div class="quizbar"><label>題型 <select id="gsel"><option value="rand">隨機題型</option>${G.map(g => `<option value="${g.id}">${g.t}（${g.base}）</option>`).join('')}</select></label><button class="btn" id="gnew" type="button">出一題</button><span class="sm-p" id="gscore"></span></div><div id="gbox"></div>`;
+  FUN.say($('.tipbox', root), tip('gen'));
   let ok = 0, tot = 0;
   const make = () => {
     const sel = $('#gsel', root).value; const g = sel === 'rand' ? pick(G) : G.find(x => x.id === sel); const p = g.make();
-    $('#gbox', root).innerHTML = `<div class="qcard"><div class="qmeta">${g.t}　<span class="pill">對應 ${g.base}</span></div><p class="qtext">${p.q}</p><div class="ansrow"><input type="text" inputmode="decimal" id="gin" placeholder="輸入數字" aria-label="你的答案"><span class="unit">${p.unit || ''}</span><button class="btn" id="gchk" type="button">對答案</button><button class="btn ghost" id="gshow" type="button">直接看解法</button></div><div class="exp" hidden></div></div>`;
-    const showSol = (msg) => { const e = $('.exp', root); e.hidden = false; e.innerHTML = (msg || '') + `<ol class="steps">${p.sol.map(s => `<li>${s}</li>`).join('')}</ol><p>正解：<b>${f2(p.ans, 4)}</b></p>`; };
-    $('#gchk', root).onclick = () => { const v = parseFloat($('#gin', root).value.replace(/,/g, '')); if (isNaN(v)) return; tot++; const good = Math.abs(v - p.ans) <= Math.max(p.tol, Math.abs(p.ans) * 0.002); if (good) ok++; $('#gscore', root).textContent = `本次答對 ${ok}/${tot}`; showSol(`<b>${good ? '答對' : '再檢查一下'}</b>`); };
+    const qt = ST.lang === 'zh' || !p.qe ? p.q : ST.lang === 'en' ? p.qe : `<p>${p.qe}</p><p class="zhsub">${p.q}</p>`;
+    $('#gbox', root).innerHTML = `<div class="qcard"><div class="qmeta">${g.t}　<span class="pill">對應 ${g.base}</span></div><div class="qtext">${qt}</div><div class="ansrow"><input type="text" inputmode="decimal" id="gin" placeholder="輸入數字" aria-label="你的答案"><span class="unit">${p.unit || ''}</span><button class="btn" id="gchk" type="button">對答案</button><button class="btn ghost" id="gshow" type="button">直接看解法</button></div><div class="exp" hidden></div></div>`;
+    const showSol = (msg) => { const e = $('.exp', root); e.hidden = false; e.innerHTML = (msg || '') + `<ol class="steps">${p.sol.map(s => `<li>${s}</li>`).join('')}</ol><p>正解：<b>${f2(p.ans, 4)}</b></p><button class="btn" id="gnext" type="button">下一題</button>`; $('#gnext', root).onclick = make; };
+    $('#gchk', root).onclick = () => { const v = parseFloat($('#gin', root).value.replace(/,/g, '')); if (isNaN(v)) return; tot++; const good = Math.abs(v - p.ans) <= Math.max(p.tol, Math.abs(p.ans) * 0.002); if (good) { ok++; ST.genOk++; save(); FUN.xp(15, $('#gchk', root)); FUN.beep('ok'); FUN.confetti(30); if (ST.genOk >= 10) FUN.badge('gen10'); } else FUN.beep('no'); $('#gscore', root).textContent = `本次答對 ${ok}/${tot}`; $('#gchk', root).disabled = true; showSol(`<b>${good ? pick(CHEERS) : '再檢查一下，看看下面的步驟'}</b>`); };
     $('#gin', root).addEventListener('keydown', e => { if (e.key === 'Enter') $('#gchk', root).click(); });
     $('#gshow', root).onclick = () => showSol('');
   };
   $('#gnew', root).onclick = make; make();
 }
 
-// ---- Flashcards (投資學講義問題) ----
+// ---------- 投資學 flashcards ----------
 function renderFlash(root) {
   const F = DATA.invest.flash;
-  root.innerHTML = `<p class="sm-p">講義上每一個「問題」都在這裡（共 ${F.length} 題）。先自己講出答案，再點卡片翻面核對。</p><div class="quizbar"><button class="btn" id="fshuf" type="button">打亂順序</button><button class="btn ghost" id="fall" type="button">全部翻開</button></div><div class="flashlist"></div>`;
-  const draw = list => { $('.flashlist', root).innerHTML = list.map((f, i) => `<button class="fcard" type="button"><span class="fq"><span class="num">${i + 1}</span>${f.q}</span><span class="fa">${f.a}</span></button>`).join(''); $$('.fcard', root).forEach(c => c.onclick = () => c.classList.toggle('on')); };
-  draw(F); $('#fshuf', root).onclick = () => draw(shuffle(F)); $('#fall', root).onclick = () => $$('.fcard', root).forEach(c => c.classList.add('on'));
+  root.innerHTML = `<div class="tipbox"></div><div class="quizbar"><button class="btn" id="fshuf" type="button">打亂順序</button><button class="btn ghost" id="fall" type="button">全部翻開</button><span class="sm-p" id="fcnt"></span></div><div class="flashlist"></div>`;
+  FUN.say($('.tipbox', root), tip('flash'));
+  const cnt = () => $('#fcnt', root).textContent = `已翻開 ${$$('.fcard.on', root).length} / ${F.length}`;
+  const draw = list => { $('.flashlist', root).innerHTML = list.map((f, i) => `<button class="fcard" type="button"><span class="fq"><span class="num">${i + 1}</span>${f.q}</span><span class="fa">${f.a}</span></button>`).join(''); $$('.fcard', root).forEach(c => c.onclick = () => { c.classList.toggle('on'); if (c.classList.contains('on') && !c.dataset.x) { c.dataset.x = 1; FUN.xp(2); } cnt(); }); cnt(); };
+  draw(F); $('#fshuf', root).onclick = () => draw(shuffle(F)); $('#fall', root).onclick = () => { $$('.fcard', root).forEach(c => c.classList.add('on')); cnt(); };
 }
 
-// ---- Essay grading (管理學) ----
+// ---------- 管理學 essay grading ----------
 function renderEssay(root) {
   const E = DATA.mgmt.essays;
-  root.innerHTML = `<div class="essay"><div class="estep"><span class="n">1</span><div><label for="esel" class="lblb">選題目</label><select id="esel">${E.map((e, i) => `<option value="${i}">[${e.ch}] ${e.q.slice(0, 40)}…</option>`).join('')}<option value="custom">自訂題目（例如老師上課出的題）</option></select><p class="qtext" id="eq"></p><textarea id="ecustom" rows="3" placeholder="貼上題目" hidden></textarea><details class="rub"><summary>看評分要點（先別偷看，寫完再看）</summary><ul id="epts"></ul></details></div></div>
-    <div class="estep"><span class="n">2</span><div><span class="lblb">手寫作答後拍照上傳</span><label class="drop" id="edrop"><input type="file" id="efile" accept="image/jpeg,image/png,image/webp,image/gif" multiple><span>點這裡選照片，或拖曳照片進來（可多張）</span></label><div class="thumbs" id="ethumbs"></div><details><summary>沒有手寫？也可以直接打字</summary><textarea id="etext" rows="6" placeholder="打字作答"></textarea></details></div></div>
-    <div class="estep"><span class="n">3</span><div><button class="btn big" id="ego" type="button">請 Claude 批改</button><button class="btn ghost" id="estop" type="button" hidden>停止</button><p class="sm-p" id="enote"></p><div class="feedback" id="eout"></div></div></div></div>`;
+  root.innerHTML = `<div class="tipbox"></div><div class="essay"><div class="estep"><span class="n">1</span><div><label for="esel" class="lblb">選題目</label><select id="esel">${E.map((e, i) => `<option value="${i}">[${e.ch}] ${(e.qEn || e.q).slice(0, 60)}…</option>`).join('')}<option value="custom">自訂題目（例如老師上課出的題）</option></select><div class="qtext" id="eq"></div><textarea id="ecustom" rows="3" placeholder="貼上題目" hidden></textarea><details class="rub"><summary>看評分要點（寫完再看）</summary><ul id="epts"></ul></details></div></div>
+    <div class="estep"><span class="n">2</span><div><span class="lblb">用英文手寫作答，拍照上傳</span><label class="drop" id="edrop"><input type="file" id="efile" accept="image/jpeg,image/png,image/webp,image/gif" multiple>${PIG('happy', 48)}<span>點這裡選照片，或把照片拖進來（可多張）</span></label><div class="thumbs" id="ethumbs"></div><details><summary>沒有手寫？也可以直接打字</summary><textarea id="etext" rows="6" placeholder="Type your answer in English"></textarea></details></div></div>
+    <div class="estep"><span class="n">3</span><div><button class="btn big" id="ego" type="button">請豬豬老師（Claude）批改</button><button class="btn ghost" id="estop" type="button" hidden>停止</button><p class="sm-p" id="enote"></p><div class="feedback" id="eout"></div></div></div></div>`;
+  FUN.say($('.tipbox', root), tip('essay'));
   let files = [];
   const sel = $('#esel', root);
-  const syncQ = () => { const c = sel.value === 'custom'; $('#ecustom', root).hidden = !c; $('#eq', root).textContent = c ? '' : E[+sel.value].q; $('#epts', root).innerHTML = c ? '<li>自訂題目沒有預設要點，Claude 會依課本內容判斷。</li>' : E[+sel.value].pts.map(p => `<li>${p}</li>`).join(''); };
+  const syncQ = () => { const c = sel.value === 'custom'; $('#ecustom', root).hidden = !c; const e = E[+sel.value]; $('#eq', root).innerHTML = c ? '' : `<p>${e.qEn}</p><p class="zhsub">${e.q}</p>`; $('#epts', root).innerHTML = c ? '<li>自訂題目沒有預設要點，會依課本內容判斷。</li>' : e.pts.map(p => `<li>${p}</li>`).join(''); };
   sel.onchange = syncQ; syncQ();
   const addFiles = fl => { [...fl].forEach(f => { if (/^image\//.test(f.type)) files.push(f); }); drawThumbs(); };
   const drawThumbs = () => { $('#ethumbs', root).innerHTML = files.map((f, i) => `<figure class="th"><img alt="作答照片 ${i + 1}" src="${URL.createObjectURL(f)}"><button type="button" data-x="${i}" aria-label="移除">×</button></figure>`).join(''); $$('[data-x]', root).forEach(b => b.onclick = () => { files.splice(+b.dataset.x, 1); drawThumbs(); }); };
@@ -1521,7 +2204,7 @@ function renderEssay(root) {
   note.textContent = '連線中…';
   (async () => {
     try { sample = window.claude ? await window.claude.use('sample') : null; } catch (e) { sample = null; }
-    if (!sample) { note.innerHTML = '這個檢視無法使用 AI 批改（需要在 claude.ai 登入後開啟）。你也可以把手寫照片直接傳到對話裡請 Claude 批改。'; go.disabled = true; return; }
+    if (!sample) { note.innerHTML = '這個檢視無法使用 AI 批改（需要在 claude.ai 登入後開啟）。也可以把手寫照片直接傳到對話裡請 Claude 批改。'; go.disabled = true; return; }
     try { lim = await sample.limits(); } catch (e) { lim = null; }
     note.textContent = lim && lim.images ? `可上傳最多 ${lim.images.maxCount} 張照片。第一次使用會詢問你是否允許。` : '此檢視只能批改打字作答（無法傳送圖片）。';
     if (!(lim && lim.images)) $('#edrop', root).hidden = true;
@@ -1529,30 +2212,30 @@ function renderEssay(root) {
   stop.onclick = () => ctl && ctl.abort();
   go.onclick = async () => {
     if (!sample) return;
-    const q = sel.value === 'custom' ? $('#ecustom', root).value.trim() : E[+sel.value].q;
-    const pts = sel.value === 'custom' ? [] : E[+sel.value].pts;
-    const typed = $('#etext', root).value.trim();
+    const cust = sel.value === 'custom'; const e = E[+sel.value];
+    const q = cust ? $('#ecustom', root).value.trim() : `${e.qEn}\n（中文題意：${e.q}）`;
+    const pts = cust ? [] : e.pts; const typed = $('#etext', root).value.trim();
     if (!q) { note.textContent = '請先輸入題目。'; return; }
     if (!files.length && !typed) { note.textContent = '請上傳作答照片或打字作答。'; return; }
-    const ch = sel.value === 'custom' ? null : E[+sel.value].ch;
-    const ref = DATA.mgmt.sections.filter(s => !ch || s.t.startsWith(ch)).map(s => s.t + '\n' + s.cards.map(c => c.t + '：' + c.plain + ' ' + strip(c.body)).join('\n')).join('\n\n').slice(0, 14000);
+    const ch = cust ? null : e.ch;
+    const ref = DATA.mgmt.sections.filter(s => !ch || s.t.startsWith(ch)).map(s => s.t + '\n' + s.cards.map(c => c.t + '：' + c.plain + ' ' + strip(c.body) + (c.ex ? ' | ' + c.ex : '')).join('\n')).join('\n\n').slice(0, 14000);
     const imgs = lim && lim.images ? files.slice(0, lim.images.maxCount) : [];
-    const prompt = `你是大學「管理學」（Robbins & Coulter《Management》）的助教，請用繁體中文批改學生的申論題作答。\n\n【題目】\n${q}\n\n${pts.length ? '【評分要點】\n' + pts.map((p, i) => (i + 1) + '. ' + p).join('\n') + '\n\n' : ''}【課程講義重點（供你核對內容正確性）】\n${ref}\n\n【學生作答】\n${imgs.length ? `附上 ${imgs.length} 張手寫作答照片，請先辨識內容。` : ''}${typed ? '\n打字部分：\n' + typed : ''}\n\n請依下列格式回覆（使用 Markdown 標題與條列）：\n## 辨識出的作答內容\n（若有照片，簡短轉錄；看不清楚的地方標註「(難辨識)」）\n## 分數\n滿分 10 分，給出分數與一句話總評。\n## 逐項評分\n依評分要點逐條說明：有寫到／部分／缺漏，並指出觀念錯誤。\n## 漏掉的關鍵字\n列出應出現的英文專有名詞與中文。\n## 參考答案架構\n用條列寫出一份高分答案的骨架（含定義、比較、例子）。\n## 下次怎麼寫更好\n2–3 點具體建議（結構、舉例、時間分配）。`;
-    out.innerHTML = '<p class="thinking">批改中…（看照片與思考可能要 30–90 秒）</p>'; go.disabled = true; stop.hidden = false; ctl = new AbortController();
+    const prompt = `You are a friendly but rigorous TA for a university Management course (Robbins & Coulter, Management). The exam is written in English. The student is a native Mandarin speaker; write your feedback in Traditional Chinese (繁體中文), but quote English terms and write the model answer in English. Use a warm, encouraging tone like a kind tutor.\n\n[Question]\n${q}\n\n${pts.length ? '[Rubric points]\n' + pts.map((p, i) => (i + 1) + '. ' + p).join('\n') + '\n\n' : ''}[Course notes for checking accuracy]\n${ref}\n\n[Student answer]\n${imgs.length ? `${imgs.length} photo(s) of a handwritten answer are attached. Transcribe them first.` : ''}${typed ? '\nTyped answer:\n' + typed : ''}\n\nReply in Markdown with these sections:\n## 辨識出的作答內容\n(brief transcription; mark unclear words as (難辨識))\n## 分數\nScore out of 10 with a one-line overall comment.\n## 逐項評分\nFor each rubric point: 有寫到／部分／缺漏, and point out any conceptual errors.\n## 英文用字與文法\nList up to 5 English wording or grammar fixes as "原句 → 建議".\n## 漏掉的關鍵字\nKey English terms that should appear, with Chinese meaning.\n## Model answer outline (English)\nA high-scoring answer skeleton in English bullet points.\n## 下次怎麼寫更好\n2–3 concrete tips.`;
+    out.innerHTML = `<div class="mascot">${PIG('wow', 56)}<p class="bubble thinking">豬豬老師批改中…（看照片與思考可能要 30–90 秒）</p></div>`; go.disabled = true; stop.hidden = false; ctl = new AbortController();
     try {
       const opt = { signal: ctl.signal, cache: false, onText: ({ text }) => { out.innerHTML = md(text); } };
       if (imgs.length) opt.images = imgs;
-      const r = await sample(prompt, opt); out.innerHTML = md(r.text); if (r.truncated) note.textContent = '回覆被截斷，可以縮短作答或分段再試。';
-    } catch (e) {
-      out.innerHTML = e && e.text ? md(e.text) : '';
-      const msg = { not_granted: '你沒有允許這個頁面使用 Claude，所以無法批改。', rate_limited: '用量太頻繁，請稍後再試。', image_rejected: '照片格式或大小不符，請換一張（JPG/PNG）。', images_unavailable: '這個檢視無法傳送圖片，請改用打字作答。', cancelled: '已停止。', session_expired: '登入已過期，請重新登入 claude.ai。', refused: '這次無法批改，請調整內容後再試。' }[e && e.code] || '批改時發生錯誤，可以再按一次。';
-      note.textContent = msg;
+      const r = await sample(prompt, opt); out.innerHTML = md(r.text); FUN.xp(30); FUN.badge('essay'); FUN.confetti(60);
+      if (r.truncated) note.textContent = '回覆被截斷，可以縮短作答或分段再試。';
+    } catch (err) {
+      out.innerHTML = err && err.text ? md(err.text) : '';
+      note.textContent = { not_granted: '你沒有允許這個頁面使用 Claude，所以無法批改。', rate_limited: '用量太頻繁，請稍後再試。', image_rejected: '照片格式或大小不符，請換一張（JPG/PNG）。', images_unavailable: '這個檢視無法傳送圖片，請改用打字作答。', cancelled: '已停止。', session_expired: '登入已過期，請重新登入 claude.ai。', refused: '這次無法批改，請調整內容後再試。' }[err && err.code] || '批改時發生錯誤，可以再按一次。';
     } finally { go.disabled = false; stop.hidden = true; }
   };
 }
 function md(t) {
-  const L = esc(t).split('\n'); let o = '', inl = false; const close = () => { if (inl) { o += '</ul>'; inl = false; } };
-  for (const raw of L) {
+  const Ls = esc(t).split('\n'); let o = '', inl = false; const close = () => { if (inl) { o += '</ul>'; inl = false; } };
+  for (const raw of Ls) {
     const l = raw.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
     if (/^#{1,4}\s/.test(l)) { close(); o += '<h4>' + l.replace(/^#+\s/, '') + '</h4>'; }
     else if (/^\s*([-*•]|\d+[.)])\s/.test(l)) { if (!inl) { o += '<ul>'; inl = true; } o += '<li>' + l.replace(/^\s*([-*•]|\d+[.)])\s/, '') + '</li>'; }
@@ -1562,42 +2245,51 @@ function md(t) {
   close(); return o;
 }
 
-// ---- Overview ----
+// ---------- Home ----------
 function renderHome(root) {
-  root.innerHTML = `<div class="home"><div class="hero"><h2>26 秋季 期中複習</h2><p>四科的講義我都讀過並整理成卡片。每張卡片都有<b>白話解釋</b>、<b>生活比喻</b>，重要觀念配圖或互動工具。勾選「我懂了」會記錄進度（只存在這台裝置的瀏覽器）。</p></div>
-    <div class="subjgrid">${ORDER.map(k => { const s = DATA[k]; const n = subjCards(s).length; const extra = k === 'deriv' ? `${s.problems.length} 題課本與類題、${s.gens.length} 種隨機變化題、${s.mcq.length} 題觀念選擇題` : k === 'invest' ? `${s.flash.length} 題講義問題翻卡、${s.mcq.length} 題選擇題` : k === 'law' ? `${s.mcq.length} 題選擇題、${LAWART.length} 條條文速記` : `${s.essays.length} 題申論（拍照批改）、${s.mcq.length} 題選擇題`; return `<button class="sg ${s.hue}" data-go="${k}" type="button"><span class="sgn">${s.full}</span><span class="sgm">${n} 個知識點 · ${extra}</span><span class="bar" data-prog="${k}"><i></i></span><span class="sgp" data-progt="${k}"></span><span class="sgi">${s.intro}</span></button>`; }).join('')}</div>
-    <div class="dates"><h3>考試日程（依課程大綱）</h3><ul><li><b>管理學期中</b>：11/4（第 9 週）· 期末 12/23</li><li><b>衍金期中</b>：2026/11/16 · 期末 12/21 · A4 手抄小抄＋計算機</li><li><b>衍金小考</b>：每單元結束後勾選習題，隔週考其中一題或類題（可開書）</li></ul></div></div>`;
+  const cfaList = []; ORDER.forEach(k => subjCards(DATA[k]).forEach(c => c.cfa && cfaList.push([k, c])));
+  const hello = new Date().getHours() < 12 ? '早安' : new Date().getHours() < 18 ? '午安' : '晚安';
+  root.innerHTML = `<div class="home"><div class="hero">${PIG('happy', 120)}<div><h2>${hello}！我是豬豬老師</h2><p>今天也一起存一點知識吧。看卡片、玩遊戲、打怪物都會得到 XP，升級後會換新稱號。你已經連續 <b>${FUN.streak()}</b> 天來複習了！</p><p class="stats"><span>Lv.${FUN.level()}</span><span>${ST.xp} XP</span><span>${Object.keys(ST.badges).length}/${BADGES.length} 徽章</span></p></div></div>
+    <div class="subjgrid">${ORDER.map(k => { const s = DATA[k]; const n = subjCards(s).length; const lang = k === 'deriv' || k === 'mgmt' ? '<span class="pill en-pill">英文考試</span>' : ''; return `<button class="sg ${s.hue}" data-go="${k}" type="button"><span class="sgn">${s.full} ${lang}</span><span class="sgm">${n} 個知識點${s.formulas ? ` · ${s.formulas.length} 個公式` : ''}</span><span class="bar" data-prog="${k}"><i></i></span><span class="sgp" data-progt="${k}"></span><span class="sgi">${s.intro}</span></button>`; }).join('')}</div>
+    <h3 class="hh">徽章牆</h3><div class="badges">${BADGES.map(b => `<div class="badge${ST.badges[b[0]] ? ' got' : ''}" title="${b[2]}"><span class="medal"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="22" r="14" class="md"/><path d="M14,4 L20,12 L26,4" class="mr"/><text x="20" y="27" text-anchor="middle" class="mt2">★</text></svg></span><b>${b[1]}</b><small>${b[2]}</small></div>`).join('')}</div>
+    <h3 class="hh">未來考 CFA：這些現在就學到了</h3><p class="sm-p">CFA Level I 會用到的觀念，點一下直接跳到那張卡。</p><div class="cfalist">${cfaList.map(([k, c]) => `<button type="button" class="cfai ${DATA[k].hue}" data-jump="${k}|${c.id}"><b>${c.t}</b><span>${c.cfa}</span></button>`).join('')}</div>
+    <div class="dates"><h3>考試日程（依課程大綱）</h3><ul><li><b>管理學期中</b>：11/4（第 9 週）· 期末 12/23 · <b>英文作答</b></li><li><b>衍金期中</b>：2026/11/16 · 期末 12/21 · A4 手抄小抄＋計算機 · <b>英文作答</b></li><li><b>衍金小考</b>：每單元結束後勾選習題，隔週考其中一題或類題（可開書）</li></ul></div></div>`;
   $$('[data-go]', root).forEach(b => b.onclick = () => go(b.dataset.go));
+  $$('[data-jump]', root).forEach(b => b.onclick = () => { const [k, id] = b.dataset.jump.split('|'); go(k, 'learn'); setTimeout(() => { const el = $('#c-' + id); if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); el.classList.add('flash'); setTimeout(() => el.classList.remove('flash'), 1600); } }, 60); });
   updateCounts();
 }
 
-// ---- Routing ----
+// ---------- Routing ----------
 const PANES = {
-  deriv: [['learn', '知識點'], ['prob', '課本習題＋類題'], ['gen', '變化題（隨機）'], ['mcq', '觀念選擇題']],
-  invest: [['learn', '知識點'], ['flash', '講義問題'], ['mcq', '選擇題']],
-  law: [['learn', '知識點＋條文'], ['mcq', '選擇題']],
-  mgmt: [['learn', '知識點'], ['essay', '申論批改'], ['mcq', '選擇題']]
+  deriv: [['learn', '知識點'], ['formula', '公式教室'], ['prob', '課本習題'], ['gen', '變化題'], ['game', '小遊戲'], ['mcq', '打怪＆選擇題']],
+  invest: [['learn', '知識點'], ['formula', '公式教室'], ['flash', '講義問題'], ['game', '小遊戲'], ['mcq', '打怪＆選擇題']],
+  law: [['learn', '知識點＋條文'], ['game', '小遊戲'], ['mcq', '打怪＆選擇題']],
+  mgmt: [['learn', '知識點'], ['formula', '公式教室'], ['essay', '申論批改'], ['game', '小遊戲'], ['mcq', '打怪＆選擇題']]
 };
+let CUR = ['home'];
 function go(k, tab) {
-  ST.subj = k; save();
+  ST.subj = k; save(); CUR = [k, tab];
   $$('.stab').forEach(b => b.setAttribute('aria-current', b.dataset.s === k ? 'page' : 'false'));
   document.body.dataset.subj = k;
   const main = $('#main');
   if (k === 'home') { renderHome(main); window.scrollTo(0, 0); return; }
-  const s = DATA[k]; tab = tab || ST.tab[k] || 'learn';
+  const s = DATA[k]; tab = tab || ST.tab[k] || 'learn'; CUR = [k, tab];
   main.innerHTML = `<div class="shead"><div><h2>${s.full}</h2><p class="intro">${s.intro}</p></div><div class="prog"><span class="bar" data-prog="${k}"><i></i></span><span data-progt="${k}"></span> 已掌握</div></div><div class="ptabs" role="tablist">${PANES[k].map(p => `<button role="tab" class="ptab" data-p="${p[0]}" aria-selected="${p[0] === tab}" type="button">${p[1]}</button>`).join('')}</div><div id="pane"></div>`;
   $$('.ptab', main).forEach(b => b.onclick = () => go(k, b.dataset.p));
   ST.tab[k] = tab; save();
   const pane = $('#pane');
-  ({ learn: () => renderLearn(k, pane), mcq: () => renderMCQ(k, pane), prob: () => renderProblems(pane), gen: () => renderGens(pane), flash: () => renderFlash(pane), essay: () => renderEssay(pane) })[tab]();
+  ({ learn: () => renderLearn(k, pane), formula: () => renderFormulas(k, pane), mcq: () => renderMCQ(k, pane), prob: () => renderProblems(pane), gen: () => renderGens(pane), flash: () => renderFlash(pane), essay: () => renderEssay(pane), game: () => renderGames(k, pane) })[tab]();
   updateCounts();
 }
-
+window.rerender = () => go(CUR[0], CUR[1]);
 function boot() {
-  $('#stabs').innerHTML = `<button class="stab home" data-s="home" type="button">總覽</button>` + ORDER.map(k => `<button class="stab ${DATA[k].hue}" data-s="${k}" type="button">${DATA[k].name}<span class="bar mini" data-prog="${k}"><i></i></span></button>`).join('');
+  FUN.init();
+  $('#stabs').innerHTML = `<button class="stab home" data-s="home" type="button">首頁</button>` + ORDER.map(k => `<button class="stab ${DATA[k].hue}" data-s="${k}" type="button">${DATA[k].name}<span class="bar mini" data-prog="${k}"><i></i></span></button>`).join('');
   $$('.stab').forEach(b => b.onclick = () => go(b.dataset.s));
+  FUN.hud();
   const h = (location.hash || '').slice(1);
   go(ORDER.includes(h) || h === 'home' ? h : (ST.subj || 'home'));
 }
 boot();
+document.getElementById("brand").insertAdjacentHTML("afterbegin", PIG("happy", 34));
 </script>

@@ -1,7 +1,7 @@
 // ===== 衍生性金融市場 (Hull, Ch1–3) =====
 DATA.deriv = {
   name: '衍金', full: '衍生性金融市場', hue: 'deriv',
-  intro: '課本：Hull《Options, Futures & Other Derivatives》11版。小考：從老師勾選習題中出一題或類題（可開書）。期中考 2026/11/16，可帶 A4 手抄小抄＋計算機。',
+  intro: '課本：Hull《Options, Futures & Other Derivatives》11版。小考：從老師勾選習題中出一題或類題（可開書）。期中考 2026/11/16，可帶 A4 手抄小抄＋計算機。考試用英文作答 → 右上角切換「EN」或「雙語」練英文題目，每張卡也有 Exam English 句子。',
   sections: [
   { id: 'ch1', t: 'Ch1 衍生性商品入門', cards: [
     { id: 'd1', t: '衍生性商品是什麼？', en: 'Derivative',
