@@ -33,7 +33,8 @@ const FUN = {
   badge(id, silent) { if (ST.badges[id]) return; ST.badges[id] = Date.now(); save(); const b = BADGES.find(x => x[0] === id); if (b && !silent) { this.toast(`獲得徽章「${b[1]}」— ${b[2]}`, 'wow'); this.confetti(60); this.beep('up'); } },
   hud() {
     const h = $('#hud'); if (!h) return; const lv = this.level(); const p = ST.xp % 100;
-    h.innerHTML = `<span class="lv">Lv.${lv}</span><span class="ttl">${TITLES[Math.min(lv - 1, TITLES.length - 1)]}</span><span class="xpbar" title="${ST.xp} XP"><i style="width:${p}%"></i></span><span class="streak" title="連續天數">${this.flame()}${this.streak()}</span><button class="snd" id="sndbtn" type="button" aria-pressed="${ST.sound}" title="音效">${ST.sound ? '音效開' : '音效關'}</button><span class="lang" role="group" aria-label="題目語言">${[['zh', '中'], ['both', '雙語'], ['en', 'EN']].map(l => `<button type="button" data-lang="${l[0]}" aria-pressed="${ST.lang === l[0]}">${l[1]}</button>`).join('')}</span>`;
+    h.innerHTML = `<button type="button" class="hbtn" id="hudms" title="里程碑" aria-label="里程碑"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4 H17 V9 A5 5 0 0 1 7 9 Z M7 6 H4 A3 3 0 0 0 7 10 M17 6 H20 A3 3 0 0 1 17 10 M12 14 V18 M8 20 H16"/></svg></button><span class="lv">Lv.${lv}</span><span class="ttl">${TITLES[Math.min(lv - 1, TITLES.length - 1)]}</span><span class="xpbar" title="${ST.xp} XP"><i style="width:${p}%"></i></span><span class="streak" title="連續天數">${this.flame()}${this.streak()}</span><button class="snd" id="sndbtn" type="button" aria-pressed="${ST.sound}" title="音效">${ST.sound ? '音效開' : '音效關'}</button><span class="lang" role="group" aria-label="題目語言">${[['zh', '中'], ['both', '雙語'], ['en', 'EN']].map(l => `<button type="button" data-lang="${l[0]}" aria-pressed="${ST.lang === l[0]}">${l[1]}</button>`).join('')}</span><button type="button" class="hbtn" id="hudset" title="設定" aria-label="設定"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5 V5 M12 19 V21.5 M2.5 12 H5 M19 12 H21.5 M5.3 5.3 L7.1 7.1 M16.9 16.9 L18.7 18.7 M5.3 18.7 L7.1 16.9 M16.9 7.1 L18.7 5.3"/></svg></button>`;
+    $('#hudms').onclick = () => go('milestones'); $('#hudset').onclick = () => go('settings');
     $('#sndbtn').onclick = () => { ST.sound = !ST.sound; save(); this.hud(); this.beep('ok'); };
     $$('[data-lang]', h).forEach(b => b.onclick = () => { ST.lang = b.dataset.lang; save(); this.hud(); if (window.rerender) rerender(); });
   },
@@ -43,7 +44,7 @@ const FUN = {
     t.innerHTML = PIG(mood, 54) + `<span>${msg}</span>`; t.className = 'show'; clearTimeout(this._tt); this._tt = setTimeout(() => t.className = '', 2600);
   },
   confetti(n = 40) {
-    if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (ST.calm || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
     let c = $('#confetti'); if (!c) { c = document.createElement('canvas'); c.id = 'confetti'; document.body.appendChild(c); }
     const W = c.width = innerWidth, H = c.height = innerHeight, x = c.getContext('2d');
     const cols = ['#ff7eb6', '#ffd43b', '#4dabf7', '#69db7c', '#b197fc', '#ffa94d'];

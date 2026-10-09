@@ -2,11 +2,11 @@
 cd "$(dirname "$0")"
 {
   cat head.html
-  echo '<header class="top"><div class="topin"><span class="brand" id="brand">26 秋季複習本</span><nav id="stabs" aria-label="科目"></nav><div id="hud"></div></div></header>'
+  echo '<header class="top"><div class="topin"><span class="brand" id="brand"><span class="brandt">26 秋季複習本</span></span><nav id="stabs" aria-label="科目"></nav><div id="hud"></div></div></header>'
   echo '<main id="main"></main>'
   echo '<script>'
   echo 'const DATA = {};'
-  cat d_deriv.js d_invest.js d_law.js d_mgmt.js gen.js figs.js widgets.js formulas.js d_basic.js en.js games.js more.js fun.js app.js
+  cat d_deriv.js d_invest.js d_law.js d_mgmt.js gen.js figs.js widgets.js formulas.js d_basic.js en.js games.js more.js fun.js pages.js app.js
   echo 'document.getElementById("brand").insertAdjacentHTML("afterbegin", PIG("happy", 34));'
   echo '</script>'
 } > ../review.html

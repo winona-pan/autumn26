@@ -132,7 +132,7 @@ function renderMCQ(key, root) {
   const qhtml = (m, meta) => { const ord = shuffle(m.o.map((t, j) => [t, j])); return `<div class="qmeta">${meta}</div><p class="qtext">${m.q}</p><div class="opts">${ord.map((o, n) => `<button class="opt" data-j="${o[1]}" type="button"><span class="key">${'ABCD'[n]}</span>${o[0]}</button>`).join('')}</div>`; };
   const answer = (m, b, then) => {
     const ok = +b.dataset.j === m.a; $$('.opt', arena).forEach(x => { x.disabled = true; if (+x.dataset.j === m.a) x.classList.add('right'); }); if (!ok) b.classList.add('wrongc');
-    mark(m, ok); if (ok) { combo++; FUN.beep('ok'); FUN.xp(5 + Math.min(combo, 10), b); if (combo === 5) FUN.badge('combo5'); if (combo === 10) FUN.badge('combo10'); if (combo % 3 === 0) FUN.confetti(25); } else { combo = 0; FUN.beep('no'); }
+    mark(m, ok); stat(key, 'a'); if (ok) stat(key, 'c'); if (ok) { combo++; FUN.beep('ok'); FUN.xp(5 + Math.min(combo, 10), b); if (combo === 5) FUN.badge('combo5'); if (combo === 10) FUN.badge('combo10'); if (combo % 3 === 0) FUN.confetti(25); } else { combo = 0; FUN.beep('no'); }
     then(ok);
   };
   const start = mode => {
@@ -140,7 +140,7 @@ function renderMCQ(key, root) {
     if (mode === 'boss') {
       const list = shuffle(bank).slice(0, 10); let i = 0, hp = list.length, hearts = 3; const [bn, be] = BOSSES[key];
       const draw = (hurt) => {
-        if (hp <= 0) { arena.innerHTML = `<div class="win">${PIG('wow', 110)}<h3>你打倒了${bn}！</h3><p>+50 XP</p><button class="btn big" id="again" type="button">再打一隻</button></div>`; FUN.xp(50); FUN.badge('boss' + key); FUN.confetti(140); FUN.beep('up'); $('#again', root).onclick = () => start('boss'); return; }
+        if (hp <= 0) { arena.innerHTML = `<div class="win">${PIG('wow', 110)}<h3>你打倒了${bn}！</h3><p>+50 XP</p><button class="btn big" id="again" type="button">再打一隻</button></div>`; FUN.xp(50); stat(key, 'boss'); FUN.badge('boss' + key); FUN.confetti(140); FUN.beep('up'); $('#again', root).onclick = () => start('boss'); return; }
         if (hearts <= 0 || i >= list.length) { arena.innerHTML = `<div class="win">${PIG('sad', 110)}<h3>${bn}還剩 ${hp} 滴血⋯</h3><p>錯的題目已放進錯題本，練一練再來挑戰！</p><button class="btn big" id="again" type="button">再挑戰</button></div>`; $('#again', root).onclick = () => start('boss'); return; }
         const m = list[i];
         arena.innerHTML = `<div class="battle"><div class="bossbox">${MONSTER(hp / list.length, hurt)}<div><b>${bn}</b> <span class="en">${be}</span><div class="hp"><i style="width:${hp / list.length * 100}%"></i></div><div class="hearts">${'<span class="h on">♥</span>'.repeat(hearts)}${'<span class="h">♥</span>'.repeat(3 - hearts)}</div></div></div><div class="qcard">${qhtml(m, `第 ${i + 1} 題 · combo ${combo}`)}<div class="exp" hidden></div><button class="btn next" type="button" hidden>繼續攻擊</button></div></div>`;
@@ -316,10 +316,11 @@ function renderHome(root) {
   const hello = new Date().getHours() < 12 ? '早安' : new Date().getHours() < 18 ? '午安' : '晚安';
   root.innerHTML = `<div class="home"><div class="hero">${PIG('happy', 120)}<div><h2>${hello}！我是豬豬老師</h2><p>今天也一起存一點知識吧。看卡片、玩遊戲、打怪物都會得到 XP，升級後會換新稱號。你已經連續 <b>${FUN.streak()}</b> 天來複習了！</p><p class="stats"><span>Lv.${FUN.level()}</span><span>${ST.xp} XP</span><span>${Object.keys(ST.badges).length}/${BADGES.length} 徽章</span></p></div></div>
     <div class="subjgrid">${ORDER.map(k => { const s = DATA[k]; const n = subjCards(s).length; const lang = k === 'basic' ? '<span class="pill en-pill">先備知識</span>' : k === 'deriv' || k === 'mgmt' ? '<span class="pill en-pill">英文考試</span>' : ''; return `<button class="sg ${s.hue}" data-go="${k}" type="button"><span class="sgn">${s.full} ${lang}</span><span class="sgm">${n} 個知識點${s.formulas ? ` · ${s.formulas.length} 個公式` : ''}</span><span class="bar" data-prog="${k}"><i></i></span><span class="sgp" data-progt="${k}"></span><span class="sgi">${s.intro}</span></button>`; }).join('')}</div>
-    <h3 class="hh">徽章牆</h3><div class="badges">${BADGES.map(b => `<div class="badge${ST.badges[b[0]] ? ' got' : ''}" title="${b[2]}"><span class="medal"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="22" r="14" class="md"/><path d="M14,4 L20,12 L26,4" class="mr"/><text x="20" y="27" text-anchor="middle" class="mt2">★</text></svg></span><b>${b[1]}</b><small>${b[2]}</small></div>`).join('')}</div>
+    <div class="homelinks"><button class="btn big" type="button" id="tomile">看我的里程碑（徽章 ${Object.keys(ST.badges).length}/${BADGES.length}）</button><button class="btn big ghost" type="button" id="toset">設定與備份</button></div>
     <h3 class="hh">未來考 CFA：這些現在就學到了</h3><p class="sm-p">CFA Level I 會用到的觀念，點一下直接跳到那張卡。</p><div class="cfalist">${cfaList.map(([k, c]) => `<button type="button" class="cfai ${DATA[k].hue}" data-jump="${k}|${c.id}"><b>${c.t}</b><span>${c.cfa}</span></button>`).join('')}</div>
     <div class="dates"><h3>考試日程（依課程大綱）</h3><ul><li><b>管理學期中</b>：11/4（第 9 週）· 期末 12/23 · <b>英文作答</b></li><li><b>衍金期中</b>：2026/11/16 · 期末 12/21 · A4 手抄小抄＋計算機 · <b>英文作答</b></li><li><b>衍金小考</b>：每單元結束後勾選習題，隔週考其中一題或類題（可開書）</li></ul></div></div>`;
   $$('[data-go]', root).forEach(b => b.onclick = () => go(b.dataset.go));
+  $('#tomile', root).onclick = () => go('milestones'); $('#toset', root).onclick = () => go('settings');
   $$('[data-jump]', root).forEach(b => b.onclick = () => { const [k, id] = b.dataset.jump.split('|'); jumpCard(k, id); });
   updateCounts();
 }
@@ -341,6 +342,8 @@ function go(k, tab) {
   document.body.dataset.subj = k;
   const main = $('#main');
   if (k === 'home') { renderHome(main); window.scrollTo(0, 0); return; }
+  if (k === 'settings') { renderSettings(main); window.scrollTo(0, 0); return; }
+  if (k === 'milestones') { renderMilestones(main); window.scrollTo(0, 0); return; }
   const s = DATA[k]; tab = tab || ST.tab[k] || 'learn'; CUR = [k, tab];
   main.innerHTML = `<div class="shead"><div><h2>${s.full}</h2><p class="intro">${s.intro}</p></div><div class="prog"><span class="bar" data-prog="${k}"><i></i></span><span data-progt="${k}"></span> 已掌握</div></div><div class="ptabs" role="tablist">${PANES[k].map(p => `<button role="tab" class="ptab" data-p="${p[0]}" aria-selected="${p[0] === tab}" type="button">${p[1]}</button>`).join('')}</div><div id="pane"></div>`;
   $$('.ptab', main).forEach(b => b.onclick = () => go(k, b.dataset.p));
@@ -360,7 +363,7 @@ const NAVI = {
 };
 const navIcon = k => `<svg class="navi" viewBox="0 0 24 24" aria-hidden="true">${NAVI[k]}</svg>`;
 function boot() {
-  FUN.init();
+  FUN.init(); applyPrefs();
   $('#stabs').innerHTML = `<button class="stab home" data-s="home" type="button">${navIcon('home')}<span>首頁</span></button>` + ORDER.map(k => `<button class="stab ${DATA[k].hue}" data-s="${k}" type="button">${navIcon(k)}<span>${DATA[k].name}</span><span class="bar mini" data-prog="${k}"><i></i></span></button>`).join('');
   $$('.stab').forEach(b => b.onclick = () => go(b.dataset.s));
   FUN.hud();
