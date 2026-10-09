@@ -2,26 +2,26 @@
 <title>26 秋季複習本</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=LXGW+WenKai+TC:wght@400;700&family=Noto+Sans+TC:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Huninn&family=Noto+Sans+TC:wght@400;500;700&display=swap">
 <style>
 /* Layout: a sticker-book study app — chunky outlined cards with offset "sticker" shadows on a dotted sky page, a piggy-bank mascot, and a candy accent per subject. */
 :root{
   --bg:#eef5ff; --dot:#d6e4fb; --panel:#ffffff; --ink:#22264a; --mute:#5d6386; --line:#22264a; --soft:#e8eefb; --hair:#cfd8ee;
-  --deriv:#0fa89a; --invest:#f07a12; --law:#e0407a; --mgmt:#7556f0; --acc:var(--deriv);
+  --basic:#2f86e0; --deriv:#0fa89a; --invest:#f07a12; --law:#e0407a; --mgmt:#7556f0; --acc:var(--deriv);
   --plain:#dff7f3; --life:#fff0d9; --exam:#ece6ff; --why:#fff7c7; --good:#1f9d55; --bad:#d9412b; --hit:#fff3a6;
   --pig:#ffb3c8; --pigd:#e8799a; --gold:#ffcf3a;
-  --f-display:"Fredoka","LXGW WenKai TC","PingFang TC",sans-serif; --f-zh:"LXGW WenKai TC","Kaiti TC",serif; --f-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --f-display:"Huninn","Noto Sans TC","PingFang TC",sans-serif; --f-zh:"Huninn","Noto Sans TC","PingFang TC",sans-serif; --f-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
   --sh:4px 4px 0 var(--line);
 }
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
   --bg:#151a33; --dot:#212a4d; --panel:#1f2547; --ink:#f1f2ff; --mute:#b1b6da; --line:#0a0d1f; --soft:#2a3160; --hair:#39417a;
-  --deriv:#3fe0cf; --invest:#ffa64d; --law:#ff7aa6; --mgmt:#a68cff; --plain:#173b3d; --life:#3d3020; --exam:#2f2a5a; --why:#3b3718; --good:#5ee09a; --bad:#ff8a73; --hit:#4a4316; --pig:#f2a0ba; --pigd:#c95f80; color-scheme:dark }}
+  --basic:#6fb6ff; --deriv:#3fe0cf; --invest:#ffa64d; --law:#ff7aa6; --mgmt:#a68cff; --plain:#173b3d; --life:#3d3020; --exam:#2f2a5a; --why:#3b3718; --good:#5ee09a; --bad:#ff8a73; --hit:#4a4316; --pig:#f2a0ba; --pigd:#c95f80; color-scheme:dark }}
 :root[data-theme="dark"]{
   --bg:#151a33; --dot:#212a4d; --panel:#1f2547; --ink:#f1f2ff; --mute:#b1b6da; --line:#0a0d1f; --soft:#2a3160; --hair:#39417a;
-  --deriv:#3fe0cf; --invest:#ffa64d; --law:#ff7aa6; --mgmt:#a68cff; --plain:#173b3d; --life:#3d3020; --exam:#2f2a5a; --why:#3b3718; --good:#5ee09a; --bad:#ff8a73; --hit:#4a4316; --pig:#f2a0ba; --pigd:#c95f80; color-scheme:dark }
-*{box-sizing:border-box}
+  --basic:#6fb6ff; --deriv:#3fe0cf; --invest:#ffa64d; --law:#ff7aa6; --mgmt:#a68cff; --plain:#173b3d; --life:#3d3020; --exam:#2f2a5a; --why:#3b3718; --good:#5ee09a; --bad:#ff8a73; --hit:#4a4316; --pig:#f2a0ba; --pigd:#c95f80; color-scheme:dark }
+*{box-sizing:border-box} [hidden]{display:none!important}
 body{background:var(--bg) radial-gradient(var(--dot) 1.5px,transparent 1.6px) 0 0/22px 22px;color:var(--ink);font-family:var(--f-body);font-size:15.5px;line-height:1.75}
-body[data-subj="invest"]{--acc:var(--invest)} body[data-subj="law"]{--acc:var(--law)} body[data-subj="mgmt"]{--acc:var(--mgmt)}
+body[data-subj="basic"]{--acc:var(--basic)} body[data-subj="invest"]{--acc:var(--invest)} body[data-subj="law"]{--acc:var(--law)} body[data-subj="mgmt"]{--acc:var(--mgmt)}
 h1,h2,h3,h4{font-family:var(--f-display);text-wrap:balance;line-height:1.3;margin:0;font-weight:600}
 button,input,select,textarea{font:inherit;color:inherit}
 :focus-visible{outline:3px solid var(--gold);outline-offset:2px}
@@ -31,7 +31,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 #stabs{display:flex;gap:6px;flex-wrap:wrap}
 .stab{border:2.5px solid var(--line);background:var(--panel);border-radius:999px;padding:3px 14px 6px;cursor:pointer;position:relative;font-weight:700;font-family:var(--f-display);box-shadow:2px 2px 0 var(--line);transition:transform .12s}
 .stab:hover{transform:translateY(-2px)}
-.stab[aria-current="page"]{color:#fff} .stab.deriv[aria-current="page"]{background:var(--deriv)} .stab.invest[aria-current="page"]{background:var(--invest)} .stab.law[aria-current="page"]{background:var(--law)} .stab.mgmt[aria-current="page"]{background:var(--mgmt)} .stab.home[aria-current="page"]{background:var(--pigd)}
+.stab[aria-current="page"]{color:#fff} .stab.basic[aria-current="page"]{background:var(--basic)} .stab.deriv[aria-current="page"]{background:var(--deriv)} .stab.invest[aria-current="page"]{background:var(--invest)} .stab.law[aria-current="page"]{background:var(--law)} .stab.mgmt[aria-current="page"]{background:var(--mgmt)} .stab.home[aria-current="page"]{background:var(--pigd)}
 #hud{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-left:auto;font-size:13px}
 #hud .lv{font-family:var(--f-display);font-weight:700;background:var(--gold);color:#22264a;border:2px solid var(--line);border-radius:8px;padding:0 7px}
 #hud .ttl{font-family:var(--f-zh);font-weight:700} .xpbar{width:90px;height:12px;border:2px solid var(--line);border-radius:8px;overflow:hidden;background:var(--soft)} .xpbar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--pigd))}
@@ -42,7 +42,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 .bar{display:block;height:8px;border-radius:5px;background:var(--soft);overflow:hidden;--p:0%;border:1.5px solid var(--line)}
 .bar i{display:block;height:100%;width:var(--p);background:var(--acc);transition:width .4s}
 .bar.mini{position:absolute;left:14px;right:14px;bottom:2px;height:3px;border:0;background:transparent}
-.stab.deriv .bar i{background:var(--deriv)} .stab.invest .bar i{background:var(--invest)} .stab.law .bar i{background:var(--law)} .stab.mgmt .bar i{background:var(--mgmt)} .stab[aria-current="page"] .bar i{background:#fff}
+.stab.basic .bar i{background:var(--basic)} .stab.deriv .bar i{background:var(--deriv)} .stab.invest .bar i{background:var(--invest)} .stab.law .bar i{background:var(--law)} .stab.mgmt .bar i{background:var(--mgmt)} .stab[aria-current="page"] .bar i{background:#fff}
 main{max-width:1200px;margin:0 auto;padding-block:20px 80px;padding-inline:16px}
 .shead{display:flex;justify-content:space-between;gap:20px;align-items:flex-end;flex-wrap:wrap;padding-bottom:12px}
 .shead h2{font-size:34px;color:var(--acc);font-family:var(--f-zh);font-weight:700}
@@ -96,7 +96,7 @@ details summary{cursor:pointer;font-weight:700;color:var(--acc)} .body{max-width
 .tbl.num td{font-variant-numeric:tabular-nums} .tbl tr.hit td{background:var(--hit)}
 .arts td:first-child{white-space:nowrap;font-family:var(--f-display)} .arts.masked .artc{color:transparent;background:repeating-linear-gradient(45deg,var(--soft),var(--soft) 6px,var(--panel) 6px,var(--panel) 12px)} .arts.masked tr.peek .artc{color:inherit;background:none} .arts tr{cursor:pointer}
 .wg{border:2.5px dashed var(--acc);border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:10px;background:color-mix(in srgb,var(--acc) 6%,var(--panel))}
-.wg-row{display:flex;flex-wrap:wrap;gap:10px 16px} .wg label{display:flex;flex-direction:column;font-size:13px;color:var(--mute);gap:2px} .wg label b{font-family:var(--f-display);color:var(--ink)}
+.wg-row{display:flex;flex-wrap:wrap;gap:10px 16px} .wg label{display:block;font-size:13px;color:var(--mute)} .wg label input,.wg label select{display:block;margin-top:2px} .wg label b{font-family:var(--f-display);color:var(--ink)}
 .wg label.full{width:100%} .wg input[type=number],.wg input[type=text],.wg select{border:2px solid var(--line);border-radius:8px;padding:5px 8px;background:var(--panel);min-width:0;width:100%;max-width:200px} .wg label.full input{max-width:none}
 .wg input[type=range],.calc input[type=range]{accent-color:var(--acc);width:150px} .wg-out{margin:0;font-size:14px} .sm-p{font-size:14px;color:var(--mute);margin:0}
 .cell{width:64px!important;border:1.5px solid var(--line);border-radius:6px;padding:2px 4px;background:var(--panel)}
@@ -122,7 +122,7 @@ details summary{cursor:pointer;font-weight:700;color:var(--acc)} .body{max-width
 .opt:hover:not(:disabled){transform:translateX(4px);background:var(--soft)} .opt.right{background:color-mix(in srgb,var(--good) 30%,var(--panel));animation:pop .35s} .opt.wrongc{background:color-mix(in srgb,var(--bad) 30%,var(--panel));animation:shake .4s}
 .exp{margin-top:12px;padding:10px 14px;border-radius:12px;background:var(--why);border:2px dashed var(--hair);font-size:15px} .next{margin-top:12px}
 .battle{display:flex;flex-direction:column;gap:14px;max-width:800px} .bossbox{display:flex;gap:16px;align-items:center;background:var(--panel);border:2.5px solid var(--line);border-radius:18px;padding:12px 16px;box-shadow:var(--sh)}
-.mon{width:96px;flex:none} .mon .mn-b{fill:#a6e36b;stroke:var(--line);stroke-width:3} body[data-subj="invest"] .mon .mn-b{fill:#ffb36b} body[data-subj="law"] .mon .mn-b{fill:#c9a6ff} body[data-subj="mgmt"] .mon .mn-b{fill:#7fd0ff}
+.mon{width:96px;flex:none} .mon .mn-b{fill:#a6e36b;stroke:var(--line);stroke-width:3} body[data-subj="basic"] .mon .mn-b{fill:#ffe066} body[data-subj="invest"] .mon .mn-b{fill:#ffb36b} body[data-subj="law"] .mon .mn-b{fill:#c9a6ff} body[data-subj="mgmt"] .mon .mn-b{fill:#7fd0ff}
 .mon .mn-w{fill:#fff;stroke:var(--line);stroke-width:2.5} .mon .mn-e{fill:#22264a} .mon .mn-m{fill:none;stroke:#22264a;stroke-width:3;stroke-linecap:round} .mon.hurt{animation:shake .45s}
 .hp{width:220px;max-width:100%;height:14px;border:2.5px solid var(--line);border-radius:8px;overflow:hidden;background:var(--soft);margin:4px 0} .hp i{display:block;height:100%;background:linear-gradient(90deg,#ff5d5d,#ffb13b);transition:width .4s}
 .hearts .h{font-size:20px;color:var(--hair);margin-right:2px} .hearts .h.on{color:#ff4d6d}
@@ -162,17 +162,19 @@ details summary{cursor:pointer;font-weight:700;color:var(--acc)} .body{max-width
 .stats{display:flex;gap:8px;flex-wrap:wrap} .stats span{background:var(--panel);border:2px solid var(--line);border-radius:10px;padding:0 10px;font-family:var(--f-display);font-weight:600;box-shadow:2px 2px 0 var(--line)}
 .subjgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}
 .sg{text-align:left;border:2.5px solid var(--line);background:var(--panel);border-radius:18px;padding:16px;cursor:pointer;display:flex;flex-direction:column;gap:8px;box-shadow:var(--sh);transition:transform .15s;border-top:12px solid var(--acc)}
-.sg:hover{transform:translateY(-4px) rotate(-.5deg)} .sg.deriv{--acc:var(--deriv)} .sg.invest{--acc:var(--invest)} .sg.law{--acc:var(--law)} .sg.mgmt{--acc:var(--mgmt)}
+.sg:hover{transform:translateY(-4px) rotate(-.5deg)} .sg.basic{--acc:var(--basic)} .sg.deriv{--acc:var(--deriv)} .sg.invest{--acc:var(--invest)} .sg.law{--acc:var(--law)} .sg.mgmt{--acc:var(--mgmt)}
 .sgn{font-family:var(--f-zh);font-size:25px;font-weight:700;color:var(--acc)} .sgm{font-size:13px;color:var(--mute)} .sgp{font-size:12px;color:var(--mute);font-weight:700} .sgi{font-size:13px}
 .hh{font-family:var(--f-zh);font-size:24px;margin:28px 0 10px}
 .badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
 .badge{background:var(--panel);border:2.5px solid var(--line);border-radius:14px;padding:8px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:2px;opacity:.45;filter:grayscale(1)} .badge.got{opacity:1;filter:none;box-shadow:3px 3px 0 var(--line)}
 .badge .medal svg{width:40px;height:40px} .badge .md{fill:var(--gold);stroke:var(--line);stroke-width:2.5} .badge .mr{fill:none;stroke:var(--law);stroke-width:4} .badge .mt2{font-size:14px;fill:#22264a} .badge b{font-size:13px} .badge small{font-size:11px;color:var(--mute);line-height:1.3}
-.cfalist{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;margin-top:8px} .cfai{text-align:left;border:2px solid var(--line);background:var(--panel);border-radius:12px;padding:8px 10px;cursor:pointer;display:flex;flex-direction:column;border-left:8px solid var(--acc)} .cfai.deriv{--acc:var(--deriv)} .cfai.invest{--acc:var(--invest)} .cfai.mgmt{--acc:var(--mgmt)} .cfai span{font-size:12px;color:var(--mute)}
+.cfalist{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;margin-top:8px} .cfai{text-align:left;border:2px solid var(--line);background:var(--panel);border-radius:12px;padding:8px 10px;cursor:pointer;display:flex;flex-direction:column;border-left:8px solid var(--acc)} .cfai.basic{--acc:var(--basic)} .cfai.deriv{--acc:var(--deriv)} .cfai.invest{--acc:var(--invest)} .cfai.mgmt{--acc:var(--mgmt)} .cfai span{font-size:12px;color:var(--mute)}
 .dates{margin-top:24px;background:var(--panel);border:2.5px solid var(--line);border-radius:18px;padding:14px 18px;max-width:800px;box-shadow:var(--sh)} .dates h3{font-size:19px;font-family:var(--f-zh)}
 #toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translate(-50%,140%);background:var(--panel);border:3px solid var(--line);border-radius:18px;padding:6px 16px 6px 8px;display:flex;align-items:center;gap:8px;box-shadow:var(--sh);z-index:50;transition:transform .3s;font-weight:700;max-width:calc(100vw - 32px)} #toast.show{transform:translate(-50%,0)}
 #confetti{position:fixed;inset:0;pointer-events:none;z-index:60}
 .xpfloat{position:absolute;z-index:55;transform:translateX(-50%);font-family:var(--f-display);font-weight:700;color:#22264a;background:var(--gold);border:2px solid var(--line);border-radius:999px;padding:0 8px;animation:floatup 1.1s forwards;pointer-events:none}
+.xpfloat.neg{background:var(--soft);color:var(--ink)}
+.pre{display:flex;flex-wrap:wrap;gap:6px;align-items:center;background:color-mix(in srgb,var(--basic) 10%,var(--panel));border:2px dashed var(--basic);border-radius:14px;padding:8px 12px} .pre .lbl{width:100%} .prechip{border:2px solid var(--line);background:var(--panel);border-radius:999px;padding:1px 12px;cursor:pointer;font-size:13.5px;font-weight:700;box-shadow:2px 2px 0 var(--line)} .prechip:hover{background:var(--basic);color:#fff}
 @keyframes floatup{to{transform:translate(-50%,-50px);opacity:0}} @keyframes pop{0%{transform:scale(.92)}60%{transform:scale(1.04)}100%{transform:scale(1)}} @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 @media (max-width:560px){#hud{margin-left:0;width:100%}.ftex{font-size:18px}.mgame{grid-template-columns:1fr 1fr;gap:8px}.mt{font-size:13px;padding:8px}}
@@ -1684,6 +1686,218 @@ DATA.mgmt.formulas = [
     calc:v=>`Regret = ${v.m} − ${v.x} = <b>${v.m-v.x}</b>`,
     oops:['用「列」的最大值減（要用欄）'], exam:'A manager who wants to minimize maximum regret computes the regret for each cell and chooses the strategy with the smallest maximum regret.', cfa:'' }
 ];
+// ===== 基礎補給站：公司理財＋統計先備知識 =====
+DATA.basic = {
+  name: '基礎', full: '基礎補給站', hue: 'basic',
+  intro: '衍金、投資學會用到的公司理財與統計基本功。看不懂其他科的卡片時，先回來這裡補一下。每張卡都從零開始講，也是 CFA Level I 的地基。',
+  sections: [
+  { id:'b1', t:'1. 錢與時間', cards: [
+    { id:'bret', t:'報酬率：賺了百分之幾？', en:'Rate of return',
+      plain:'報酬率 = 賺到的錢 ÷ 一開始投入的錢。用百分比表示，才能比較大小不同的投資。',
+      life:'你用 100 元買一張卡牌，後來賣 120 元，還拿到 5 元的紅利 → 賺了 25 元，報酬率 25%。',
+      body:'<p class="formula">報酬率 = (期末價格 − 期初價格 + 期間收到的現金) ÷ 期初價格</p><ul><li>股票：<b>資本利得</b>（價差 capital gain）＋ <b>股利</b>（dividend）。</li><li>例：股價 50 → 55，配息 2 → (55 − 50 + 2) ÷ 50 = 14%。</li><li>為什麼要用百分比？賺 10 元的投資，若本金是 20 元（50%）和 1000 元（1%）差很多。</li></ul>' },
+    { id:'bint', t:'利率、單利與複利', en:'Interest, simple vs compound',
+      plain:'利率是「借錢的價格」。單利只對本金算利息；複利是「利息也會再生利息」，像滾雪球。',
+      life:'存 100 元、年利率 10%：單利每年都是 10 元；複利第一年 10 元、第二年 11 元（因為本金變 110）、第三年 12.1 元……越滾越大。',
+      body:'<p class="formula">單利：FV = PV × (1 + r × n)　　複利：FV = PV × (1 + r)<sup>n</sup></p><ul><li>FV（future value 終值）＝未來會變成多少；PV（present value 現值）＝現在的錢；r = 每期利率；n = 期數。</li><li>一年複利 m 次：FV = PV × (1 + r/m)<sup>m×n</sup>。m 越大，FV 越大。</li><li><b>連續複利</b>（Hull 第 4 章會用）：m 趨近無限大 → FV = PV × e<sup>rn</sup>，e ≈ 2.71828。</li><li>民法 §207 禁止「利息滾入原本」就是在限制複利。</li></ul>' },
+    { id:'bpv', t:'現值：未來的錢今天值多少？', en:'Present value / time value of money',
+      plain:'今天的 100 元比明年的 100 元值錢，因為今天的錢可以拿去存、賺利息。把未來的錢「折回」今天，就是現值。',
+      life:'如果有人說「一年後給你 110 元」或「現在給你 100 元」，利率 10% 時兩者一樣：100 存一年剛好變 110。',
+      body:'<p class="formula">PV = FV ÷ (1 + r)<sup>n</sup></p><ul><li>這就是複利公式倒過來。除以 (1 + r)<sup>n</sup> 叫做<b>折現</b>（discounting）。</li><li>例：3 年後拿 1,331 元、利率 10% → PV = 1,331 ÷ 1.1<sup>3</sup> = 1,000。</li><li>為什麼重要：股票、債券的「合理價格」都是把未來所有現金流折現加總。期貨定價（Hull Ch5）也用到。</li></ul>' },
+    { id:'bannual', t:'年化：把不同期間換成「一年」來比', en:'Annualizing',
+      plain:'三個月賺 2% 和一年賺 7% 哪個好？要先換成同一個期間（通常是一年）才能比。',
+      life:'跑 100 公尺花 15 秒和跑 1 公里花 3 分鐘，要換成「每秒幾公尺」才能比誰快。',
+      body:'<ul><li>簡單年化：季報酬 2% × 4 = 8%。</li><li>複利年化：(1 + 2%)<sup>4</sup> − 1 = 8.24%。</li><li>標準差年化：月標準差 × √12（因為變異數隨時間線性增加）。</li></ul>' }
+  ]},
+  { id:'b2', t:'2. 金融商品是什麼', cards: [
+    { id:'bstock', t:'股票：當公司的小老闆', en:'Stock / equity',
+      plain:'買股票＝買公司的一小部分所有權。公司賺錢你可以分紅（股利），公司變值錢股價會漲（資本利得）。',
+      life:'和朋友合開飲料店，你出 10% 的錢，就擁有 10% 股份：賺錢分你 10%，店被收購時你也拿 10%。',
+      body:'<ul><li><b>股東</b> shareholder：公司的主人，有投票權。</li><li><b>有限責任</b> limited liability：公司倒了，你最多賠掉買股票的錢，不用拿自己的房子還債。</li><li><b>剩餘請求權</b>：公司要先付員工、供應商、債權人，剩下的才是股東的 → 股東風險比較高，所以期望報酬也比較高。</li><li><b>市值</b> market cap = 股價 × 股數。</li><li><b>EPS</b> 每股盈餘 = 淨利 ÷ 股數；<b>P/E</b> 本益比 = 股價 ÷ EPS。</li></ul>' },
+    { id:'bbond', t:'債券：借錢給別人的借據', en:'Bond / debt',
+      plain:'買債券＝借錢給公司或政府。他們定期付你利息（票息），到期還本金。利率上升時，舊債券價格會下跌。',
+      life:'你借朋友 1,000 元，他每年給你 50 元利息、三年後還 1,000。如果後來銀行利率變 8%，你這張只有 5% 的借據就沒那麼搶手，要賣掉只能打折。',
+      body:'<ul><li><b>面額</b> face value、<b>票面利率</b> coupon rate、<b>到期日</b> maturity。</li><li><b>殖利率</b> yield：照現在價格買進持有到期的年報酬率。</li><li><b>價格與殖利率反向</b>：殖利率↑ → 價格↓（現值公式分母變大）。</li><li>國庫券 Treasury bill：短期政府債，常被當作「無風險」資產（R<sub>f</sub>）。</li><li>股東 vs 債權人：債權人先拿錢、報酬固定；股東後拿、報酬不固定。</li></ul>' },
+    { id:'bindex', t:'股價指數、ETF、共同基金', en:'Index, ETF, mutual fund',
+      plain:'指數是「一籃子股票的平均分數」，用來代表整個市場。ETF 和基金是讓你一次買下一整籃股票的工具。',
+      life:'全班平均分數＝指數；買 ETF 像是「買下全班的平均成績」，不用挑誰會考好。',
+      body:'<ul><li>台灣加權指數、S&amp;P 500、道瓊工業指數。</li><li>指數期貨的乘數：S&amp;P 500 期貨 $250 × 指數、Mini S&amp;P $50 × 指數、台指期 NT$200 × 指數。</li><li><b>被動投資</b>：買指數（ETF）；<b>主動投資</b>：基金經理人挑股票想贏指數。《漫步華爾街》建議多數人用被動。</li></ul>' },
+    { id:'bspot', t:'現貨、遠期、期貨：差在「什麼時候交錢交貨」', en:'Spot vs forward vs futures',
+      plain:'現貨＝現在付錢、現在拿貨。遠期／期貨＝現在講好價格，未來才付錢交貨。',
+      life:'在超商買飲料是現貨；預購演唱會周邊（現在說好價格、下個月出貨）就是遠期。',
+      body:'<ul><li><b>現貨價 S</b>（spot price）：現在馬上成交的價格。</li><li><b>期貨價 F</b>：今天約定、未來交割的價格。</li><li>為什麼 F 通常不等於 S？因為等待有成本與好處：持有現貨要付倉儲費、損失利息（所以 F 常比 S 高），有些資產會配息（讓 F 低一點）。</li></ul>' },
+    { id:'blong', t:'做多、做空、放空', en:'Long and short positions',
+      plain:'做多（long）＝買進，希望漲。做空（short）＝賣出，希望跌。股票的「放空」是先借股票來賣，之後再買回還。',
+      life:'放空像跟朋友借一本現在賣 500 元的絕版書，先賣掉拿 500；等書價跌到 300 再買一本還他，賺 200。如果書價漲到 800 你就虧了。',
+      body:'<ul><li>期貨的空頭不需要先借東西，只要簽約就是 short。</li><li>放空的最大損失理論上無限（價格可以一直漲）。</li><li>融券餘額（short interest）＝大家借券放空還沒買回的量。</li></ul>' },
+    { id:'blev', t:'槓桿、融資與保證金', en:'Leverage and margin',
+      plain:'槓桿＝用少少的自己的錢，控制很大的部位。賺的時候放大，虧的時候也放大。',
+      life:'你只出 10 萬、跟銀行借 90 萬買 100 萬的房子。房價漲 10% → 賺 10 萬，你的本金翻倍（+100%）；跌 10% → 你的 10 萬全沒了。',
+      body:'<ul><li><b>槓桿倍數</b> = 部位總值 ÷ 自有資金。</li><li><b>融資買股</b>（buying on margin）：向券商借錢買股，1929 年崩盤主因之一。</li><li>期貨保證金：只要押合約價值的一小部分（例如 5–10%）→ 天生高槓桿 → 所以要每日結算、追繳保證金來控制違約風險。</li></ul>' }
+  ]},
+  { id:'b3', t:'3. 風險的數學', cards: [
+    { id:'bmean', t:'平均數與期望值', en:'Mean and expected value',
+      plain:'平均數＝過去資料加總 ÷ 個數。期望值＝未來各種可能結果 × 機率，再加總（「長期平均下來」會得到多少）。',
+      life:'擲骰子的期望值 = (1+2+3+4+5+6)/6 = 3.5，雖然你從來擲不出 3.5，但擲很多次平均就是 3.5。',
+      body:'<p class="formula">E(R) = Σ p<sub>i</sub> × R<sub>i</sub></p><ul><li>Σ 唸作 sigma，意思是「全部加起來」。</li><li>例：景氣好（機率 0.3）賺 20%、普通（0.5）賺 10%、差（0.2）賠 5% → 0.3×20 + 0.5×10 + 0.2×(−5) = 10%。</li></ul>' },
+    { id:'bsd', t:'變異數與標準差：晃得多大？', en:'Variance and standard deviation',
+      plain:'標準差 σ 衡量「結果離平均有多遠」，數字越大代表越不穩定，就是投資學說的「風險」。',
+      life:'兩個同學平均都考 70 分：A 每次都 68–72（σ 小，很穩），B 有時 40 有時 100（σ 大，很不穩）。',
+      body:'<p class="formula">σ² = Σ p<sub>i</sub> (R<sub>i</sub> − E(R))²　　σ = √σ²</p><ul><li>步驟：① 每個結果減平均 ② 平方（讓負的變正的）③ 乘機率（或除以個數）加總 = 變異數 ④ 開根號 = 標準差（單位回到 %）。</li><li>Hull 的 σ<sub>S</sub>、σ<sub>F</sub> 就是「價格變動」的標準差。</li></ul>' },
+    { id:'bcorr', t:'共變異數與相關係數：兩個東西會不會一起動？', en:'Covariance and correlation',
+      plain:'相關係數 ρ 介於 −1 到 1：1 = 完全同方向一起動；0 = 沒關係；−1 = 完全反方向。',
+      life:'冰淇淋銷量和氣溫：ρ 接近 1。雨傘銷量和晴天：ρ 接近 −1。你的考試成績和隔壁班的午餐：ρ ≈ 0。',
+      body:'<p class="formula">ρ = Cov(X, Y) ÷ (σ<sub>X</sub> × σ<sub>Y</sub>)</p><ul><li>共變異數 Cov：兩者偏離平均的方向是否一致（正 = 同向）。但它的數字大小沒有上限，不好比較 → 除以兩個標準差，就變成 −1 到 1 的相關係數。</li><li>避險比率 h* = ρσ<sub>S</sub>/σ<sub>F</sub> 裡的 ρ 就是它：相關越高，期貨越能幫你避險。</li></ul>' },
+    { id:'bdiv', t:'分散投資：系統風險 vs 非系統風險', en:'Diversification',
+      plain:'買很多支不同的股票，個別公司的意外（非系統風險）會互相抵消；但整個市場一起跌（系統風險）是分散不掉的。',
+      life:'不要把雞蛋放在同一個籃子：一個籃子掉了還有別的。但如果整台車翻了（金融海嘯），所有籃子都會掉。',
+      body:'<ul><li><b>非系統風險</b>（公司特有、可分散）：工廠失火、CEO 醜聞。</li><li><b>系統風險</b>（市場風險、不可分散）：利率、經濟衰退、戰爭。</li><li>因為非系統風險可以免費消除，市場只會給「系統風險」報酬 → 這就是 CAPM 只看 β 的原因。</li></ul>' },
+    { id:'bbeta', t:'β 貝他：跟著大盤晃動的倍數', en:'Beta',
+      plain:'β 衡量一支股票（或組合）對大盤的敏感度。β = 1 跟大盤一樣；β = 2 大盤漲 1% 它約漲 2%；β = 0.5 只漲 0.5%。',
+      life:'大盤是船，β 是你坐的位置：船頭（β 高）晃得最厲害，船中間（β 低）比較穩。',
+      body:'<p class="formula">β = Cov(R<sub>i</sub>, R<sub>M</sub>) ÷ σ<sub>M</sub>²</p><ul><li>β 只衡量<b>系統風險</b>。</li><li>組合的 β = 各股票 β 依權重加權平均。</li><li>用指數期貨可以把組合 β 調高或調低（衍金 Ch3）。</li></ul>' },
+    { id:'bsharpe', t:'夏普比率：每承擔 1 單位風險，多賺多少？', en:'Sharpe ratio',
+      plain:'夏普比率 = (報酬 − 無風險利率) ÷ 標準差。越高越好，代表「CP 值」越高。',
+      life:'兩個打工：A 時薪 200 但很累，B 時薪 180 但很輕鬆。要看「每單位辛苦換到多少錢」。',
+      body:'<p class="formula">Sharpe = (R<sub>p</sub> − R<sub>f</sub>) ÷ σ<sub>p</sub></p><ul><li>投資學的「績效評估」要做風險調整，夏普比率是最常用的一個。CML 的斜率就是市場組合的夏普比率。</li><li>其他：Treynor = (R<sub>p</sub> − R<sub>f</sub>)/β；Jensen α = 實際報酬 − CAPM 預期報酬。</li></ul>' }
+  ]},
+  { id:'b4', t:'4. 公司理財基本功', cards: [
+    { id:'bdec', t:'公司的三大財務決策', en:'Three financial decisions',
+      plain:'投資決策（錢花在哪）、融資決策（錢從哪來：借錢或找股東）、股利決策（賺的錢發給股東還是留著）。',
+      life:'開咖啡店：買哪台咖啡機（投資）、跟銀行貸款還是找朋友入股（融資）、年底賺的錢要分紅還是拿去開分店（股利）。',
+      body:'<ul><li>Investment decision、Financing decision、Dividend decision（投資學第一週講義）。</li><li>目標：讓股東財富（股價）最大化。</li></ul>' },
+    { id:'bbs', t:'資產負債表：公司「有什麼、欠什麼」', en:'Balance sheet',
+      plain:'資產 = 負債 + 股東權益。左邊是公司擁有的東西，右邊是這些東西的錢從哪裡來。',
+      life:'你有一台 3 萬的機車（資產），其中 2 萬是跟爸媽借的（負債）、1 萬是自己存的（權益）。',
+      body:'<ul><li><b>資產</b> assets：現金、存貨、廠房設備。</li><li><b>負債</b> liabilities：借款、應付帳款、發行的債券。</li><li><b>股東權益</b> equity：股東投入的錢＋累積保留的盈餘。</li><li><b>資本結構</b>：負債 vs 權益的比例。負債多 → 槓桿高、風險高。</li></ul>' },
+    { id:'bis', t:'損益表：公司「這段期間賺多少」', en:'Income statement',
+      plain:'營收 − 成本 − 費用 − 利息 − 稅 = 淨利。淨利 ÷ 股數 = EPS。',
+      life:'飲料店一個月：賣飲料收 30 萬（營收）− 茶葉杯子 10 萬（成本）− 房租薪水 12 萬（費用）− 貸款利息 1 萬 − 稅 1 萬 = 淨利 6 萬。',
+      body:'<ul><li>技術分析的優點之一（Reilly）：財報有很多種費用與資產的報告方式，技術分析不受影響。</li><li>網路泡沫時很多公司「營收有、淨利是負的」→ 本益比算不出來。</li></ul>' },
+    { id:'bforms', t:'公司的法律型態與有限責任', en:'Legal forms and limited liability',
+      plain:'獨資、合夥：老闆要負無限責任（賠到自己的房子）。公司：股東只負有限責任，但公司賺錢要先繳公司稅，股東領股利再繳個人稅（雙重課稅）。',
+      life:'自己擺攤（獨資）欠錢要自己還；開成股份有限公司，公司欠的錢不會追到你家。',
+      body:'<p>管理學 Ch10 的 Exhibit 10.2 會詳細比較：Sole proprietorship、General partnership、LLP、C corporation、S corporation、LLC。CFA Level I Corporate Issuers 也考同樣的內容。</p>' },
+    { id:'barb', t:'套利與單一價格法則', en:'Arbitrage and the law of one price',
+      plain:'同樣的東西在兩個地方價格不同，就可以「低買高賣」賺無風險的錢。大家都這樣做，價格就會被拉回一致。',
+      life:'A 店飲料 20 元、B 店收購 25 元 → 一直買 A 賣 B，A 會漲價、B 會降價，直到差價消失。',
+      body:'<ul><li>衍生性商品定價的核心：如果期貨價格偏離「合理價格」，套利者會把它拉回來。</li><li>期貨到期時一定收斂到現貨價格，就是因為套利。</li></ul>' }
+  ]}
+  ],
+  mcq: [
+    {q:'股價從 40 漲到 44，期間配息 2 元，報酬率是？', o:['10%','15%','5%','12%'], a:1, e:'(44 − 40 + 2) ÷ 40 = 6 ÷ 40 = 15%。'},
+    {q:'100 元存 2 年、年利率 10%、每年複利一次，2 年後變成？', o:['120','121','110','122'], a:1, e:'100 × 1.1² = 121。單利才是 120。'},
+    {q:'複利和單利的差別在於：', o:['複利的利率比較高','複利的利息也會再生利息','單利不用繳稅','沒有差別'], a:1, e:'利滾利。'},
+    {q:'2 年後的 121 元，利率 10% 時的現值是？', o:['100','110','121','90'], a:0, e:'121 ÷ 1.1² = 100。'},
+    {q:'利率上升時，未來固定金額的現值會：', o:['上升','下降','不變','變成 0'], a:1, e:'分母 (1 + r)ⁿ 變大，現值變小。'},
+    {q:'季報酬 3%，用簡單年化大約是？', o:['3%','9%','12%','36%'], a:2, e:'3% × 4 = 12%。'},
+    {q:'買股票的人是公司的：', o:['債權人','股東（所有者）','員工','供應商'], a:1, e:'買債券才是債權人。'},
+    {q:'「有限責任」的意思是：', o:['股東最多賠掉投資的金額','公司不用繳稅','股東不能投票','債權人不能求償'], a:0, e:'公司的債務不會追到股東個人財產。'},
+    {q:'債券的殖利率上升時，價格會：', o:['上升','下降','不變','先升後降'], a:1, e:'價格與殖利率反向。'},
+    {q:'某公司淨利 1 億元、股數 1,000 萬股、股價 200 元。本益比是？', o:['10','20','2','200'], a:1, e:'EPS = 10；P/E = 200 ÷ 10 = 20。'},
+    {q:'現在付錢、現在交貨的價格叫做：', o:['期貨價','現貨價','執行價','交割價'], a:1, e:'Spot price。'},
+    {q:'預期價格會下跌，應該：', o:['做多','做空','買 call','什麼都不做'], a:1, e:'Short 希望跌。'},
+    {q:'自己出 20 萬、借 80 萬買 100 萬的資產，槓桿倍數是？', o:['2 倍','4 倍','5 倍','10 倍'], a:2, e:'100 ÷ 20 = 5 倍。'},
+    {q:'承上，資產價格下跌 10%，自有資金虧損幾 %？', o:['10%','20%','50%','80%'], a:2, e:'虧 10 萬 ÷ 20 萬 = 50%（槓桿放大 5 倍）。'},
+    {q:'三種情況報酬 20%、10%、−5%，機率 0.3、0.5、0.2。期望報酬是？', o:['8.33%','10%','11%','12.5%'], a:1, e:'6 + 5 − 1 = 10%。'},
+    {q:'標準差越大代表：', o:['報酬越高','結果越不穩定（風險越大）','越安全','相關係數越高'], a:1, e:''},
+    {q:'變異數是 0.04，標準差是？', o:['0.0016','0.02','0.2','2'], a:2, e:'√0.04 = 0.2 = 20%。'},
+    {q:'相關係數 ρ = −1 代表：', o:['完全同方向','完全反方向','沒有關係','資料錯誤'], a:1, e:'範圍 −1 到 1。'},
+    {q:'Cov(X,Y) = 0.006、σX = 0.1、σY = 0.2，相關係數是？', o:['0.03','0.3','0.6','0.12'], a:1, e:'0.006 ÷ (0.1 × 0.2) = 0.3。'},
+    {q:'下列何者屬於「非系統風險」？', o:['央行升息','經濟衰退','某公司工廠失火','戰爭'], a:2, e:'公司特有、可以分散。'},
+    {q:'分散投資可以消除：', o:['系統風險','非系統風險','所有風險','通膨'], a:1, e:'系統風險分散不掉。'},
+    {q:'β = 1.5 的股票，大盤上漲 2%，它預期大約上漲？', o:['1.5%','2%','3%','3.5%'], a:2, e:'1.5 × 2% = 3%。'},
+    {q:'組合 60% 投資 β=1.2、40% 投資 β=0.7，組合 β 是？', o:['0.95','1.0','1.9','0.84'], a:1, e:'0.6×1.2 + 0.4×0.7 = 0.72 + 0.28 = 1.0。'},
+    {q:'R_p = 12%、R_f = 2%、σ = 20%，夏普比率是？', o:['0.6','0.5','0.1','2'], a:1, e:'(12 − 2) ÷ 20 = 0.5。'},
+    {q:'資產負債表的恆等式：', o:['資產 = 負債 − 權益','資產 = 負債 + 股東權益','淨利 = 營收 − 資產','權益 = 資產 + 負債'], a:1, e:''},
+    {q:'公司決定「要跟銀行借錢還是發新股」屬於：', o:['投資決策','融資決策','股利決策','行銷決策'], a:1, e:''},
+    {q:'淨利 ÷ 流通股數 = ？', o:['P/E','EPS','ROE','市值'], a:1, e:'每股盈餘。'},
+    {q:'同一商品 A 市場 100 元、B 市場 105 元，套利者會：', o:['A 賣 B 買','A 買 B 賣','兩邊都買','什麼都不做'], a:1, e:'低買高賣。'},
+    {q:'獨資商號的老闆對債務負：', o:['有限責任','無限責任','不負責','由政府負責'], a:1, e:''},
+    {q:'C corporation 被稱為「雙重課稅」是因為：', o:['一年課兩次','公司所得與股東股利都要課稅','只有大公司要繳','需要兩個會計師'], a:1, e:''}
+  ],
+  match: [['spot price','現貨價'],['futures price','期貨價'],['present value','現值'],['future value','終值'],['compound interest','複利'],['dividend','股利'],['capital gain','資本利得'],['shareholder','股東'],['creditor','債權人'],['limited liability','有限責任'],['bond yield','殖利率'],['EPS','每股盈餘'],['market cap','市值'],['leverage','槓桿'],['short selling','放空'],['standard deviation','標準差'],['correlation','相關係數'],['covariance','共變異數'],['beta','系統風險敏感度'],['diversification','分散投資'],['systematic risk','不可分散的市場風險'],['Sharpe ratio','每單位風險的超額報酬'],['risk-free rate','無風險利率'],['balance sheet','資產負債表'],['income statement','損益表'],['arbitrage','套利']],
+  sort: [
+    { t:'系統風險還是非系統風險？', b:['系統風險（分散不掉）','非系統風險（可分散）'], items:[['央行升息',0],['某公司 CEO 醜聞',1],['全球金融海嘯',0],['某工廠火災',1],['戰爭爆發',0],['某藥廠新藥失敗',1],['經濟衰退',0],['某公司產品召回',1]] },
+    { t:'資產、負債還是股東權益？', b:['資產','負債','股東權益'], items:[['現金',0],['銀行借款',1],['股東投入的資本',2],['廠房設備',0],['發行的公司債',1],['保留盈餘',2],['存貨',0],['應付帳款',1]] },
+    { t:'這是哪一種財務決策？', b:['投資決策','融資決策','股利決策'], items:[['要不要蓋新工廠',0],['發行公司債',1],['今年配多少現金股利',2],['併購一家公司',0],['辦理現金增資',1],['把盈餘保留下來再投資',2]] }
+  ]
+};
+
+DATA.basic.formulas = [
+  { id:'B1', t:'報酬率', en:'Holding period return', q:'這筆投資賺了百分之幾？',
+    tex:'<v s="R">R</v> = (<v s="P1">P<sub>1</sub></v> − <v s="P0">P<sub>0</sub></v> + <v s="D">D</v>) ÷ <v s="P0">P<sub>0</sub></v>',
+    syms:{R:['報酬率','holding period return','這段期間賺了幾 %'],P1:['期末價格','ending price','賣出（或現在）的價格'],P0:['期初價格','beginning price','買進的價格'],D:['期間收到的現金','income (dividend / coupon)','股利或利息']},
+    why:'分子是「總共賺到多少錢」：價差（P<sub>1</sub> − P<sub>0</sub>）加上中間拿到的現金 D。分母是本金。除完就是「每 1 元本金賺了多少」。',
+    steps:['價差 = P<sub>1</sub> − P<sub>0</sub>','加上股利 D','÷ P<sub>0</sub>','× 100%'],
+    vars:[{k:'P0',s:'P<sub>0</sub>',v:50,min:1,max:500,step:1},{k:'P1',s:'P<sub>1</sub>',v:55,min:0,max:500,step:1},{k:'D',s:'D',v:2,min:0,max:50,step:0.5}],
+    calc:v=>`(${v.P1} − ${v.P0} + ${v.D}) ÷ ${v.P0} = ${fx(v.P1-v.P0+v.D)} ÷ ${v.P0} = <b>${fx((v.P1-v.P0+v.D)/v.P0*100,2)}%</b>`,
+    oops:['分母用期末價格','忘了加股利'], exam:'The holding period return is (P<sub>1</sub> − P<sub>0</sub> + D)/P<sub>0</sub>.', cfa:'CFA Level I Quant：holding period return。' },
+  { id:'B2', t:'複利終值', en:'Future value with compounding', q:'現在的錢放 n 年後會變成多少？',
+    tex:'<v s="FV">FV</v> = <v s="PV">PV</v> × (1 + <v s="r">r</v>)<sup><v s="n">n</v></sup>',
+    syms:{FV:['終值','future value','未來會變成多少'],PV:['現值','present value','現在投入的錢'],r:['每期利率','interest rate per period','例如年利率 5% = 0.05'],n:['期數','number of periods','放幾年（幾期）']},
+    why:'每過一期，錢都乘上 (1 + r)。過 n 期就乘 n 次 → (1 + r)<sup>n</sup>。這就是「利滾利」：第二年的利息是用「本金＋第一年利息」來算。',
+    steps:['1 + r','算 n 次方','× PV'],
+    vars:[{k:'PV',s:'PV',v:100,min:1,max:100000,step:1},{k:'r',s:'r (%)',v:10,min:0,max:30,step:0.5},{k:'n',s:'n',v:3,min:0,max:40,step:1}],
+    calc:v=>`${v.PV} × (1 + ${v.r/100})<sup>${v.n}</sup> = ${v.PV} × ${fx(Math.pow(1+v.r/100,v.n))} = <b>${fx(v.PV*Math.pow(1+v.r/100,v.n),2)}</b>（單利只有 ${fx(v.PV*(1+v.r/100*v.n),2)}）`,
+    oops:['把 (1 + r)<sup>n</sup> 算成 1 + r × n（那是單利）','利率忘了換成小數'], exam:'With annual compounding, FV = PV(1 + r)<sup>n</sup>.', cfa:'CFA Level I Quant：time value of money（超級基礎）。' },
+  { id:'B3', t:'現值（折現）', en:'Present value', q:'未來的錢，今天值多少？',
+    tex:'<v s="PV">PV</v> = <v s="FV">FV</v> ÷ (1 + <v s="r">r</v>)<sup><v s="n">n</v></sup>',
+    syms:{PV:['現值','present value','今天值多少'],FV:['未來金額','future value','未來會拿到的錢'],r:['折現率','discount rate','你要求的報酬率／利率'],n:['期數','periods','幾年後拿到']},
+    why:'就是複利公式倒過來。問自己：「今天要存多少，n 年後才會變成 FV？」答案就是 FV 除以成長倍數。利率越高、等越久，現值越小。',
+    steps:['(1 + r)<sup>n</sup>','FV ÷ 它'],
+    vars:[{k:'FV',s:'FV',v:1331,min:1,max:100000,step:1},{k:'r',s:'r (%)',v:10,min:0,max:30,step:0.5},{k:'n',s:'n',v:3,min:0,max:40,step:1}],
+    calc:v=>`${v.FV} ÷ ${fx(Math.pow(1+v.r/100,v.n))} = <b>${fx(v.FV/Math.pow(1+v.r/100,v.n),2)}</b>`,
+    oops:['乘以 (1 + r)<sup>n</sup>（方向反了）'], exam:'The present value of a future cash flow is FV/(1 + r)<sup>n</sup>.', cfa:'CFA Level I：discounted cash flow 的基礎。' },
+  { id:'B4', t:'期望報酬', en:'Expected return', q:'考慮各種可能，平均會賺多少？',
+    tex:'<v s="E">E(R)</v> = Σ <v s="p">p<sub>i</sub></v> × <v s="R">R<sub>i</sub></v>',
+    syms:{E:['期望報酬','expected return','長期平均'],p:['第 i 種情況的機率','probability','全部加起來 = 1'],R:['第 i 種情況的報酬','return in state i','']},
+    why:'每種情況「出現的次數比例」乘上「那時候的報酬」再加總，就是加權平均。',
+    steps:['每種情況：機率 × 報酬','全部加起來'],
+    vars:[{k:'p1',s:'好 機率',v:0.3,min:0,max:1,step:0.05},{k:'r1',s:'好 報酬%',v:20,min:-50,max:80,step:1},{k:'p2',s:'普通 機率',v:0.5,min:0,max:1,step:0.05},{k:'r2',s:'普通 報酬%',v:10,min:-50,max:80,step:1},{k:'r3',s:'差 報酬%',v:-5,min:-80,max:50,step:1}],
+    calc:v=>{const p3=+(1-v.p1-v.p2).toFixed(2);return `差的機率 = 1 − ${v.p1} − ${v.p2} = ${p3}<br>${v.p1}×${v.r1} + ${v.p2}×${v.r2} + ${p3}×(${v.r3}) = <b>${fx(v.p1*v.r1+v.p2*v.r2+p3*v.r3,2)}%</b>`;},
+    oops:['機率加總不等於 1'], exam:'Expected return is the probability-weighted average of possible returns.', cfa:'CFA Quant：expected value。' },
+  { id:'B5', t:'標準差', en:'Standard deviation', q:'報酬晃動得多厲害（風險多大）？',
+    tex:'<v s="s">σ</v> = √[ Σ <v s="p">p<sub>i</sub></v> × (<v s="R">R<sub>i</sub></v> − <v s="E">E(R)</v>)² ]',
+    syms:{s:['標準差','standard deviation','風險的大小'],p:['機率','probability',''],R:['各情況報酬','return in state i',''],E:['期望報酬','expected return','平均']},
+    why:'① 每個結果跟平均差多少（R − E）。② 有正有負會互相抵消，所以先平方。③ 用機率加權平均 → 變異數。④ 平方後單位變成「%²」很奇怪，開根號回到 % → 標準差。',
+    steps:['算 E(R)','每個 R − E(R)','平方','× 機率後加總 = 變異數','開根號'],
+    vars:[{k:'r1',s:'情況1 報酬%',v:20,min:-50,max:80,step:1},{k:'r2',s:'情況2 報酬%',v:0,min:-50,max:80,step:1}],
+    calc:v=>{const E=(v.r1+v.r2)/2;const var_=((v.r1-E)**2+(v.r2-E)**2)/2;return `兩種情況各 50%：E = ${fx(E,2)}%<br>σ² = 0.5×(${v.r1}−${fx(E,2)})² + 0.5×(${v.r2}−${fx(E,2)})² = ${fx(var_,2)}　→ σ = <b>${fx(Math.sqrt(var_),2)}%</b>`;},
+    oops:['忘了開根號','沒平方直接加（正負抵消變 0）'], exam:'Standard deviation measures the dispersion of returns around the mean and is used as a measure of total risk.', cfa:'CFA Quant：variance and standard deviation。' },
+  { id:'B6', t:'相關係數', en:'Correlation coefficient', q:'兩個資產是不是一起漲跌？',
+    tex:'<v s="r">ρ</v> = <v s="c">Cov(X,Y)</v> ÷ (<v s="sx">σ<sub>X</sub></v> × <v s="sy">σ<sub>Y</sub></v>)',
+    syms:{r:['相關係數','correlation','−1 到 1'],c:['共變異數','covariance','一起偏離平均的程度'],sx:['X 的標準差','σ of X',''],sy:['Y 的標準差','σ of Y','']},
+    why:'共變異數有方向但沒有固定刻度（單位一換數字就變），除以兩個標準差就把它「標準化」成 −1～1，可以直接比較。',
+    steps:['算 Cov','算 σ<sub>X</sub>、σ<sub>Y</sub>','相除'],
+    vars:[{k:'c',s:'Cov',v:0.006,min:-0.05,max:0.05,step:0.001},{k:'sx',s:'σ<sub>X</sub>',v:0.1,min:0.01,max:1,step:0.01},{k:'sy',s:'σ<sub>Y</sub>',v:0.2,min:0.01,max:1,step:0.01}],
+    calc:v=>{const r=v.c/(v.sx*v.sy);return `${v.c} ÷ (${v.sx} × ${v.sy}) = <b>${fx(r,3)}</b>${Math.abs(r)>1?'（超過 ±1，這組數字不可能存在）':''}`;},
+    oops:['忘了乘兩個標準差'], exam:'Correlation equals covariance divided by the product of the two standard deviations; it ranges from −1 to +1.', cfa:'CFA Quant＋Portfolio：covariance、correlation。' },
+  { id:'B7', t:'兩資產組合的報酬與風險', en:'Two-asset portfolio', q:'把錢分成兩份投資，整體報酬與風險是多少？',
+    tex:'<v s="Rp">E(R<sub>p</sub>)</v> = <v s="w">w</v>R<sub>1</sub> + (1−<v s="w">w</v>)R<sub>2</sub><br><v s="sp">σ<sub>p</sub>²</v> = w²σ<sub>1</sub>² + (1−w)²σ<sub>2</sub>² + 2w(1−w)<v s="r">ρ</v>σ<sub>1</sub>σ<sub>2</sub>',
+    syms:{Rp:['組合期望報酬','portfolio expected return','加權平均'],w:['投資在資產 1 的比例','weight','0～1'],sp:['組合變異數','portfolio variance','開根號 = 組合標準差'],r:['相關係數','correlation','越小 → 分散效果越好']},
+    why:'報酬就是簡單的加權平均。風險卻<b>不是</b>加權平均：多了最後一項「2w(1−w)ρσ<sub>1</sub>σ<sub>2</sub>」。ρ 越小（甚至負的），這一項越小，組合風險就比兩個單獨的都低 → 這就是分散投資的數學。',
+    steps:['報酬：權重 × 報酬，加總','風險：代入三項','開根號'],
+    vars:[{k:'w',s:'w',v:0.5,min:0,max:1,step:0.05},{k:'s1',s:'σ<sub>1</sub>%',v:20,min:0,max:60,step:1},{k:'s2',s:'σ<sub>2</sub>%',v:30,min:0,max:60,step:1},{k:'r',s:'ρ',v:0.2,min:-1,max:1,step:0.05}],
+    calc:v=>{const w=v.w,a=v.s1/100,b=v.s2/100;const vp=w*w*a*a+(1-w)**2*b*b+2*w*(1-w)*v.r*a*b;return `σ<sub>p</sub>² = ${fx(w*w*a*a)} + ${fx((1-w)**2*b*b)} + ${fx(2*w*(1-w)*v.r*a*b)} = ${fx(vp)}<br>σ<sub>p</sub> = <b>${fx(Math.sqrt(Math.max(vp,0))*100,2)}%</b>（加權平均會是 ${fx((w*a+(1-w)*b)*100,2)}%，差距就是分散的好處）`;},
+    oops:['把組合標準差當成加權平均'], exam:'Portfolio risk is lower than the weighted average of individual risks whenever the correlation is less than +1.', cfa:'CFA Level I Portfolio Management：必考。' },
+  { id:'B8', t:'夏普比率', en:'Sharpe ratio', q:'每承擔 1 單位總風險，多賺多少？',
+    tex:'<v s="S">Sharpe</v> = (<v s="Rp">R<sub>p</sub></v> − <v s="rf">R<sub>f</sub></v>) ÷ <v s="s">σ<sub>p</sub></v>',
+    syms:{S:['夏普比率','Sharpe ratio','風險調整後的績效'],Rp:['組合報酬','portfolio return',''],rf:['無風險利率','risk-free rate',''],s:['組合標準差','portfolio standard deviation','總風險']},
+    why:'R<sub>p</sub> − R<sub>f</sub> 是「比放定存多賺的部分」（超額報酬），除以「承擔的風險」。像比較兩份打工的「時薪」，而不是只看總薪水。',
+    steps:['超額報酬 = R<sub>p</sub> − R<sub>f</sub>','÷ σ<sub>p</sub>'],
+    vars:[{k:'Rp',s:'R<sub>p</sub>%',v:12,min:-20,max:50,step:0.5},{k:'rf',s:'R<sub>f</sub>%',v:2,min:0,max:10,step:0.25},{k:'s',s:'σ<sub>p</sub>%',v:20,min:1,max:60,step:1}],
+    calc:v=>`(${v.Rp} − ${v.rf}) ÷ ${v.s} = <b>${fx((v.Rp-v.rf)/v.s,3)}</b>`,
+    oops:['用 β 當分母（那是 Treynor）'], exam:'The Sharpe ratio measures excess return per unit of total risk.', cfa:'CFA Level I：Sharpe ratio 必考。' },
+  { id:'B9', t:'貝他', en:'Beta', q:'這支股票對大盤有多敏感？',
+    tex:'<v s="b">β<sub>i</sub></v> = <v s="c">Cov(R<sub>i</sub>, R<sub>M</sub>)</v> ÷ <v s="v">σ<sub>M</sub>²</v> = <v s="r">ρ<sub>iM</sub></v> × <v s="si">σ<sub>i</sub></v> ÷ <v s="sm">σ<sub>M</sub></v>',
+    syms:{b:['貝他','beta',''],c:['與市場的共變異數','covariance with market',''],v:['市場變異數','market variance',''],r:['與市場的相關係數','correlation with market',''],si:['股票標準差','stock σ',''],sm:['市場標準差','market σ','']},
+    why:'把 Cov 換成 ρσ<sub>i</sub>σ<sub>M</sub> 就得到第二個寫法。發現了嗎？它跟衍金的 h* = ρσ<sub>S</sub>/σ<sub>F</sub> 長得一模一樣！所以用指數期貨避險時，β 就是避險比率。',
+    steps:['ρ × σ<sub>i</sub>','÷ σ<sub>M</sub>'],
+    vars:[{k:'r',s:'ρ',v:0.8,min:-1,max:1,step:0.05},{k:'si',s:'σ<sub>i</sub>%',v:30,min:1,max:80,step:1},{k:'sm',s:'σ<sub>M</sub>%',v:20,min:1,max:60,step:1}],
+    calc:v=>`${v.r} × ${v.si} ÷ ${v.sm} = <b>${fx(v.r*v.si/v.sm,3)}</b>`,
+    oops:['除以 σ<sub>M</sub> 而不是 σ<sub>M</sub>²（用 Cov 的寫法時）'], exam:'Beta equals the covariance of the asset with the market divided by the variance of the market.', cfa:'CFA Level I：beta、CAPM 必考。' }
+];
 // ===== English layer: exam sentences, CFA tags, English problems & questions =====
 const EX = {
   d1:'A derivative is an instrument whose value depends on, or is derived from, the value of an underlying asset.',
@@ -1871,6 +2085,113 @@ DATA.mgmt.sort = [
   { t:'Mechanistic or organic?', b:['Mechanistic','Organic'], items:[['High specialization',0],['Cross-functional teams',1],['Narrow span of control',0],['Decentralization',1],['High formalization',0],['Free flow of information',1],['Mass production (Woodward)',0],['Stable environment',0],['Unit production (Woodward)',1]] },
   { t:'Which competitive strategy?', b:['Cost leadership','Differentiation','Focus'], items:[['全聯：全產業最低價',0],['Apple：設計與品牌',1],['只做左撇子文具',2],['Walmart',0],['Starbucks 體驗',1],['專攻高端寵物鮮食',2]] }
 ];
+// ===== 題庫擴充（觀念＋計算，不刁鑽）、移除冷知識題、先備知識連結 =====
+// 移除只考數字/日期的冷門題
+const TRIVIA = {
+  invest: ['南海公司 1720 年決議承擔的政府債務約為？', '英國泡沫法案（Bubble Act）於哪一年廢除？', '1929 年崩盤到 1932 年觸底，跌幅相對最小的績優股是？', '1955–1990 年日本房地產價值上漲約：', '日本股市指數 1992/8 跌至約多少點？', '研究顯示 1998–99 年改名加入網路字眼的公司，改名期間漲幅比同類公司高出：', 'TheGlobe.com 首日股價從 9 美元漲到約？', '鬱金香條紋花瓣的成因是？'],
+  mgmt: ['S corporation 股東人數上限：'],
+  law: ['內亂、外患及妨害國交罪的第一審為：']
+};
+Object.keys(TRIVIA).forEach(k => { DATA[k].mcq = DATA[k].mcq.filter(m => !TRIVIA[k].includes(m.q)); });
+
+DATA.deriv.mcq.push(
+  {q:'Long 1 口期貨，成交價 100，到期價 108，每口 50 單位。損益是？', o:['+400','−400','+8','+5,400'], a:0, e:'(108 − 100) × 50 = 400。'},
+  {q:'Short 遠期，交割價 K = 60，到期 S_T = 55。每單位收益是？', o:['−5','+5','0','+55'], a:1, e:'空頭收益 K − S_T = 5。'},
+  {q:'買 call：K = 50、權利金 3、到期股價 58。利潤是？', o:['8','5','3','−3'], a:1, e:'payoff = 8，profit = 8 − 3 = 5。'},
+  {q:'買 call：K = 50、權利金 3、到期股價 45。利潤是？', o:['−5','−3','0','2'], a:1, e:'不執行，payoff = 0，只虧權利金 3。'},
+  {q:'買 put：K = 40、權利金 2、到期股價 33。利潤是？', o:['7','5','2','−2'], a:1, e:'payoff = 7，profit = 5。'},
+  {q:'買 call 的損益兩平點是？', o:['K','K + 權利金','K − 權利金','權利金'], a:1, e:'股價要漲到 K + c 才回本。'},
+  {q:'原始保證金 5,000、維持保證金 4,000、每口 1,000 單位的多頭，價格下跌多少會被追繳？', o:['1.0','4.0','5.0','0.1'], a:0, e:'(5,000 − 4,000) ÷ 1,000 = 1.0。'},
+  {q:'保證金帳戶從 12,000 虧到 8,500，維持保證金 9,000、原始 12,000。需補繳？', o:['500','3,500','9,000','0'], a:1, e:'低於維持 → 補到原始：12,000 − 8,500 = 3,500。'},
+  {q:'買方開倉 300、賣方平倉 500。OI 變化？', o:['+200','−200','+800','0'], a:1, e:'300 − 500 = −200。'},
+  {q:'S = 52、F = 50，基差 b = ？', o:['−2','+2','102','0'], a:1, e:'b = S − F = 2。'},
+  {q:'Short hedge：開始時 F₁ = 30，平倉時 S₂ = 28、F₂ = 27.5。實際賣價 = ？', o:['28','30.5','30','27.5'], a:1, e:'F₁ + b₂ = 30 + 0.5 = 30.5。'},
+  {q:'ρ = 0.9、σS = 2、σF = 3，h* = ？', o:['0.6','1.35','0.9','0.67'], a:0, e:'0.9 × 2 ÷ 3 = 0.6。'},
+  {q:'h* = 0.8，要避險 100,000 單位，每口 5,000 單位。口數？', o:['16','20','25','80'], a:0, e:'0.8 × 100,000 ÷ 5,000 = 16。'},
+  {q:'組合 $10M、β = 1.2，指數期貨 2,000、乘數 $250。完全避險要 short 幾口？', o:['20','24','30','12'], a:1, e:'V_F = 500,000；1.2 × 10M ÷ 500,000 = 24。'},
+  {q:'承上，要把 β 降到 0.6，要 short 幾口？', o:['6','12','24','18'], a:1, e:'(1.2 − 0.6) × 20 = 12。'},
+  {q:'為什麼「想未來擁有某資產」時，買期貨通常比現在買現貨划算？', o:['期貨一定比較便宜','買現貨要先付錢且有倉儲成本與利息損失','期貨沒有風險','現貨不能賣'], a:1, e:'講義 Ch3「Think about it」。'}
+);
+DATA.invest.mcq.push(
+  {q:'CAPM：R_f = 3%、E(R_M) = 9%、β = 1.5，預期報酬是？', o:['9%','12%','13.5%','10.5%'], a:1, e:'3 + 1.5 × 6 = 12%。'},
+  {q:'β = 0 的資產，依 CAPM 預期報酬等於：', o:['市場報酬','無風險利率','0','市場風險溢酬'], a:1, e:''},
+  {q:'CML 的橫軸是：', o:['β','總風險 σ','時間','報酬'], a:1, e:'SML 的橫軸才是 β。'},
+  {q:'SML 適用於：', o:['只有效率投資組合','所有證券與組合','只有債券','只有無風險資產'], a:1, e:'CML 只適用效率組合。'},
+  {q:'股價 80、EPS 4，本益比是？', o:['4','20','80','0.05'], a:1, e:'80 ÷ 4 = 20。'},
+  {q:'本益比很高（例如 60 倍以上）通常代表：', o:['股價很便宜','市場對未來成長期望極高，或可能有泡沫','公司虧損','一定會上漲'], a:1, e:'日本 1990、網路泡沫都是這樣。'},
+  {q:'股價 66、6 日均線 60，乖離率是？', o:['6%','10%','9.1%','−10%'], a:1, e:'(66 − 60) ÷ 60 = 10% → 正乖離過大。'},
+  {q:'最近 6 天上漲總和 9、下跌總和 3，RSI 是？', o:['33','75','67','25'], a:1, e:'100 × 9 ÷ 12 = 75。'},
+  {q:'9 日內最高 60、最低 40、今天收盤 55，RSV 是？', o:['55','75','25','92'], a:1, e:'(55 − 40) ÷ (60 − 40) × 100 = 75。'},
+  {q:'承上，前一日 K = 50，今日 K 值是？', o:['58.3','75','66.7','50'], a:0, e:'75/3 + 50 × 2/3 = 25 + 33.3 = 58.3。'},
+  {q:'昨天 OBV 10,000，今天收盤上漲、成交量 2,000，今天 OBV 是？', o:['8,000','12,000','10,000','2,000'], a:1, e:'上漲 → 加上成交量。'},
+  {q:'價格 $20，用 0.382 計算的下跌支撐是？', o:['12.36','7.64','27.64','16.18'], a:0, e:'20 × (1 − 0.382) = 12.36。'},
+  {q:'「更傻的傻瓜理論」的意思是：', o:['只買便宜的股票','不管價格多高，只要相信有人會用更高價接手就買','長期持有','分散投資'], a:1, e:'泡沫的核心心理。'},
+  {q:'《漫步華爾街》對多數投資人的建議是：', o:['用技術分析短線交易','買低成本的指數基金','只買科技股','借錢投資'], a:1, e:'因為多數人打不贏市場（效率市場）。'},
+  {q:'「投資」相較於「投機」的特徵是：', o:['短期、追價差','長期、重視股利與研究、控制風險','不需研究','高槓桿'], a:1, e:''},
+  {q:'債券評級越低（信用越差）通常殖利率：', o:['越低','越高','一樣','等於 0'], a:1, e:'信心指數就是比較高評級與中評級債殖利率。'}
+);
+DATA.law.mcq.push(
+  {q:'民法第 1 條規定的法源適用順序為：', o:['習慣 → 法律 → 法理','法律 → 習慣 → 法理','法理 → 法律 → 習慣','判例 → 法律 → 習慣'], a:1, e:''},
+  {q:'「準用」與「類推適用」最大的差別是：', o:['準用有法律明文，類推適用沒有','兩者相同','類推適用有明文','準用只用於刑法'], a:0, e:''},
+  {q:'「推定」與「視為」的差別：', o:['推定可以舉證推翻，視為不行','視為可以推翻','兩者都可推翻','兩者都不可推翻'], a:0, e:''},
+  {q:'17 歲的高中生，行為能力為：', o:['無行為能力','限制行為能力','完全行為能力','視婚姻而定'], a:1, e:'7 歲以上未滿 18 歲。'},
+  {q:'下列何者是「契約」？', o:['遺囑','買賣','拾得遺失物','債務催告'], a:1, e:'遺囑是單獨行為；拾得是事實行為；催告是意思通知。'},
+  {q:'要約與承諾意思一致時：', o:['契約成立','契約無效','需要公證','需要登記'], a:0, e:'§153 I，明示或默示皆可。'},
+  {q:'甲向乙要約 50 萬賣車，乙還價 45 萬。乙的還價在法律上是：', o:['承諾','新要約（視為拒絕原要約）','要約引誘','意思實現'], a:1, e:'§160 II。'},
+  {q:'承上，甲拒絕 45 萬後，乙改口說「好，50 萬我買」。契約：', o:['已成立','未成立，因原要約已因拒絕失效','由法院決定','效力未定'], a:1, e:'乙的這句話變成新要約，需甲承諾。'},
+  {q:'無因管理的成立，下列何者「不是」要件？', o:['無法律上義務','管理他人事務','為他人管理之意思','事先取得本人同意'], a:3, e:'事先同意就變成委任了。'},
+  {q:'鄰居出國時你幫他修颱風吹壞的屋頂，花了 2 萬元。你可以向他請求：', o:['什麼都不能請求','2 萬元及自支出時起的利息','只能請求一半','只能請求報酬'], a:1, e:'適法無因管理 §176 I。'},
+  {q:'不當得利的效果是：', o:['損害賠償','返還所受利益','懲罰性賠償','回復名譽'], a:1, e:'目的在除去不當利益，不是填補損害。'},
+  {q:'銀行誤把 1 萬元轉進你的帳戶，你：', o:['可以保留','應依不當得利返還','只要返還一半','銀行不能請求'], a:1, e:'無法律上原因受利益。'},
+  {q:'契約被撤銷後，已經付出的價金可依什麼請求返還？', o:['無因管理','不當得利（原因嗣後不存在）','侵權行為','契約'], a:1, e:'§179 後段。'},
+  {q:'侵權行為的基本歸責原則是：', o:['無過失責任','過失責任','結果責任','衡平責任'], a:1, e:'特殊情形才有推定過失或無過失責任。'},
+  {q:'不小心騎車撞傷路人，路人主要依什麼請求賠償？', o:['§184 I 前段','§179','§172','§245-1'], a:0, e:'過失侵害身體健康權。'},
+  {q:'相當因果關係的判斷是：', o:['只要有條件關係就成立','先有條件關係，再看是否「通常會發生」','只看統計機率','由被害人決定'], a:1, e:''},
+  {q:'正當防衛的限制是：', o:['不得過當','只能防衛自己','只能用言語','事後要賠償'], a:0, e:'§149，可防衛自己或他人權利。'},
+  {q:'債的發生原因中，下列何者「不需要」當事人合意？', o:['買賣契約','租賃契約','侵權行為','保證契約'], a:2, e:'無因管理、不當得利、侵權都是法定之債。'},
+  {q:'權利能力從何時開始？', o:['7 歲','18 歲','出生','結婚'], a:2, e:''},
+  {q:'民法的五編是：', o:['總則、債、物權、親屬、繼承','總則、契約、侵權、物權、親屬','總則、債、商事、親屬、繼承','總則、物權、公司、親屬、繼承'], a:0, e:''}
+);
+DATA.mgmt.mcq.push(
+  {q:'Which function involves monitoring, comparing, and correcting work?', o:['Planning','Organizing','Leading','Controlling'], a:3, e:''},
+  {q:'Which function involves defining goals and developing plans?', o:['Planning','Organizing','Leading','Controlling'], a:0, e:''},
+  {q:'First-line managers mainly need which skill most?', o:['Conceptual','Technical','Political','Financial'], a:1, e:'Technical skills matter most at lower levels.'},
+  {q:'Which skill is equally important at all managerial levels?', o:['Technical','Human','Conceptual','None'], a:1, e:''},
+  {q:'A laptop scores 8 on a criterion with weight 6. Its weighted score is:', o:['14','48','2','86'], a:1, e:'8 × 6 = 48.'},
+  {q:'Outcomes 100 (p = 0.4) and 50 (p = 0.6). Expected value?', o:['75','70','60','150'], a:1, e:'40 + 30 = 70.'},
+  {q:'Rational decision making assumes the decision maker:', o:['Has limited information','Knows all alternatives and consequences','Relies on intuition','Satisfices'], a:1, e:''},
+  {q:'Which bias: continuing a failing project because of money already spent?', o:['Sunk costs error','Framing','Availability','Hindsight'], a:0, e:''},
+  {q:'Which bias: blaming bad luck for failure and taking credit for success?', o:['Self-serving bias','Anchoring','Representation','Randomness'], a:0, e:''},
+  {q:'Exporting means:', o:['Selling products abroad that are made at home','Buying foreign products to sell at home','Building a factory abroad','Licensing your brand'], a:0, e:''},
+  {q:'Which approach involves the highest investment and risk when going global?', o:['Exporting','Licensing','Franchising','Foreign subsidiary'], a:3, e:''},
+  {q:'The four areas of organizational change are strategy, structure, technology, and:', o:['People','Price','Profit','Place'], a:0, e:''},
+  {q:'The first step of Lewin’s change process is:', o:['Refreezing','Changing','Unfreezing','Evaluating'], a:2, e:''},
+  {q:'SWOT analysis combines:', o:['Internal strengths/weaknesses and external opportunities/threats','Only competitors','Only financial ratios','Only customer surveys'], a:0, e:''},
+  {q:'A firm that buys its supplier is pursuing:', o:['Horizontal integration','Vertical integration','Diversification','Retrenchment'], a:1, e:'Backward vertical integration.'},
+  {q:'A business with unlimited personal liability for the owner is a:', o:['Corporation','LLC','Sole proprietorship','S corporation'], a:2, e:''},
+  {q:'Grouping jobs by function such as marketing, finance, and production is:', o:['Functional departmentalization','Geographic departmentalization','Product departmentalization','Customer departmentalization'], a:0, e:''},
+  {q:'An organization with wide spans of control, decentralization, and low formalization is:', o:['Mechanistic','Organic','Bureaucratic','Functional'], a:1, e:''},
+  {q:'A matrix structure violates which principle?', o:['Span of control','Unity of command','Formalization','Specialization'], a:1, e:'Employees report to two managers.'},
+  {q:'An entrepreneur differs from a small business owner mainly because the entrepreneur:', o:['Avoids risk','Seeks opportunity, innovation, and growth','Never hires staff','Only wants a stable income'], a:1, e:''}
+);
+DATA.deriv.mcqEn.push(
+  {q:'Long one futures contract at 100, settlement at maturity 108, contract size 50. The gain is:', o:['400','−400','8','5,400'], a:0, e:'(108 − 100) × 50 = 400.'},
+  {q:'A long call has K = 50 and premium 3. If S_T = 58, the profit is:', o:['8','5','3','−3'], a:1, e:'Payoff 8 − premium 3 = 5.'},
+  {q:'A long put has K = 40 and premium 2. If S_T = 33, the profit is:', o:['7','5','2','−2'], a:1, e:'Payoff 7 − 2 = 5.'},
+  {q:'Initial margin 5,000, maintenance 4,000, contract size 1,000 (long). A margin call occurs after a price fall of:', o:['1.0','4.0','5.0','0.1'], a:0, e:'(5,000 − 4,000)/1,000 = 1.0.'},
+  {q:'New longs 300, longs closing out 500. Change in open interest:', o:['+200','−200','+800','0'], a:1, e:'300 − 500 = −200.'},
+  {q:'h* = 0.8, exposure 100,000 units, contract size 5,000. Number of contracts:', o:['16','20','25','80'], a:0, e:'0.8 × 100,000/5,000 = 16.'},
+  {q:'$10M portfolio, beta 1.2, index futures 2,000, multiplier $250. Contracts to short for a full hedge:', o:['20','24','30','12'], a:1, e:'1.2 × 10,000,000/500,000 = 24.'},
+  {q:'Spot 52 and futures 50. The basis is:', o:['−2','+2','102','0'], a:1, e:'Basis = S − F.'}
+);
+
+// 先備知識連結：card id → 基礎卡 ids
+const PRE = {
+  d1:['bstock','bspot'], d2:['barb'], d3:['bspot','blong'], d4:['blong','bspot'], d5:['bspot'], d7:['barb','bspot'], d8:['blev'], d9:['blong'], d12:['bspot','blong'], d14:['bspot'], d16:['bsd','bcorr'], d17:['bsd'], d18:['bbeta','bdiv','bindex'], d19:['bbeta','bdiv'], d20:['blev'],
+  i1a:['bdec','bstock','bbond'], i1b:['bret'], i1c:['bret'], i1d:['bis','bstock'], i1e:['bsd','bbeta','bdiv','bsharpe'], i1f:['bindex','bsharpe'], i2c:['bstock'], i2d:['blev'], i2e:['bstock'], i2g:['bbond'], i3d:['bbond','blev'], i3e:['blong']
+};
+Object.keys(PRE).forEach(id => ['deriv', 'invest'].forEach(k => subjCardsPre(DATA[k]).forEach(c => { if (c.id === id) c.pre = PRE[id]; })));
+function subjCardsPre(s) { return s.sections.reduce((a, x) => a.concat(x.cards), []); }
 // ===== Fun layer: mascot, XP, badges, confetti, sound =====
 const PIG = (mood = 'happy', size = 86) => {
   const mouth = mood === 'sad' ? 'M40,63 Q47,57 54,63' : mood === 'wow' ? 'M44,60 a3,4 0 1,0 6,0 a3,4 0 1,0 -6,0' : 'M39,58 Q47,67 55,58';
@@ -1878,13 +2199,13 @@ const PIG = (mood = 'happy', size = 86) => {
   return `<svg class="pig" width="${size}" height="${size}" viewBox="0 0 94 94" aria-hidden="true"><path d="M20,24 L26,6 L38,20 Z" class="pk-b"/><path d="M74,24 L68,6 L56,20 Z" class="pk-b"/><ellipse cx="47" cy="50" rx="36" ry="32" class="pk-b"/><rect x="38" y="16" width="18" height="4" rx="2" class="pk-d"/><ellipse cx="26" cy="54" rx="5" ry="3.5" class="pk-c"/><ellipse cx="68" cy="54" rx="5" ry="3.5" class="pk-c"/>${eye}<ellipse cx="47" cy="51" rx="11" ry="8" class="pk-s"/><circle cx="43" cy="51" r="2" class="pk-d"/><circle cx="51" cy="51" r="2" class="pk-d"/><path d="${mouth}" class="pk-m"/><rect x="24" y="76" width="10" height="12" rx="4" class="pk-b"/><rect x="60" y="76" width="10" height="12" rx="4" class="pk-b"/><circle cx="80" cy="70" r="9" class="pk-coin"/><text x="80" y="74" text-anchor="middle" class="pk-ct">$</text></svg>`;
 };
 const MONSTER = (hpPct, hurt) => `<svg class="mon${hurt ? ' hurt' : ''}" viewBox="0 0 120 110" aria-hidden="true"><path d="M20,95 C5,60 15,15 60,12 C105,15 115,60 100,95 C90,88 80,100 70,92 C62,100 55,90 48,97 C40,89 30,100 20,95 Z" class="mn-b"/><circle cx="44" cy="48" r="11" class="mn-w"/><circle cx="78" cy="48" r="11" class="mn-w"/><circle cx="${hurt ? 41 : 46}" cy="50" r="5" class="mn-e"/><circle cx="${hurt ? 75 : 80}" cy="50" r="5" class="mn-e"/><path d="${hpPct > 0.4 ? 'M42,74 L50,68 L58,74 L66,68 L74,74 L80,68' : 'M44,76 Q61,64 78,76'}" class="mn-m"/><path d="M30,20 L22,4 L40,16 Z M90,20 L98,4 L80,16 Z" class="mn-b"/></svg>`;
-const BOSSES = { deriv: ['保證金怪', 'Margin Monster'], invest: ['泡沫怪', 'Bubble Beast'], law: ['條文龍', 'Article Dragon'], mgmt: ['偏誤魔王', 'Bias Boss'] };
+const BOSSES = { basic: ['利滾利精靈', 'Compound Goblin'], deriv: ['保證金怪', 'Margin Monster'], invest: ['泡沫怪', 'Bubble Beast'], law: ['條文龍', 'Article Dragon'], mgmt: ['偏誤魔王', 'Bias Boss'] };
 const TITLES = ['豬寶寶', '小存錢筒', '零用錢管家', '理財小鬼', '期貨學徒', '避險高手', '華爾街實習生', '分析師', 'CFA 候選人', '投資大師'];
 const CHEERS = ['好厲害！', '答對了！豬豬為你驕傲', 'Nice! 繼續保持', '你就是未來的 CFA！', '完美 ✓', '這題很難耶，你做到了', 'Correct! 💰'.replace(' 💰', '')];
 const COMFORT = ['沒關係，錯了才記得住！', '豬豬也常錯，看一下解釋就懂了', 'Almost! 再看一次說明', '加入錯題本了，下次一定會'];
 const BADGES = [
-  ['first', '第一步', '勾選第一張「我懂了」'], ['c25', '小書蟲', '掌握 25 個知識點'], ['c75', '大書蟲', '掌握 75 個知識點'], ['allderiv', '衍金通關', '衍金知識點全部掌握'], ['allinvest', '投資通關', '投資學知識點全部掌握'], ['alllaw', '民商通關', '民商法知識點全部掌握'], ['allmgmt', '管理通關', '管理學知識點全部掌握'],
-  ['combo5', '五連勝', '選擇題連續答對 5 題'], ['combo10', '十連勝', '連續答對 10 題'], ['bossderiv', '打倒保證金怪', '衍金打怪勝利'], ['bossinvest', '戳破泡沫', '投資學打怪勝利'], ['bosslaw', '屠龍者', '民商法打怪勝利'], ['bossmgmt', '擊敗偏誤魔王', '管理學打怪勝利'],
+  ['first', '第一步', '勾選第一張「我懂了」'], ['c25', '小書蟲', '掌握 25 個知識點'], ['c75', '大書蟲', '掌握 75 個知識點'], ['allbasic', '基礎打底', '基礎補給站全部掌握'], ['allderiv', '衍金通關', '衍金知識點全部掌握'], ['allinvest', '投資通關', '投資學知識點全部掌握'], ['alllaw', '民商通關', '民商法知識點全部掌握'], ['allmgmt', '管理通關', '管理學知識點全部掌握'],
+  ['combo5', '五連勝', '選擇題連續答對 5 題'], ['combo10', '十連勝', '連續答對 10 題'], ['bossbasic', '打倒利滾利精靈', '基礎打怪勝利'], ['bossderiv', '打倒保證金怪', '衍金打怪勝利'], ['bossinvest', '戳破泡沫', '投資學打怪勝利'], ['bosslaw', '屠龍者', '民商法打怪勝利'], ['bossmgmt', '擊敗偏誤魔王', '管理學打怪勝利'],
   ['speed', '閃電手', '限時賽答對 12 題以上'], ['match', '配對王', '完成一次配對遊戲'], ['sortp', '分類達人', '分類遊戲全對'], ['calc5', '公式小玩家', '玩過 5 個公式計算器'], ['gen10', '計算機器', '變化題答對 10 題'], ['essay', '交卷了', '送出第一份申論批改'], ['s3', '三天不間斷', '連續 3 天打開複習'], ['s7', '一週全勤', '連續 7 天打開複習']
 ];
 
@@ -1898,8 +2219,9 @@ const FUN = {
   streak() { let n = 0; const d = new Date(); for (; ; ) { const k = d.toISOString().slice(0, 10); if (ST.days.includes(k)) { n++; d.setDate(d.getDate() - 1); } else break; } return n; },
   level() { return Math.floor(ST.xp / 100) + 1; },
   xp(n, el) {
-    const lv0 = this.level(); ST.xp += n; save(); this.hud();
-    if (el) { const r = el.getBoundingClientRect(); const f = document.createElement('div'); f.className = 'xpfloat'; f.textContent = '+' + n + ' XP'; f.style.left = (r.left + r.width / 2) + 'px'; f.style.top = (r.top + window.scrollY) + 'px'; document.body.appendChild(f); setTimeout(() => f.remove(), 1100); }
+    const lv0 = this.level(); ST.xp = Math.max(0, ST.xp + n); save(); this.hud();
+    if (el) { const r = el.getBoundingClientRect(); const f = document.createElement('div'); f.className = 'xpfloat' + (n < 0 ? ' neg' : ''); f.textContent = (n > 0 ? '+' : '−') + Math.abs(n) + ' XP'; f.style.left = (r.left + r.width / 2) + 'px'; f.style.top = (r.top + window.scrollY) + 'px'; document.body.appendChild(f); setTimeout(() => f.remove(), 1100); }
+    if (this.level() < lv0) this.toast(`取消勾選，XP 退回，目前 Lv.${this.level()}`, 'sad');
     if (this.level() > lv0) { this.toast(`升級！Lv.${this.level()}「${TITLES[Math.min(this.level() - 1, TITLES.length - 1)]}」`, 'wow'); this.confetti(80); this.beep('up'); }
   },
   badge(id, silent) { if (ST.badges[id]) return; ST.badges[id] = Date.now(); save(); const b = BADGES.find(x => x[0] === id); if (b && !silent) { this.toast(`獲得徽章「${b[1]}」— ${b[2]}`, 'wow'); this.confetti(60); this.beep('up'); } },
@@ -1937,7 +2259,7 @@ const FUN = {
 };
 const LG = (zh, en) => ST.lang === 'en' ? (en || zh) : ST.lang === 'zh' ? zh : (en ? `${en}<span class="zhsub">${zh}</span>` : zh);
 // ===== App =====
-const ORDER = ['deriv', 'invest', 'law', 'mgmt'];
+const ORDER = ['basic', 'deriv', 'invest', 'law', 'mgmt'];
 const store = {
   k: 'rv26autumn',
   get() { try { return JSON.parse(localStorage.getItem(this.k)) || {}; } catch (e) { return {}; } },
@@ -1980,6 +2302,7 @@ function cardHTML(c) {
   return `<article class="card${done ? ' done' : ''}" id="c-${c.id}" data-search="${esc((c.t + ' ' + (c.en || '') + ' ' + c.plain + ' ' + c.life + ' ' + strip(c.body || '') + ' ' + (c.ex || '')).toLowerCase())}">
     <header><h4>${c.t}</h4>${c.en ? `<span class="en">${c.en}</span>` : ''}${c.cfa ? `<span class="cfa" title="CFA 相關">CFA · ${c.cfa}</span>` : ''}</header>
     <div class="duo"><div class="plain"><span class="lbl">白話</span><p>${c.plain}</p></div><div class="life"><span class="lbl">生活比喻</span><p>${c.life}</p></div></div>
+    ${c.pre ? `<div class="pre"><span class="lbl">看不懂？需要先懂這些基礎</span>${c.pre.map(p => { const b = subjCards(DATA.basic).find(x => x.id === p); return b ? `<button type="button" class="prechip" data-pre="${p}">${b.t}</button>` : ''; }).join('')}</div>` : ''}
     ${fig}
     ${c.ex ? `<div class="exam"><span class="lbl">Exam English 考試這樣寫</span><p>${c.ex}</p><button class="mini" type="button" data-say="${esc(c.ex)}">朗讀</button></div>` : ''}
     <details${done ? '' : ' open'}><summary>完整重點</summary><div class="body">${c.body || ''}</div>
@@ -1997,9 +2320,10 @@ function renderLearn(key, root) {
   FUN.say($('.tipbox', root), tip('learn'));
   $$('.wmount', root).forEach(m => WIDGETS[m.dataset.w] && WIDGETS[m.dataset.w](m));
   $$('[data-say]', root).forEach(b => b.onclick = () => speak(b.dataset.say));
+  $$('[data-pre]', root).forEach(b => b.onclick = () => jumpCard('basic', b.dataset.pre));
   $$('[data-done]', root).forEach(cb => cb.addEventListener('change', () => {
     const id = cb.dataset.done;
-    if (cb.checked) { if (!ST.done[id]) { ST.done[id] = true; FUN.xp(10, cb); FUN.beep('ok'); } } else delete ST.done[id];
+    if (cb.checked) { if (!ST.done[id]) { ST.done[id] = true; FUN.xp(10, cb); FUN.beep('ok'); } } else if (ST.done[id]) { delete ST.done[id]; FUN.xp(-10, cb); }
     save(); cb.closest('.card').classList.toggle('done', cb.checked); updateCounts(); FUN.checkCards();
   }));
   const q = $('#q-' + key, root);
@@ -2153,7 +2477,7 @@ function renderProblems(root) {
     $('.hint', pb).onclick = () => { const h = steps.find(s => s.hidden); if (h) h.hidden = false; else $('.ans', pb).hidden = false; };
     $('.reveal', pb).onclick = () => { steps.forEach(s => s.hidden = false); $('.ans', pb).hidden = false; };
   });
-  $$('[data-pd]', root).forEach(cb => cb.onchange = () => { const k = 'P' + cb.dataset.pd; if (cb.checked && !ST.done[k]) { ST.done[k] = true; FUN.xp(10, cb); } else if (!cb.checked) delete ST.done[k]; save(); });
+  $$('[data-pd]', root).forEach(cb => cb.onchange = () => { const k = 'P' + cb.dataset.pd; if (cb.checked && !ST.done[k]) { ST.done[k] = true; FUN.xp(10, cb); } else if (!cb.checked && ST.done[k]) { delete ST.done[k]; FUN.xp(-10, cb); } save(); });
   $$('[data-f]', root).forEach(b => b.onclick = () => { $$('[data-f]', root).forEach(x => { x.classList.toggle('on', x === b); x.classList.toggle('ghost', x !== b); }); $$('.prob', root).forEach(p => p.hidden = b.dataset.f !== 'all' && p.dataset.l !== b.dataset.f); });
 }
 
@@ -2181,7 +2505,7 @@ function renderFlash(root) {
   root.innerHTML = `<div class="tipbox"></div><div class="quizbar"><button class="btn" id="fshuf" type="button">打亂順序</button><button class="btn ghost" id="fall" type="button">全部翻開</button><span class="sm-p" id="fcnt"></span></div><div class="flashlist"></div>`;
   FUN.say($('.tipbox', root), tip('flash'));
   const cnt = () => $('#fcnt', root).textContent = `已翻開 ${$$('.fcard.on', root).length} / ${F.length}`;
-  const draw = list => { $('.flashlist', root).innerHTML = list.map((f, i) => `<button class="fcard" type="button"><span class="fq"><span class="num">${i + 1}</span>${f.q}</span><span class="fa">${f.a}</span></button>`).join(''); $$('.fcard', root).forEach(c => c.onclick = () => { c.classList.toggle('on'); if (c.classList.contains('on') && !c.dataset.x) { c.dataset.x = 1; FUN.xp(2); } cnt(); }); cnt(); };
+  const draw = list => { $('.flashlist', root).innerHTML = list.map((f, i) => `<button class="fcard" type="button"><span class="fq"><span class="num">${i + 1}</span>${f.q}</span><span class="fa">${f.a}</span></button>`).join(''); $$('.fcard', root).forEach(c => c.onclick = () => { c.classList.toggle('on'); if (c.classList.contains('on')) { ST.flip = ST.flip || {}; const fk = c.querySelector('.fq').textContent.slice(0, 30); if (!ST.flip[fk]) { ST.flip[fk] = 1; FUN.xp(2); } } cnt(); }); cnt(); };
   draw(F); $('#fshuf', root).onclick = () => draw(shuffle(F)); $('#fall', root).onclick = () => { $$('.fcard', root).forEach(c => c.classList.add('on')); cnt(); };
 }
 
@@ -2251,17 +2575,20 @@ function renderHome(root) {
   const cfaList = []; ORDER.forEach(k => subjCards(DATA[k]).forEach(c => c.cfa && cfaList.push([k, c])));
   const hello = new Date().getHours() < 12 ? '早安' : new Date().getHours() < 18 ? '午安' : '晚安';
   root.innerHTML = `<div class="home"><div class="hero">${PIG('happy', 120)}<div><h2>${hello}！我是豬豬老師</h2><p>今天也一起存一點知識吧。看卡片、玩遊戲、打怪物都會得到 XP，升級後會換新稱號。你已經連續 <b>${FUN.streak()}</b> 天來複習了！</p><p class="stats"><span>Lv.${FUN.level()}</span><span>${ST.xp} XP</span><span>${Object.keys(ST.badges).length}/${BADGES.length} 徽章</span></p></div></div>
-    <div class="subjgrid">${ORDER.map(k => { const s = DATA[k]; const n = subjCards(s).length; const lang = k === 'deriv' || k === 'mgmt' ? '<span class="pill en-pill">英文考試</span>' : ''; return `<button class="sg ${s.hue}" data-go="${k}" type="button"><span class="sgn">${s.full} ${lang}</span><span class="sgm">${n} 個知識點${s.formulas ? ` · ${s.formulas.length} 個公式` : ''}</span><span class="bar" data-prog="${k}"><i></i></span><span class="sgp" data-progt="${k}"></span><span class="sgi">${s.intro}</span></button>`; }).join('')}</div>
+    <div class="subjgrid">${ORDER.map(k => { const s = DATA[k]; const n = subjCards(s).length; const lang = k === 'basic' ? '<span class="pill en-pill">先備知識</span>' : k === 'deriv' || k === 'mgmt' ? '<span class="pill en-pill">英文考試</span>' : ''; return `<button class="sg ${s.hue}" data-go="${k}" type="button"><span class="sgn">${s.full} ${lang}</span><span class="sgm">${n} 個知識點${s.formulas ? ` · ${s.formulas.length} 個公式` : ''}</span><span class="bar" data-prog="${k}"><i></i></span><span class="sgp" data-progt="${k}"></span><span class="sgi">${s.intro}</span></button>`; }).join('')}</div>
     <h3 class="hh">徽章牆</h3><div class="badges">${BADGES.map(b => `<div class="badge${ST.badges[b[0]] ? ' got' : ''}" title="${b[2]}"><span class="medal"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="22" r="14" class="md"/><path d="M14,4 L20,12 L26,4" class="mr"/><text x="20" y="27" text-anchor="middle" class="mt2">★</text></svg></span><b>${b[1]}</b><small>${b[2]}</small></div>`).join('')}</div>
     <h3 class="hh">未來考 CFA：這些現在就學到了</h3><p class="sm-p">CFA Level I 會用到的觀念，點一下直接跳到那張卡。</p><div class="cfalist">${cfaList.map(([k, c]) => `<button type="button" class="cfai ${DATA[k].hue}" data-jump="${k}|${c.id}"><b>${c.t}</b><span>${c.cfa}</span></button>`).join('')}</div>
     <div class="dates"><h3>考試日程（依課程大綱）</h3><ul><li><b>管理學期中</b>：11/4（第 9 週）· 期末 12/23 · <b>英文作答</b></li><li><b>衍金期中</b>：2026/11/16 · 期末 12/21 · A4 手抄小抄＋計算機 · <b>英文作答</b></li><li><b>衍金小考</b>：每單元結束後勾選習題，隔週考其中一題或類題（可開書）</li></ul></div></div>`;
   $$('[data-go]', root).forEach(b => b.onclick = () => go(b.dataset.go));
-  $$('[data-jump]', root).forEach(b => b.onclick = () => { const [k, id] = b.dataset.jump.split('|'); go(k, 'learn'); setTimeout(() => { const el = $('#c-' + id); if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); el.classList.add('flash'); setTimeout(() => el.classList.remove('flash'), 1600); } }, 60); });
+  $$('[data-jump]', root).forEach(b => b.onclick = () => { const [k, id] = b.dataset.jump.split('|'); jumpCard(k, id); });
   updateCounts();
 }
 
+function jumpCard(k, id) { go(k, 'learn'); setTimeout(() => { const el = $('#c-' + id); if (el) { const d = el.querySelector('details'); if (d) d.open = true; el.scrollIntoView({ behavior: 'smooth', block: 'start' }); el.classList.add('flash'); setTimeout(() => el.classList.remove('flash'), 1600); } }, 60); }
+
 // ---------- Routing ----------
 const PANES = {
+  basic: [['learn', '基礎卡片'], ['formula', '公式教室'], ['game', '小遊戲'], ['mcq', '打怪＆選擇題']],
   deriv: [['learn', '知識點'], ['formula', '公式教室'], ['prob', '課本習題'], ['gen', '變化題'], ['game', '小遊戲'], ['mcq', '打怪＆選擇題']],
   invest: [['learn', '知識點'], ['formula', '公式教室'], ['flash', '講義問題'], ['game', '小遊戲'], ['mcq', '打怪＆選擇題']],
   law: [['learn', '知識點＋條文'], ['game', '小遊戲'], ['mcq', '打怪＆選擇題']],

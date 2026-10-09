@@ -1,5 +1,5 @@
 // ===== App =====
-const ORDER = ['deriv', 'invest', 'law', 'mgmt'];
+const ORDER = ['basic', 'deriv', 'invest', 'law', 'mgmt'];
 const store = {
   k: 'rv26autumn',
   get() { try { return JSON.parse(localStorage.getItem(this.k)) || {}; } catch (e) { return {}; } },
@@ -42,6 +42,7 @@ function cardHTML(c) {
   return `<article class="card${done ? ' done' : ''}" id="c-${c.id}" data-search="${esc((c.t + ' ' + (c.en || '') + ' ' + c.plain + ' ' + c.life + ' ' + strip(c.body || '') + ' ' + (c.ex || '')).toLowerCase())}">
     <header><h4>${c.t}</h4>${c.en ? `<span class="en">${c.en}</span>` : ''}${c.cfa ? `<span class="cfa" title="CFA 相關">CFA · ${c.cfa}</span>` : ''}</header>
     <div class="duo"><div class="plain"><span class="lbl">白話</span><p>${c.plain}</p></div><div class="life"><span class="lbl">生活比喻</span><p>${c.life}</p></div></div>
+    ${c.pre ? `<div class="pre"><span class="lbl">看不懂？需要先懂這些基礎</span>${c.pre.map(p => { const b = subjCards(DATA.basic).find(x => x.id === p); return b ? `<button type="button" class="prechip" data-pre="${p}">${b.t}</button>` : ''; }).join('')}</div>` : ''}
     ${fig}
     ${c.ex ? `<div class="exam"><span class="lbl">Exam English 考試這樣寫</span><p>${c.ex}</p><button class="mini" type="button" data-say="${esc(c.ex)}">朗讀</button></div>` : ''}
     <details${done ? '' : ' open'}><summary>完整重點</summary><div class="body">${c.body || ''}</div>
@@ -59,9 +60,10 @@ function renderLearn(key, root) {
   FUN.say($('.tipbox', root), tip('learn'));
   $$('.wmount', root).forEach(m => WIDGETS[m.dataset.w] && WIDGETS[m.dataset.w](m));
   $$('[data-say]', root).forEach(b => b.onclick = () => speak(b.dataset.say));
+  $$('[data-pre]', root).forEach(b => b.onclick = () => jumpCard('basic', b.dataset.pre));
   $$('[data-done]', root).forEach(cb => cb.addEventListener('change', () => {
     const id = cb.dataset.done;
-    if (cb.checked) { if (!ST.done[id]) { ST.done[id] = true; FUN.xp(10, cb); FUN.beep('ok'); } } else delete ST.done[id];
+    if (cb.checked) { if (!ST.done[id]) { ST.done[id] = true; FUN.xp(10, cb); FUN.beep('ok'); } } else if (ST.done[id]) { delete ST.done[id]; FUN.xp(-10, cb); }
     save(); cb.closest('.card').classList.toggle('done', cb.checked); updateCounts(); FUN.checkCards();
   }));
   const q = $('#q-' + key, root);
@@ -215,7 +217,7 @@ function renderProblems(root) {
     $('.hint', pb).onclick = () => { const h = steps.find(s => s.hidden); if (h) h.hidden = false; else $('.ans', pb).hidden = false; };
     $('.reveal', pb).onclick = () => { steps.forEach(s => s.hidden = false); $('.ans', pb).hidden = false; };
   });
-  $$('[data-pd]', root).forEach(cb => cb.onchange = () => { const k = 'P' + cb.dataset.pd; if (cb.checked && !ST.done[k]) { ST.done[k] = true; FUN.xp(10, cb); } else if (!cb.checked) delete ST.done[k]; save(); });
+  $$('[data-pd]', root).forEach(cb => cb.onchange = () => { const k = 'P' + cb.dataset.pd; if (cb.checked && !ST.done[k]) { ST.done[k] = true; FUN.xp(10, cb); } else if (!cb.checked && ST.done[k]) { delete ST.done[k]; FUN.xp(-10, cb); } save(); });
   $$('[data-f]', root).forEach(b => b.onclick = () => { $$('[data-f]', root).forEach(x => { x.classList.toggle('on', x === b); x.classList.toggle('ghost', x !== b); }); $$('.prob', root).forEach(p => p.hidden = b.dataset.f !== 'all' && p.dataset.l !== b.dataset.f); });
 }
 
@@ -243,7 +245,7 @@ function renderFlash(root) {
   root.innerHTML = `<div class="tipbox"></div><div class="quizbar"><button class="btn" id="fshuf" type="button">打亂順序</button><button class="btn ghost" id="fall" type="button">全部翻開</button><span class="sm-p" id="fcnt"></span></div><div class="flashlist"></div>`;
   FUN.say($('.tipbox', root), tip('flash'));
   const cnt = () => $('#fcnt', root).textContent = `已翻開 ${$$('.fcard.on', root).length} / ${F.length}`;
-  const draw = list => { $('.flashlist', root).innerHTML = list.map((f, i) => `<button class="fcard" type="button"><span class="fq"><span class="num">${i + 1}</span>${f.q}</span><span class="fa">${f.a}</span></button>`).join(''); $$('.fcard', root).forEach(c => c.onclick = () => { c.classList.toggle('on'); if (c.classList.contains('on') && !c.dataset.x) { c.dataset.x = 1; FUN.xp(2); } cnt(); }); cnt(); };
+  const draw = list => { $('.flashlist', root).innerHTML = list.map((f, i) => `<button class="fcard" type="button"><span class="fq"><span class="num">${i + 1}</span>${f.q}</span><span class="fa">${f.a}</span></button>`).join(''); $$('.fcard', root).forEach(c => c.onclick = () => { c.classList.toggle('on'); if (c.classList.contains('on')) { ST.flip = ST.flip || {}; const fk = c.querySelector('.fq').textContent.slice(0, 30); if (!ST.flip[fk]) { ST.flip[fk] = 1; FUN.xp(2); } } cnt(); }); cnt(); };
   draw(F); $('#fshuf', root).onclick = () => draw(shuffle(F)); $('#fall', root).onclick = () => { $$('.fcard', root).forEach(c => c.classList.add('on')); cnt(); };
 }
 
@@ -313,17 +315,20 @@ function renderHome(root) {
   const cfaList = []; ORDER.forEach(k => subjCards(DATA[k]).forEach(c => c.cfa && cfaList.push([k, c])));
   const hello = new Date().getHours() < 12 ? '早安' : new Date().getHours() < 18 ? '午安' : '晚安';
   root.innerHTML = `<div class="home"><div class="hero">${PIG('happy', 120)}<div><h2>${hello}！我是豬豬老師</h2><p>今天也一起存一點知識吧。看卡片、玩遊戲、打怪物都會得到 XP，升級後會換新稱號。你已經連續 <b>${FUN.streak()}</b> 天來複習了！</p><p class="stats"><span>Lv.${FUN.level()}</span><span>${ST.xp} XP</span><span>${Object.keys(ST.badges).length}/${BADGES.length} 徽章</span></p></div></div>
-    <div class="subjgrid">${ORDER.map(k => { const s = DATA[k]; const n = subjCards(s).length; const lang = k === 'deriv' || k === 'mgmt' ? '<span class="pill en-pill">英文考試</span>' : ''; return `<button class="sg ${s.hue}" data-go="${k}" type="button"><span class="sgn">${s.full} ${lang}</span><span class="sgm">${n} 個知識點${s.formulas ? ` · ${s.formulas.length} 個公式` : ''}</span><span class="bar" data-prog="${k}"><i></i></span><span class="sgp" data-progt="${k}"></span><span class="sgi">${s.intro}</span></button>`; }).join('')}</div>
+    <div class="subjgrid">${ORDER.map(k => { const s = DATA[k]; const n = subjCards(s).length; const lang = k === 'basic' ? '<span class="pill en-pill">先備知識</span>' : k === 'deriv' || k === 'mgmt' ? '<span class="pill en-pill">英文考試</span>' : ''; return `<button class="sg ${s.hue}" data-go="${k}" type="button"><span class="sgn">${s.full} ${lang}</span><span class="sgm">${n} 個知識點${s.formulas ? ` · ${s.formulas.length} 個公式` : ''}</span><span class="bar" data-prog="${k}"><i></i></span><span class="sgp" data-progt="${k}"></span><span class="sgi">${s.intro}</span></button>`; }).join('')}</div>
     <h3 class="hh">徽章牆</h3><div class="badges">${BADGES.map(b => `<div class="badge${ST.badges[b[0]] ? ' got' : ''}" title="${b[2]}"><span class="medal"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="22" r="14" class="md"/><path d="M14,4 L20,12 L26,4" class="mr"/><text x="20" y="27" text-anchor="middle" class="mt2">★</text></svg></span><b>${b[1]}</b><small>${b[2]}</small></div>`).join('')}</div>
     <h3 class="hh">未來考 CFA：這些現在就學到了</h3><p class="sm-p">CFA Level I 會用到的觀念，點一下直接跳到那張卡。</p><div class="cfalist">${cfaList.map(([k, c]) => `<button type="button" class="cfai ${DATA[k].hue}" data-jump="${k}|${c.id}"><b>${c.t}</b><span>${c.cfa}</span></button>`).join('')}</div>
     <div class="dates"><h3>考試日程（依課程大綱）</h3><ul><li><b>管理學期中</b>：11/4（第 9 週）· 期末 12/23 · <b>英文作答</b></li><li><b>衍金期中</b>：2026/11/16 · 期末 12/21 · A4 手抄小抄＋計算機 · <b>英文作答</b></li><li><b>衍金小考</b>：每單元結束後勾選習題，隔週考其中一題或類題（可開書）</li></ul></div></div>`;
   $$('[data-go]', root).forEach(b => b.onclick = () => go(b.dataset.go));
-  $$('[data-jump]', root).forEach(b => b.onclick = () => { const [k, id] = b.dataset.jump.split('|'); go(k, 'learn'); setTimeout(() => { const el = $('#c-' + id); if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); el.classList.add('flash'); setTimeout(() => el.classList.remove('flash'), 1600); } }, 60); });
+  $$('[data-jump]', root).forEach(b => b.onclick = () => { const [k, id] = b.dataset.jump.split('|'); jumpCard(k, id); });
   updateCounts();
 }
 
+function jumpCard(k, id) { go(k, 'learn'); setTimeout(() => { const el = $('#c-' + id); if (el) { const d = el.querySelector('details'); if (d) d.open = true; el.scrollIntoView({ behavior: 'smooth', block: 'start' }); el.classList.add('flash'); setTimeout(() => el.classList.remove('flash'), 1600); } }, 60); }
+
 // ---------- Routing ----------
 const PANES = {
+  basic: [['learn', '基礎卡片'], ['formula', '公式教室'], ['game', '小遊戲'], ['mcq', '打怪＆選擇題']],
   deriv: [['learn', '知識點'], ['formula', '公式教室'], ['prob', '課本習題'], ['gen', '變化題'], ['game', '小遊戲'], ['mcq', '打怪＆選擇題']],
   invest: [['learn', '知識點'], ['formula', '公式教室'], ['flash', '講義問題'], ['game', '小遊戲'], ['mcq', '打怪＆選擇題']],
   law: [['learn', '知識點＋條文'], ['game', '小遊戲'], ['mcq', '打怪＆選擇題']],
