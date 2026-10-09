@@ -312,19 +312,19 @@ function md(t) {
 
 // ---------- Home ----------
 function renderHome(root) {
-  const cfaList = []; ORDER.forEach(k => subjCards(DATA[k]).forEach(c => c.cfa && cfaList.push([k, c])));
   const hello = new Date().getHours() < 12 ? '早安' : new Date().getHours() < 18 ? '午安' : '晚安';
   root.innerHTML = `<div class="home"><div class="hero">${PIG('happy', 120)}<div><h2>${hello}！我是豬豬老師</h2><p>今天也一起存一點知識吧。看卡片、玩遊戲、打怪物都會得到 XP，升級後會換新稱號。你已經連續 <b>${FUN.streak()}</b> 天來複習了！</p><p class="stats"><span>Lv.${FUN.level()}</span><span>${ST.xp} XP</span><span>${Object.keys(ST.badges).length}/${BADGES.length} 徽章</span></p></div></div>
     <div class="subjgrid">${ORDER.map(k => { const s = DATA[k]; const n = subjCards(s).length; const lang = k === 'basic' ? '<span class="pill en-pill">先備知識</span>' : k === 'deriv' || k === 'mgmt' ? '<span class="pill en-pill">英文考試</span>' : ''; return `<button class="sg ${s.hue}" data-go="${k}" type="button"><span class="sgn">${s.full} ${lang}</span><span class="sgm">${n} 個知識點${s.formulas ? ` · ${s.formulas.length} 個公式` : ''}</span><span class="bar" data-prog="${k}"><i></i></span><span class="sgp" data-progt="${k}"></span><span class="sgi">${s.intro}</span></button>`; }).join('')}</div>
     <div class="homelinks"><button class="btn big" type="button" id="tomile">看我的里程碑（徽章 ${Object.keys(ST.badges).length}/${BADGES.length}）</button><button class="btn big ghost" type="button" id="toset">設定與備份</button></div>
-    <h3 class="hh">未來考 CFA：這些現在就學到了</h3><p class="sm-p">CFA Level I 會用到的觀念，點一下直接跳到那張卡。</p><div class="cfalist">${cfaList.map(([k, c]) => `<button type="button" class="cfai ${DATA[k].hue}" data-jump="${k}|${c.id}"><b>${c.t}</b><span>${c.cfa}</span></button>`).join('')}</div>
+    <button type="button" class="cfahome" id="tocfa"><span class="cfahi">${navIcon('cfa')}</span><span><b>CFA 特區</b><span>考試內容、十大科目、費用與日程、讀書計畫，還有你在各科已經學到的 CFA 觀念</span></span><span class="cfago">→</span></button>
     <div class="dates"><h3>考試日程（依課程大綱）</h3><ul><li><b>管理學期中</b>：11/4（第 9 週）· 期末 12/23 · <b>英文作答</b></li><li><b>衍金期中</b>：2026/11/16 · 期末 12/21 · A4 手抄小抄＋計算機 · <b>英文作答</b></li><li><b>衍金小考</b>：每單元結束後勾選習題，隔週考其中一題或類題（可開書）</li></ul></div></div>`;
   $$('[data-go]', root).forEach(b => b.onclick = () => go(b.dataset.go));
   $('#tomile', root).onclick = () => go('milestones'); $('#toset', root).onclick = () => go('settings');
-  $$('[data-jump]', root).forEach(b => b.onclick = () => { const [k, id] = b.dataset.jump.split('|'); jumpCard(k, id); });
+  $('#tocfa', root).onclick = () => go('cfa');
   updateCounts();
 }
 
+function jumpFormula(k, id) { go(k, 'formula'); setTimeout(() => { const el = $('#f-' + id); if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); el.classList.add('flash'); setTimeout(() => el.classList.remove('flash'), 1600); } }, 60); }
 function jumpCard(k, id) { go(k, 'learn'); setTimeout(() => { const el = $('#c-' + id); if (el) { const d = el.querySelector('details'); if (d) d.open = true; el.scrollIntoView({ behavior: 'smooth', block: 'start' }); el.classList.add('flash'); setTimeout(() => el.classList.remove('flash'), 1600); } }, 60); }
 
 // ---------- Routing ----------
@@ -344,6 +344,7 @@ function go(k, tab) {
   if (k === 'home') { renderHome(main); window.scrollTo(0, 0); return; }
   if (k === 'settings') { renderSettings(main); window.scrollTo(0, 0); return; }
   if (k === 'milestones') { renderMilestones(main); window.scrollTo(0, 0); return; }
+  if (k === 'cfa') { renderCFA(main); window.scrollTo(0, 0); return; }
   const s = DATA[k]; tab = tab || ST.tab[k] || 'learn'; CUR = [k, tab];
   main.innerHTML = `<div class="shead"><div><h2>${s.full}</h2><p class="intro">${s.intro}</p></div><div class="prog"><span class="bar" data-prog="${k}"><i></i></span><span data-progt="${k}"></span> 已掌握</div></div><div class="ptabs" role="tablist">${PANES[k].map(p => `<button role="tab" class="ptab" data-p="${p[0]}" aria-selected="${p[0] === tab}" type="button">${p[1]}</button>`).join('')}</div><div id="pane"></div>`;
   $$('.ptab', main).forEach(b => b.onclick = () => go(k, b.dataset.p));
@@ -359,15 +360,16 @@ const NAVI = {
   deriv: '<path d="M3 19 L9 12 L13 15 L21 6"/><path d="M16 6 H21 V11"/>',
   invest: '<rect x="4" y="12" width="4" height="8" rx="1"/><rect x="10" y="8" width="4" height="12" rx="1"/><rect x="16" y="4" width="4" height="16" rx="1"/>',
   law: '<path d="M12 4 V20 M7 20 H17 M5 7 H19"/><path d="M5 7 L2.5 13 H7.5 Z M19 7 L16.5 13 H21.5 Z"/>',
+  cfa: '<circle cx="12" cy="9" r="5"/><path d="M9 13.5 L7 21 L12 18.5 L17 21 L15 13.5"/>',
   mgmt: '<circle cx="9" cy="8" r="3"/><circle cx="16.5" cy="9" r="2.5"/><path d="M3 20 C3 15 15 15 15 20 M14 15.5 C17 14.5 21 15.5 21 19"/>'
 };
 const navIcon = k => `<svg class="navi" viewBox="0 0 24 24" aria-hidden="true">${NAVI[k]}</svg>`;
 function boot() {
   FUN.init(); applyPrefs();
-  $('#stabs').innerHTML = `<button class="stab home" data-s="home" type="button">${navIcon('home')}<span>首頁</span></button>` + ORDER.map(k => `<button class="stab ${DATA[k].hue}" data-s="${k}" type="button">${navIcon(k)}<span>${DATA[k].name}</span><span class="bar mini" data-prog="${k}"><i></i></span></button>`).join('');
+  $('#stabs').innerHTML = `<button class="stab home" data-s="home" type="button">${navIcon('home')}<span>首頁</span></button>` + ORDER.map(k => `<button class="stab ${DATA[k].hue}" data-s="${k}" type="button">${navIcon(k)}<span>${DATA[k].name}</span><span class="bar mini" data-prog="${k}"><i></i></span></button>`).join('') + `<button class="stab cfa" data-s="cfa" type="button">${navIcon('cfa')}<span>CFA</span></button>`;
   $$('.stab').forEach(b => b.onclick = () => go(b.dataset.s));
   FUN.hud();
   const h = (location.hash || '').slice(1);
-  go(ORDER.includes(h) || h === 'home' ? h : (ST.subj || 'home'));
+  go(ORDER.includes(h) || h === 'home' || h === 'cfa' ? h : (ST.subj || 'home'));
 }
 boot();
