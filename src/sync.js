@@ -1,0 +1,156 @@
+// ===== 雲端同步：用你 GitHub 帳號裡的一個「私人 Gist」當雲端存檔，手機和電腦自動合併 =====
+// token 只存在這台裝置（不會放進備份碼）；建議只開 gist 權限。
+// 合併規則：筆記、重點、書籤、「我懂了」逐筆比時間，刪除有紀錄不會長回來；其他（XP、錯題本、計畫⋯）以最近修改的裝置為準。
+// 畫面設定（主題、字級、目前科目、閱讀位置⋯）每台裝置各自保留。
+const SYNC = (() => {
+  const LK = 'rv26sync', FILE = 'rv26-sync.json', DESC = '26 秋季複習本同步（請勿手動修改）', API = 'https://api.github.com';
+  const LOCAL_ONLY = new Set(['subj', 'tab', 'pos', 'ntview', 'zoom', 'theme', '_themeSet', 'mu', 'calm', 'notips', 'sound', 'lang']);
+  const TOKEN_URL = 'https://github.com/settings/tokens/new?scopes=gist&description=' + encodeURIComponent('26 秋季複習本同步');
+  let cfg = (() => { try { return JSON.parse(localStorage.getItem(LK)) || {}; } catch (e) { return {}; } })();
+  const keep = () => { try { localStorage.setItem(LK, JSON.stringify(cfg)); } catch (e) { } };
+  let busy = false, again = false, tChange = 0, tPush = 0;
+
+  const syncable = st => { const o = {}; for (const k in st) if (!LOCAL_ONLY.has(k)) o[k] = st[k]; return o; };
+  const hash = s => { let h = 5381; for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0; return (h >>> 0).toString(36) + ':' + s.length; };
+  const ts = v => typeof v === 'number' ? v : (v && (v.up || v.at)) || 1;
+
+  // ---- 合併兩份資料 ----
+  function merge(L, R) {
+    const a = L.data || {}, b = R.data || {}, rNewer = (R.mt || 0) > (L.mt || 0), nw = rNewer ? b : a, od = rNewer ? a : b;
+    const del = Object.assign({}, a.del || {}); for (const [k, t] of Object.entries(b.del || {})) del[k] = Math.max(del[k] || 0, t);
+    const cut = Date.now() - 180 * 864e5; for (const k in del) if (del[k] < cut) delete del[k];
+    const D = (k, fam) => Math.max(del[k] || 0, del[fam + '|*'] || 0, del['*'] || 0);
+    const out = {};
+    for (const k of new Set([...Object.keys(a), ...Object.keys(b)])) {
+      if (k === 'del') continue;
+      if (k === 'done' || k === 'badges') {
+        const o = {}; for (const src of [a[k] || {}, b[k] || {}]) for (const [id, v] of Object.entries(src)) { if (!v) continue; const t = ts(v); if (t <= D(k + '|' + id, k)) continue; if (!(id in o) || t > ts(o[id])) o[id] = v; }
+        out[k] = o; continue;
+      }
+      if (k === 'nt') {
+        const o = {}; for (const src of [a.nt || {}, b.nt || {}]) for (const [cid, notes] of Object.entries(src)) for (const [nk, d] of Object.entries(notes)) {
+          if (ts(d) <= D('nt|' + cid + '|' + nk, 'nt')) continue; o[cid] = o[cid] || {}; if (!o[cid][nk] || ts(d) > ts(o[cid][nk])) o[cid][nk] = d; }
+        out.nt = o; continue;
+      }
+      if (k === 'hl') {
+        const o = {}; for (const src of [a.hl || {}, b.hl || {}]) for (const [cid, list] of Object.entries(src)) for (const h of list) {
+          if (ts(h) <= D('hl|' + h.id, 'hl')) continue; o[cid] = o[cid] || []; const i = o[cid].findIndex(x => x.id === h.id); if (i < 0) o[cid].push(h); else if (ts(h) > ts(o[cid][i])) o[cid][i] = h; }
+        for (const cid in o) o[cid].sort((x, y) => x.at - y.at);
+        out.hl = o; continue;
+      }
+      if (k === 'bm') {
+        const o = {}; for (const src of [a.bm || {}, b.bm || {}]) for (const [cid, d] of Object.entries(src)) { if (ts(d) <= D('bm|' + cid, 'bm')) continue; if (!o[cid] || ts(d) > ts(o[cid])) o[cid] = d; }
+        out.bm = o; continue;
+      }
+      out[k] = k in nw ? nw[k] : od[k];
+    }
+    out.del = del; return out;
+  }
+
+  // ---- GitHub API ----
+  async function api(method, path, body) {
+    const r = await fetch(API + path, { method, headers: { Authorization: 'Bearer ' + cfg.token, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' }, body: body ? JSON.stringify(body) : undefined, cache: 'no-store' });
+    if (r.status === 401) throw new Error('token 無效或已過期，請重新建立一個。');
+    if (r.status === 403 || r.status === 404) throw new Error(r.headers.get('x-ratelimit-remaining') === '0' ? 'GitHub 暫時限制次數，稍後會自動再試。' : 'token 沒有 gist 權限（建立時要勾 gist）。');
+    if (!r.ok) throw new Error('GitHub 回應錯誤（' + r.status + '）');
+    return r.status === 204 ? null : r.json();
+  }
+  const fileText = async f => (!f.truncated && f.content != null) ? f.content : (await fetch(f.raw_url, { cache: 'no-store' })).text();
+  async function findOrCreate() {
+    for (let page = 1; page <= 5; page++) {
+      const list = await api('GET', '/gists?per_page=100&page=' + page);
+      const g = list.find(x => x.description === DESC || (x.files && x.files[FILE])); if (g) return g.id;
+      if (list.length < 100) break;
+    }
+    const g = await api('POST', '/gists', { description: DESC, public: false, files: { [FILE]: { content: JSON.stringify({ v: 1, mt: cfg.mt || 0, at: Date.now(), data: syncable(ST) }) } } });
+    return g.id;
+  }
+
+  // ---- 套用合併結果到這台 ----
+  function apply(data) {
+    for (const k of Object.keys(ST)) if (!LOCAL_ONLY.has(k) && !(k in data)) delete ST[k];
+    Object.assign(ST, data); store.set(ST);
+    try { FUN.hud(); updateCounts(); } catch (e) { }
+    // 正在寫筆記、選文字或答題時不重畫，下次換頁就會看到
+    const busyUI = document.querySelector('[contenteditable="true"]') || !getSelection().isCollapsed || (CUR[1] && !['learn', 'notes'].includes(CUR[1]));
+    if (!busyUI && CUR[0]) window.rerender(); else if (CUR[1] === 'learn') NOTES.bmPill();
+  }
+
+  // ---- 同步一次：抓雲端 → 合併 → 寫回本機與雲端 → 補傳／補抓圖片 ----
+  async function run() {
+    if (!cfg.token) return; if (busy) { again = true; return; }
+    busy = true; status('同步中⋯');
+    try {
+      if (!cfg.gist) { cfg.gist = await findOrCreate(); keep(); }
+      const g = await api('GET', '/gists/' + cfg.gist);
+      const f = g.files[FILE]; let remote = null;
+      if (f) { try { remote = JSON.parse(await fileText(f)); } catch (e) { remote = null; } }
+      const localData = syncable(ST), lj = JSON.stringify(localData);
+      const merged = remote && remote.data ? merge({ mt: cfg.mt || 0, data: localData }, remote) : localData;
+      const mj = JSON.stringify(merged);
+      if (mj !== lj) apply(JSON.parse(mj));
+      const mt = Math.max(cfg.mt || 0, (remote && remote.mt) || 0);
+      if (!remote || JSON.stringify(remote.data) !== mj) await api('PATCH', '/gists/' + cfg.gist, { files: { [FILE]: { content: JSON.stringify({ v: 1, mt, at: Date.now(), data: merged }) } } });
+      // 圖片：這台有、雲端沒有 → 上傳；雲端有、這台沒有 → 下載
+      const used = IMGS.usedIds(merged), have = new Set(await IMGS.keys());
+      for (const id of used) {
+        const name = 'img-' + id + '.txt';
+        if (!g.files[name] && have.has(id)) { const d = await IMGS.get(id); if (d) await api('PATCH', '/gists/' + cfg.gist, { files: { [name]: { content: d } } }); }
+        else if (g.files[name] && !have.has(id)) { const d = await fileText(g.files[name]); if (/^data:image\//.test(d)) { await IMGS.put(id, d); IMGS.hydrate(); } }
+      }
+      cfg.mt = mt; cfg.h = hash(mj); cfg.last = Date.now(); cfg.err = ''; keep(); status();
+    } catch (e) { cfg.err = e.message || String(e); keep(); status(); }
+    finally { busy = false; if (again) { again = false; setTimeout(run, 500); } }
+  }
+
+  // ---- 本機有改動 → 記下修改時間，稍後上傳 ----
+  function changed() {
+    if (!cfg.token) return;
+    clearTimeout(tChange); tChange = setTimeout(() => {
+      const h = hash(JSON.stringify(syncable(ST)));
+      if (h !== cfg.h) { cfg.h = h; cfg.mt = Date.now(); keep(); clearTimeout(tPush); tPush = setTimeout(run, 2500); }
+    }, 1500);
+  }
+
+  // ---- 連線／中斷 ----
+  async function connect(token) {
+    cfg = { token: token.trim(), mt: 0 }; keep();
+    try { const u = await api('GET', '/user'); cfg.user = u.login; cfg.h = hash(JSON.stringify(syncable(ST))); keep(); await run(); return !cfg.err; }
+    catch (e) { const m = e.message; cfg = {}; keep(); throw new Error(m); }
+  }
+  function disconnect() { cfg = {}; keep(); status(); }
+
+  // ---- 設定頁 ----
+  const ago = t => { if (!t) return '還沒同步'; const m = Math.round((Date.now() - t) / 60000); return m < 1 ? '剛剛' : m < 60 ? m + ' 分鐘前' : m < 1440 ? Math.round(m / 60) + ' 小時前' : Math.round(m / 1440) + ' 天前'; };
+  function status(msg) {
+    const el = document.getElementById('syncst'); if (!el) return;
+    el.textContent = msg || (cfg.err ? '同步失敗：' + cfg.err : cfg.token ? `已連線（GitHub：${cfg.user || '—'}）・上次同步 ${ago(cfg.last)}` : '');
+    el.classList.toggle('bad', !!cfg.err && !msg);
+  }
+  function settingsHTML() {
+    return `<section class="setbox" id="syncbox"><h3>雲端同步（手機 ↔ 電腦）</h3>${cfg.token ? `
+      <p class="sm-p" id="syncst"></p>
+      <p class="sm-p">筆記、重點、書籤、圖片、「我懂了」、XP、錯題本、讀書計畫都會自動同步。每台裝置的主題、字級、閱讀位置各自保留。</p>
+      <div class="row wrap"><button class="btn" id="syncnow" type="button">立即同步</button><button class="btn ghost" id="syncoff" type="button">這台不再同步</button></div>` : `
+      <p class="sm-p">用你 GitHub 帳號裡的一個<b>私人 Gist</b> 當雲端存檔。每台裝置都做一次下面的步驟，之後就會自動同步。</p>
+      <ol class="syncsteps"><li>打開 <a href="${TOKEN_URL}" target="_blank" rel="noopener">GitHub 建立 token 的頁面</a>（會自動勾好 <b>gist</b>，其他都不用勾）。</li><li><b>Expiration</b> 選一年或 No expiration，按最下面的 <b>Generate token</b>。</li><li>複製 <code>ghp_</code> 開頭的那串，貼到下面按「連線」。另一台裝置貼<b>同一串</b>就好（建議先存在你的密碼管理工具裡）。</li></ol>
+      <div class="row wrap"><input type="password" id="synctok" autocomplete="off" spellcheck="false" placeholder="貼上 ghp_ 開頭的 token" aria-label="GitHub token"><button class="btn" id="syncgo" type="button">連線</button></div>
+      <p class="sm-p" id="syncst"></p>
+      <p class="sm-p">token 只存在這台裝置，不會放進備份碼。只開 gist 權限的話，就算外洩也只能讀寫你的 Gist，碰不到你的程式碼。</p>`}</section>`;
+  }
+  function bindSettings(root) {
+    status();
+    const go1 = root.querySelector('#syncgo');
+    if (go1) go1.onclick = async () => { const v = root.querySelector('#synctok').value; if (!/^\s*(ghp_|github_pat_)\w+\s*$/.test(v)) { status('看起來不像 token：應該是 ghp_ 或 github_pat_ 開頭。'); return; } go1.disabled = true; status('連線中⋯');
+      try { await connect(v); FUN.toast('同步完成！', 'wow'); renderSettings(root); } catch (e) { status('連線失敗：' + e.message); go1.disabled = false; } };
+    const now = root.querySelector('#syncnow'); if (now) now.onclick = async () => { await run(); if (!cfg.err) FUN.toast('同步完成', 'happy'); };
+    const off = root.querySelector('#syncoff'); if (off) armed(off, '這台不再同步', () => { disconnect(); renderSettings(root); });
+  }
+
+  // ---- 自動同步的時機：開啟時、切回來時、每 3 分鐘 ----
+  if (cfg.token) setTimeout(run, 1500);
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && cfg.token && Date.now() - (cfg.last || 0) > 20000) run(); });
+  setInterval(() => { if (document.visibilityState === 'visible' && cfg.token) run(); }, 180000);
+
+  return { run, changed, merge, settingsHTML, bindSettings, on: () => !!cfg.token };
+})();

@@ -371,7 +371,34 @@ body.notips .tipbox{display:none} body.calm *{animation:none!important;transitio
  :root{--rp:#7a5c3e} @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--rp:#d6b48e}} :root[data-theme="dark"]{--rp:#d6b48e}
 .pblk.rp,.plrow.rp{--acc:var(--rp)} .rpname{border:2px solid var(--line);border-radius:8px;padding:2px 8px;background:var(--bg);color:var(--ink);font:inherit;font-weight:700;width:150px} .plrow.rp input[type=date]{border:2px solid var(--line);border-radius:8px;padding:2px 6px;background:var(--bg);color:var(--ink);font:inherit}
 .savebar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:16px 0;max-width:860px;position:sticky;top:64px;z-index:5;background:var(--bg);padding:6px 0}
+.bmbtn{font:inherit;font-size:12.5px;font-weight:700;color:var(--ink);background:var(--panel);border:2px solid var(--line);border-radius:999px;padding:2px 10px;cursor:pointer}
+.bmbtn.on{background:var(--bad);border-color:var(--bad);color:#fff}
+.card .body .bmk{position:relative;box-shadow:inset 4px 0 0 var(--bad);background:color-mix(in srgb,var(--bad) 7%,transparent);border-radius:4px}
+.card .body .bmk::before{content:'讀到這裡';display:inline-block;margin:0 6px 2px 0;padding:0 7px;border-radius:999px;background:var(--bad);color:#fff;font-size:11.5px;font-weight:800;vertical-align:1px;line-height:1.7}
+.card.bmkcard>header::after{content:'讀到這裡';display:inline-block;margin-left:8px;padding:0 8px;border-radius:999px;background:var(--bad);color:#fff;font-size:11.5px;font-weight:800;line-height:1.8}
+.bmpill{position:fixed;right:max(12px,env(safe-area-inset-right,0px));bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:65;display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.bmpill[hidden]{display:none}
+.bmopen{font:inherit;font-weight:800;font-size:13.5px;color:#fff;background:var(--bad);border:2px solid var(--line);border-radius:999px;padding:6px 14px;box-shadow:3px 3px 0 var(--line);cursor:pointer}
+.bmlist{display:none;width:min(340px,calc(100vw - 32px));max-height:min(60vh,420px);overflow:auto;background:var(--panel);border:2px solid var(--line);border-radius:14px;box-shadow:3px 3px 0 var(--line);padding:10px 12px}
+.bmpill.open .bmlist{display:block} .bmlist>b{display:block;margin-bottom:6px}
+.bmrow{display:flex;gap:8px;align-items:center;padding:6px 0;border-top:1px dashed var(--hair)} .bmrow:first-of-type{border-top:0}
+.bmgo{flex:1;min-width:0;text-align:left;font:inherit;color:var(--ink);background:none;border:0;padding:2px 0;cursor:pointer;display:flex;flex-direction:column;gap:1px}
+.bmgo span{font-weight:700} .bmgo small{color:var(--mute);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ntbms .bmrow{background:var(--panel);border:2px solid var(--line);border-radius:12px;padding:8px 12px;margin-bottom:8px}
+.nth3{margin:4px 0 8px;font-size:15px}
+.postoast{bottom:calc(136px + env(safe-area-inset-bottom,0px))}
+.ntrich img{display:block;max-width:100%;height:auto;border-radius:8px;margin:6px 0;cursor:zoom-in;border:1px solid var(--hair)}
+.ntrich img.missing{min-height:40px;min-width:120px;background:var(--soft)}
+.nted img{cursor:default}
+.nted.busy{opacity:.6;pointer-events:none}
+.ntrich math[display="block"]{display:block;margin:.5em 0;overflow-x:auto}
+.imgview{position:fixed;inset:0;z-index:90;background:rgba(10,12,30,.86);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:16px;cursor:zoom-out}
+.imgview img{max-width:100%;max-height:calc(100vh - 90px);border-radius:8px;background:#fff}
+.syncsteps{margin:6px 0 10px;padding-left:1.3em;font-size:14px;line-height:1.7} .syncsteps a{color:var(--acc);font-weight:700}
+#synctok{flex:1 1 220px;min-width:0;font:inherit;padding:7px 10px;border:2px solid var(--line);border-radius:10px;background:var(--panel);color:var(--ink)}
+#syncst.bad{color:var(--bad);font-weight:700}
 @media (max-width:640px){.nttools{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px;scrollbar-width:thin} .ntgrp{flex-wrap:nowrap;flex:none}}
+@media (pointer:coarse){.hlbar .hlc{width:32px;height:32px} .hlb{padding:6px 12px} .ntfb{height:34px;min-width:36px} .ntdot{width:30px;height:30px} .bmbtn,.ntmode{padding:5px 12px}}
 </style>
 <header class="top"><div class="topin"><span class="brand" id="brand"><span class="brandt">26 秋季複習本</span></span><nav id="stabs" aria-label="科目"></nav><div id="hud"></div></div></header>
 <main id="main"></main>
@@ -3810,7 +3837,7 @@ function renderSettings(root) {
   const seg = (name, opts, cur) => `<div class="seg" role="group" aria-label="${name}">${opts.map(o => `<button type="button" data-set="${name}" data-v="${o[0]}" aria-pressed="${String(cur) === String(o[0])}">${o[1]}</button>`).join('')}</div>`;
   const doneN = Object.keys(ST.done).filter(k => !k.startsWith('P')).length;
   const wrongN = Object.values(ST.wrong2 || {}).reduce((a, x) => a + x.length, 0);
-  root.innerHTML = `<div class="pagehead"><h2>設定</h2><p class="intro">調整成你最舒服的樣子。所有設定和紀錄只存在這台裝置的瀏覽器裡。</p></div>
+  root.innerHTML = `<div class="pagehead"><h2>設定</h2><p class="intro">調整成你最舒服的樣子。設定和紀錄存在這台裝置的瀏覽器裡；開啟下面的雲端同步後，手機和電腦會自動合併。</p></div>
   <div class="setgrid">
     <section class="setbox"><h3>外觀</h3>
       <div class="row"><span>主題</span>${seg('theme', [['system', '跟著系統'], ['light', '淺色'], ['dark', '深色']], ST.theme || 'system')}</div>
@@ -3822,6 +3849,7 @@ function renderSettings(root) {
       <div class="row"><span>題目語言（衍金、管理學）</span>${seg('lang', [['zh', '中文'], ['both', '雙語'], ['en', 'English']], ST.lang)}</div>
       <div class="row"><span>音效</span>${seg('sound', [['true', '開'], ['false', '關']], !!ST.sound)}</div>
     </section>
+    ${SYNC.settingsHTML()}
     <section class="setbox"><h3>備份與搬家</h3><p class="sm-p">手機和電腦的紀錄是分開的。在一台按「複製備份碼」，到另一台貼上後按「匯入」，進度就搬過去了。</p>
       <div class="row wrap"><button class="btn" id="bkcopy" type="button">複製備份碼</button><span class="sm-p" id="bkmsg"></span></div>
       <textarea id="bktext" rows="3" placeholder="把備份碼貼在這裡" aria-label="備份碼"></textarea>
@@ -3850,10 +3878,11 @@ function renderSettings(root) {
     try { const v = JSON.parse(decodeURIComponent(escape(atob($('#bktext', root).value.trim())))); if (typeof v !== 'object' || !v.done) throw 0; ST = Object.assign({ done: {}, wrong2: {}, tab: {}, best: {} }, v); FUN.init(); save(); applyPrefs(); FUN.hud(); FUN.toast('匯入成功！', 'wow'); renderSettings(root); }
     catch (e) { $('#bkmsg', root).textContent = '備份碼看起來不完整，請重新複製一次。'; }
   });
+  SYNC.bindSettings(root);
   armed($('#clrwrong', root), '清除錯題本', () => { ST.wrong2 = {}; save(); FUN.toast('錯題本清空了', 'happy'); renderSettings(root); });
-  armed($('#clrdone', root), '清除勾選', () => { const n = Object.keys(ST.done).length; ST.done = {}; ST.xp = Math.max(0, ST.xp - n * 10); save(); FUN.hud(); updateCounts(); FUN.toast(`清除 ${n} 個勾選，XP 已扣回`, 'sad'); renderSettings(root); });
+  armed($('#clrdone', root), '清除勾選', () => { const n = Object.keys(ST.done).length; ST.done = {}; (ST.del = ST.del || {})['done|*'] = Date.now(); ST.xp = Math.max(0, ST.xp - n * 10); save(); FUN.hud(); updateCounts(); FUN.toast(`清除 ${n} 個勾選，XP 已扣回`, 'sad'); renderSettings(root); });
   armed($('#clrbest', root), '清除遊戲紀錄', () => { ST.best = {}; ST.stats = {}; ST.genOk = 0; save(); FUN.toast('遊戲紀錄清空了', 'happy'); renderSettings(root); });
-  armed($('#clrall', root), '全部重設', () => { const keep = {}; PREF_KEYS.forEach(k => keep[k] = ST[k]); ST = Object.assign({ done: {}, wrong2: {}, subj: 'home', tab: {}, best: {} }, keep); FUN.init(); save(); FUN.hud(); updateCounts(); FUN.toast('全部重新開始！一起加油', 'wow'); renderSettings(root); });
+  armed($('#clrall', root), '全部重設', () => { const keep = {}; PREF_KEYS.forEach(k => keep[k] = ST[k]); ST = Object.assign({ done: {}, wrong2: {}, subj: 'home', tab: {}, best: {} }, keep); ST.del = { '*': Date.now() }; FUN.init(); save(); FUN.hud(); updateCounts(); FUN.toast('全部重新開始！一起加油', 'wow'); renderSettings(root); });
 }
 
 function renderMilestones(root) {
@@ -5113,6 +5142,52 @@ function planReRow(P) {
     <label>熟悉度 <select data-fam="re">${PLAN_FAM.map(f => `<option${(P.fam.re || '普通') === f[0] ? ' selected' : ''}>${f[0]}</option>`).join('')}</select></label><span class="sm-p">需要 <b data-need="re"></b></span>
     <details class="reunits"><summary>單元進度（看完的打勾，就不會再排）</summary>${RE_UNITS.map((u, i) => `<label><input type="checkbox" data-redone="${i}"${P.reDone[i] ? ' checked' : ''}> ${i + 1}. ${u[0]} <span class="pill">${u[1] === 'mid' ? '期中' : '期末'}</span></label>`).join('')}</details></div>`;
 }
+// ===== 筆記圖片：壓縮後存在 IndexedDB（容量比 localStorage 大很多，不會擠到進度紀錄） =====
+// 筆記內容只記 <img data-img="編號">，顯示時再從這裡取出。雲端同步時圖片另外上傳（見 sync.js）。
+const IMGS = (() => {
+  const DB = 'rv26media', OS = 'img', cache = new Map();
+  let dbp = null;
+  const db = () => dbp || (dbp = new Promise((res, rej) => { try { const r = indexedDB.open(DB, 1); r.onupgradeneeded = () => r.result.createObjectStore(OS); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); } catch (e) { rej(e); } }));
+  const tx = (mode, fn) => db().then(d => new Promise((res, rej) => { const t = d.transaction(OS, mode); const st = t.objectStore(OS); const out = fn(st); t.oncomplete = () => res(out && out.result !== undefined ? out.result : out); t.onerror = () => rej(t.error); }));
+  const put = (id, data) => { cache.set(id, data); return tx('readwrite', st => st.put({ d: data, at: Date.now() }, id)); };
+  const get = async id => { if (cache.has(id)) return cache.get(id); try { const v = await tx('readonly', st => st.get(id)); const d = v && v.d; if (d) cache.set(id, d); return d || null; } catch (e) { return null; } };
+  const keys = () => tx('readonly', st => st.getAllKeys()).catch(() => []);
+  const del = id => { cache.delete(id); return tx('readwrite', st => st.delete(id)).catch(() => { }); };
+  const meta = id => tx('readonly', st => st.get(id)).then(v => v ? v.at : 0).catch(() => 0);
+  const uid = () => 'i' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+
+  // 壓縮：最長邊 1400px，JPEG 品質 0.82（截圖文字仍清楚，一張約 100–300KB）
+  async function compress(file) {
+    const url = URL.createObjectURL(file);
+    try {
+      const img = await new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = url; });
+      const k = Math.min(1, 1400 / Math.max(img.naturalWidth, img.naturalHeight));
+      const c = document.createElement('canvas'); c.width = Math.round(img.naturalWidth * k); c.height = Math.round(img.naturalHeight * k);
+      const g = c.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height); g.drawImage(img, 0, 0, c.width, c.height);
+      return c.toDataURL('image/jpeg', 0.82);
+    } finally { URL.revokeObjectURL(url); }
+  }
+  async function add(file) { const data = await compress(file); const id = uid(); await put(id, data); return { id, data }; }
+
+  // 把畫面上 <img data-img> 補上圖片
+  function hydrate(root) { (root || document).querySelectorAll('img[data-img]:not([src])').forEach(async im => { const d = await get(im.dataset.img); if (d) im.src = d; else { im.alt = '圖片同步中或已遺失'; im.classList.add('missing'); } }); }
+
+  // 點圖片放大
+  document.addEventListener('click', e => {
+    const im = e.target.closest('.ntrich img'); if (!im || im.closest('[contenteditable="true"]') || !im.src) return;
+    const ov = document.createElement('div'); ov.className = 'imgview'; ov.innerHTML = `<img src="${im.src}" alt=""><button type="button" class="ntbtn" aria-label="關閉">關閉</button>`;
+    const close = () => ov.remove(); ov.onclick = close; document.addEventListener('keydown', function k(ev) { if (ev.key === 'Escape') { close(); document.removeEventListener('keydown', k); } });
+    document.body.appendChild(ov);
+  });
+
+  // 筆記裡用到的圖片編號
+  function usedIds(st) { const s = new Set(); Object.values((st || ST).nt || {}).forEach(card => Object.values(card).forEach(d => (d.h || '').replace(/data-img="([a-z0-9]+)"/g, (m, id) => s.add(id)))); return s; }
+  // 清掉 7 天以上沒被任何筆記用到的圖片
+  async function gc() { try { const used = usedIds(); for (const id of await keys()) if (!used.has(id) && Date.now() - (await meta(id)) > 7 * 864e5) await del(id); } catch (e) { } }
+  setTimeout(gc, 15000);
+
+  return { add, get, put, keys, del, hydrate, usedIds };
+})();
 // ===== 筆記的格式：貼上 Gemini／ChatGPT／網頁內容時保留粗體、列點、標題、表格、程式碼、數學式 =====
 // 選取後 Ctrl/⌘+C 會帶 HTML → 清理後保留格式；用「複製」按鈕拿到的是 Markdown 純文字 → 轉成 HTML。
 const RICH = (() => {
@@ -5120,7 +5195,7 @@ const RICH = (() => {
   const KEEP = new Set(['B', 'STRONG', 'I', 'EM', 'U', 'S', 'DEL', 'CODE', 'PRE', 'P', 'BR', 'UL', 'OL', 'LI', 'TABLE', 'THEAD', 'TBODY', 'TR', 'TH', 'TD', 'BLOCKQUOTE', 'A', 'SUB', 'SUP', 'HR', 'DIV', 'MARK', 'H4', 'H5', 'H6']);
   const HEAD = { H1: 'H4', H2: 'H4', H3: 'H4' };
   const MATH = new Set('math mrow mi mo mn ms mtext mspace msup msub msubsup mfrac msqrt mroot munder mover munderover mtable mtr mtd mstyle mpadded mphantom menclose semantics mfenced'.split(' '));
-  const DROP = 'script, style, meta, link, title, head, noscript, iframe, object, embed, svg, img, video, audio, canvas, button, input, textarea, select, form, annotation, annotation-xml, template';
+  const DROP = 'script, style, meta, link, title, head, noscript, iframe, object, embed, svg, video, audio, canvas, button, input, textarea, select, form, annotation, annotation-xml, template';
   // 筆記可用的顏色：編輯時用這些色碼下指令，存檔時轉成 class（深色模式另有配色）
   const TC = { r: '#d1342f', o: '#d9730d', g: '#2e8b57', b: '#2b6cd4', v: '#7a4fd6', k: '#7d8597' };
   const BG = { y: '#ffe866', g: '#b8f0b0', p: '#ffc2dc', b: '#bfe0ff' };
@@ -5154,6 +5229,15 @@ const RICH = (() => {
           walk(n, m); dst.appendChild(m); continue;
         }
         let tag = n.tagName.toUpperCase(); tag = HEAD[tag] || tag;
+        if (tag === 'IMG') {
+          // 自己的圖片只留編號（內容在 IndexedDB）；外部圖片只收 https
+          const id = n.getAttribute('data-img'), src = n.getAttribute('src') || '';
+          const im = document.createElement('img'); im.className = 'ntimg'; im.alt = '';
+          if (id && /^[a-z0-9]+$/.test(id)) im.setAttribute('data-img', id);
+          else if (/^https:\/\//i.test(src)) { im.src = src; im.referrerPolicy = 'no-referrer'; im.loading = 'lazy'; }
+          else continue;
+          dst.appendChild(im); continue;
+        }
         const st = n.getAttribute('style') || '';
         if (tag === 'STRIKE') tag = 'S';
         const cc = colorCls(n);
@@ -5179,7 +5263,7 @@ const RICH = (() => {
     };
     walk(doc.body, out);
     // 去掉頭尾空段落
-    const empty = e => e && e.nodeType === 1 && /^(P|DIV|BR)$/.test(e.tagName) && !e.textContent.trim() && !e.querySelector('math, hr');
+    const empty = e => e && e.nodeType === 1 && /^(P|DIV|BR)$/.test(e.tagName) && !e.textContent.trim() && !e.querySelector('math, hr, img');
     out.querySelectorAll('p, div').forEach(e => { if (empty(e)) e.remove(); });
     while (empty(out.firstChild)) out.firstChild.remove();
     while (empty(out.lastChild)) out.lastChild.remove();
@@ -5197,6 +5281,28 @@ const RICH = (() => {
     return s.replace(/\u0000(\d+)\u0000/g, (m, i) => '<code>' + escT(codes[+i]) + '</code>');
   }
   const cells = l => l.trim().replace(/^\|/, '').replace(/\|$/, '').split('|').map(c => c.trim());
+  // ---- 數學式：$…$、$$…$$、\(…\)、\[…\] → 用 KaTeX 轉成 MathML（第一次需要網路，之後離線快取） ----
+  let kp = null;
+  const loadKatex = () => window.katex ? Promise.resolve(window.katex) : (kp || (kp = new Promise(res => {
+    const sc = document.createElement('script'); sc.src = 'https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js'; sc.crossOrigin = 'anonymous';
+    const to = setTimeout(() => res(null), 8000); sc.onload = () => { clearTimeout(to); res(window.katex || null); }; sc.onerror = () => { clearTimeout(to); kp = null; res(null); };
+    document.head.appendChild(sc);
+  })));
+  const hasMath = t => /\$\$[\s\S]+?\$\$|\\\[[\s\S]+?\\\]|\\\([\s\S]+?\\\)|(^|[^\\$\w])\$(?!\s)[^$\n]+?(?<!\s)\$(?![\w$])/.test(t);
+  const tex = (t, display) => { try { return window.katex.renderToString(t.trim(), { output: 'mathml', displayMode: display, throwOnError: false }); } catch (e) { return null; } };
+  // 把數學式換成佔位符，Markdown 轉完再換回（程式碼區塊與行內程式碼裡的 $ 不動）
+  function stashMath(src, store) {
+    if (!window.katex) return src;
+    const put = (t, d, raw) => { const h = tex(t, d); if (!h) return raw; store.push(h); return (d ? '\n\n' : '') + '\u0001' + (store.length - 1) + '\u0001' + (d ? '\n\n' : ''); };
+    return src.split(/(```[\s\S]*?```|`[^`\n]+`)/).map((seg, i) => i % 2 ? seg : seg
+      .replace(/\$\$([\s\S]+?)\$\$/g, (m, t) => put(t, true, m))
+      .replace(/\\\[([\s\S]+?)\\\]/g, (m, t) => put(t, true, m))
+      .replace(/\\\(([\s\S]+?)\\\)/g, (m, t) => put(t, false, m))
+      .replace(/(^|[^\\$\w])\$(?!\s)([^$\n]+?)(?<!\s)\$(?![\w$])/g, (m, pre, t) => pre + put(t, false, '$' + t + '$'))).join('');
+  }
+  const unstash = (html, store) => html.replace(/\u0001(\d+)\u0001/g, (m, i) => store[+i] || '').replace(/<p>\s*(<span class="katex-display">[\s\S]*?<\/span>|<span class="katex">[\s\S]*?<\/span>)\s*<\/p>/g, '<p>$1</p>');
+  const mdMath = src => { const st = []; return unstash(md(stashMath(src, st)), st); };
+
   function md(src) {
     const L = src.replace(/\r\n?/g, '\n').split('\n'); let i = 0; const out = [];
     const isList = l => /^\s*([-*+]|\d+[.)])\s+/.test(l);
@@ -5243,16 +5349,25 @@ const RICH = (() => {
 
   // ---- 貼上：判斷用 HTML、Markdown 還是純文字 ----
   const looksMd = t => /(^|\n)\s{0,3}(#{1,6}\s|[-*+]\s+\S|\d+[.)]\s+\S|>\s|```)|\*\*[^*\n]+\*\*|\n\s*\|.*\|\s*\n\s*\|?\s*:?-{2,}/.test(t);
-  function fromClipboard(cd) {
-    const html = cd.getData('text/html'), txt = cd.getData('text/plain');
+  // 先在事件當下把剪貼簿內容讀出來（之後就讀不到了），再非同步處理
+  function readClip(cd) { return { html: cd.getData('text/html'), txt: cd.getData('text/plain'), files: [...(cd.files || [])].filter(f => /^image\//.test(f.type)) }; }
+  async function convert({ html, txt, files }) {
+    if (files.length && (!html || !/<(p|li|h\d|table|b|strong)[\s>]/i.test(html))) {
+      // 純圖片（截圖、相簿、拖曳）→ 壓縮存起來
+      const out = []; for (const f of files) { try { const { id, data } = await IMGS.add(f); out.push(`<img class="ntimg" data-img="${id}" src="${data}" alt="">`); } catch (e) { } }
+      return out.map(x => '<p>' + x + '</p>').join('');
+    }
+    if (txt && hasMath(txt)) await loadKatex();
     if (html) {
       const c = clean(html), plain = (new DOMParser().parseFromString(c, 'text/html').body.textContent || '');
       const structured = /<(ul|ol|table|h[4-6]|b|strong|i|em|pre|code|blockquote|math)[\s>]/i.test(c);
       // HTML 裡其實只是 Markdown 原文（例如從編輯器複製）→ 改用 Markdown 轉換
-      if (txt && looksMd(txt) && (!structured || /\*\*[^*]+\*\*|(^|\n)#{1,6}\s/.test(plain))) return clean(md(txt));
+      if (txt && looksMd(txt) && (!structured || /\*\*[^*]+\*\*|(^|\n)#{1,6}\s/.test(plain))) return clean(mdMath(txt));
+      // HTML 裡還留著 $…$ 原文（沒有排版好的公式）→ 也用 Markdown 路線把公式排出來
+      if (txt && hasMath(plain) && !/<math[\s>]/i.test(c) && window.katex) return clean(mdMath(txt));
       if (c.trim()) return c;
     }
-    if (txt) return looksMd(txt) ? clean(md(txt)) : txt.split(/\n{2,}/).map(p => '<p>' + escT(p).replace(/\n/g, '<br>') + '</p>').join('');
+    if (txt) return (looksMd(txt) || hasMath(txt)) ? clean(mdMath(txt)) : txt.split(/\n{2,}/).map(p => '<p>' + escT(p).replace(/\n/g, '<br>') + '</p>').join('');
     return '';
   }
   function insertHTML(html) {
@@ -5261,12 +5376,17 @@ const RICH = (() => {
     const frag = r.createContextualFragment(html); const last = frag.lastChild; r.insertNode(frag); if (last) { r.setStartAfter(last); r.collapse(true); sel.removeAllRanges(); sel.addRange(r); }
   }
   function attach(ed) {
-    ed.addEventListener('paste', e => { const cd = e.clipboardData; if (!cd) return; e.preventDefault(); const h = fromClipboard(cd); if (h) insertHTML(h); });
-    ed.addEventListener('drop', e => { const cd = e.dataTransfer; if (!cd) return; e.preventDefault(); const h = fromClipboard(cd); if (h) insertHTML(h); });
+    const run = async (data, range) => { ed.classList.add('busy'); try { const h = await convert(data); if (h) { ed.focus(); if (range) { const sel = getSelection(); sel.removeAllRanges(); sel.addRange(range); } insertHTML(h); ed.dispatchEvent(new Event('input')); } } finally { ed.classList.remove('busy'); } };
+    const keep = () => { const sel = getSelection(); return sel.rangeCount && ed.contains(sel.anchorNode) ? sel.getRangeAt(0).cloneRange() : null; };
+    ed.addEventListener('paste', e => { const cd = e.clipboardData; if (!cd) return; e.preventDefault(); run(readClip(cd), keep()); });
+    ed.addEventListener('drop', e => { const cd = e.dataTransfer; if (!cd) return; e.preventDefault(); let r = null; if (document.caretRangeFromPoint) r = document.caretRangeFromPoint(e.clientX, e.clientY); run(readClip(cd), r || keep()); });
   }
+  // 插入圖片（檔案選擇器／相機）與公式
+  async function insertFiles(ed, files, range) { const h = await convert({ html: '', txt: '', files: [...files] }); if (h) { ed.focus(); if (range) { const sel = getSelection(); sel.removeAllRanges(); sel.addRange(range); } insertHTML(h); } }
+  async function insertTex(ed, t, display, range) { if (!(await loadKatex())) return false; const h = tex(t, display); if (!h) return false; ed.focus(); if (range) { const sel = getSelection(); sel.removeAllRanges(); sel.addRange(range); } insertHTML(clean(h) + '&nbsp;'); return true; }
   // 舊筆記（純文字）轉成 HTML
   const fromText = t => t.split(/\n{2,}/).map(p => '<p>' + escT(p).replace(/\n/g, '<br>') + '</p>').join('');
-  return { clean, md, attach, fromText, TC, BG, colorCls };
+  return { clean, md, mdMath, attach, insertFiles, insertTex, loadKatex, fromText, TC, BG, colorCls };
 })();
 // ===== 筆記與螢光筆：完整重點裡的每個列點都能寫筆記、選取文字畫重點 =====
 // 存在 ST.hl（重點）與 ST.nt（筆記），設定頁的備份碼會一起帶走。
@@ -5276,6 +5396,9 @@ const NOTES = (() => {
   const BLK = 'li, p, td, th, dd, h4, .ez';
   const HL = () => (ST.hl = ST.hl || {});
   const NT = () => (ST.nt = ST.nt || {});
+  const BM = () => (ST.bm = ST.bm || {});
+  // 刪除紀錄（同步時才知道「這筆是被刪掉的」，不會從另一台裝置又長回來）
+  const tomb = k => { ST.del = ST.del || {}; ST.del[k] = Date.now(); };
   const hash = s => { let h = 5381; for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0; return (h >>> 0).toString(36); };
   const norm = s => s.replace(/\s+/g, ' ').trim();
   const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
@@ -5347,6 +5470,16 @@ const NOTES = (() => {
     // 游標所在的格式亮起來
     const state = () => { ['bold', 'italic', 'underline', 'strikeThrough', 'insertUnorderedList', 'insertOrderedList'].forEach(c => { const b = box.querySelector(`[data-fmt="${c}"]`); if (b) { let on = false; try { on = document.queryCommandState(c); } catch (e) { } b.classList.toggle('on', on); } });
       let blk = ''; try { blk = (document.queryCommandValue('formatBlock') || '').toLowerCase(); } catch (e) { } box.querySelectorAll('[data-blk]').forEach(b => b.classList.toggle('on', blk === b.dataset.blk)); };
+    // 圖片與公式
+    let saved = null; const keepSel = () => { const sel = getSelection(); saved = sel.rangeCount && ed.contains(sel.anchorNode) ? sel.getRangeAt(0).cloneRange() : null; };
+    const file = box.querySelector('.ntfile');
+    box.querySelector('[data-ins="img"]').onclick = () => { keepSel(); file.click(); };
+    file.onchange = async () => { if (file.files.length) await RICH.insertFiles(ed, file.files, saved); file.value = ''; };
+    box.querySelector('[data-ins="tex"]').onclick = async () => {
+      keepSel(); const t = prompt('輸入 LaTeX 公式（例：h^* = \\rho \\frac{\\sigma_S}{\\sigma_F}）。開頭加 $$ 會置中成獨立一行。'); if (!t || !t.trim()) return;
+      const disp = /^\s*\$\$/.test(t), body = t.replace(/^\s*\$\$?|\$\$?\s*$/g, '');
+      if (!(await RICH.insertTex(ed, body, disp, saved))) alert('公式排版需要網路（第一次使用時下載排版工具），請連上網路再試一次。');
+    };
     ed.addEventListener('keyup', state); ed.addEventListener('mouseup', state); ed.addEventListener('input', () => tidyColors(ed));
     ed.addEventListener('keydown', e => { if (e.key === 'Tab') { e.preventDefault(); cmd(e.shiftKey ? 'outdent' : 'indent', null); } });
   }
@@ -5364,9 +5497,10 @@ const NOTES = (() => {
         <span class="ntgrp"><button type="button" class="ntfb" data-fmt="insertUnorderedList" title="圓點清單">• 清單</button><button type="button" class="ntfb" data-fmt="insertOrderedList" title="數字清單">1. 清單</button><button type="button" class="ntfb" data-fmt="outdent" title="往外縮">⇤</button><button type="button" class="ntfb" data-fmt="indent" title="往內縮">⇥</button></span>
         <span class="ntgrp ntsw"><span class="ntswl">文字</span>${Object.keys(RICH.TC).map(c => `<button type="button" class="ntdot tc-${c}" data-tc="${c}" aria-label="文字顏色"><span>A</span></button>`).join('')}<button type="button" class="ntdot" data-tc="" aria-label="預設文字顏色" title="預設顏色"><span>A</span></button></span>
         <span class="ntgrp ntsw"><span class="ntswl">底色</span>${Object.keys(RICH.BG).map(c => `<button type="button" class="ntdot bgdot bg-${c}" data-bg="${c}" aria-label="底色"></button>`).join('')}<button type="button" class="ntdot bgdot" data-bg="" aria-label="移除底色" title="移除底色">✕</button></span>
+        <span class="ntgrp"><button type="button" class="ntfb" data-ins="img" title="插入圖片（也可以直接貼上或拖進來）">圖片</button><button type="button" class="ntfb" data-ins="tex" title="插入數學公式（LaTeX）">公式</button><input type="file" accept="image/*" multiple hidden class="ntfile"></span>
         <span class="ntgrp"><button type="button" class="ntfb" data-fmt="removeFormat" title="清除選取文字的格式">清除格式</button></span></span><div class="nted ntrich" contenteditable="true" role="textbox" aria-multiline="true" aria-label="筆記" data-ph="寫下你查到的補充、自己的理解、還不懂的地方⋯">${html}</div><span class="ntbtns"><button type="button" class="ntbtn" data-nt="done">完成</button>${d ? '<button type="button" class="ntbtn ghost" data-nt="del">刪除</button>' : '<button type="button" class="ntbtn ghost" data-nt="cancel">取消</button>'}</span>`
       : `<span class="nthead">我的筆記</span><div class="nttext ntrich">${html}</div><span class="ntbtns"><button type="button" class="ntbtn ghost" data-nt="edit">編輯</button></span>`;
-    box.dataset.k = k;
+    box.dataset.k = k; IMGS.hydrate(box);
     if (edit) {
       const ed = box.querySelector('.nted'); RICH.attach(ed);
       wireTools(box, ed);
@@ -5378,7 +5512,7 @@ const NOTES = (() => {
     const h = ed ? RICH.clean(ed.innerHTML) : '', tmp = document.createElement('div'); tmp.innerHTML = h;
     const text = (ed ? ed.innerText : '').trim(), has = text || tmp.querySelector('math, hr, table');
     if (has) { all[id] = all[id] || {}; const old = all[id][k]; all[id][k] = { t: text, h, q: norm(textOf(block)).slice(0, 80), at: old ? old.at : Date.now(), up: Date.now() }; }
-    else if (all[id]) { delete all[id][k]; if (!Object.keys(all[id]).length) delete all[id]; }
+    else if (all[id]) { if (all[id][k]) tomb('nt|' + id + '|' + k); delete all[id][k]; if (!Object.keys(all[id]).length) delete all[id]; }
     save(); noteBox(block, card, k, false); badge(card);
   }
   function showNotes(card) {
@@ -5393,6 +5527,44 @@ const NOTES = (() => {
   }
   function openNote(card, block) { const k = keysOf(card).get(block); if (k) noteBox(block, card, k, true); }
 
+  // ---- 書籤：「讀到這裡」可以插在某個列點或整張卡；每張卡最多一個 ----
+  let SUBJ = '';
+  function setBm(card, block) {
+    const id = cardId(card), keys = keysOf(card), k = block ? keys.get(block) || '' : '';
+    BM()[id] = { s: SUBJ, k, q: block ? norm(textOf(block)).slice(0, 80) : '', t: card.querySelector('header h4').textContent.trim(), at: Date.now() };
+    save(); showBm(card); bmPill(); FUN.beep('ok'); FUN.toast && FUN.toast('已插書籤：讀到這裡', 'happy');
+  }
+  function rmBm(id) { if (BM()[id]) { tomb('bm|' + id); delete BM()[id]; save(); } const card = $('#c-' + id); if (card) showBm(card); bmPill(); }
+  function showBm(card) {
+    card.querySelectorAll('.bmk').forEach(x => x.classList.remove('bmk')); card.classList.remove('bmkcard');
+    const d = BM()[cardId(card)], bt = card.querySelector('.bmbtn');
+    if (bt) { bt.classList.toggle('on', !!d); bt.textContent = d ? '已插書籤' : '書籤'; bt.setAttribute('aria-pressed', !!d); }
+    if (!d) return;
+    let b = d.k ? blockByKey(card, d.k) : null;
+    if (d.k && !b && d.q) for (const [bb, kk] of keysOf(card)) if (norm(textOf(bb)).startsWith(d.q.slice(0, 40))) { b = bb; d.k = kk; break; }
+    if (b) b.classList.add('bmk'); else card.classList.add('bmkcard');
+  }
+  function jumpBm(id) {
+    const d = BM()[id]; if (!d) return;
+    const go2 = () => { const card = $('#c-' + id); if (!card) return; const det = card.querySelector('details'); if (det) det.open = true; const el = card.querySelector('.bmk') || card; window.scrollTo(0, Math.max(0, scrollY + el.getBoundingClientRect().top - innerHeight / 3)); el.classList.add('flash'); setTimeout(() => el.classList.remove('flash'), 1600); };
+    if (CUR[0] === d.s && CUR[1] === 'learn' && $('#c-' + id)) go2(); else { go(d.s, 'learn', { top: 1 }); setTimeout(go2, 120); }
+  }
+  const ago = t => { const m = Math.round((Date.now() - t) / 60000); return m < 1 ? '剛剛' : m < 60 ? m + ' 分鐘前' : m < 1440 ? Math.round(m / 60) + ' 小時前' : Math.round(m / 1440) + ' 天前'; };
+  const bmsOf = s => Object.entries(BM()).filter(([id, d]) => d.s === s).sort((a, b) => b[1].at - a[1].at);
+  // 知識點頁右下角的「書籤」按鈕與清單
+  function bmPill() {
+    let p = $('#bmpill'); const pane = $('#pane');
+    if (!pane || !pane.querySelector('.learn')) { if (p) p.hidden = true; return; }
+    const list = bmsOf(SUBJ);
+    if (!p) { p = document.createElement('div'); p.id = 'bmpill'; p.className = 'bmpill'; document.body.appendChild(p);
+      p.addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return;
+        if (b.dataset.bmo) { p.classList.toggle('open'); return; }
+        if (b.dataset.bmj) { p.classList.remove('open'); jumpBm(b.dataset.bmj); }
+        if (b.dataset.bmd) { rmBm(b.dataset.bmd); } }); }
+    p.hidden = !list.length;
+    p.innerHTML = `<div class="bmlist" role="dialog" aria-label="書籤"><b>這科的書籤</b>${list.map(([id, d]) => `<div class="bmrow"><button type="button" class="bmgo" data-bmj="${id}"><span>${escH(d.t)}</span>${d.q ? `<small>「${escH(d.q.slice(0, 36))}${d.q.length > 36 ? '⋯' : ''}」</small>` : ''}<small>${ago(d.at)}</small></button><button type="button" class="ntbtn ghost" data-bmd="${id}" aria-label="移除書籤">移除</button></div>`).join('')}</div><button type="button" class="bmopen" data-bmo="1">書籤 ${list.length}</button>`;
+  }
+
   // ---- 卡片上的計數與筆記模式按鈕 ----
   function badge(card) {
     const id = cardId(card), h = (HL()[id] || []).length, n = Object.keys(NT()[id] || {}).length;
@@ -5403,7 +5575,7 @@ const NOTES = (() => {
   }
   function decorate(card) {
     const hd = card.querySelector('header'); if (!hd || hd.querySelector('.ntmode')) return;
-    hd.insertAdjacentHTML('beforeend', '<span class="ntside"><span class="ntcnt"></span><button type="button" class="ntmode" aria-pressed="false" title="打開後，點任何一個列點就能寫筆記">＋筆記</button></span>');
+    hd.insertAdjacentHTML('beforeend', '<span class="ntside"><span class="ntcnt"></span><button type="button" class="bmbtn" aria-pressed="false" title="在這張卡插書籤；想插在某一點，選取那段文字後按工具列的「書籤」">書籤</button><button type="button" class="ntmode" aria-pressed="false" title="打開後，點任何一個列點就能寫筆記">＋筆記</button></span>');
   }
 
   // ---- 選取工具列（全頁共用一個） ----
@@ -5412,16 +5584,16 @@ const NOTES = (() => {
     if (bar) return bar;
     bar = document.createElement('div'); bar.className = 'hlbar'; bar.hidden = true; bar.setAttribute('role', 'toolbar'); bar.setAttribute('aria-label', '螢光筆');
     bar.innerHTML = COLORS.map(c => `<button type="button" class="hlc hl-${c[0]}" data-c="${c[0]}" aria-label="${c[1]}色螢光筆" title="${c[1]}色"></button>`).join('')
-      + '<button type="button" class="hlb" data-a="note">筆記</button><button type="button" class="hlb" data-a="clear">移除重點</button>';
+      + '<button type="button" class="hlb" data-a="note">筆記</button><button type="button" class="hlb" data-a="bm">書籤</button><button type="button" class="hlb" data-a="clear">移除重點</button>';
     bar.addEventListener('mousedown', e => e.preventDefault());
-    bar.addEventListener('click', e => { const b = e.target.closest('button'); if (!b || !cur) return; b.dataset.c ? color(b.dataset.c) : b.dataset.a === 'note' ? noteFromBar() : clear(); });
+    bar.addEventListener('click', e => { const b = e.target.closest('button'); if (!b || !cur) return; b.dataset.c ? color(b.dataset.c) : b.dataset.a === 'note' ? noteFromBar() : b.dataset.a === 'bm' ? bmFromBar() : clear(); });
     document.body.appendChild(bar); return bar;
   }
-  const hide = () => { if (bar) bar.hidden = true; cur = null; };
+  const hide = () => { if (bar) bar.hidden = true; cur = null; const p = $('#bmpill'); if (p && !($('#pane') && $('#pane').querySelector('.learn'))) p.hidden = true; };
   function place(rect) {
     ensureBar(); bar.hidden = false;
     const w = bar.offsetWidth, x = Math.min(Math.max(8, rect.left + rect.width / 2 - w / 2 + scrollX), scrollX + document.documentElement.clientWidth - w - 8);
-    bar.style.left = x + 'px'; bar.style.top = (rect.bottom + scrollY + 10) + 'px';
+    bar.style.left = x + 'px'; bar.style.top = (rect.bottom + scrollY + (matchMedia('(pointer: coarse)').matches ? 30 : 10)) + 'px';
   }
   // 選取範圍 → 每個碰到的最外層列點各自的 [起, 迄]
   function pieces(card, range) {
@@ -5441,24 +5613,27 @@ const NOTES = (() => {
   }
   function color(c) {
     const { card } = cur; const id = cardId(card), list = HL()[id] = HL()[id] || [], keys = keysOf(card);
-    if (cur.mark) { list.filter(h => h.id === cur.mark).forEach(h => h.c = c); }
+    if (cur.mark) { list.filter(h => h.id === cur.mark).forEach(h => { h.c = c; h.up = Date.now(); }); }
     else cur.ps.forEach(([b, s, e]) => { const k = keys.get(b), x = textOf(b).slice(s, e); list.push({ id: uid(), k, s, e, c, x, at: Date.now() }); });
     save(); paint(card); badge(card); getSelection().removeAllRanges(); hide(); FUN.beep('ok');
   }
   function clear() {
     const { card } = cur; const id = cardId(card), keys = keysOf(card); let list = HL()[id] || [];
-    if (cur.mark) list = list.filter(h => h.id !== cur.mark);
-    else cur.ps.forEach(([b, s, e]) => { const k = keys.get(b); list = list.filter(h => !(h.k === k && h.s < e && h.e > s)); });
+    const gone = h => { tomb('hl|' + h.id); return false; };
+    if (cur.mark) list = list.filter(h => h.id !== cur.mark || gone(h));
+    else cur.ps.forEach(([b, s, e]) => { const k = keys.get(b); list = list.filter(h => !(h.k === k && h.s < e && h.e > s) || gone(h)); });
     if (list.length) HL()[id] = list; else delete HL()[id];
     save(); paint(card); badge(card); getSelection().removeAllRanges(); hide();
   }
+  function bmFromBar() { const { card } = cur; const b = cur.mark ? card.querySelector(`mark[data-h="${cur.mark}"]`).parentElement.closest(BLK) : cur.ps[0][0]; getSelection().removeAllRanges(); hide(); setBm(card, b); }
   function noteFromBar() { const { card } = cur; const b = cur.mark ? card.querySelector(`mark[data-h="${cur.mark}"]`).parentElement.closest(BLK) : cur.ps[0][0]; getSelection().removeAllRanges(); hide(); openNote(card, b); }
 
   // ---- 掛到知識點頁 ----
   let globalBound = false;
   function mount(key, root) {
-    hide();
-    $$('.card', root).forEach(card => { decorate(card); paint(card); showNotes(card); badge(card); });
+    hide(); SUBJ = key;
+    $$('.card', root).forEach(card => { decorate(card); paint(card); showNotes(card); badge(card); showBm(card); });
+    bmPill();
     let t; const check = () => { clearTimeout(t); t = setTimeout(() => onSelect(root), 180); };
     root.addEventListener('mouseup', check); root.addEventListener('keyup', check); root.addEventListener('touchend', check);
     if (!globalBound) { globalBound = true;
@@ -5467,6 +5642,7 @@ const NOTES = (() => {
       window.addEventListener('resize', hide); }
     root.addEventListener('click', e => {
       const card = e.target.closest('.card'); if (!card) return;
+      const bb = e.target.closest('.bmbtn'); if (bb) { BM()[cardId(card)] ? rmBm(cardId(card)) : setBm(card, null); return; }
       const tg = e.target.closest('.ntmode'); if (tg) { const on = card.classList.toggle('nmode'); tg.setAttribute('aria-pressed', on); tg.textContent = on ? '完成筆記' : '＋筆記'; if (on) { const d = card.querySelector('details'); if (d) d.open = true; } return; }
       const nb = e.target.closest('[data-nt]');
       if (nb) { const box = nb.closest('.ntbox'), block = box.parentElement, k = box.dataset.k, a = nb.dataset.nt;
@@ -5504,7 +5680,11 @@ const NOTES = (() => {
           ${ns.map(d => `<div class="ntitem"><p class="ntq">「${escH(d.q)}${d.q.length >= 80 ? '⋯' : ''}」${d.lost ? '<span class="ntlost">原文已更新</span>' : ''}</p><div class="ntt ntrich">${d.h || RICH.fromText(d.t)}</div></div>`).join('')}</article>`;
       }).join('');
       $('.ntlist', root).innerHTML = items || `<div class="win">${PIG('happy', 90)}<p>${q || view.c || view.f !== 'all' ? '沒有符合的重點或筆記。' : '還沒有重點或筆記。到「知識點」打開完整重點，選取文字就能畫重點；按卡片右上角的「＋筆記」就能在列點下面寫筆記。'}</p></div>`;
-      $('.ntsum', root).textContent = `重點 ${nh}・筆記 ${nn}`;
+      const bms = bmsOf(k);
+      $('.ntbms', root).innerHTML = bms.length && view.f !== 'hl' && view.f !== 'note' ? `<h3 class="nth3">書籤</h3>${bms.map(([id, d]) => `<div class="bmrow"><button type="button" class="bmgo" data-bmj="${id}"><span>${escH(d.t)}</span>${d.q ? `<small>「${escH(d.q.slice(0, 50))}${d.q.length > 50 ? '⋯' : ''}」</small>` : ''}<small>${ago(d.at)}</small></button></div>`).join('')}` : '';
+      $$('[data-bmj]', root).forEach(b => b.onclick = () => jumpBm(b.dataset.bmj));
+      IMGS.hydrate(root);
+      $('.ntsum', root).textContent = `重點 ${nh}・筆記 ${nn}・書籤 ${bms.length}`;
       $$('[data-jump]', root).forEach(b => b.onclick = () => jumpCard(k, b.dataset.jump));
       $$('[data-f]', root).forEach(b => b.classList.toggle('on', b.dataset.f === view.f));
       $$('[data-fc]', root).forEach(b => b.classList.toggle('on', b.dataset.fc === view.c));
@@ -5513,14 +5693,170 @@ const NOTES = (() => {
       <div class="ntbar"><input type="search" id="ntq" placeholder="搜尋重點或筆記" aria-label="搜尋重點或筆記">
       <div class="uchips"><button type="button" class="uchip" data-f="all">全部</button><button type="button" class="uchip" data-f="hl">只看重點</button><button type="button" class="uchip" data-f="note">只看筆記</button></div>
       <div class="uchips">${COLORS.map(c => `<button type="button" class="uchip hlchip" data-fc="${c[0]}"><span class="hlc hl-${c[0]}"></span>${c[1]}</button>`).join('')}</div>
-      <span class="sm-p ntsum"></span></div><div class="ntlist"></div></div>`;
+      <span class="sm-p ntsum"></span></div><div class="ntbms"></div><div class="ntlist"></div></div>`;
     $('#ntq', root).addEventListener('input', draw);
     $$('[data-f]', root).forEach(b => b.onclick = () => { view.f = b.dataset.f; save(); draw(); });
     $$('[data-fc]', root).forEach(b => b.onclick = () => { view.c = view.c === b.dataset.fc ? '' : b.dataset.fc; save(); draw(); });
     draw();
   }
 
-  return { mount, page, hide };
+  return { mount, page, hide, bmPill };
+})();
+// ===== 雲端同步：用你 GitHub 帳號裡的一個「私人 Gist」當雲端存檔，手機和電腦自動合併 =====
+// token 只存在這台裝置（不會放進備份碼）；建議只開 gist 權限。
+// 合併規則：筆記、重點、書籤、「我懂了」逐筆比時間，刪除有紀錄不會長回來；其他（XP、錯題本、計畫⋯）以最近修改的裝置為準。
+// 畫面設定（主題、字級、目前科目、閱讀位置⋯）每台裝置各自保留。
+const SYNC = (() => {
+  const LK = 'rv26sync', FILE = 'rv26-sync.json', DESC = '26 秋季複習本同步（請勿手動修改）', API = 'https://api.github.com';
+  const LOCAL_ONLY = new Set(['subj', 'tab', 'pos', 'ntview', 'zoom', 'theme', '_themeSet', 'mu', 'calm', 'notips', 'sound', 'lang']);
+  const TOKEN_URL = 'https://github.com/settings/tokens/new?scopes=gist&description=' + encodeURIComponent('26 秋季複習本同步');
+  let cfg = (() => { try { return JSON.parse(localStorage.getItem(LK)) || {}; } catch (e) { return {}; } })();
+  const keep = () => { try { localStorage.setItem(LK, JSON.stringify(cfg)); } catch (e) { } };
+  let busy = false, again = false, tChange = 0, tPush = 0;
+
+  const syncable = st => { const o = {}; for (const k in st) if (!LOCAL_ONLY.has(k)) o[k] = st[k]; return o; };
+  const hash = s => { let h = 5381; for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0; return (h >>> 0).toString(36) + ':' + s.length; };
+  const ts = v => typeof v === 'number' ? v : (v && (v.up || v.at)) || 1;
+
+  // ---- 合併兩份資料 ----
+  function merge(L, R) {
+    const a = L.data || {}, b = R.data || {}, rNewer = (R.mt || 0) > (L.mt || 0), nw = rNewer ? b : a, od = rNewer ? a : b;
+    const del = Object.assign({}, a.del || {}); for (const [k, t] of Object.entries(b.del || {})) del[k] = Math.max(del[k] || 0, t);
+    const cut = Date.now() - 180 * 864e5; for (const k in del) if (del[k] < cut) delete del[k];
+    const D = (k, fam) => Math.max(del[k] || 0, del[fam + '|*'] || 0, del['*'] || 0);
+    const out = {};
+    for (const k of new Set([...Object.keys(a), ...Object.keys(b)])) {
+      if (k === 'del') continue;
+      if (k === 'done' || k === 'badges') {
+        const o = {}; for (const src of [a[k] || {}, b[k] || {}]) for (const [id, v] of Object.entries(src)) { if (!v) continue; const t = ts(v); if (t <= D(k + '|' + id, k)) continue; if (!(id in o) || t > ts(o[id])) o[id] = v; }
+        out[k] = o; continue;
+      }
+      if (k === 'nt') {
+        const o = {}; for (const src of [a.nt || {}, b.nt || {}]) for (const [cid, notes] of Object.entries(src)) for (const [nk, d] of Object.entries(notes)) {
+          if (ts(d) <= D('nt|' + cid + '|' + nk, 'nt')) continue; o[cid] = o[cid] || {}; if (!o[cid][nk] || ts(d) > ts(o[cid][nk])) o[cid][nk] = d; }
+        out.nt = o; continue;
+      }
+      if (k === 'hl') {
+        const o = {}; for (const src of [a.hl || {}, b.hl || {}]) for (const [cid, list] of Object.entries(src)) for (const h of list) {
+          if (ts(h) <= D('hl|' + h.id, 'hl')) continue; o[cid] = o[cid] || []; const i = o[cid].findIndex(x => x.id === h.id); if (i < 0) o[cid].push(h); else if (ts(h) > ts(o[cid][i])) o[cid][i] = h; }
+        for (const cid in o) o[cid].sort((x, y) => x.at - y.at);
+        out.hl = o; continue;
+      }
+      if (k === 'bm') {
+        const o = {}; for (const src of [a.bm || {}, b.bm || {}]) for (const [cid, d] of Object.entries(src)) { if (ts(d) <= D('bm|' + cid, 'bm')) continue; if (!o[cid] || ts(d) > ts(o[cid])) o[cid] = d; }
+        out.bm = o; continue;
+      }
+      out[k] = k in nw ? nw[k] : od[k];
+    }
+    out.del = del; return out;
+  }
+
+  // ---- GitHub API ----
+  async function api(method, path, body) {
+    const r = await fetch(API + path, { method, headers: { Authorization: 'Bearer ' + cfg.token, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' }, body: body ? JSON.stringify(body) : undefined, cache: 'no-store' });
+    if (r.status === 401) throw new Error('token 無效或已過期，請重新建立一個。');
+    if (r.status === 403 || r.status === 404) throw new Error(r.headers.get('x-ratelimit-remaining') === '0' ? 'GitHub 暫時限制次數，稍後會自動再試。' : 'token 沒有 gist 權限（建立時要勾 gist）。');
+    if (!r.ok) throw new Error('GitHub 回應錯誤（' + r.status + '）');
+    return r.status === 204 ? null : r.json();
+  }
+  const fileText = async f => (!f.truncated && f.content != null) ? f.content : (await fetch(f.raw_url, { cache: 'no-store' })).text();
+  async function findOrCreate() {
+    for (let page = 1; page <= 5; page++) {
+      const list = await api('GET', '/gists?per_page=100&page=' + page);
+      const g = list.find(x => x.description === DESC || (x.files && x.files[FILE])); if (g) return g.id;
+      if (list.length < 100) break;
+    }
+    const g = await api('POST', '/gists', { description: DESC, public: false, files: { [FILE]: { content: JSON.stringify({ v: 1, mt: cfg.mt || 0, at: Date.now(), data: syncable(ST) }) } } });
+    return g.id;
+  }
+
+  // ---- 套用合併結果到這台 ----
+  function apply(data) {
+    for (const k of Object.keys(ST)) if (!LOCAL_ONLY.has(k) && !(k in data)) delete ST[k];
+    Object.assign(ST, data); store.set(ST);
+    try { FUN.hud(); updateCounts(); } catch (e) { }
+    // 正在寫筆記、選文字或答題時不重畫，下次換頁就會看到
+    const busyUI = document.querySelector('[contenteditable="true"]') || !getSelection().isCollapsed || (CUR[1] && !['learn', 'notes'].includes(CUR[1]));
+    if (!busyUI && CUR[0]) window.rerender(); else if (CUR[1] === 'learn') NOTES.bmPill();
+  }
+
+  // ---- 同步一次：抓雲端 → 合併 → 寫回本機與雲端 → 補傳／補抓圖片 ----
+  async function run() {
+    if (!cfg.token) return; if (busy) { again = true; return; }
+    busy = true; status('同步中⋯');
+    try {
+      if (!cfg.gist) { cfg.gist = await findOrCreate(); keep(); }
+      const g = await api('GET', '/gists/' + cfg.gist);
+      const f = g.files[FILE]; let remote = null;
+      if (f) { try { remote = JSON.parse(await fileText(f)); } catch (e) { remote = null; } }
+      const localData = syncable(ST), lj = JSON.stringify(localData);
+      const merged = remote && remote.data ? merge({ mt: cfg.mt || 0, data: localData }, remote) : localData;
+      const mj = JSON.stringify(merged);
+      if (mj !== lj) apply(JSON.parse(mj));
+      const mt = Math.max(cfg.mt || 0, (remote && remote.mt) || 0);
+      if (!remote || JSON.stringify(remote.data) !== mj) await api('PATCH', '/gists/' + cfg.gist, { files: { [FILE]: { content: JSON.stringify({ v: 1, mt, at: Date.now(), data: merged }) } } });
+      // 圖片：這台有、雲端沒有 → 上傳；雲端有、這台沒有 → 下載
+      const used = IMGS.usedIds(merged), have = new Set(await IMGS.keys());
+      for (const id of used) {
+        const name = 'img-' + id + '.txt';
+        if (!g.files[name] && have.has(id)) { const d = await IMGS.get(id); if (d) await api('PATCH', '/gists/' + cfg.gist, { files: { [name]: { content: d } } }); }
+        else if (g.files[name] && !have.has(id)) { const d = await fileText(g.files[name]); if (/^data:image\//.test(d)) { await IMGS.put(id, d); IMGS.hydrate(); } }
+      }
+      cfg.mt = mt; cfg.h = hash(mj); cfg.last = Date.now(); cfg.err = ''; keep(); status();
+    } catch (e) { cfg.err = e.message || String(e); keep(); status(); }
+    finally { busy = false; if (again) { again = false; setTimeout(run, 500); } }
+  }
+
+  // ---- 本機有改動 → 記下修改時間，稍後上傳 ----
+  function changed() {
+    if (!cfg.token) return;
+    clearTimeout(tChange); tChange = setTimeout(() => {
+      const h = hash(JSON.stringify(syncable(ST)));
+      if (h !== cfg.h) { cfg.h = h; cfg.mt = Date.now(); keep(); clearTimeout(tPush); tPush = setTimeout(run, 2500); }
+    }, 1500);
+  }
+
+  // ---- 連線／中斷 ----
+  async function connect(token) {
+    cfg = { token: token.trim(), mt: 0 }; keep();
+    try { const u = await api('GET', '/user'); cfg.user = u.login; cfg.h = hash(JSON.stringify(syncable(ST))); keep(); await run(); return !cfg.err; }
+    catch (e) { const m = e.message; cfg = {}; keep(); throw new Error(m); }
+  }
+  function disconnect() { cfg = {}; keep(); status(); }
+
+  // ---- 設定頁 ----
+  const ago = t => { if (!t) return '還沒同步'; const m = Math.round((Date.now() - t) / 60000); return m < 1 ? '剛剛' : m < 60 ? m + ' 分鐘前' : m < 1440 ? Math.round(m / 60) + ' 小時前' : Math.round(m / 1440) + ' 天前'; };
+  function status(msg) {
+    const el = document.getElementById('syncst'); if (!el) return;
+    el.textContent = msg || (cfg.err ? '同步失敗：' + cfg.err : cfg.token ? `已連線（GitHub：${cfg.user || '—'}）・上次同步 ${ago(cfg.last)}` : '');
+    el.classList.toggle('bad', !!cfg.err && !msg);
+  }
+  function settingsHTML() {
+    return `<section class="setbox" id="syncbox"><h3>雲端同步（手機 ↔ 電腦）</h3>${cfg.token ? `
+      <p class="sm-p" id="syncst"></p>
+      <p class="sm-p">筆記、重點、書籤、圖片、「我懂了」、XP、錯題本、讀書計畫都會自動同步。每台裝置的主題、字級、閱讀位置各自保留。</p>
+      <div class="row wrap"><button class="btn" id="syncnow" type="button">立即同步</button><button class="btn ghost" id="syncoff" type="button">這台不再同步</button></div>` : `
+      <p class="sm-p">用你 GitHub 帳號裡的一個<b>私人 Gist</b> 當雲端存檔。每台裝置都做一次下面的步驟，之後就會自動同步。</p>
+      <ol class="syncsteps"><li>打開 <a href="${TOKEN_URL}" target="_blank" rel="noopener">GitHub 建立 token 的頁面</a>（會自動勾好 <b>gist</b>，其他都不用勾）。</li><li><b>Expiration</b> 選一年或 No expiration，按最下面的 <b>Generate token</b>。</li><li>複製 <code>ghp_</code> 開頭的那串，貼到下面按「連線」。另一台裝置貼<b>同一串</b>就好（建議先存在你的密碼管理工具裡）。</li></ol>
+      <div class="row wrap"><input type="password" id="synctok" autocomplete="off" spellcheck="false" placeholder="貼上 ghp_ 開頭的 token" aria-label="GitHub token"><button class="btn" id="syncgo" type="button">連線</button></div>
+      <p class="sm-p" id="syncst"></p>
+      <p class="sm-p">token 只存在這台裝置，不會放進備份碼。只開 gist 權限的話，就算外洩也只能讀寫你的 Gist，碰不到你的程式碼。</p>`}</section>`;
+  }
+  function bindSettings(root) {
+    status();
+    const go1 = root.querySelector('#syncgo');
+    if (go1) go1.onclick = async () => { const v = root.querySelector('#synctok').value; if (!/^\s*(ghp_|github_pat_)\w+\s*$/.test(v)) { status('看起來不像 token：應該是 ghp_ 或 github_pat_ 開頭。'); return; } go1.disabled = true; status('連線中⋯');
+      try { await connect(v); FUN.toast('同步完成！', 'wow'); renderSettings(root); } catch (e) { status('連線失敗：' + e.message); go1.disabled = false; } };
+    const now = root.querySelector('#syncnow'); if (now) now.onclick = async () => { await run(); if (!cfg.err) FUN.toast('同步完成', 'happy'); };
+    const off = root.querySelector('#syncoff'); if (off) armed(off, '這台不再同步', () => { disconnect(); renderSettings(root); });
+  }
+
+  // ---- 自動同步的時機：開啟時、切回來時、每 3 分鐘 ----
+  if (cfg.token) setTimeout(run, 1500);
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && cfg.token && Date.now() - (cfg.last || 0) > 20000) run(); });
+  setInterval(() => { if (document.visibilityState === 'visible' && cfg.token) run(); }, 180000);
+
+  return { run, changed, merge, settingsHTML, bindSettings, on: () => !!cfg.token };
 })();
 // ===== App =====
 const ORDER = ['basic', 'deriv', 'invest', 'law', 'mgmt', 're'];
@@ -5530,7 +5866,7 @@ const store = {
   set(v) { try { localStorage.setItem(this.k, JSON.stringify(v)); } catch (e) { } }
 };
 let ST = Object.assign({ done: {}, wrong2: {}, subj: 'home', tab: {}, best: {} }, store.get());
-const save = () => store.set(ST);
+const save = () => { store.set(ST); if (typeof SYNC !== 'undefined') SYNC.changed(); };
 const strip = h => h.replace(/<[^>]+>/g, ' ').replace(/&nbsp;|&lt;|&gt;|&amp;/g, ' ').replace(/\s+/g, ' ').trim();
 function subjCards(s) { return s.sections.reduce((a, x) => a.concat(x.cards), []); }
 function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; }
@@ -5593,7 +5929,7 @@ function renderLearn(key, root) {
   $$('[data-pre]', root).forEach(b => b.onclick = () => jumpCard('basic', b.dataset.pre));
   $$('[data-done]', root).forEach(cb => cb.addEventListener('change', () => {
     const id = cb.dataset.done;
-    if (cb.checked) { if (!ST.done[id]) { ST.done[id] = true; FUN.xp(10, cb); FUN.beep('ok'); } } else if (ST.done[id]) { delete ST.done[id]; FUN.xp(-10, cb); }
+    if (cb.checked) { if (!ST.done[id]) { ST.done[id] = Date.now(); FUN.xp(10, cb); FUN.beep('ok'); } } else if (ST.done[id]) { (ST.del = ST.del || {})['done|' + id] = Date.now(); delete ST.done[id]; FUN.xp(-10, cb); }
     save(); cb.closest('.card').classList.toggle('done', cb.checked); updateCounts(); FUN.checkCards();
   }));
   const q = $('#q-' + key, root);
@@ -5757,7 +6093,7 @@ function renderProblems(root) {
     $('.hint', pb).onclick = () => { const h = steps.find(s => s.hidden); if (h) h.hidden = false; else $('.ans', pb).hidden = false; };
     $('.reveal', pb).onclick = () => { steps.forEach(s => s.hidden = false); $('.ans', pb).hidden = false; };
   });
-  $$('[data-pd]', root).forEach(cb => cb.onchange = () => { const k = 'P' + cb.dataset.pd; if (cb.checked && !ST.done[k]) { ST.done[k] = true; FUN.xp(10, cb); } else if (!cb.checked && ST.done[k]) { delete ST.done[k]; FUN.xp(-10, cb); } save(); });
+  $$('[data-pd]', root).forEach(cb => cb.onchange = () => { const k = 'P' + cb.dataset.pd; if (cb.checked && !ST.done[k]) { ST.done[k] = Date.now(); FUN.xp(10, cb); } else if (!cb.checked && ST.done[k]) { (ST.del = ST.del || {})['done|' + k] = Date.now(); delete ST.done[k]; FUN.xp(-10, cb); } save(); });
   $$('[data-f]', root).forEach(b => b.onclick = () => { $$('[data-f]', root).forEach(x => { x.classList.toggle('on', x === b); x.classList.toggle('ghost', x !== b); }); $$('.prob', root).forEach(p => p.hidden = b.dataset.f !== 'all' && p.dataset.l !== b.dataset.f); });
 }
 
@@ -5865,8 +6201,8 @@ function renderHome(root) {
   updateCounts();
 }
 
-function jumpFormula(k, id) { go(k, 'formula', { top: 1 }); setTimeout(() => { const el = $('#f-' + id); if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); el.classList.add('flash'); setTimeout(() => el.classList.remove('flash'), 1600); } }, 60); }
-function jumpCard(k, id) { go(k, 'learn', { top: 1 }); setTimeout(() => { const el = $('#c-' + id); if (el) { const d = el.querySelector('details'); if (d) d.open = true; el.scrollIntoView({ behavior: 'smooth', block: 'start' }); el.classList.add('flash'); setTimeout(() => el.classList.remove('flash'), 1600); } }, 60); }
+function jumpFormula(k, id) { go(k, 'formula', { top: 1 }); setTimeout(() => { const el = $('#f-' + id); if (el) { window.scrollTo(0, Math.max(0, scrollY + el.getBoundingClientRect().top - topGap())); el.classList.add('flash'); setTimeout(() => el.classList.remove('flash'), 1600); } }, 60); }
+function jumpCard(k, id) { go(k, 'learn', { top: 1 }); setTimeout(() => { const el = $('#c-' + id); if (el) { const d = el.querySelector('details'); if (d) d.open = true; window.scrollTo(0, Math.max(0, scrollY + el.getBoundingClientRect().top - topGap())); el.classList.add('flash'); setTimeout(() => el.classList.remove('flash'), 1600); } }, 60); }
 
 // ---------- 記住每一頁讀到哪裡 ----------
 // 以「畫面最上方那張卡片／區塊」當錨點（版面寬度、展開收合改變也找得回來），找不到才用捲動距離。
@@ -5922,10 +6258,10 @@ function go(k, tab, opt) {
   $$('.stab').forEach(b => b.setAttribute('aria-current', b.dataset.s === k ? 'page' : 'false'));
   document.body.dataset.subj = k;
   const main = $('#main');
-  if (k === 'home') { renderHome(main); opt && opt.top ? window.scrollTo(0, 0) : restorePos(); return; }
-  if (k === 'settings') { renderSettings(main); opt && opt.top ? window.scrollTo(0, 0) : restorePos(); return; }
-  if (k === 'milestones') { renderMilestones(main); opt && opt.top ? window.scrollTo(0, 0) : restorePos(); return; }
-  if (k === 'plan') { renderPlan(main); opt && opt.top ? window.scrollTo(0, 0) : restorePos(); return; }
+  if (k === 'home') { renderHome(main); NOTES.bmPill(); opt && opt.top ? window.scrollTo(0, 0) : restorePos(); return; }
+  if (k === 'settings') { renderSettings(main); NOTES.bmPill(); opt && opt.top ? window.scrollTo(0, 0) : restorePos(); return; }
+  if (k === 'milestones') { renderMilestones(main); NOTES.bmPill(); opt && opt.top ? window.scrollTo(0, 0) : restorePos(); return; }
+  if (k === 'plan') { renderPlan(main); NOTES.bmPill(); opt && opt.top ? window.scrollTo(0, 0) : restorePos(); return; }
   const s = DATA[k]; tab = tab || ST.tab[k] || PANES[k][0][0]; CUR = [k, tab];
   main.innerHTML = `<div class="shead"><div><h2>${s.full}</h2><p class="intro">${s.intro}</p></div><div class="prog"><span class="bar" data-prog="${k}"><i></i></span><span data-progt="${k}"></span> 已掌握</div></div><div class="ptabs" role="tablist">${PANES[k].map(p => `<button role="tab" class="ptab" data-p="${p[0]}" aria-selected="${p[0] === tab}" type="button">${p[1]}</button>`).join('')}</div><div id="pane"></div>`;
   $$('.ptab', main).forEach(b => b.onclick = () => go(k, b.dataset.p));
@@ -5934,6 +6270,7 @@ function go(k, tab, opt) {
   ({ intro: () => renderCFA(pane), learn: () => renderLearn(k, pane), formula: () => renderFormulas(k, pane), mcq: () => renderMCQ(k, pane), prob: () => renderProblems(pane), gen: () => renderGens(pane), flash: () => renderFlash(pane), essay: () => renderEssay(pane), game: () => renderGames(k, pane), notes: () => NOTES.page(k, pane) })[tab]();
   updateCounts();
   opt && opt.top ? window.scrollTo(0, 0) : restorePos();
+  NOTES.bmPill();
 }
 window.rerender = () => go(CUR[0], CUR[1]);
 const NAVI = {

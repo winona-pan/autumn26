@@ -359,5 +359,32 @@ body.notips .tipbox{display:none} body.calm *{animation:none!important;transitio
  :root{--rp:#7a5c3e} @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--rp:#d6b48e}} :root[data-theme="dark"]{--rp:#d6b48e}
 .pblk.rp,.plrow.rp{--acc:var(--rp)} .rpname{border:2px solid var(--line);border-radius:8px;padding:2px 8px;background:var(--bg);color:var(--ink);font:inherit;font-weight:700;width:150px} .plrow.rp input[type=date]{border:2px solid var(--line);border-radius:8px;padding:2px 6px;background:var(--bg);color:var(--ink);font:inherit}
 .savebar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:16px 0;max-width:860px;position:sticky;top:64px;z-index:5;background:var(--bg);padding:6px 0}
+.bmbtn{font:inherit;font-size:12.5px;font-weight:700;color:var(--ink);background:var(--panel);border:2px solid var(--line);border-radius:999px;padding:2px 10px;cursor:pointer}
+.bmbtn.on{background:var(--bad);border-color:var(--bad);color:#fff}
+.card .body .bmk{position:relative;box-shadow:inset 4px 0 0 var(--bad);background:color-mix(in srgb,var(--bad) 7%,transparent);border-radius:4px}
+.card .body .bmk::before{content:'讀到這裡';display:inline-block;margin:0 6px 2px 0;padding:0 7px;border-radius:999px;background:var(--bad);color:#fff;font-size:11.5px;font-weight:800;vertical-align:1px;line-height:1.7}
+.card.bmkcard>header::after{content:'讀到這裡';display:inline-block;margin-left:8px;padding:0 8px;border-radius:999px;background:var(--bad);color:#fff;font-size:11.5px;font-weight:800;line-height:1.8}
+.bmpill{position:fixed;right:max(12px,env(safe-area-inset-right,0px));bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:65;display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.bmpill[hidden]{display:none}
+.bmopen{font:inherit;font-weight:800;font-size:13.5px;color:#fff;background:var(--bad);border:2px solid var(--line);border-radius:999px;padding:6px 14px;box-shadow:3px 3px 0 var(--line);cursor:pointer}
+.bmlist{display:none;width:min(340px,calc(100vw - 32px));max-height:min(60vh,420px);overflow:auto;background:var(--panel);border:2px solid var(--line);border-radius:14px;box-shadow:3px 3px 0 var(--line);padding:10px 12px}
+.bmpill.open .bmlist{display:block} .bmlist>b{display:block;margin-bottom:6px}
+.bmrow{display:flex;gap:8px;align-items:center;padding:6px 0;border-top:1px dashed var(--hair)} .bmrow:first-of-type{border-top:0}
+.bmgo{flex:1;min-width:0;text-align:left;font:inherit;color:var(--ink);background:none;border:0;padding:2px 0;cursor:pointer;display:flex;flex-direction:column;gap:1px}
+.bmgo span{font-weight:700} .bmgo small{color:var(--mute);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ntbms .bmrow{background:var(--panel);border:2px solid var(--line);border-radius:12px;padding:8px 12px;margin-bottom:8px}
+.nth3{margin:4px 0 8px;font-size:15px}
+.postoast{bottom:calc(136px + env(safe-area-inset-bottom,0px))}
+.ntrich img{display:block;max-width:100%;height:auto;border-radius:8px;margin:6px 0;cursor:zoom-in;border:1px solid var(--hair)}
+.ntrich img.missing{min-height:40px;min-width:120px;background:var(--soft)}
+.nted img{cursor:default}
+.nted.busy{opacity:.6;pointer-events:none}
+.ntrich math[display="block"]{display:block;margin:.5em 0;overflow-x:auto}
+.imgview{position:fixed;inset:0;z-index:90;background:rgba(10,12,30,.86);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:16px;cursor:zoom-out}
+.imgview img{max-width:100%;max-height:calc(100vh - 90px);border-radius:8px;background:#fff}
+.syncsteps{margin:6px 0 10px;padding-left:1.3em;font-size:14px;line-height:1.7} .syncsteps a{color:var(--acc);font-weight:700}
+#synctok{flex:1 1 220px;min-width:0;font:inherit;padding:7px 10px;border:2px solid var(--line);border-radius:10px;background:var(--panel);color:var(--ink)}
+#syncst.bad{color:var(--bad);font-weight:700}
 @media (max-width:640px){.nttools{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px;scrollbar-width:thin} .ntgrp{flex-wrap:nowrap;flex:none}}
+@media (pointer:coarse){.hlbar .hlc{width:32px;height:32px} .hlb{padding:6px 12px} .ntfb{height:34px;min-width:36px} .ntdot{width:30px;height:30px} .bmbtn,.ntmode{padding:5px 12px}}
 </style>

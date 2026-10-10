@@ -23,7 +23,7 @@ function renderSettings(root) {
   const seg = (name, opts, cur) => `<div class="seg" role="group" aria-label="${name}">${opts.map(o => `<button type="button" data-set="${name}" data-v="${o[0]}" aria-pressed="${String(cur) === String(o[0])}">${o[1]}</button>`).join('')}</div>`;
   const doneN = Object.keys(ST.done).filter(k => !k.startsWith('P')).length;
   const wrongN = Object.values(ST.wrong2 || {}).reduce((a, x) => a + x.length, 0);
-  root.innerHTML = `<div class="pagehead"><h2>設定</h2><p class="intro">調整成你最舒服的樣子。所有設定和紀錄只存在這台裝置的瀏覽器裡。</p></div>
+  root.innerHTML = `<div class="pagehead"><h2>設定</h2><p class="intro">調整成你最舒服的樣子。設定和紀錄存在這台裝置的瀏覽器裡；開啟下面的雲端同步後，手機和電腦會自動合併。</p></div>
   <div class="setgrid">
     <section class="setbox"><h3>外觀</h3>
       <div class="row"><span>主題</span>${seg('theme', [['system', '跟著系統'], ['light', '淺色'], ['dark', '深色']], ST.theme || 'system')}</div>
@@ -35,6 +35,7 @@ function renderSettings(root) {
       <div class="row"><span>題目語言（衍金、管理學）</span>${seg('lang', [['zh', '中文'], ['both', '雙語'], ['en', 'English']], ST.lang)}</div>
       <div class="row"><span>音效</span>${seg('sound', [['true', '開'], ['false', '關']], !!ST.sound)}</div>
     </section>
+    ${SYNC.settingsHTML()}
     <section class="setbox"><h3>備份與搬家</h3><p class="sm-p">手機和電腦的紀錄是分開的。在一台按「複製備份碼」，到另一台貼上後按「匯入」，進度就搬過去了。</p>
       <div class="row wrap"><button class="btn" id="bkcopy" type="button">複製備份碼</button><span class="sm-p" id="bkmsg"></span></div>
       <textarea id="bktext" rows="3" placeholder="把備份碼貼在這裡" aria-label="備份碼"></textarea>
@@ -63,10 +64,11 @@ function renderSettings(root) {
     try { const v = JSON.parse(decodeURIComponent(escape(atob($('#bktext', root).value.trim())))); if (typeof v !== 'object' || !v.done) throw 0; ST = Object.assign({ done: {}, wrong2: {}, tab: {}, best: {} }, v); FUN.init(); save(); applyPrefs(); FUN.hud(); FUN.toast('匯入成功！', 'wow'); renderSettings(root); }
     catch (e) { $('#bkmsg', root).textContent = '備份碼看起來不完整，請重新複製一次。'; }
   });
+  SYNC.bindSettings(root);
   armed($('#clrwrong', root), '清除錯題本', () => { ST.wrong2 = {}; save(); FUN.toast('錯題本清空了', 'happy'); renderSettings(root); });
-  armed($('#clrdone', root), '清除勾選', () => { const n = Object.keys(ST.done).length; ST.done = {}; ST.xp = Math.max(0, ST.xp - n * 10); save(); FUN.hud(); updateCounts(); FUN.toast(`清除 ${n} 個勾選，XP 已扣回`, 'sad'); renderSettings(root); });
+  armed($('#clrdone', root), '清除勾選', () => { const n = Object.keys(ST.done).length; ST.done = {}; (ST.del = ST.del || {})['done|*'] = Date.now(); ST.xp = Math.max(0, ST.xp - n * 10); save(); FUN.hud(); updateCounts(); FUN.toast(`清除 ${n} 個勾選，XP 已扣回`, 'sad'); renderSettings(root); });
   armed($('#clrbest', root), '清除遊戲紀錄', () => { ST.best = {}; ST.stats = {}; ST.genOk = 0; save(); FUN.toast('遊戲紀錄清空了', 'happy'); renderSettings(root); });
-  armed($('#clrall', root), '全部重設', () => { const keep = {}; PREF_KEYS.forEach(k => keep[k] = ST[k]); ST = Object.assign({ done: {}, wrong2: {}, subj: 'home', tab: {}, best: {} }, keep); FUN.init(); save(); FUN.hud(); updateCounts(); FUN.toast('全部重新開始！一起加油', 'wow'); renderSettings(root); });
+  armed($('#clrall', root), '全部重設', () => { const keep = {}; PREF_KEYS.forEach(k => keep[k] = ST[k]); ST = Object.assign({ done: {}, wrong2: {}, subj: 'home', tab: {}, best: {} }, keep); ST.del = { '*': Date.now() }; FUN.init(); save(); FUN.hud(); updateCounts(); FUN.toast('全部重新開始！一起加油', 'wow'); renderSettings(root); });
 }
 
 function renderMilestones(root) {
