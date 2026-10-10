@@ -28,21 +28,21 @@ DATA.re.sections[0].cards.push(
 );
 
 DATA.re.mcq.push(
-  { q:'In a mortgage loan, the borrower is called the:', o:['mortgagee','mortgagor','trustee','beneficiary'], a:1, e:'Mortgagor 是提供抵押的借款人；mortgagee 是貸方。' },
-  { q:'The document that creates the borrower’s personal obligation to repay the debt is the:', o:['mortgage','promissory note','deed of trust','title insurance policy'], a:1, e:'Promissory note 是債務本身；mortgage／deed of trust 是擔保工具。' },
-  { q:'Under lien theory, legal title to the property during the loan is held by the:', o:['lender','borrower','trustee','county recorder'], a:1, e:'Lien theory：所有權在借款人，貸方只有 lien，違約要法拍。Title theory 則是貸方持有法律所有權。' },
-  { q:'In a deed of trust, the lender is the:', o:['trustor','trustee','beneficiary','grantor'], a:2, e:'Trustor = 借款人；trustee = 中立第三人；beneficiary = 貸方。' },
-  { q:'A power of sale clause allows:', o:['the borrower to sell without paying off the loan','a nonjudicial foreclosure','the lender to raise the interest rate','the borrower to assume another loan'], a:1, e:'有 power of sale，違約時可不經法院拍賣（nonjudicial foreclosure）。' },
-  { q:'A clause that makes the entire loan balance immediately due upon default is the:', o:['due-on-sale clause','acceleration clause','subordination clause','release clause'], a:1, e:'Acceleration clause；due-on-sale 是出售房屋時要求還清。' },
-  { q:'Hazard insurance required by a mortgage lender mainly protects against:', o:['borrower default','physical damage to the property, such as fire','defects in title','rising interest rates'], a:1, e:'Hazard insurance 保財產損失；PMI 保違約；title insurance 保產權瑕疵。' },
-  { q:'Private mortgage insurance (PMI) primarily protects the:', o:['borrower','lender','title company','local government'], a:1, e:'PMI 在借款人違約時補償貸方，通常 LTV > 80% 要求。' },
-  { q:'Which lien typically has priority even over a first mortgage?', o:['Mechanic’s lien','Property tax lien','Second mortgage','Judgment lien'], a:1, e:'欠繳房地產稅的 tax lien 通常最優先 → 所以貸方常用 escrow 代繳稅金。' },
-  { q:'A borrower’s right to pay off the debt and keep the property before the foreclosure sale is the:', o:['statutory redemption','equity of redemption','deficiency judgment','due-on-sale right'], a:1, e:'Equity of redemption 是法拍前；statutory redemption 是部分州允許法拍後一段期間內贖回。' },
-  { q:'When foreclosure proceeds are less than the loan balance on a recourse loan, the lender may seek a:', o:['deficiency judgment','reconveyance','wraparound mortgage','subordination'], a:0, e:'Deficiency judgment：法院判決借款人支付差額；無追索權貸款則不行。' },
-  { q:'A mortgage given by the buyer to the seller as part of the purchase price is a:', o:['blanket mortgage','purchase-money mortgage','package mortgage','reverse mortgage'], a:1, e:'Purchase-money mortgage，常見於賣方融資。' },
-  { q:'Under a land contract (installment sales contract), title passes to the buyer:', o:['at signing','after the first payment','after the contract is fully paid','never'], a:2, e:'付清前所有權仍在賣方，買方風險較高。' },
-  { q:'依票據法，本票執票人向發票人行使追索權時，可以：', o:['直接到地政事務所過戶','聲請法院裁定後強制執行','要求警察扣押財產','不需任何程序直接拍賣房屋'], a:1, e:'票據法 §123：本票可聲請法院裁定後強制執行，比一般訴訟快。' },
-  { q:'Buying a property “subject to” the existing mortgage means the buyer:', o:['becomes personally liable for the loan','takes the property without personal liability; the seller remains liable','must pay off the loan immediately','receives a new loan from the lender'], a:1, e:'Subject to：買方不負個人責任；assumption：買方承受並負個人責任。' }
+  { u:'re1', q:'In a mortgage loan, the borrower is called the:', o:['mortgagee','mortgagor','trustee','beneficiary'], a:1, e:'Mortgagor 是提供抵押的借款人；mortgagee 是貸方。' },
+  { u:'re1', q:'The document that creates the borrower’s personal obligation to repay the debt is the:', o:['mortgage','promissory note','deed of trust','title insurance policy'], a:1, e:'Promissory note 是債務本身；mortgage／deed of trust 是擔保工具。' },
+  { u:'re1', q:'Under lien theory, legal title to the property during the loan is held by the:', o:['lender','borrower','trustee','county recorder'], a:1, e:'Lien theory：所有權在借款人，貸方只有 lien，違約要法拍。Title theory 則是貸方持有法律所有權。' },
+  { u:'re1', q:'In a deed of trust, the lender is the:', o:['trustor','trustee','beneficiary','grantor'], a:2, e:'Trustor = 借款人；trustee = 中立第三人；beneficiary = 貸方。' },
+  { u:'re1', q:'A power of sale clause allows:', o:['the borrower to sell without paying off the loan','a nonjudicial foreclosure','the lender to raise the interest rate','the borrower to assume another loan'], a:1, e:'有 power of sale，違約時可不經法院拍賣（nonjudicial foreclosure）。' },
+  { u:'re1', q:'A clause that makes the entire loan balance immediately due upon default is the:', o:['due-on-sale clause','acceleration clause','subordination clause','release clause'], a:1, e:'Acceleration clause；due-on-sale 是出售房屋時要求還清。' },
+  { u:'re1', q:'Hazard insurance required by a mortgage lender mainly protects against:', o:['borrower default','physical damage to the property, such as fire','defects in title','rising interest rates'], a:1, e:'Hazard insurance 保財產損失；PMI 保違約；title insurance 保產權瑕疵。' },
+  { u:'re1', q:'Private mortgage insurance (PMI) primarily protects the:', o:['borrower','lender','title company','local government'], a:1, e:'PMI 在借款人違約時補償貸方，通常 LTV > 80% 要求。' },
+  { u:'re1', q:'Which lien typically has priority even over a first mortgage?', o:['Mechanic’s lien','Property tax lien','Second mortgage','Judgment lien'], a:1, e:'欠繳房地產稅的 tax lien 通常最優先 → 所以貸方常用 escrow 代繳稅金。' },
+  { u:'re1', q:'A borrower’s right to pay off the debt and keep the property before the foreclosure sale is the:', o:['statutory redemption','equity of redemption','deficiency judgment','due-on-sale right'], a:1, e:'Equity of redemption 是法拍前；statutory redemption 是部分州允許法拍後一段期間內贖回。' },
+  { u:'re1', q:'When foreclosure proceeds are less than the loan balance on a recourse loan, the lender may seek a:', o:['deficiency judgment','reconveyance','wraparound mortgage','subordination'], a:0, e:'Deficiency judgment：法院判決借款人支付差額；無追索權貸款則不行。' },
+  { u:'re1', q:'A mortgage given by the buyer to the seller as part of the purchase price is a:', o:['blanket mortgage','purchase-money mortgage','package mortgage','reverse mortgage'], a:1, e:'Purchase-money mortgage，常見於賣方融資。' },
+  { u:'re1', q:'Under a land contract (installment sales contract), title passes to the buyer:', o:['at signing','after the first payment','after the contract is fully paid','never'], a:2, e:'付清前所有權仍在賣方，買方風險較高。' },
+  { u:'re1', q:'依票據法，本票執票人向發票人行使追索權時，可以：', o:['直接到地政事務所過戶','聲請法院裁定後強制執行','要求警察扣押財產','不需任何程序直接拍賣房屋'], a:1, e:'票據法 §123：本票可聲請法院裁定後強制執行，比一般訴訟快。' },
+  { u:'re1', q:'Buying a property “subject to” the existing mortgage means the buyer:', o:['becomes personally liable for the loan','takes the property without personal liability; the seller remains liable','must pay off the loan immediately','receives a new loan from the lender'], a:1, e:'Subject to：買方不負個人責任；assumption：買方承受並負個人責任。' }
 );
 
 // ===== 單元 1 補充（二）：產權與契據（條款與 lien 排序在 d_re3.js，違約與法拍在 d_re4.js） =====
@@ -55,19 +55,19 @@ DATA.re.sections[0].cards.push(
 );
 
 DATA.re.mcq.push(
-  { q:'A clause allowing additional loans to be secured by the same mortgage is the:', o:['assignment clause','future advances clause','release clause','condemnation clause'], a:1, e:'Future advances clause（追加貸款條款），類似台灣的最高限額抵押權。' },
-  { q:'The clause that specifies the order in which a borrower’s payment is applied (e.g., escrow, interest, then principal) is the:', o:['application of payments clause','acceleration clause','due-on-sale clause','prepayment clause'], a:0, e:'Application of payments：每筆付款依序沖抵費用、代管帳戶、利息、本金。' },
-  { q:'“Forbearance by lender not a waiver” means that:', o:['the lender must forgive late payments','the lender’s failure to enforce a right once does not waive that right later','the borrower may skip payments','the loan becomes non-recourse'], a:1, e:'貸方一時沒有行使權利，不代表以後放棄。' },
-  { q:'An assignment clause allows the:', o:['borrower to transfer the loan to a buyer without approval','lender to sell the note and mortgage to another party','borrower to subordinate the mortgage','lender to raise the interest rate'], a:1, e:'貸方可以轉讓債權（例如賣到次級市場），借款人義務不變。' },
-  { q:'When a buyer assumes a loan and the lender releases the original borrower from liability, this is called:', o:['subordination','novation','reconveyance','condemnation'], a:1, e:'Novation（債務更替）：新債務人取代舊債務人。' },
-  { q:'After a mortgage is paid off, the lender provides a document releasing its lien, called a:', o:['lis pendens','satisfaction (release) of mortgage','quitclaim deed','notice of default'], a:1, e:'Satisfaction / release of mortgage；deed of trust 則是 reconveyance。台灣是抵押權塗銷。' },
-  { q:'In a deed, the party conveying the property is the:', o:['grantee','grantor','mortgagee','beneficiary'], a:1, e:'Grantor = 讓與人（賣方）；grantee = 受讓人（買方）。' },
-  { q:'Which deed provides the greatest protection to the buyer?', o:['Quitclaim deed','Special warranty deed','General warranty deed','Bargain and sale deed'], a:2, e:'General warranty deed 保證包含前手造成的瑕疵；quitclaim 完全不保證。' },
-  { q:'Which method of title assurance is a one-time premium policy that pays for losses from covered title defects?', o:['Abstract of title','Title insurance','Torrens certificate','Attorney’s opinion'], a:1, e:'Title insurance：owner’s policy 保障買方、lender’s policy 保障貸方。' },
-  { q:'Under the Torrens system:', o:['a private insurer guarantees title','title is registered and certified by a government authority','no recording is needed','only lenders are protected'], a:1, e:'政府登記並確認產權，登記有公信力；台灣制度類似。' },
-  { q:'Generally, which lien is paid first from foreclosure proceeds (after sale costs)?', o:['The first recorded mortgage','Property tax liens','Judgment liens','Second mortgages'], a:1, e:'房地產稅 lien 通常優先於所有 lien；其他依登記先後。台灣稅捐稽徵法 §6 也規定土增稅、地價稅、房屋稅優先。' },
-  { q:'If a senior mortgage is foreclosed, a junior lien on the property is typically:', o:['moved to first priority','wiped out, with any surplus available to it','unaffected and remains on the property','converted to a tax lien'], a:1, e:'前順位法拍後，後順位 lien 被塗銷，只能從剩餘價金受償。' },
-  { q:'依民法，同一不動產上的數個抵押權，其次序依：', o:['債權金額大小','登記之先後','借款利率高低','債權人的身分'], a:1, e:'民法 §865：依登記之先後定其次序。' },
-  { q:'A notice recorded to warn third parties that a lawsuit (such as a judicial foreclosure) affects the property is a:', o:['lis pendens','deed in lieu','credit bid','subordination agreement'], a:0, e:'Lis pendens（訴訟繫屬通知）。' },
-  { q:'Property acquired by the lender at a foreclosure sale is referred to as:', o:['REO (real estate owned)','HELOC','PMI','PITI'], a:0, e:'貸方用 credit bid 得標後持有的不動產稱為 REO。' }
+  { u:'re1', q:'A clause allowing additional loans to be secured by the same mortgage is the:', o:['assignment clause','future advances clause','release clause','condemnation clause'], a:1, e:'Future advances clause（追加貸款條款），類似台灣的最高限額抵押權。' },
+  { u:'re1', q:'The clause that specifies the order in which a borrower’s payment is applied (e.g., escrow, interest, then principal) is the:', o:['application of payments clause','acceleration clause','due-on-sale clause','prepayment clause'], a:0, e:'Application of payments：每筆付款依序沖抵費用、代管帳戶、利息、本金。' },
+  { u:'re1', q:'“Forbearance by lender not a waiver” means that:', o:['the lender must forgive late payments','the lender’s failure to enforce a right once does not waive that right later','the borrower may skip payments','the loan becomes non-recourse'], a:1, e:'貸方一時沒有行使權利，不代表以後放棄。' },
+  { u:'re1', q:'An assignment clause allows the:', o:['borrower to transfer the loan to a buyer without approval','lender to sell the note and mortgage to another party','borrower to subordinate the mortgage','lender to raise the interest rate'], a:1, e:'貸方可以轉讓債權（例如賣到次級市場），借款人義務不變。' },
+  { u:'re1', q:'When a buyer assumes a loan and the lender releases the original borrower from liability, this is called:', o:['subordination','novation','reconveyance','condemnation'], a:1, e:'Novation（債務更替）：新債務人取代舊債務人。' },
+  { u:'re1', q:'After a mortgage is paid off, the lender provides a document releasing its lien, called a:', o:['lis pendens','satisfaction (release) of mortgage','quitclaim deed','notice of default'], a:1, e:'Satisfaction / release of mortgage；deed of trust 則是 reconveyance。台灣是抵押權塗銷。' },
+  { u:'re1', q:'In a deed, the party conveying the property is the:', o:['grantee','grantor','mortgagee','beneficiary'], a:1, e:'Grantor = 讓與人（賣方）；grantee = 受讓人（買方）。' },
+  { u:'re1', q:'Which deed provides the greatest protection to the buyer?', o:['Quitclaim deed','Special warranty deed','General warranty deed','Bargain and sale deed'], a:2, e:'General warranty deed 保證包含前手造成的瑕疵；quitclaim 完全不保證。' },
+  { u:'re1', q:'Which method of title assurance is a one-time premium policy that pays for losses from covered title defects?', o:['Abstract of title','Title insurance','Torrens certificate','Attorney’s opinion'], a:1, e:'Title insurance：owner’s policy 保障買方、lender’s policy 保障貸方。' },
+  { u:'re1', q:'Under the Torrens system:', o:['a private insurer guarantees title','title is registered and certified by a government authority','no recording is needed','only lenders are protected'], a:1, e:'政府登記並確認產權，登記有公信力；台灣制度類似。' },
+  { u:'re1', q:'Generally, which lien is paid first from foreclosure proceeds (after sale costs)?', o:['The first recorded mortgage','Property tax liens','Judgment liens','Second mortgages'], a:1, e:'房地產稅 lien 通常優先於所有 lien；其他依登記先後。台灣稅捐稽徵法 §6 也規定土增稅、地價稅、房屋稅優先。' },
+  { u:'re1', q:'If a senior mortgage is foreclosed, a junior lien on the property is typically:', o:['moved to first priority','wiped out, with any surplus available to it','unaffected and remains on the property','converted to a tax lien'], a:1, e:'前順位法拍後，後順位 lien 被塗銷，只能從剩餘價金受償。' },
+  { u:'re1', q:'依民法，同一不動產上的數個抵押權，其次序依：', o:['債權金額大小','登記之先後','借款利率高低','債權人的身分'], a:1, e:'民法 §865：依登記之先後定其次序。' },
+  { u:'re1', q:'A notice recorded to warn third parties that a lawsuit (such as a judicial foreclosure) affects the property is a:', o:['lis pendens','deed in lieu','credit bid','subordination agreement'], a:0, e:'Lis pendens（訴訟繫屬通知）。' },
+  { u:'re1', q:'Property acquired by the lender at a foreclosure sale is referred to as:', o:['REO (real estate owned)','HELOC','PMI','PITI'], a:0, e:'貸方用 credit bid 得標後持有的不動產稱為 REO。' }
 );
