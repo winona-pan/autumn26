@@ -51,10 +51,11 @@ const NOTES = (() => {
   // ---- 筆記 ----
   // ---- 筆記編輯列：顏色用固定色碼下指令，再把產生的 style 換成 class ----
   function tidyColors(ed) {
-    ed.querySelectorAll('[style], font[color]').forEach(n => {
-      const cc = RICH.colorCls(n), keep = (n.className || '').split(/\s+/).filter(c => c && !/^(tc|bg)-/.test(c));
+    ed.querySelectorAll('[style], font[color], font[size]').forEach(n => {
+      const cc = RICH.colorCls(n), keep = (n.className || '').split(/\s+/).filter(c => c && !/^(tc|bg|fs)-/.test(c));
+      if (n.hasAttribute('size') && !cc.some(c => c.startsWith('fs-'))) keep.push('fs-m');
       const rest = (n.getAttribute('style') || '').split(';').filter(x => x.trim() && !/^\s*(color|background(-color)?)\s*:/i.test(x)).join(';');
-      if (rest) n.setAttribute('style', rest); else n.removeAttribute('style'); n.removeAttribute('color');
+      if (rest) n.setAttribute('style', rest); else n.removeAttribute('style'); n.removeAttribute('color'); n.removeAttribute('size');
       const fin = [...new Set(keep.concat(cc))]; if (fin.length) n.className = fin.join(' '); else n.removeAttribute('class');
     });
   }
@@ -68,6 +69,8 @@ const NOTES = (() => {
     const cmd = (c, v) => { ed.focus(); css(c === 'foreColor'); document.execCommand(c, false, v); css(false); tidyColors(ed); state(); };
     box.querySelectorAll('.nttools button').forEach(bt => bt.addEventListener('mousedown', e => e.preventDefault()));
     box.querySelectorAll('[data-fmt]').forEach(bt => bt.onclick = () => cmd(bt.dataset.fmt, null));
+    // 字級：用 fontSize 指令（產生 <font size>），再換成 class；「中」= 拿掉字級
+    box.querySelectorAll('[data-fs]').forEach(bt => bt.onclick = () => { ed.focus(); if (bt.dataset.fs === '3') { stripColor(ed, /^fs-/); return; } css(false); document.execCommand('fontSize', false, bt.dataset.fs); tidyColors(ed); state(); });
     box.querySelectorAll('[data-blk]').forEach(bt => bt.onclick = () => cmd('formatBlock', '<' + bt.dataset.blk + '>'));
     box.querySelectorAll('[data-tc]').forEach(bt => bt.onclick = () => { const c = bt.dataset.tc; if (c) cmd('foreColor', RICH.TC[c]); else { ed.focus(); stripColor(ed, /^tc-/); } });
     box.querySelectorAll('[data-bg]').forEach(bt => bt.onclick = () => { const c = bt.dataset.bg; if (c) { ed.focus(); css(true); if (!document.execCommand('hiliteColor', false, RICH.BG[c])) document.execCommand('backColor', false, RICH.BG[c]); css(false); tidyColors(ed); } else { ed.focus(); stripColor(ed, /^bg-/); } });
@@ -87,6 +90,7 @@ const NOTES = (() => {
       ? `<span class="nthead">我的筆記<small>可以直接貼上 Gemini、ChatGPT 或網頁內容，格式會保留</small></span><span class="nttools" role="toolbar" aria-label="筆記格式">
         <span class="ntgrp"><button type="button" class="ntfb" data-blk="h4" title="大標題">大標</button><button type="button" class="ntfb" data-blk="h5" title="小標題">小標</button><button type="button" class="ntfb" data-blk="p" title="內文">內文</button><button type="button" class="ntfb" data-blk="blockquote" title="引用">引用</button></span>
         <span class="ntgrp"><button type="button" class="ntfb" data-fmt="bold" title="粗體（⌘/Ctrl+B）"><b>B</b></button><button type="button" class="ntfb" data-fmt="italic" title="斜體（⌘/Ctrl+I）"><i>I</i></button><button type="button" class="ntfb" data-fmt="underline" title="底線（⌘/Ctrl+U）"><u>U</u></button><button type="button" class="ntfb" data-fmt="strikeThrough" title="刪除線"><s>S</s></button></span>
+        <span class="ntgrp"><span class="ntswl">字級</span><button type="button" class="ntfb" data-fs="2" title="小字" style="font-size:11px">小</button><button type="button" class="ntfb" data-fs="3" title="一般大小">中</button><button type="button" class="ntfb" data-fs="5" title="大字" style="font-size:15px">大</button><button type="button" class="ntfb" data-fs="6" title="特大字" style="font-size:17px">特大</button></span>
         <span class="ntgrp"><button type="button" class="ntfb" data-fmt="insertUnorderedList" title="圓點清單">• 清單</button><button type="button" class="ntfb" data-fmt="insertOrderedList" title="數字清單">1. 清單</button><button type="button" class="ntfb" data-fmt="outdent" title="往外縮">⇤</button><button type="button" class="ntfb" data-fmt="indent" title="往內縮">⇥</button></span>
         <span class="ntgrp ntsw"><span class="ntswl">文字</span>${Object.keys(RICH.TC).map(c => `<button type="button" class="ntdot tc-${c}" data-tc="${c}" aria-label="文字顏色"><span>A</span></button>`).join('')}<button type="button" class="ntdot" data-tc="" aria-label="預設文字顏色" title="預設顏色"><span>A</span></button></span>
         <span class="ntgrp ntsw"><span class="ntswl">底色</span>${Object.keys(RICH.BG).map(c => `<button type="button" class="ntdot bgdot bg-${c}" data-bg="${c}" aria-label="底色"></button>`).join('')}<button type="button" class="ntdot bgdot" data-bg="" aria-label="移除底色" title="移除底色">✕</button></span>

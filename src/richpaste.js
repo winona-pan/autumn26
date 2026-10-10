@@ -12,7 +12,8 @@ const RICH = (() => {
   const hex = c => { if (!c) return ''; c = c.trim().toLowerCase(); let m = c.match(/^#([0-9a-f]{3})$/); if (m) return '#' + m[1].split('').map(x => x + x).join(''); if (/^#[0-9a-f]{6}$/.test(c)) return c; m = c.match(/^rgba?\(\s*(\d+)[,\s]+(\d+)[,\s]+(\d+)/); return m ? '#' + [m[1], m[2], m[3]].map(x => (+x).toString(16).padStart(2, '0')).join('') : ''; };
   const find = (map, c) => { const h = hex(c); return Object.keys(map).find(k => map[k] === h); };
   function colorCls(n) {
-    const out = new Set(((n.getAttribute('class') || '').match(/\b(tc|bg)-[a-z]\b/g) || []));
+    const out = new Set(((n.getAttribute('class') || '').match(/\b(tc|bg|fs)-[a-z]+\b/g) || []));
+    const fsz = { 1: 's', 2: 's', 4: 'l', 5: 'l', 6: 'xl', 7: 'xl' }[n.getAttribute('size')]; if (fsz) out.add('fs-' + fsz);
     const st = n.getAttribute('style') || '';
     const fc = (st.match(/(?:^|;)\s*color:\s*([^;]+)/i) || [])[1] || n.getAttribute('color'); const t = find(TC, fc); if (t) out.add('tc-' + t);
     const bc = (st.match(/background(?:-color)?:\s*([^;]+)/i) || [])[1]; const b = find(BG, bc); if (b) out.add('bg-' + b);
