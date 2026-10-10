@@ -3,13 +3,15 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Huninn&family=Noto+Sans+TC:wght@400;500;700&display=swap">
 <style>
+@font-face{font-family:"LatinPunct";src:local("Helvetica Neue"),local("HelveticaNeue"),local("Segoe UI"),local("Roboto"),local("Noto Sans"),local("Arial"),local("ArialMT");unicode-range:U+2018-2019,U+201C-201D;font-weight:100 900}
+
 /* Layout: a sticker-book study app — chunky outlined cards with offset "sticker" shadows on a dotted sky page, a piggy-bank mascot, and a candy accent per subject. */
 :root{
   --bg:#eef5ff; --dot:#d6e4fb; --panel:#ffffff; --ink:#22264a; --mute:#5d6386; --line:#22264a; --soft:#e8eefb; --hair:#cfd8ee;
   --basic:#2f86e0; --deriv:#0fa89a; --invest:#f07a12; --law:#e0407a; --mgmt:#7556f0; --cfa:#2f9e44; --acc:var(--deriv);
   --plain:#dff7f3; --life:#fff0d9; --exam:#ece6ff; --why:#fff7c7; --good:#1f9d55; --bad:#d9412b; --hit:#fff3a6;
   --pig:#ffb3c8; --pigd:#e8799a; --gold:#ffcf3a;
-  --f-display:"Huninn","Noto Sans TC","PingFang TC",sans-serif; --f-zh:"Huninn","Noto Sans TC","PingFang TC",sans-serif; --f-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --f-display:"Huninn","Noto Sans TC","PingFang TC",sans-serif; --f-zh:"Huninn","Noto Sans TC","PingFang TC",sans-serif; --f-body:"LatinPunct","Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
   --sh:4px 4px 0 var(--line);
 }
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
