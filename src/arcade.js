@@ -10,13 +10,26 @@ const ARCADE = (() => {
   const best = (id, v, lower) => { const k = 'ar_' + id + '_' + KEY, o = ST.best[k]; if (v != null && (o == null || (lower ? v < o : v > o))) { ST.best[k] = v; save(); return { v, rec: true }; } return { v: o, rec: false }; };
 
   // ---- 題目來源 ----
-  function pairsFor(k) {
+  const CJK = '[\\u3400-\\u9fff]', ENW = "[A-Za-z][A-Za-z0-9 \\-/&’'.]{1,32}";
+  const PAIR_RX = [
+    new RegExp(`<b>(${ENW})</b>\\s*[（(](${CJK}[^）)<]{0,14})[）)]`, 'g'),
+    new RegExp(`<b>(${CJK}[^<（(]{1,12})</b>\\s*[（(](${ENW})[）)]`, 'g'),
+    new RegExp(`(${CJK}{2,8})[（(](${ENW})[）)]`, 'g')
+  ];
+  function pairsFor(k, all) {
     const seen = new Set(), out = [];
     const cjk = t => /[\u3400-\u9fff]/.test(t);
-    const add = (en, zh) => { en = plain(en); zh = plain(zh); if (cjk(en) && !cjk(zh)) [en, zh] = [zh, en]; if (cjk(en) || !en || !zh || en.length > 40 || zh.length > 28) return; const key = en.toLowerCase(); if (seen.has(key)) return; seen.add(key); out.push([en, zh]); };
-    (DATA[k].match || []).forEach(p => add(p[0], p[1]));
-    subjCards(DATA[k]).forEach(c => { (c.terms || []).forEach(t => add(t[0], t[1])); if (k === 'cfa' && c.en) add(c.en.split(/[:：;]/)[0], c.t.split(/[：:（(]/)[0]); });
-    return out;
+    const add = (en, zh, u) => { en = plain(en); zh = plain(zh); if (cjk(en) && !cjk(zh)) [en, zh] = [zh, en]; if (cjk(en) || !en || !zh || en.length > 40 || zh.length > 28) return; const key = en.toLowerCase(); if (seen.has(key)) return; seen.add(key); const p = [en, zh]; p.u = u || null; out.push(p); };
+    (DATA[k].match || []).forEach(p => add(p[0], p[1], p.u));
+    (DATA[k].extraPairs || []).forEach(p => add(p[0], p[1], p[2]));
+    if (k === 'law' && typeof LAWART !== 'undefined') LAWART.forEach(a => { if (!a.u) a.u = UNITS.tagText('law', [a[0]]) || UNITS.tagText('law', [a[1]]); add(a[0], a[1], a.u); });
+    (DATA[k].sections || []).forEach(s => s.cards.forEach(c => {
+      (c.terms || []).forEach(t => add(t[0], t[1], s.id)); if (k === 'cfa' && c.en) add(c.en.split(/[:：;]/)[0], c.t.split(/[：:（(]/)[0], s.id);
+      // 從卡片內文抓「中文（English）」「<b>English</b>（中文）」這類對照
+      const txt = (c.body || '') + ' ' + (c.plain || '');
+      for (const rx of PAIR_RX) { rx.lastIndex = 0; let m; while ((m = rx.exec(txt))) { const ab = [m[1], m[2]].find(x => /^[A-Z0-9]{2,6}$/.test(x.trim())); if (ab && out.some(p => p[0].includes('(' + ab.trim() + ')'))) continue; add(m[1], m[2], s.id); } }
+    }));
+    return all ? out : out.filter(p => UNITS.inSel(k, p.u));
   }
   const isWord = en => /^[A-Za-z][A-Za-z '’\-()/&.,]{1,24}$/.test(en) && (en.match(/[A-Za-z]/g) || []).length >= 3;
 
@@ -27,41 +40,60 @@ const ARCADE = (() => {
     snake: '<path d="M4 18 h6 a3 3 0 0 0 0-6 h-2 a3 3 0 0 1 0-6 h8"/><circle cx="19" cy="6" r="2"/><circle cx="18" cy="17" r="2"/>',
     hang: '<circle cx="8" cy="7" r="3"/><circle cx="16" cy="6" r="3"/><circle cx="12" cy="5" r="3"/><path d="M8 10 L12 15 M16 9 L12 15 M12 8 V15"/><rect x="8" y="15" width="8" height="6" rx="3"/>',
     match: '<circle cx="6" cy="7" r="2.5"/><circle cx="6" cy="17" r="2.5"/><circle cx="18" cy="7" r="2.5"/><circle cx="18" cy="17" r="2.5"/><path d="M8.5 7 L15.5 17 M8.5 17 L15.5 7"/>',
-    sort: '<path d="M4 6 h16 M4 12 h10 M4 18 h6"/><path d="M17 14 l3 3 -3 3"/>'
+    sort: '<path d="M4 6 h16 M4 12 h10 M4 18 h6"/><path d="M17 14 l3 3 -3 3"/>',
+    qboss: '<path d="M5 9 a7 7 0 0 1 14 0 v6 l-2 -1.5 -2 1.5 -2 -1.5 -2 1.5 -2 -1.5 -2 1.5 Z"/><circle cx="9.5" cy="9.5" r="1.2"/><circle cx="14.5" cy="9.5" r="1.2"/>',
+    qspeed: '<circle cx="12" cy="13" r="7"/><path d="M12 13 L15 10 M10 3 h4 M12 3 v3"/>',
+    qprac: '<path d="M5 4 h10 l4 4 v12 H5 Z"/><path d="M8 11 h8 M8 15 h6"/>',
+    qwrong: '<path d="M6 4 h12 v16 l-6 -4 -6 4 Z"/><path d="M10 8 l4 4 M14 8 l-4 4"/>'
   };
   const icon = k => `<svg viewBox="0 0 24 24" aria-hidden="true">${ICON[k]}</svg>`;
   function render(key, root) {
     stop(); KEY = key;
-    const P = pairsFor(key), S = DATA[key].sort || [], hasMcq = (bankFor(key) || []).length >= 4, words = P.filter(p => isWord(p[0]));
-    const G = [
-      P.length >= 6 && ['mem', '翻牌記憶', '翻兩張，找出英文 ↔ 中文', 't1', () => { const b = best('mem', null, true).v; return b != null ? `最少 ${b} 步` : ''; }],
-      P.length >= 6 && ['mole', '打地鼠', '看中文，敲舉著對的英文的地鼠', 't2', () => { const b = best('mole').v; return b ? `最高 ${b} 分` : ''; }],
-      hasMcq && ['snake', '貪吃蛇答題', '吃到正確答案的果子就變長', 't3', () => { const b = best('snake').v; return b ? `最多 ${b} 題` : ''; }],
-      words.length >= 4 && ['hang', '猜單字救豬豬', '看中文猜英文，猜錯就破一顆氣球', 't4', () => { const b = best('hang').v; return b ? `最多連救 ${b} 隻` : ''; }],
-      (DATA[key].match || []).length >= 6 && ['match', '配對連連看', key === 'law' ? '條號 ↔ 內容，越快越好' : '英文 ↔ 意思，越快越好', 't5', () => { const b = ST.best['m' + key]; return b ? `最快 ${b} 秒` : ''; }],
-      ...S.map((s, i) => ['s' + i, '分類', s.t, 't6', () => ''])
-    ].filter(Boolean);
+    const allQ = bankFor(key) || [];
     root.innerHTML = `<div class="arc"><div class="tipbox"></div>
       <div class="arcbar"><button type="button" class="arcsw" data-sw="sound" aria-pressed="${!!ST.sound}">音效：${ST.sound ? '開' : '關'}</button><button type="button" class="arcsw" data-sw="music" aria-pressed="${!!ST.music}">配樂：${ST.music ? '開' : '關'}</button></div>
-      <div class="arcgrid">${G.map(g => `<button type="button" class="arct ${g[3]}" data-g="${g[0]}"><span class="arci">${icon(g[0].startsWith('s') && g[0] !== 'snake' ? 'sort' : g[0])}</span><b>${g[1]}</b><span>${g[2]}</span><small>${g[4]()}</small></button>`).join('')}</div>
-      <div class="arena"></div></div>`;
-    FUN.say($('.tipbox', root), pick(['挑一個遊戲吧！右上角可以開音效和配樂。', '翻牌、打地鼠、貪吃蛇、救豬豬⋯⋯玩著玩著名詞就記住了！', '電腦用鍵盤、手機用手指都能玩。']));
+      <div class="arcunits"></div><p class="sm-p ucount"></p>
+      <div class="arcgrid"></div><div class="arena"></div></div>`;
+    FUN.say($('.tipbox', root), pick(['先選單元，再挑打怪或小遊戲！答對的題目會幫那個單元升級。', '選好單元後，打怪、貪吃蛇、翻牌、打地鼠都只出這些單元的內容。', '每個單元都有自己的等級，看看哪一個最弱就先練那個！']));
     $$('[data-sw]', root).forEach(b => b.onclick = () => { const k = b.dataset.sw; ST[k] = !ST[k]; save(); FUN.hud(); if (k === 'music') ST.music ? music() : SOUND.stop(); else sfx('ok'); b.setAttribute('aria-pressed', !!ST[k]); b.textContent = (k === 'sound' ? '音效：' : '配樂：') + (ST[k] ? '開' : '關'); });
     const arena = $('.arena', root), grid = $('.arcgrid', root);
-    const hall = () => { stop(); grid.hidden = false; arena.innerHTML = ''; render(key, root); };
+    const draw = () => {
+      const Q = UNITS.filter(key, allQ), P = pairsFor(key), words = P.filter(p => isWord(p[0])), S = (DATA[key].sort || []).filter(g => UNITS.inSel(key, g.u)), M = (DATA[key].match || []).filter(p => UNITS.inSel(key, p.u));
+      const wrongN = Q.filter(m => new Set(ST.wrong2[key] || []).has(m.id)).length;
+      $('.ucount', root).textContent = UNITS.scopeText(key, Q.length, allQ.length) + `，名詞 ${P.length} 個`;
+      const T = [
+        ['q:boss', '打怪模式', '10 題 · 3 顆心，打倒怪物', 'tb', Q.length >= 4, ''],
+        ['q:speed', '60 秒限時賽', '能答幾題就幾題', 'ts', Q.length >= 4, (() => { const b = ST.best['sp' + key]; return b ? `最佳 ${b} 題` : ''; })()],
+        ['q:prac', '慢慢練習', '一題一題做，每題都有解釋', 'tp', Q.length >= 1, ''],
+        ['q:wrong', '錯題本', `${wrongN} 題待複習`, 'tw', wrongN > 0, ''],
+        ['mem', '翻牌記憶', '翻兩張，找出英文 ↔ 中文', 't1', P.length >= 6, (() => { const b = best('mem', null, true).v; return b != null ? `最少 ${b} 步` : ''; })()],
+        ['mole', '打地鼠', '看中文，敲舉著對的英文的地鼠', 't2', P.length >= 4, (() => { const b = best('mole').v; return b ? `最高 ${b} 分` : ''; })()],
+        ['snake', '貪吃蛇答題', '吃到正確答案的果子就變長', 't3', Q.length >= 1, (() => { const b = best('snake').v; return b ? `最多 ${b} 題` : ''; })()],
+        pairsFor(key, true).filter(p => isWord(p[0])).length >= 6 ? ['hang', '猜單字救豬豬', '看中文猜英文，猜錯就破一顆氣球', 't4', words.length >= 2, (() => { const b = best('hang').v; return b ? `最多連救 ${b} 隻` : ''; })()] : null,
+        ['match', '配對連連看', key === 'law' ? '條號 ↔ 內容，越快越好' : '英文 ↔ 意思，越快越好', 't5', P.length >= 6, (() => { const b = ST.best['m' + key]; return b ? `最快 ${b} 秒` : ''; })()],
+        ...S.map(g => ['s' + DATA[key].sort.indexOf(g), '分類', g.t, 't6', true, ''])
+      ].filter(Boolean);
+      const ico = g => g.startsWith('q:') ? 'q' + g.slice(2) : g.startsWith('s') && g !== 'snake' ? 'sort' : g;
+      grid.innerHTML = T.map(g => `<button type="button" class="arct ${g[3]}" data-g="${g[0]}"${g[4] ? '' : ' disabled'}><span class="arci">${icon(ico(g[0]))}</span><b>${g[1]}</b><span>${g[2]}</span><small>${g[4] ? g[5] : '這個範圍的內容不夠，換個單元試試'}</small></button>`).join('');
+      $$('[data-g]', grid).forEach(b => b.onclick = () => open(b.dataset.g));
+    };
+    const hall = () => { stop(); SOUND.stop(); grid.hidden = false; $('.arcunits', root).hidden = false; $('.ucount', root).hidden = false; arena.innerHTML = ''; draw(); music(); };
     const open = g => {
-      stop(); grid.hidden = true; music(); sfx('start');
-      arena.innerHTML = `<div class="arctop"><button type="button" class="ntbtn ghost arcback">← 遊戲大廳</button></div><div class="arcplay"></div>`;
+      stop(); grid.hidden = true; $('.arcunits', root).hidden = true; $('.ucount', root).hidden = true; sfx('start');
+      const names = UNITS.sel(key).size ? UNITS.list(key).filter(u => UNITS.sel(key).has(u.id)).map(u => u.t).join('、') : '全部單元';
+      arena.innerHTML = `<div class="arctop"><button type="button" class="ntbtn ghost arcback">← 遊戲大廳</button><span class="sm-p arcscope">範圍：${esc2(names)}</span></div><div class="arcplay"></div>`;
       $('.arcback', arena).onclick = hall;
       const box = $('.arcplay', arena), again = () => open(g);
-      if (g === 'mem') memory(box, P, again, hall); else if (g === 'mole') mole(box, P, again, hall); else if (g === 'snake') snake(box, key, again, hall);
-      else if (g === 'hang') hang(box, words, again, hall); else if (g === 'match') matchGame(box, key, again, hall); else sortGame(box, S[+g.slice(1)], again, hall);
+      const P = pairsFor(key), words = P.filter(p => isWord(p[0]));
+      if (g.startsWith('q:')) { renderMCQ(key, box, { embedded: true, mode: g.slice(2) }); }
+      else { music(); if (g === 'mem') memory(box, P, again, hall); else if (g === 'mole') mole(box, P, again, hall); else if (g === 'snake') snake(box, key, again, hall);
+        else if (g === 'hang') hang(box, words, again, hall); else if (g === 'match') matchGame(box, key, again, hall); else sortGame(box, DATA[key].sort[+g.slice(1)], again, hall); }
       window.scrollTo(0, Math.max(0, scrollY + arena.getBoundingClientRect().top - 70));
     };
-    $$('[data-g]', grid).forEach(b => b.onclick = () => open(b.dataset.g));
-    music();
+    UNITS.picker(key, $('.arcunits', root), { count: u => allQ.filter(m => m.u === u).length + pairsFor(key, true).filter(p => p.u === u).length, total: allQ.length, label: '選單元（可多選，混合幾個單元一起玩；按鈕上是單元等級）', onChange: draw });
+    draw(); music();
   }
-  function music() { if (CUR[1] === 'game') SOUND.play('game'); }
+  function music() { if (CUR[1] === 'play' || CUR[1] === 'game') SOUND.play('game'); }
   function result(box, { pig, title, lines, xp, again, hall }) {
     if (xp) FUN.xp(xp);
     box.insertAdjacentHTML('beforeend', `<div class="arcover"><div class="win">${PIG(pig, 100)}<h3>${title}</h3>${lines.map(l => `<p>${l}</p>`).join('')}<div class="row wrap arcbtns"><button class="btn big" type="button" data-again>再玩一次</button><button class="btn ghost" type="button" data-hall>遊戲大廳</button></div></div></div>`);
@@ -80,7 +112,7 @@ const ARCADE = (() => {
       moves++; box.querySelector('[data-mv]').textContent = moves;
       const [a, c] = open; open = [];
       if (cards[a].i === cards[c].i) {
-        got++; combo++; box.querySelector('[data-got]').textContent = got; sfx(combo >= 3 ? 'combo' : 'coin');
+        got++; combo++; UNITS.add(KEY, set[cards[a].i].u, 2); box.querySelector('[data-got]').textContent = got; sfx(combo >= 3 ? 'combo' : 'coin');
         [a, c].forEach(x => box.querySelector(`[data-n="${x}"]`).classList.add('done'));
         if (got === 6) { const sec = Math.round((Date.now() - t0) / 1000), stars = moves <= 8 ? 3 : moves <= 11 ? 2 : 1, r = best('mem', moves, true); FUN.confetti(90); sfx('win');
           setTimeout(() => result(box, { pig: 'wow', title: '★'.repeat(stars) + '☆'.repeat(3 - stars), lines: [`${moves} 步、${sec} 秒完成`, r.rec ? '新紀錄！' : `最佳紀錄 ${r.v} 步`], xp: 10 + stars * 5, again, hall }), 500); }
@@ -112,7 +144,7 @@ const ARCADE = (() => {
     $$('.mole', box).forEach(m => m.addEventListener('pointerdown', e => {
       e.preventDefault(); const h = m.parentElement; if (!alive || !h.classList.contains('up') || m.classList.contains('hit')) return;
       clearTimeout(m._timer); const i = +h.dataset.h;
-      if (m.dataset.t === target[0]) { score++; combo++; sfx('whack'); setTimeout(() => sfx(combo % 3 === 0 ? 'combo' : 'coin'), 60); m.classList.add('hit'); box.querySelector('[data-sc]').textContent = score; newTarget(); }
+      if (m.dataset.t === target[0]) { score++; combo++; UNITS.add(KEY, target.u, 2); sfx('whack'); setTimeout(() => sfx(combo % 3 === 0 ? 'combo' : 'coin'), 60); m.classList.add('hit'); box.querySelector('[data-sc]').textContent = score; newTarget(); }
       else { combo = 0; lives--; sfx('no'); m.classList.add('bad'); box.querySelector('.hearts').innerHTML = '<span class="h on">♥</span>'.repeat(lives) + '<span class="h">♥</span>'.repeat(3 - lives); if (!lives) end(); }
       setTimeout(() => { h.classList.remove('up'); up.delete(i); }, 260);
     }));
@@ -126,7 +158,7 @@ const ARCADE = (() => {
 
   // ---- 貪吃蛇答題 ----
   function snake(box, key, again, hall) {
-    const bank = shuffle(bankFor(key)); let qi = 0;
+    const bank = shuffle(UNITS.filter(key, bankFor(key))); let qi = 0;
     const W = 14, H = 14; let snakeA, dir, nextDir, foods, score = 0, lives = 3, running = false, alive = true, timer = 0, q;
     box.innerHTML = `<div class="molehud"><span>答對 <b data-sc>0</b></span><span class="hearts">${'<span class="h on">♥</span>'.repeat(3)}</span><span class="sm-p">方向鍵／滑動</span></div>
       <div class="snq"></div><div class="snwrap"><canvas class="sncv" width="420" height="420" aria-label="貪吃蛇"></canvas><div class="snmsg"></div></div>
@@ -161,7 +193,7 @@ const ARCADE = (() => {
       snakeA.unshift(h);
       const f = foods.find(f => f.p[0] === h[0] && f.p[1] === h[1]);
       if (f) {
-        if (f.right) { score++; box.querySelector('[data-sc]').textContent = score; sfx('eat'); setTimeout(() => sfx(score % 5 ? 'coin' : 'combo'), 80); snakeA.push(snakeA[snakeA.length - 1]); box.querySelector('.snexp').innerHTML = `<b>答對！</b>${q.e || ''}`; if (score % 5 === 0) FUN.confetti(40); ask(); return; }
+        if (f.right) { score++; UNITS.add(key, q.u, 3); box.querySelector('[data-sc]').textContent = score; sfx('eat'); setTimeout(() => sfx(score % 5 ? 'coin' : 'combo'), 80); snakeA.push(snakeA[snakeA.length - 1]); box.querySelector('.snexp').innerHTML = `<b>答對！</b>${q.e || ''}`; if (score % 5 === 0) FUN.confetti(40); ask(); return; }
         foods = foods.filter(x => x !== f); snakeA.pop(); if (snakeA.length > 3) snakeA.pop(); box.querySelector('.snexp').innerHTML = `<b>不是 ${'ABCD'[f.n]} 喔</b>，再找找看。`; loseLife('吃錯了！'); return;
       }
       snakeA.pop(); draw();
@@ -199,7 +231,7 @@ const ARCADE = (() => {
         if (letters.has(c)) { got.add(c); b.classList.add('ok'); sfx('ok'); show(); if ([...letters].every(x => got.has(x))) win(); }
         else { miss++; b.classList.add('no'); sfx('pop'); const bl = box.querySelector(`.b${6 - miss}`); if (bl) bl.classList.add('popped'); if (miss >= 6) lose(); }
       };
-      const win = () => { over = true; streak++; const r = best('hang', streak); show(); sfx('win'); FUN.confetti(60); box.querySelector('.hgstage').classList.add('saved');
+      const win = () => { over = true; streak++; UNITS.add(KEY, w.u, 4); const r = best('hang', streak); show(); sfx('win'); FUN.confetti(60); box.querySelector('.hgstage').classList.add('saved');
         result(box, { pig: 'wow', title: '豬豬得救了！', lines: [`<b>${esc2(en)}</b>＝${esc2(zh)}`, `連救 ${streak} 隻${r.rec ? '（新紀錄！）' : ''}`], xp: 8, again: round, hall }); box.querySelector('[data-again]').textContent = '下一個單字'; };
       const lose = () => { over = true; show(); sfx('lose'); box.querySelector('.hgstage').classList.add('fell'); box.querySelector('.hgpig').innerHTML = PIG('sad', 86); const s = streak; streak = 0;
         result(box, { pig: 'sad', title: '氣球破光了⋯', lines: [`答案是 <b>${esc2(en)}</b>（${esc2(zh)}）`, s ? `這輪連救了 ${s} 隻` : ''], again: round, hall }); };
@@ -212,13 +244,13 @@ const ARCADE = (() => {
 
   // ---- 配對連連看（原本的遊戲，加上音效） ----
   function matchGame(box, key, again, hall) {
-    const pairs = shuffle(DATA[key].match).slice(0, 6); const L = shuffle(pairs.map((p, i) => [p[0], i])), R = shuffle(pairs.map((p, i) => [p[1], i]));
+    const pairs = shuffle(pairsFor(key)).slice(0, 6); const L = shuffle(pairs.map((p, i) => [p[0], i])), R = shuffle(pairs.map((p, i) => [p[1], i]));
     let sel = null, left = pairs.length, miss = 0; const t0 = Date.now();
     box.innerHTML = `<p class="arcinfo"><b>配對連連看</b>　先點左邊，再點右邊</p><div class="mgame"><div class="mcol">${L.map(x => `<button class="mt l" data-i="${x[1]}" type="button">${x[0]}</button>`).join('')}</div><div class="mcol">${R.map(x => `<button class="mt r" data-i="${x[1]}" type="button">${x[0]}</button>`).join('')}</div></div><p class="sm-p" data-st>還剩 ${left} 組</p>`;
     $$('.mt', box).forEach(b => b.onclick = () => {
       if (b.classList.contains('l')) { $$('.mt.l', box).forEach(x => x.classList.remove('sel')); b.classList.add('sel'); sel = b; sfx('flip'); return; }
       if (!sel) { b.classList.add('shake'); setTimeout(() => b.classList.remove('shake'), 400); return; }
-      if (sel.dataset.i === b.dataset.i) { sel.classList.add('gone'); b.classList.add('gone'); sel.disabled = b.disabled = true; sel = null; left--; sfx('coin');
+      if (sel.dataset.i === b.dataset.i) { UNITS.add(key, pairs[+b.dataset.i].u, 2); sel.classList.add('gone'); b.classList.add('gone'); sel.disabled = b.disabled = true; sel = null; left--; sfx('coin');
         if (!left) { const sec = ((Date.now() - t0) / 1000).toFixed(1); const bst = Math.min(ST.best['m' + key] || 999, +sec); const rec = bst === +sec; ST.best['m' + key] = bst; save(); FUN.badge('match'); FUN.confetti(90); sfx('win');
           result(box, { pig: 'wow', title: `${sec} 秒完成！`, lines: [`答錯 ${miss} 次`, rec ? '新紀錄！' : `最佳紀錄 ${bst} 秒`], xp: 20, again, hall }); }
         else box.querySelector('[data-st]').textContent = `還剩 ${left} 組`; }
@@ -235,7 +267,7 @@ const ARCADE = (() => {
         result(box, { pig: perfect ? 'wow' : 'happy', title: `${ok} / ${items.length}`, lines: [perfect ? '全對！' : '紅字是分錯的'], xp: perfect ? 20 : 8, again, hall }); return; }
       const it = items[i];
       box.innerHTML = `<div class="sgame"><p class="sm-p">${g.t}　(${i + 1}/${items.length})</p><div class="scard">${it[0]}</div><div class="buckets">${g.b.map((bn, bi) => `<button class="bk" data-b="${bi}" type="button">${bn}</button>`).join('')}</div><p class="sfb" aria-live="polite"></p></div>`;
-      $$('.bk', box).forEach(b => b.onclick = () => { const good = +b.dataset.b === it[1]; res.push([it[0], good]); if (good) { ok++; sfx('coin'); b.classList.add('right'); } else { sfx('no'); b.classList.add('wrongc'); $$('.bk', box)[it[1]].classList.add('right'); }
+      $$('.bk', box).forEach(b => b.onclick = () => { const good = +b.dataset.b === it[1]; res.push([it[0], good]); if (good) { ok++; UNITS.add(KEY, g.u, 1); sfx('coin'); b.classList.add('right'); } else { sfx('no'); b.classList.add('wrongc'); $$('.bk', box)[it[1]].classList.add('right'); }
         $$('.bk', box).forEach(x => x.disabled = true); box.querySelector('.sfb').textContent = good ? pick(CHEERS) : `正確答案：${g.b[it[1]]}`; setTimeout(() => { i++; draw(); }, good ? 500 : 1300); });
     };
     draw();

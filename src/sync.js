@@ -40,6 +40,10 @@ const SYNC = (() => {
         for (const cid in o) o[cid].sort((x, y) => x.at - y.at);
         out.hl = o; continue;
       }
+      if (k === 'ux') { // 單元點數：每個單元取兩台中較高的
+        const o = {}; for (const src of [a.ux || {}, b.ux || {}]) for (const [sk, us] of Object.entries(src)) { o[sk] = o[sk] || {}; for (const [u, n] of Object.entries(us)) o[sk][u] = Math.max(o[sk][u] || 0, n); }
+        out.ux = o; continue;
+      }
       if (k === 'bm') {
         const o = {}; for (const src of [a.bm || {}, b.bm || {}]) for (const [cid, d] of Object.entries(src)) { if (ts(d) <= D('bm|' + cid, 'bm')) continue; if (!o[cid] || ts(d) > ts(o[cid])) o[cid] = d; }
         out.bm = o; continue;

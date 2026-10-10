@@ -69,7 +69,7 @@ function renderLearn(key, root) {
   $$('[data-pre]', root).forEach(b => b.onclick = () => jumpCard('basic', b.dataset.pre));
   $$('[data-done]', root).forEach(cb => cb.addEventListener('change', () => {
     const id = cb.dataset.done;
-    if (cb.checked) { if (!ST.done[id]) { ST.done[id] = Date.now(); FUN.xp(10, cb); FUN.beep('ok'); } } else if (ST.done[id]) { (ST.del = ST.del || {})['done|' + id] = Date.now(); delete ST.done[id]; FUN.xp(-10, cb); }
+    if (cb.checked) { if (!ST.done[id]) { ST.done[id] = Date.now(); FUN.xp(10, cb); FUN.beep('ok'); UNITS.add(key, UNITS.unitOfCard(key, id), 10); } } else if (ST.done[id]) { UNITS.add(key, UNITS.unitOfCard(key, id), -10); (ST.del = ST.del || {})['done|' + id] = Date.now(); delete ST.done[id]; FUN.xp(-10, cb); }
     save(); cb.closest('.card').classList.toggle('done', cb.checked); updateCounts(); FUN.checkCards();
   }));
   const q = $('#q-' + key, root);
@@ -124,20 +124,23 @@ function bankFor(key) {
   return b;
 }
 const unitName = s => s.t.replace(/（[^）]*）\s*$/, '').replace(/\s+[A-Za-z][A-Za-z &]*$/, '');
-function renderMCQ(key, root) {
+function renderMCQ(key, root, opts = {}) {
   const all = bankFor(key); const wrong = () => new Set(ST.wrong2[key] || []);
+  if (opts.embedded) { // 在「遊戲＆打怪」裡：範圍用上面選好的單元，直接開始指定的模式
+    root.innerHTML = '<span class="wc" hidden></span><span class="ucount" hidden></span><div class="arena"></div>';
+  }
   const units = DATA[key].sections.map(s => ({ id: s.id, t: unitName(s), n: all.filter(m => m.u === s.id).length })).filter(u => u.n);
   ST.mu = ST.mu || {}; const sel = new Set((ST.mu[key] || []).filter(id => units.some(u => u.id === id)));
   let bank = all;
   const pool = () => { bank = sel.size ? all.filter(m => sel.has(m.u)) : all; };
-  root.innerHTML = `<div class="tipbox"></div><div class="modes">
+  if (!opts.embedded) root.innerHTML = `<div class="tipbox"></div><div class="modes">
     <button class="mode boss" data-m="boss" type="button"><b>打怪模式</b><span>10 題 · 3 顆心</span></button>
     <button class="mode speed" data-m="speed" type="button"><b>60 秒限時賽</b><span>能答幾題就幾題</span></button>
     <button class="mode prac" data-m="prac" type="button"><b>慢慢練習</b><span>每題都有解釋</span></button>
     <button class="mode wrong" data-m="wrong" type="button"><b>錯題本</b><span class="wc"></span></button></div>
     <div class="ubar"><span class="lbl">出題範圍（可多選，混合幾個單元一起考）</span><div class="uchips"><button class="uchip" data-u="" type="button">全部混合 <i>${all.length}</i></button>${units.map(u => `<button class="uchip" data-u="${u.id}" type="button">${u.t} <i>${u.n}</i></button>`).join('')}</div></div>
     <p class="sm-p ucount"></p><div class="arena"></div>`;
-  FUN.say($('.tipbox', root), tip('boss'));
+  if (!opts.embedded) FUN.say($('.tipbox', root), tip('boss'));
   const wc = () => $('.wc', root).textContent = `${bank.filter(m => wrong().has(m.id)).length} 題待複習`;
   const scope = () => { pool(); $$('.uchip', root).forEach(b => { const on = b.dataset.u ? sel.has(b.dataset.u) : !sel.size; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
     $('.ucount', root).textContent = `${sel.size ? `已選 ${sel.size} 個單元，共 ${bank.length} 題（全部 ${all.length} 題）` : `全部單元混合出題，共 ${all.length} 題`}${key === 'deriv' ? '（右上角可切換中文、英文或雙語題目）' : ''}`; wc(); };
@@ -148,7 +151,7 @@ function renderMCQ(key, root) {
   const qhtml = (m, meta) => { const ord = shuffle(m.o.map((t, j) => [t, j])); return `<div class="qmeta">${meta}</div><p class="qtext">${m.q}</p><div class="opts">${ord.map((o, n) => `<button class="opt" data-j="${o[1]}" type="button"><span class="key">${'ABCD'[n]}</span>${o[0]}</button>`).join('')}</div>`; };
   const answer = (m, b, then) => {
     const ok = +b.dataset.j === m.a; $$('.opt', arena).forEach(x => { x.disabled = true; if (+x.dataset.j === m.a) x.classList.add('right'); }); if (!ok) b.classList.add('wrongc');
-    mark(m, ok); stat(key, 'a'); if (ok) stat(key, 'c'); if (ok) { combo++; FUN.beep('ok'); FUN.xp(5 + Math.min(combo, 10), b); if (combo === 5) FUN.badge('combo5'); if (combo === 10) FUN.badge('combo10'); if (combo % 3 === 0) FUN.confetti(25); } else { combo = 0; FUN.beep('no'); }
+    mark(m, ok); stat(key, 'a'); if (ok) { stat(key, 'c'); UNITS.add(key, m.u, 3); } if (ok) { combo++; FUN.beep('ok'); FUN.xp(5 + Math.min(combo, 10), b); if (combo === 5) FUN.badge('combo5'); if (combo === 10) FUN.badge('combo10'); if (combo % 3 === 0) FUN.confetti(25); } else { combo = 0; FUN.beep('no'); }
     then(ok);
   };
   const start = mode => {
@@ -182,6 +185,7 @@ function renderMCQ(key, root) {
     }
   };
   $$('[data-m]', root).forEach(b => b.onclick = () => start(b.dataset.m));
+  if (opts.embedded) { if (opts.mode === 'wrong' && !bank.some(b => wrong().has(b.id))) arena.innerHTML = `<div class="win">${PIG('happy', 90)}<p>這個範圍的錯題本是空的，太棒了！</p></div>`; else start(opts.mode); return; }
   arena.innerHTML = `<div class="win">${PIG('happy', 100)}<p>選一個模式開始吧！</p></div>`;
 }
 const FUN_CHEER = () => pick(CHEERS), FUN_COMFORT = () => pick(COMFORT);
@@ -191,31 +195,33 @@ function renderGames(key, root) { ARCADE.render(key, root); }
 
 // ---------- 衍金 textbook problems ----------
 function renderProblems(root) {
-  const P = DATA.deriv.problems;
-  root.innerHTML = `<div class="tipbox"></div><div class="quizbar"><button class="btn on" data-f="all" type="button">全部</button><button class="btn ghost" data-f="課本" type="button">老師勾選（11版）</button><button class="btn ghost" data-f="類題" type="button">課本類似題</button></div><div class="plist">${P.map(p => `<div class="prob" data-l="${p.lvl}"><div class="psrc"><span class="pill ${p.lvl === '課本' ? 'good' : ''}">${p.lvl}</span> ${p.src}</div><div class="qtext">${ST.lang === 'zh' || !p.qEn ? p.q : ST.lang === 'en' ? p.qEn : `<p>${p.qEn}</p><p class="zhsub">${p.q}</p>`}</div><ol class="steps">${p.steps.map(s => `<li hidden>${s}</li>`).join('')}</ol><div class="ans" hidden><b>答：</b>${p.ans}${p.ansEn && ST.lang !== 'zh' ? `<p class="en-ans"><b>English answer:</b> ${p.ansEn} <button class="mini" type="button" data-say="${esc(p.ansEn)}">朗讀</button></p>` : ''}</div><div class="pbtn"><button class="btn ghost hint" type="button">下一步提示</button><button class="btn ghost reveal" type="button">看完整解答</button><label class="chk"><input type="checkbox" data-pd="${p.id}"${ST.done['P' + p.id] ? ' checked' : ''}> 我會了</label></div></div>`).join('')}</div>`;
+  const ALL = DATA.deriv.problems, P = UNITS.filter('deriv', ALL);
+  root.innerHTML = `<div class="tipbox"></div><div class="punits"></div><div class="quizbar"><button class="btn on" data-f="all" type="button">全部</button><button class="btn ghost" data-f="課本" type="button">老師勾選（11版）</button><button class="btn ghost" data-f="類題" type="button">課本類似題</button></div><div class="plist">${P.map(p => `<div class="prob" data-l="${p.lvl}"><div class="psrc"><span class="pill ${p.lvl === '課本' ? 'good' : ''}">${p.lvl}</span> ${p.src}</div><div class="qtext">${ST.lang === 'zh' || !p.qEn ? p.q : ST.lang === 'en' ? p.qEn : `<p>${p.qEn}</p><p class="zhsub">${p.q}</p>`}</div><ol class="steps">${p.steps.map(s => `<li hidden>${s}</li>`).join('')}</ol><div class="ans" hidden><b>答：</b>${p.ans}${p.ansEn && ST.lang !== 'zh' ? `<p class="en-ans"><b>English answer:</b> ${p.ansEn} <button class="mini" type="button" data-say="${esc(p.ansEn)}">朗讀</button></p>` : ''}</div><div class="pbtn"><button class="btn ghost hint" type="button">下一步提示</button><button class="btn ghost reveal" type="button">看完整解答</button><label class="chk"><input type="checkbox" data-pd="${p.id}"${ST.done['P' + p.id] ? ' checked' : ''}> 我會了</label></div></div>`).join('')}</div>`;
   FUN.say($('.tipbox', root), tip('prob'));
+  UNITS.picker('deriv', $('.punits', root), { count: u => ALL.filter(p => p.u === u).length, total: ALL.length, label: '選單元（可多選）', onChange: () => renderProblems(root) });
   $$('[data-say]', root).forEach(b => b.onclick = () => speak(b.dataset.say));
   $$('.prob', root).forEach(pb => {
     const steps = $$('.steps li', pb);
     $('.hint', pb).onclick = () => { const h = steps.find(s => s.hidden); if (h) h.hidden = false; else $('.ans', pb).hidden = false; };
     $('.reveal', pb).onclick = () => { steps.forEach(s => s.hidden = false); $('.ans', pb).hidden = false; };
   });
-  $$('[data-pd]', root).forEach(cb => cb.onchange = () => { const k = 'P' + cb.dataset.pd; if (cb.checked && !ST.done[k]) { ST.done[k] = Date.now(); FUN.xp(10, cb); } else if (!cb.checked && ST.done[k]) { (ST.del = ST.del || {})['done|' + k] = Date.now(); delete ST.done[k]; FUN.xp(-10, cb); } save(); });
+  $$('[data-pd]', root).forEach(cb => cb.onchange = () => { const k = 'P' + cb.dataset.pd, pu = (ALL.find(x => String(x.id) === cb.dataset.pd) || {}).u; if (cb.checked && !ST.done[k]) { ST.done[k] = Date.now(); FUN.xp(10, cb); UNITS.add('deriv', pu, 10); } else if (!cb.checked && ST.done[k]) { UNITS.add('deriv', pu, -10); (ST.del = ST.del || {})['done|' + k] = Date.now(); delete ST.done[k]; FUN.xp(-10, cb); } save(); });
   $$('[data-f]', root).forEach(b => b.onclick = () => { $$('[data-f]', root).forEach(x => { x.classList.toggle('on', x === b); x.classList.toggle('ghost', x !== b); }); $$('.prob', root).forEach(p => p.hidden = b.dataset.f !== 'all' && p.dataset.l !== b.dataset.f); });
 }
 
 // ---------- 衍金 generators ----------
 function renderGens(root) {
-  const G = DATA.deriv.gens;
-  root.innerHTML = `<div class="tipbox"></div><div class="quizbar"><label>題型 <select id="gsel"><option value="rand">隨機題型</option>${G.map(g => `<option value="${g.id}">${g.t}（${g.base}）</option>`).join('')}</select></label><button class="btn" id="gnew" type="button">出一題</button><span class="sm-p" id="gscore"></span></div><div id="gbox"></div>`;
+  const ALL = DATA.deriv.gens, G = UNITS.filter('deriv', ALL).length ? UNITS.filter('deriv', ALL) : ALL;
+  root.innerHTML = `<div class="tipbox"></div><div class="punits"></div><div class="quizbar"><label>題型 <select id="gsel"><option value="rand">隨機題型</option>${G.map(g => `<option value="${g.id}">${g.t}（${g.base}）</option>`).join('')}</select></label><button class="btn" id="gnew" type="button">出一題</button><span class="sm-p" id="gscore"></span></div><div id="gbox"></div>`;
   FUN.say($('.tipbox', root), tip('gen'));
+  UNITS.picker('deriv', $('.punits', root), { count: u => ALL.filter(g => g.u === u).length, total: ALL.length, label: '選單元（可多選）', onChange: () => renderGens(root) });
   let ok = 0, tot = 0;
   const make = () => {
     const sel = $('#gsel', root).value; const g = sel === 'rand' ? pick(G) : G.find(x => x.id === sel); const p = g.make();
     const qt = ST.lang === 'zh' || !p.qe ? p.q : ST.lang === 'en' ? p.qe : `<p>${p.qe}</p><p class="zhsub">${p.q}</p>`;
     $('#gbox', root).innerHTML = `<div class="qcard"><div class="qmeta">${g.t}　<span class="pill">對應 ${g.base}</span></div><div class="qtext">${qt}</div><div class="ansrow"><input type="text" inputmode="decimal" id="gin" placeholder="輸入數字" aria-label="你的答案"><span class="unit">${p.unit || ''}</span><button class="btn" id="gchk" type="button">對答案</button><button class="btn ghost" id="gshow" type="button">直接看解法</button></div><div class="exp" hidden></div></div>`;
     const showSol = (msg) => { const e = $('.exp', root); e.hidden = false; e.innerHTML = (msg || '') + `<ol class="steps">${p.sol.map(s => `<li>${s}</li>`).join('')}</ol><p>正解：<b>${f2(p.ans, 4)}</b></p><button class="btn" id="gnext" type="button">下一題</button>`; $('#gnext', root).onclick = make; };
-    $('#gchk', root).onclick = () => { const v = parseFloat($('#gin', root).value.replace(/,/g, '')); if (isNaN(v)) return; tot++; const good = Math.abs(v - p.ans) <= Math.max(p.tol, Math.abs(p.ans) * 0.002); if (good) { ok++; ST.genOk++; save(); FUN.xp(15, $('#gchk', root)); FUN.beep('ok'); FUN.confetti(30); if (ST.genOk >= 10) FUN.badge('gen10'); } else FUN.beep('no'); $('#gscore', root).textContent = `本次答對 ${ok}/${tot}`; $('#gchk', root).disabled = true; showSol(`<b>${good ? pick(CHEERS) : '再檢查一下，看看下面的步驟'}</b>`); };
+    $('#gchk', root).onclick = () => { const v = parseFloat($('#gin', root).value.replace(/,/g, '')); if (isNaN(v)) return; tot++; const good = Math.abs(v - p.ans) <= Math.max(p.tol, Math.abs(p.ans) * 0.002); if (good) { ok++; ST.genOk++; UNITS.add('deriv', g.u, 5); save(); FUN.xp(15, $('#gchk', root)); FUN.beep('ok'); FUN.confetti(30); if (ST.genOk >= 10) FUN.badge('gen10'); } else FUN.beep('no'); $('#gscore', root).textContent = `本次答對 ${ok}/${tot}`; $('#gchk', root).disabled = true; showSol(`<b>${good ? pick(CHEERS) : '再檢查一下，看看下面的步驟'}</b>`); };
     $('#gin', root).addEventListener('keydown', e => { if (e.key === 'Enter') $('#gchk', root).click(); });
     $('#gshow', root).onclick = () => showSol('');
   };
@@ -224,11 +230,12 @@ function renderGens(root) {
 
 // ---------- 投資學 flashcards ----------
 function renderFlash(root) {
-  const F = DATA.invest.flash;
-  root.innerHTML = `<div class="tipbox"></div><div class="quizbar"><button class="btn" id="fshuf" type="button">打亂順序</button><button class="btn ghost" id="fall" type="button">全部翻開</button><span class="sm-p" id="fcnt"></span></div><div class="flashlist"></div>`;
+  const ALL = DATA.invest.flash, F = UNITS.filter('invest', ALL);
+  root.innerHTML = `<div class="tipbox"></div><div class="punits"></div><div class="quizbar"><button class="btn" id="fshuf" type="button">打亂順序</button><button class="btn ghost" id="fall" type="button">全部翻開</button><span class="sm-p" id="fcnt"></span></div><div class="flashlist"></div>`;
   FUN.say($('.tipbox', root), tip('flash'));
+  UNITS.picker('invest', $('.punits', root), { count: u => ALL.filter(f => f.u === u).length, total: ALL.length, label: '選單元（可多選）', onChange: () => renderFlash(root) });
   const cnt = () => $('#fcnt', root).textContent = `已翻開 ${$$('.fcard.on', root).length} / ${F.length}`;
-  const draw = list => { $('.flashlist', root).innerHTML = list.map((f, i) => `<button class="fcard" type="button"><span class="fq"><span class="num">${i + 1}</span>${f.q}</span><span class="fa">${f.a}</span></button>`).join(''); $$('.fcard', root).forEach(c => c.onclick = () => { c.classList.toggle('on'); if (c.classList.contains('on')) { ST.flip = ST.flip || {}; const fk = c.querySelector('.fq').textContent.slice(0, 30); if (!ST.flip[fk]) { ST.flip[fk] = 1; FUN.xp(2); } } cnt(); }); cnt(); };
+  const draw = list => { $('.flashlist', root).innerHTML = list.map((f, i) => `<button class="fcard" type="button" data-fi="${ALL.indexOf(f)}"><span class="fq"><span class="num">${i + 1}</span>${f.q}</span><span class="fa">${f.a}</span></button>`).join(''); $$('.fcard', root).forEach(c => c.onclick = () => { c.classList.toggle('on'); if (c.classList.contains('on')) { ST.flip = ST.flip || {}; const fk = c.querySelector('.fq').textContent.slice(0, 30); if (!ST.flip[fk]) { ST.flip[fk] = 1; FUN.xp(2); UNITS.add('invest', (ALL[+c.dataset.fi] || {}).u, 2); } } cnt(); }); cnt(); };
   draw(F); $('#fshuf', root).onclick = () => draw(shuffle(F)); $('#fall', root).onclick = () => { $$('.fcard', root).forEach(c => c.classList.add('on')); cnt(); };
 }
 
@@ -348,13 +355,13 @@ window.addEventListener('pagehide', savePos);
 
 // ---------- Routing ----------
 const PANES = {
-  basic: [['learn', '基礎卡片'], ['formula', '公式教室'], ['game', '小遊戲'], ['mcq', '打怪＆選擇題'], ['notes', '我的筆記']],
-  deriv: [['learn', '知識點'], ['formula', '公式教室'], ['prob', '課本習題'], ['gen', '變化題'], ['game', '小遊戲'], ['mcq', '打怪＆選擇題'], ['notes', '我的筆記']],
-  invest: [['learn', '知識點'], ['formula', '公式教室'], ['flash', '講義問題'], ['game', '小遊戲'], ['mcq', '打怪＆選擇題'], ['notes', '我的筆記']],
-  law: [['learn', '知識點＋條文'], ['game', '小遊戲'], ['mcq', '打怪＆選擇題'], ['notes', '我的筆記']],
-  mgmt: [['learn', '知識點'], ['formula', '公式教室'], ['essay', '申論批改'], ['game', '小遊戲'], ['mcq', '打怪＆選擇題'], ['notes', '我的筆記']],
-  re: [['learn', '知識點'], ['game', '小遊戲'], ['mcq', '打怪＆選擇題'], ['notes', '我的筆記']],
-  cfa: [['intro', '考試指南'], ['learn', 'Level I 完整筆記'], ['game', '小遊戲'], ['mcq', '打怪＆選擇題'], ['notes', '我的筆記']]
+  basic: [['learn', '基礎卡片'], ['formula', '公式教室'], ['play', '遊戲＆打怪'], ['notes', '我的筆記']],
+  deriv: [['learn', '知識點'], ['formula', '公式教室'], ['prob', '課本習題'], ['gen', '變化題'], ['play', '遊戲＆打怪'], ['notes', '我的筆記']],
+  invest: [['learn', '知識點'], ['formula', '公式教室'], ['flash', '講義問題'], ['play', '遊戲＆打怪'], ['notes', '我的筆記']],
+  law: [['learn', '知識點＋條文'], ['play', '遊戲＆打怪'], ['notes', '我的筆記']],
+  mgmt: [['learn', '知識點'], ['formula', '公式教室'], ['essay', '申論批改'], ['play', '遊戲＆打怪'], ['notes', '我的筆記']],
+  re: [['learn', '知識點'], ['play', '遊戲＆打怪'], ['notes', '我的筆記']],
+  cfa: [['intro', '考試指南'], ['learn', 'Level I 完整筆記'], ['play', '遊戲＆打怪'], ['notes', '我的筆記']]
 };
 let CUR = [];
 function go(k, tab, opt) {
@@ -369,12 +376,14 @@ function go(k, tab, opt) {
   if (k === 'settings') { renderSettings(main); NOTES.bmPill(); opt && opt.top ? window.scrollTo(0, 0) : restorePos(); return; }
   if (k === 'milestones') { renderMilestones(main); NOTES.bmPill(); opt && opt.top ? window.scrollTo(0, 0) : restorePos(); return; }
   if (k === 'plan') { renderPlan(main); NOTES.bmPill(); opt && opt.top ? window.scrollTo(0, 0) : restorePos(); return; }
-  const s = DATA[k]; tab = tab || ST.tab[k] || PANES[k][0][0]; CUR = [k, tab];
+  const s = DATA[k]; tab = tab || ST.tab[k] || PANES[k][0][0];
+  if (tab === 'game' || tab === 'mcq') tab = 'play'; // 舊分頁名稱（讀書計畫的連結、上次停留的分頁）
+  if (!PANES[k].some(p => p[0] === tab)) tab = PANES[k][0][0]; CUR = [k, tab];
   main.innerHTML = `<div class="shead"><div><h2>${s.full}</h2><p class="intro">${s.intro}</p></div><div class="prog"><span class="bar" data-prog="${k}"><i></i></span><span data-progt="${k}"></span> 已掌握</div></div><div class="ptabs" role="tablist">${PANES[k].map(p => `<button role="tab" class="ptab" data-p="${p[0]}" aria-selected="${p[0] === tab}" type="button">${p[1]}</button>`).join('')}</div><div id="pane"></div>`;
   $$('.ptab', main).forEach(b => b.onclick = () => go(k, b.dataset.p));
   ST.tab[k] = tab; save();
   const pane = $('#pane');
-  ({ intro: () => renderCFA(pane), learn: () => renderLearn(k, pane), formula: () => renderFormulas(k, pane), mcq: () => renderMCQ(k, pane), prob: () => renderProblems(pane), gen: () => renderGens(pane), flash: () => renderFlash(pane), essay: () => renderEssay(pane), game: () => renderGames(k, pane), notes: () => NOTES.page(k, pane) })[tab]();
+  ({ intro: () => renderCFA(pane), learn: () => renderLearn(k, pane), formula: () => renderFormulas(k, pane), mcq: () => renderMCQ(k, pane), prob: () => renderProblems(pane), gen: () => renderGens(pane), flash: () => renderFlash(pane), essay: () => renderEssay(pane), game: () => renderGames(k, pane), play: () => renderGames(k, pane), notes: () => NOTES.page(k, pane) })[tab]();
   updateCounts();
   opt && opt.top ? window.scrollTo(0, 0) : restorePos();
   NOTES.bmPill();
