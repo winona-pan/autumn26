@@ -50,11 +50,17 @@ function cardHTML(c) {
     <label class="chk"><input type="checkbox" data-done="${c.id}"${done ? ' checked' : ''}> 我懂了，可以講給別人聽 <span class="xpchip">+10 XP</span></label>
   </article>`;
 }
+// 依學習順序分組的章節：先列出路線，再依組顯示卡片
+function secGroupsHTML(x) {
+  const by = Object.fromEntries(x.cards.map(c => [c.id, c]));
+  return `<ol class="route">${x.groups.map((g, i) => `<li><a href="#grp-${x.id}-${i + 1}">${g.t}</a></li>`).join('')}</ol>`
+    + x.groups.map((g, i) => `<div class="grpbox" id="grp-${x.id}-${i + 1}"><div class="grp"><span class="grpn">${i + 1}</span><div><b>${g.t}</b><p>${g.d}</p></div></div>${g.ids.map(id => cardHTML(by[id])).join('')}</div>`).join('');
+}
 function renderLearn(key, root) {
   const s = DATA[key];
   root.innerHTML = `<div class="tipbox"></div><div class="learn"><nav class="toc" aria-label="章節">${s.sections.map(x => `<a href="#sec-${x.id}">${x.t}<span class="cnt" data-sec="${x.id}"></span></a>`).join('')}${key === 'law' ? '<a href="#sec-art">條文速記表</a>' : ''}</nav>
     <div class="cards"><div class="searchbar"><input type="search" id="q-${key}" placeholder="搜尋名詞或關鍵字（例：basis、要約、BCG）" aria-label="搜尋"></div>
-    ${s.sections.map(x => `<section class="sec" id="sec-${x.id}"><h3>${x.t}</h3>${x.cards.map(cardHTML).join('')}</section>`).join('')}
+    ${s.sections.map(x => `<section class="sec" id="sec-${x.id}"><h3>${x.t}</h3>${x.groups ? secGroupsHTML(x) : x.cards.map(cardHTML).join('')}</section>`).join('')}
     ${key === 'law' ? `<section class="sec" id="sec-art"><h3>條文速記表</h3><p class="sm-p">選擇題常考「第幾條」。按「遮住內容」後，點每一列偷看答案。</p><button class="btn ghost" id="arthide" type="button">遮住內容</button><div class="tblwrap"><table class="tbl arts">${LAWART.map(a => `<tr><td><b>${a[0]}</b></td><td class="artc">${a[1]}</td></tr>`).join('')}</table></div></section>` : ''}
     </div></div>`;
   FUN.say($('.tipbox', root), tip('learn'));
@@ -67,7 +73,7 @@ function renderLearn(key, root) {
     save(); cb.closest('.card').classList.toggle('done', cb.checked); updateCounts(); FUN.checkCards();
   }));
   const q = $('#q-' + key, root);
-  q.addEventListener('input', () => { const v = q.value.trim().toLowerCase(); $$('.card', root).forEach(c => c.hidden = v && !c.dataset.search.includes(v)); $$('.sec', root).forEach(sec => sec.hidden = v && !$$('.card', sec).some(c => !c.hidden)); });
+  q.addEventListener('input', () => { const v = q.value.trim().toLowerCase(); $$('.card', root).forEach(c => c.hidden = v && !c.dataset.search.includes(v)); $$('details.deep', root).forEach(d => d.open = !!v && d.textContent.toLowerCase().includes(v)); $$('.grpbox', root).forEach(g => g.hidden = v && !$$('.card', g).some(c => !c.hidden)); $$('.sec', root).forEach(sec => sec.hidden = v && !$$('.card', sec).some(c => !c.hidden)); });
   const ah = $('#arthide', root); if (ah) ah.addEventListener('click', () => { const t = root.querySelector('.arts'); t.classList.toggle('masked'); ah.textContent = t.classList.contains('masked') ? '顯示內容' : '遮住內容'; });
   $$('.arts tr', root).forEach(tr => tr.addEventListener('click', () => tr.classList.toggle('peek')));
   updateCounts();
