@@ -5852,12 +5852,16 @@ const SYNC = (() => {
     return r.status === 204 ? null : r.json();
   }
   const fileText = async f => (!f.truncated && f.content != null) ? f.content : (await fetch(f.raw_url, { cache: 'no-store' })).text();
-  async function findOrCreate() {
+  async function findExisting() {
     for (let page = 1; page <= 5; page++) {
       const list = await api('GET', '/gists?per_page=100&page=' + page);
       const g = list.find(x => x.description === DESC || (x.files && x.files[FILE])); if (g) return g.id;
       if (list.length < 100) break;
     }
+    return null;
+  }
+  async function findOrCreate() {
+    const id = await findExisting(); if (id) return id;
     const g = await api('POST', '/gists', { description: DESC, public: false, files: { [FILE]: { content: JSON.stringify({ v: 1, mt: cfg.mt || 0, at: Date.now(), data: syncable(ST) }) } } });
     return g.id;
   }
@@ -5909,11 +5913,30 @@ const SYNC = (() => {
   }
 
   // ---- 連線／中斷 ----
+  // 進度摘要：讓你比較哪一台比較新
+  const summary = st => ({ xp: st.xp || 0, done: Object.keys(st.done || {}).filter(k => !k.startsWith('P')).length, nt: Object.values(st.nt || {}).reduce((a, x) => a + Object.keys(x).length, 0), hl: Object.values(st.hl || {}).reduce((a, x) => a + x.length, 0), bm: Object.keys(st.bm || {}).length, wrong: Object.values(st.wrong2 || {}).reduce((a, x) => a + x.length, 0) });
+  let pending = null;
+  // 第一次連線：雲端已經有別台的進度 → 先問哪一台比較新
   async function connect(token) {
-    cfg = { token: token.trim(), mt: 0 }; keep();
-    try { const u = await api('GET', '/user'); cfg.user = u.login; cfg.h = hash(JSON.stringify(syncable(ST))); keep(); await run(); return !cfg.err; }
-    catch (e) { const m = e.message; cfg = {}; keep(); throw new Error(m); }
+    cfg = { token: token.trim() };
+    try {
+      const u = await api('GET', '/user'); const gid = await findExisting();
+      if (gid) {
+        const g = await api('GET', '/gists/' + gid); const f = g.files[FILE]; let remote = null;
+        if (f) { try { remote = JSON.parse(await fileText(f)); } catch (e) { } }
+        if (remote && remote.data) { pending = { token: cfg.token, user: u.login, gist: gid, remote: summary(remote.data), at: remote.at || 0 }; cfg = {}; return { choose: pending, local: summary(ST) }; }
+      }
+      cfg = { token: token.trim(), user: u.login, gist: gid || undefined, mt: 0, h: hash(JSON.stringify(syncable(ST))) }; keep(); await run(); return { ok: !cfg.err };
+    } catch (e) { const m = e.message; cfg = {}; keep(); throw new Error(m); }
   }
+  // prefer：'local' = 這台比較新（XP、錯題本、計畫以這台為準）；'remote' = 雲端比較新
+  async function finish(prefer) {
+    if (!pending) return; const p = pending; pending = null;
+    cfg = { token: p.token, user: p.user, gist: p.gist, mt: prefer === 'local' ? Date.now() : 0, h: hash(JSON.stringify(syncable(ST))) }; keep();
+    await run();
+  }
+  // 之後如果發現另一台蓋掉了這台的 XP／錯題本：以這台為準再同步一次（筆記、重點、書籤一樣是合併）
+  async function preferLocal() { cfg.mt = Date.now(); keep(); await run(); }
   function disconnect() { cfg = {}; keep(); status(); }
 
   // ---- 設定頁 ----
@@ -5927,18 +5950,34 @@ const SYNC = (() => {
     return `<section class="setbox" id="syncbox"><h3>雲端同步（手機 ↔ 電腦）</h3>${cfg.token ? `
       <p class="sm-p" id="syncst"></p>
       <p class="sm-p">筆記、重點、書籤、圖片、「我懂了」、XP、錯題本、讀書計畫都會自動同步。每台裝置的主題、字級、閱讀位置各自保留。</p>
-      <div class="row wrap"><button class="btn" id="syncnow" type="button">立即同步</button><button class="btn ghost" id="syncoff" type="button">這台不再同步</button></div>` : `
+      <div class="row wrap"><button class="btn" id="syncnow" type="button">立即同步</button><button class="btn ghost" id="syncmine" type="button">以這台為準再同步</button><button class="btn ghost" id="syncoff" type="button">這台不再同步</button></div>
+      <p class="sm-p">「以這台為準再同步」：XP、錯題本、讀書計畫改用這台的；筆記、重點、書籤、「我懂了」照樣兩邊合併，不會不見。</p>` : `
       <p class="sm-p">用你 GitHub 帳號裡的一個<b>私人 Gist</b> 當雲端存檔。每台裝置都做一次下面的步驟，之後就會自動同步。</p>
       <ol class="syncsteps"><li>打開 <a href="${TOKEN_URL}" target="_blank" rel="noopener">GitHub 建立 token 的頁面</a>（會自動勾好 <b>gist</b>，其他都不用勾）。</li><li><b>Expiration</b> 選一年或 No expiration，按最下面的 <b>Generate token</b>。</li><li>複製 <code>ghp_</code> 開頭的那串，貼到下面按「連線」。另一台裝置貼<b>同一串</b>就好（建議先存在你的密碼管理工具裡）。</li></ol>
       <div class="row wrap"><input type="password" id="synctok" autocomplete="off" spellcheck="false" placeholder="貼上 ghp_ 開頭的 token" aria-label="GitHub token"><button class="btn" id="syncgo" type="button">連線</button></div>
       <p class="sm-p" id="syncst"></p>
       <p class="sm-p">token 只存在這台裝置，不會放進備份碼。只開 gist 權限的話，就算外洩也只能讀寫你的 Gist，碰不到你的程式碼。</p>`}</section>`;
   }
+  function showChoice(root, r) {
+    const L = r.local, R = r.choose.remote, row = (k, t) => `<tr><td>${t}</td><td>${L[k]}</td><td>${R[k]}</td></tr>`;
+    const box = root.querySelector('#syncbox');
+    box.innerHTML = `<h3>雲端同步（手機 ↔ 電腦）</h3><p class="sm-p"><b>雲端已經有另一台裝置的進度</b>（${ago(r.choose.at)}更新）。哪一台比較新？</p>
+      <div class="tblwrap"><table class="tbl syncmp"><tr><th></th><th>這台</th><th>雲端（另一台）</th></tr>${row('xp', 'XP')}${row('done', '「我懂了」')}${row('wrong', '錯題本')}${row('nt', '筆記')}${row('hl', '重點')}${row('bm', '書籤')}</table></div>
+      <p class="sm-p">不管選哪個，<b>筆記、重點、書籤、「我懂了」都會兩邊合併</b>，不會不見。選擇只決定 XP、錯題本、讀書計畫、遊戲紀錄要用哪一台的。</p>
+      <div class="row wrap"><button class="btn" id="syncpl" type="button">這台比較新</button><button class="btn ghost" id="syncpr" type="button">雲端（另一台）比較新</button></div><p class="sm-p" id="syncst"></p>`;
+    const pick = async which => { box.querySelectorAll('button').forEach(b => b.disabled = true); status('同步中⋯'); await finish(which); if (!cfg.err) FUN.toast('同步完成！', 'wow'); renderSettings(root); };
+    box.querySelector('#syncpl').onclick = () => pick('local'); box.querySelector('#syncpr').onclick = () => pick('remote');
+  }
   function bindSettings(root) {
     status();
     const go1 = root.querySelector('#syncgo');
     if (go1) go1.onclick = async () => { const v = root.querySelector('#synctok').value; if (!/^\s*(ghp_|github_pat_)\w+\s*$/.test(v)) { status('看起來不像 token：應該是 ghp_ 或 github_pat_ 開頭。'); return; } go1.disabled = true; status('連線中⋯');
-      try { await connect(v); FUN.toast('同步完成！', 'wow'); renderSettings(root); } catch (e) { status('連線失敗：' + e.message); go1.disabled = false; } };
+      try {
+        const r = await connect(v);
+        if (r.choose) { showChoice(root, r); return; }
+        FUN.toast('同步完成！', 'wow'); renderSettings(root);
+      } catch (e) { status('連線失敗：' + e.message); go1.disabled = false; } };
+    const mine = root.querySelector('#syncmine'); if (mine) armed(mine, '以這台為準再同步', async () => { status('同步中⋯'); await preferLocal(); if (!cfg.err) FUN.toast('已以這台為準同步', 'happy'); renderSettings(root); });
     const now = root.querySelector('#syncnow'); if (now) now.onclick = async () => { await run(); if (!cfg.err) FUN.toast('同步完成', 'happy'); };
     const off = root.querySelector('#syncoff'); if (off) armed(off, '這台不再同步', () => { disconnect(); renderSettings(root); });
   }
