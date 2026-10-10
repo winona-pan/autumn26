@@ -3,7 +3,7 @@
 const RICH = (() => {
   const MML = 'http://www.w3.org/1998/Math/MathML';
   const KEEP = new Set(['B', 'STRONG', 'I', 'EM', 'U', 'S', 'DEL', 'CODE', 'PRE', 'P', 'BR', 'UL', 'OL', 'LI', 'TABLE', 'THEAD', 'TBODY', 'TR', 'TH', 'TD', 'BLOCKQUOTE', 'A', 'SUB', 'SUP', 'HR', 'DIV', 'MARK', 'H4', 'H5', 'H6']);
-  const HEAD = { H1: 'H4', H2: 'H4', H3: 'H4' };
+  const HEAD = { H1: 'H4', H2: 'H4', H3: 'H5' };
   const MATH = new Set('math mrow mi mo mn ms mtext mspace msup msub msubsup mfrac msqrt mroot munder mover munderover mtable mtr mtd mstyle mpadded mphantom menclose semantics mfenced'.split(' '));
   const DROP = 'script, style, meta, link, title, head, noscript, iframe, object, embed, svg, video, audio, canvas, button, input, textarea, select, form, annotation, annotation-xml, template';
   // 筆記可用的顏色：編輯時用這些色碼下指令，存檔時轉成 class（深色模式另有配色）
@@ -25,7 +25,20 @@ const RICH = (() => {
   function clean(html) {
     const doc = new DOMParser().parseFromString(html, 'text/html');
     // KaTeX（Gemini 的數學式）：保留裡面的 MathML，丟掉重複的排版用 HTML
-    doc.querySelectorAll('.katex').forEach(k => { const m = k.querySelector('math'); k.replaceWith(m || doc.createTextNode(k.textContent)); });
+    // Gemini：公式元素帶著原始 LaTeX（data-math）→ 重新排成 MathML；沒有排版工具時保留 $…$ 原文
+    doc.querySelectorAll('[data-math]').forEach(el => {
+      const t = el.getAttribute('data-math'), disp = /math-block|display/.test(el.className) || el.tagName === 'DIV';
+      const h = window.katex ? tex(t, disp) : null;
+      if (h) { const box = doc.createElement(disp ? 'p' : 'span'); box.innerHTML = h; el.replaceWith(box); }
+      else el.replaceWith(doc.createTextNode(disp ? '$$' + t + '$$' : '$' + t + '$'));
+    });
+    // 其他 KaTeX：優先用裡面的 MathML，其次用 LaTeX 原文註解
+    doc.querySelectorAll('.katex').forEach(k => { const m = k.querySelector('math'); const an = k.querySelector('annotation[encoding="application/x-tex"]');
+      if (m) k.replaceWith(m); else if (an && window.katex) { const sp = doc.createElement('span'); sp.innerHTML = tex(an.textContent, false) || ''; k.replaceWith(sp); } else k.replaceWith(doc.createTextNode(an ? '$' + an.textContent + '$' : k.textContent)); });
+    // Gemini 介面元素：程式碼區塊的語言標籤與按鈕、表格的「匯出到試算表」、來源標註
+    doc.querySelectorAll('code-block').forEach(cb => { const pre = cb.querySelector('pre'); cb.replaceWith(pre || doc.createTextNode(cb.textContent)); });
+    doc.querySelectorAll('table-block').forEach(tb => { const t = tb.querySelector('table'); if (t) tb.replaceWith(t); });
+    doc.querySelectorAll('.code-block-decoration, .table-footer, .export-sheets-button, [class*="export-sheets"], sources-carousel, source-footnote, sup[data-turn-source-index], .citation-chip, [data-turn-source-index], mat-icon, .cdk-visually-hidden').forEach(n => n.remove());
     doc.querySelectorAll(DROP).forEach(n => n.remove());
     const out = document.createElement('div');
     const walk = (src, dst) => {
@@ -85,12 +98,14 @@ const RICH = (() => {
   // ---- Markdown → HTML（標題、粗斜體、刪除線、行內程式碼、連結、清單（可巢狀）、表格、引用、程式碼區塊、分隔線） ----
   function inline(s) {
     const codes = []; s = s.replace(/`([^`]+)`/g, (m, c) => { codes.push(c); return '\u0000' + (codes.length - 1) + '\u0000'; });
+    // Markdown 跳脫字元（\$、\*、\_ ⋯）→ 原字元，且不再被當成格式符號
+    const escs = []; s = s.replace(/\\([\\`*_{}\[\]()#+\-.!|~<>$])/g, (m, c) => { escs.push(c); return '\u0002' + (escs.length - 1) + '\u0002'; });
     s = escT(s)
       .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
       .replace(/\*\*\*(.+?)\*\*\*/g, '<b><i>$1</i></b>').replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/__(.+?)__/g, '<b>$1</b>')
       .replace(/(^|[^*\w])\*(?!\s)(.+?)(?<!\s)\*(?!\*)/g, '$1<i>$2</i>').replace(/(^|[^_\w])_(?!\s)(.+?)(?<!\s)_(?!\w)/g, '$1<i>$2</i>')
       .replace(/~~(.+?)~~/g, '<s>$1</s>');
-    return s.replace(/\u0000(\d+)\u0000/g, (m, i) => '<code>' + escT(codes[+i]) + '</code>');
+    return s.replace(/\u0000(\d+)\u0000/g, (m, i) => '<code>' + escT(codes[+i]) + '</code>').replace(/\u0002(\d+)\u0002/g, (m, i) => escT(escs[+i]));
   }
   const cells = l => l.trim().replace(/^\|/, '').replace(/\|$/, '').split('|').map(c => c.trim());
   // ---- 數學式：$…$、$$…$$、\(…\)、\[…\] → 用 KaTeX 轉成 MathML（第一次需要網路，之後離線快取） ----
@@ -101,7 +116,7 @@ const RICH = (() => {
     document.head.appendChild(sc);
   })));
   const hasMath = t => /\$\$[\s\S]+?\$\$|\\\[[\s\S]+?\\\]|\\\([\s\S]+?\\\)|(^|[^\\$\w])\$(?!\s)[^$\n]+?(?<!\s)\$(?![\w$])/.test(t);
-  const tex = (t, display) => { try { return window.katex.renderToString(t.trim(), { output: 'mathml', displayMode: display, throwOnError: false }); } catch (e) { return null; } };
+  function tex(t, display) { try { return window.katex.renderToString(t.trim(), { output: 'mathml', displayMode: display, throwOnError: false }); } catch (e) { return null; } }
   // 把數學式換成佔位符，Markdown 轉完再換回（程式碼區塊與行內程式碼裡的 $ 不動）
   function stashMath(src, store) {
     if (!window.katex) return src;
@@ -164,13 +179,14 @@ const RICH = (() => {
   const looksMd = t => /(^|\n)\s{0,3}(#{1,6}\s|[-*+]\s+\S|\d+[.)]\s+\S|>\s|```)|\*\*[^*\n]+\*\*|\n\s*\|.*\|\s*\n\s*\|?\s*:?-{2,}/.test(t);
   // 先在事件當下把剪貼簿內容讀出來（之後就讀不到了），再非同步處理
   function readClip(cd) { return { html: cd.getData('text/html'), txt: cd.getData('text/plain'), files: [...(cd.files || [])].filter(f => /^image\//.test(f.type)) }; }
-  async function convert({ html, txt, files }) {
+  async function convert({ html, txt, files, plain }) {
+    if (plain) return txt ? txt.split(/\n{2,}/).map(p => '<p>' + escT(p).replace(/\n/g, '<br>') + '</p>').join('') : '';
     if (files.length && (!html || !/<(p|li|h\d|table|b|strong)[\s>]/i.test(html))) {
       // 純圖片（截圖、相簿、拖曳）→ 壓縮存起來
       const out = []; for (const f of files) { try { const { id, data } = await IMGS.add(f); out.push(`<img class="ntimg" data-img="${id}" src="${data}" alt="">`); } catch (e) { } }
       return out.map(x => '<p>' + x + '</p>').join('');
     }
-    if (txt && hasMath(txt)) await loadKatex();
+    if ((txt && hasMath(txt)) || (html && /data-math=|class="katex|<annotation/.test(html))) await loadKatex();
     if (html) {
       const c = clean(html), plain = (new DOMParser().parseFromString(c, 'text/html').body.textContent || '');
       const structured = /<(ul|ol|table|h[4-6]|b|strong|i|em|pre|code|blockquote|math)[\s>]/i.test(c);
@@ -188,10 +204,15 @@ const RICH = (() => {
     const sel = getSelection(); if (!sel.rangeCount) return; const r = sel.getRangeAt(0); r.deleteContents();
     const frag = r.createContextualFragment(html); const last = frag.lastChild; r.insertNode(frag); if (last) { r.setStartAfter(last); r.collapse(true); sel.removeAllRanges(); sel.addRange(r); }
   }
+  let plainNext = false;
   function attach(ed) {
+    ed.addEventListener('keydown', e => { if ((e.metaKey || e.ctrlKey) && e.shiftKey && (e.key === 'v' || e.key === 'V')) { plainNext = true; setTimeout(() => plainNext = false, 1000); } });
     const run = async (data, range) => { ed.classList.add('busy'); try { const h = await convert(data); if (h) { ed.focus(); const sel = getSelection(); if (!range || !ed.contains(range.startContainer)) { range = document.createRange(); range.selectNodeContents(ed); range.collapse(false); } sel.removeAllRanges(); sel.addRange(range); insertHTML(h); ed.dispatchEvent(new Event('input')); } } finally { ed.classList.remove('busy'); } };
     const keep = () => { const sel = getSelection(); return sel.rangeCount && ed.contains(sel.anchorNode) ? sel.getRangeAt(0).cloneRange() : null; };
-    ed.addEventListener('paste', e => { const cd = e.clipboardData; if (!cd) return; e.preventDefault(); run(readClip(cd), keep()); });
+    ed.addEventListener('paste', e => { const cd = e.clipboardData; if (!cd) return; e.preventDefault(); const d = readClip(cd);
+      try { sessionStorage.setItem('rv26lastpaste', JSON.stringify({ html: d.html.slice(0, 200000), txt: d.txt.slice(0, 50000), at: Date.now() })); } catch (err) { }
+      if (plainNext) { plainNext = false; d.html = ''; d.plain = true; }
+      run(d, keep()); });
     ed.addEventListener('drop', e => { const cd = e.dataTransfer; if (!cd) return; e.preventDefault(); let r = null; if (document.caretRangeFromPoint) r = document.caretRangeFromPoint(e.clientX, e.clientY); run(readClip(cd), r || keep()); });
   }
   // 插入圖片（檔案選擇器／相機）與公式

@@ -100,7 +100,7 @@ const NOTES = (() => {
     if (!box) { box = document.createElement('span'); box.className = 'ntbox'; block.appendChild(box); }
     const html = d ? (d.h || RICH.fromText(d.t)) : '';
     box.innerHTML = edit
-      ? `<span class="nthead">我的筆記<small>可以直接貼上 Gemini、ChatGPT 或網頁內容，格式會保留</small></span><span class="nttools" role="toolbar" aria-label="筆記格式">
+      ? `<span class="nthead">我的筆記<small>可以直接貼上 Gemini、ChatGPT 或網頁內容，格式會保留；⌘/Ctrl+Shift+V 貼純文字</small></span><span class="nttools" role="toolbar" aria-label="筆記格式">
         <span class="ntgrp"><button type="button" class="ntfb" data-blk="h4" title="大標題">大標</button><button type="button" class="ntfb" data-blk="h5" title="小標題">小標</button><button type="button" class="ntfb" data-blk="p" title="內文">內文</button><button type="button" class="ntfb" data-blk="blockquote" title="引用">引用</button></span>
         <span class="ntgrp"><button type="button" class="ntfb" data-fmt="bold" title="粗體（⌘/Ctrl+B）"><b>B</b></button><button type="button" class="ntfb" data-fmt="italic" title="斜體（⌘/Ctrl+I）"><i>I</i></button><button type="button" class="ntfb" data-fmt="underline" title="底線（⌘/Ctrl+U）"><u>U</u></button><button type="button" class="ntfb" data-fmt="strikeThrough" title="刪除線"><s>S</s></button></span>
         <span class="ntgrp"><span class="ntswl">字級</span><button type="button" class="ntfb" data-fs="2" title="小字" style="font-size:11px">小</button><button type="button" class="ntfb" data-fs="3" title="一般大小">中</button><button type="button" class="ntfb" data-fs="5" title="大字" style="font-size:15px">大</button><button type="button" class="ntfb" data-fs="6" title="特大字" style="font-size:17px">特大</button></span>
