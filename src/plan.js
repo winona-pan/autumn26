@@ -51,7 +51,7 @@ function planTasks(k, f) {
   }
   if (k === 're' || k === 'reF') {
     const P = ST.plan;
-    return RE_UNITS.map((u, i) => [u, i]).filter(([u, i]) => (u[1] === 'mid') === (k === 're') && !P.reDone[i]).map(([u, i]) => ({ k, id: `re${i + 1}a`, sec: `單元 ${i + 1}`, t: `${u[0]}：看影片＋複習`, min: Math.round(+P.reH * 60 * f), kind: 'rec' }));
+    return RE_UNITS.map((u, i) => [u, i]).filter(([u, i]) => (u[1] === 'mid') === (k === 're') && !P.reDone[i]).map(([u, i]) => ({ k, id: DATA.re.sections[i].cards[0].id, sec: `單元 ${i + 1}`, t: `${u[0]}：看影片＋複習`, min: Math.round(+P.reH * 60 * f), kind: 'rec' }));
   }
   const T = [], s = DATA[k], m = PLAN_MIN[k] * f;
   s.sections.forEach(x => x.cards.forEach(c => { if (!ST.done[c.id]) T.push({ k, id: c.id, sec: x.t, t: c.t, min: m, kind: 'c' }); }));

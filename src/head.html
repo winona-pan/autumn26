@@ -87,6 +87,24 @@ figure{margin:0;overflow-x:auto} .fig{width:100%;max-width:560px;height:auto;dis
 details summary{cursor:pointer;font-weight:700;color:var(--acc)} .body{max-width:74ch} .body ul,.body ol{padding-left:1.3em;margin:6px 0} .body li{margin:3px 0}
 .note{font-size:14px;color:var(--mute);border-left:4px solid var(--acc);padding-left:10px}
 .formula{font-family:var(--f-display);font-size:17px;background:var(--why);padding:6px 14px;border-radius:10px;display:inline-block;border:2px solid var(--line)}
+.route{display:flex;flex-wrap:wrap;gap:6px 8px;margin:0;padding:0;list-style:none;counter-reset:rt}
+.route li{counter-increment:rt}
+.route a{display:inline-block;padding:4px 10px;border:2px solid var(--line);border-radius:999px;background:var(--panel);color:var(--ink);text-decoration:none;font-size:14px}
+.route a::before{content:counter(rt) '. ';font-weight:700;color:var(--acc)}
+.grpbox{display:flex;flex-direction:column;gap:18px;scroll-margin-top:100px}
+.grp{display:flex;gap:12px;align-items:flex-start;margin-top:10px;padding:10px 14px;border-radius:14px;background:var(--soft);border:2px dashed var(--acc)}
+.grp b{font-size:18px}
+.grp p{margin:2px 0 0;color:var(--mute);font-size:14px}
+.grpn{flex:none;width:30px;height:30px;border-radius:50%;background:var(--acc);color:#fff;display:grid;place-items:center;font-weight:700}
+.body details.deep{margin:6px 0;padding:2px 0 2px 10px;border-left:3px solid var(--hair)}
+.body details.deep[open]{border-left-color:var(--acc)}
+.body details.deep>summary{font-weight:400;color:var(--ink);list-style:none}
+.body details.deep>summary::-webkit-details-marker{display:none}
+.body details.deep>summary::before{content:'▸ ';color:var(--acc);font-weight:700}
+.body details.deep[open]>summary::before{content:'▾ '}
+.body details.deep>summary b{color:var(--acc)}
+.body details.deep>summary small{color:var(--mute)}
+.body .dk{display:inline-block;font-size:12px;font-weight:700;padding:0 6px;margin-right:6px;border-radius:6px;background:var(--soft);border:1px solid var(--hair);color:var(--mute)}
 .terms{display:grid;grid-template-columns:max-content 1fr;gap:4px 14px;font-size:14px;margin:8px 0 0} .terms dt{font-weight:700} .terms dd{margin:0;color:var(--mute)}
 .chk{display:flex;gap:8px;align-items:center;font-size:14px;cursor:pointer;font-weight:500} .chk input{accent-color:var(--good);width:20px;height:20px}
 .xpchip{font-size:11px;background:var(--gold);color:#22264a;border-radius:999px;padding:0 6px;font-weight:700;border:1.5px solid var(--line)}
