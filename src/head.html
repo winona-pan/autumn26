@@ -455,7 +455,14 @@ body.notips .tipbox{display:none} body.calm *{animation:none!important;transitio
 .hgkeys button{font:inherit;font-weight:900;font-size:16px;height:42px;border:2.5px solid var(--line);border-radius:10px;background:var(--panel);color:var(--ink);box-shadow:2px 2px 0 var(--line);cursor:pointer;touch-action:manipulation}
 .hgkeys button.ok{background:#b2f2bb} .hgkeys button.no{background:#ffc9c9;opacity:.6} .hgkeys button:disabled{cursor:default;box-shadow:none;transform:translate(2px,2px)}
 @media (prefers-reduced-motion:reduce){.mcard,.mole,.hgstage,.bl{transition:none!important;animation:none!important}}
+.uchip{display:inline-flex;flex-direction:column;align-items:flex-start;gap:2px}
+.ulvw{display:flex;align-items:center;gap:5px;width:100%} .ulv{font-size:10.5px;font-weight:900;color:var(--acc);letter-spacing:.02em} .uchip.on .ulv{color:#fff}
+.ubarx{flex:1;min-width:34px;height:5px;border-radius:999px;background:color-mix(in srgb,var(--ink) 12%,transparent);overflow:hidden} .ubarx i{display:block;height:100%;width:0;background:var(--acc);border-radius:inherit;transition:width .4s} .uchip.on .ubarx{background:rgba(255,255,255,.35)} .uchip.on .ubarx i{background:#fff}
+.punits{margin-bottom:10px} .arcunits{margin-bottom:4px} .arcscope{align-self:center}
+.arct:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:2px 2px 0 var(--line)}
+.arct.tb{--c:#e03131} .arct.ts{--c:#f76707} .arct.tp{--c:#1971c2} .arct.tw{--c:#868e96}
 @media (max-width:640px){.nttools{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px;scrollbar-width:thin} .ntgrp{flex-wrap:nowrap;flex:none}}
 @media (pointer:coarse){.hlbar .hlc{width:32px;height:32px} .hlb{padding:6px 12px} .ntfb{height:34px;min-width:36px} .ntdot{width:30px;height:30px} .bmbtn,.ntmode{padding:5px 12px}}
 @media (max-width:560px){.arcgrid{grid-template-columns:1fr 1fr;gap:10px} .arct{padding:10px;border-radius:14px} .arct b{font-size:15.5px} .arct span:not(.arci){font-size:12px} .arci{width:38px;height:38px;border-radius:11px} .arci svg{width:23px;height:23px}}
+@media (max-width:640px){.ubar .uchips{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:6px;scroll-snap-type:x proximity} .ubar .uchip{flex:none;max-width:74vw;scroll-snap-align:start} .ubar .uchip .ut{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:68vw;display:block}}
 </style>
