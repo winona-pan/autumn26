@@ -152,7 +152,7 @@ function renderMCQ(key, root) {
     then(ok);
   };
   const start = mode => {
-    combo = 0;
+    combo = 0; if (mode === 'boss' || mode === 'speed') SOUND.play('boss'); else SOUND.stop();
     if (mode === 'boss') {
       const list = shuffle(bank).slice(0, 10); let i = 0, hp = list.length, hearts = 3; const [bn, be] = BOSSES[key];
       const draw = (hurt) => {
@@ -186,41 +186,8 @@ function renderMCQ(key, root) {
 }
 const FUN_CHEER = () => pick(CHEERS), FUN_COMFORT = () => pick(COMFORT);
 
-// ---------- Games: match & sort ----------
-function renderGames(key, root) {
-  const S = DATA[key].sort;
-  root.innerHTML = `<div class="tipbox"></div><div class="modes"><button class="mode prac" data-g="match" type="button"><b>配對遊戲</b><span>${key === 'law' ? '條號 ↔ 內容' : '英文 ↔ 意思'}</span></button>${S.map((s, i) => `<button class="mode speed" data-g="s${i}" type="button"><b>分類</b><span>${s.t}</span></button>`).join('')}</div><div class="arena"></div>`;
-  FUN.say($('.tipbox', root), tip('game'));
-  const arena = $('.arena', root);
-  const match = () => {
-    const pairs = shuffle(DATA[key].match).slice(0, 6); const L = shuffle(pairs.map((p, i) => [p[0], i])), Rr = shuffle(pairs.map((p, i) => [p[1], i]));
-    let sel = null, left = pairs.length, t0 = Date.now(), miss = 0;
-    arena.innerHTML = `<div class="mgame"><div class="mcol">${L.map(x => `<button class="mt l" data-i="${x[1]}" type="button">${x[0]}</button>`).join('')}</div><div class="mcol">${Rr.map(x => `<button class="mt r" data-i="${x[1]}" type="button">${x[0]}</button>`).join('')}</div></div><p class="sm-p" id="mstat">還剩 ${left} 組</p>`;
-    $$('.mt', arena).forEach(b => b.onclick = () => {
-      if (b.classList.contains('l')) { $$('.mt.l', arena).forEach(x => x.classList.remove('sel')); b.classList.add('sel'); sel = b; return; }
-      if (!sel) { b.classList.add('shake'); setTimeout(() => b.classList.remove('shake'), 400); return; }
-      if (sel.dataset.i === b.dataset.i) { sel.classList.add('gone'); b.classList.add('gone'); sel.disabled = b.disabled = true; sel = null; left--; FUN.beep('ok');
-        if (!left) { const sec = ((Date.now() - t0) / 1000).toFixed(1); const best = Math.min(ST.best['m' + key] || 999, +sec); ST.best['m' + key] = best; save(); FUN.xp(20); FUN.badge('match'); FUN.confetti(90);
-          arena.innerHTML = `<div class="win">${PIG('wow', 100)}<h3>${sec} 秒完成！</h3><p>答錯 ${miss} 次 · 最佳紀錄 ${best} 秒</p><button class="btn big" id="again" type="button">再玩一次</button></div>`; $('#again', root).onclick = match; }
-        else $('#mstat', arena).textContent = `還剩 ${left} 組`; }
-      else { miss++; FUN.beep('no'); b.classList.add('shake'); sel.classList.add('shake'); const s = sel; setTimeout(() => { b.classList.remove('shake'); s.classList.remove('shake'); }, 400); }
-    });
-  };
-  const sort = (si) => {
-    const g = S[si]; const items = shuffle(g.items); let i = 0, ok = 0; const res = [];
-    const draw = () => {
-      if (i >= items.length) { const perfect = ok === items.length; FUN.xp(perfect ? 20 : 8); if (perfect) { FUN.badge('sortp'); FUN.confetti(90); }
-        arena.innerHTML = `<div class="win">${PIG(perfect ? 'wow' : 'happy', 100)}<h3>${ok} / ${items.length}</h3><div class="sortres">${g.b.map((bn, bi) => `<div class="bucket"><b>${bn}</b>${items.filter(x => x[1] === bi).map(x => `<span class="${res.find(r => r[0] === x[0])[1] ? '' : 'miss'}">${x[0]}</span>`).join('')}</div>`).join('')}</div><button class="btn big" id="again" type="button">再玩一次</button></div>`; $('#again', root).onclick = () => sort(si); return; }
-      const it = items[i];
-      arena.innerHTML = `<div class="sgame"><p class="sm-p">${g.t}　(${i + 1}/${items.length})</p><div class="scard">${it[0]}</div><div class="buckets">${g.b.map((bn, bi) => `<button class="bk" data-b="${bi}" type="button">${bn}</button>`).join('')}</div><p class="sfb" aria-live="polite"></p></div>`;
-      $$('.bk', arena).forEach(b => b.onclick = () => { const good = +b.dataset.b === it[1]; res.push([it[0], good]); if (good) { ok++; FUN.beep('ok'); b.classList.add('right'); } else { FUN.beep('no'); b.classList.add('wrongc'); $$('.bk', arena)[it[1]].classList.add('right'); }
-        $$('.bk', arena).forEach(x => x.disabled = true); $('.sfb', arena).textContent = good ? pick(CHEERS) : `正確答案：${g.b[it[1]]}`; setTimeout(() => { i++; draw(); }, good ? 500 : 1300); });
-    };
-    draw();
-  };
-  $$('[data-g]', root).forEach(b => b.onclick = () => b.dataset.g === 'match' ? match() : sort(+b.dataset.g.slice(1)));
-  match();
-}
+// ---------- Games：遊戲大廳在 arcade.js ----------
+function renderGames(key, root) { ARCADE.render(key, root); }
 
 // ---------- 衍金 textbook problems ----------
 function renderProblems(root) {
@@ -386,12 +353,12 @@ const PANES = {
   invest: [['learn', '知識點'], ['formula', '公式教室'], ['flash', '講義問題'], ['game', '小遊戲'], ['mcq', '打怪＆選擇題'], ['notes', '我的筆記']],
   law: [['learn', '知識點＋條文'], ['game', '小遊戲'], ['mcq', '打怪＆選擇題'], ['notes', '我的筆記']],
   mgmt: [['learn', '知識點'], ['formula', '公式教室'], ['essay', '申論批改'], ['game', '小遊戲'], ['mcq', '打怪＆選擇題'], ['notes', '我的筆記']],
-  re: [['learn', '知識點'], ['mcq', '打怪＆選擇題'], ['notes', '我的筆記']],
-  cfa: [['intro', '考試指南'], ['learn', 'Level I 完整筆記'], ['mcq', '打怪＆選擇題'], ['notes', '我的筆記']]
+  re: [['learn', '知識點'], ['game', '小遊戲'], ['mcq', '打怪＆選擇題'], ['notes', '我的筆記']],
+  cfa: [['intro', '考試指南'], ['learn', 'Level I 完整筆記'], ['game', '小遊戲'], ['mcq', '打怪＆選擇題'], ['notes', '我的筆記']]
 };
 let CUR = [];
 function go(k, tab, opt) {
-  NOTES.hide();
+  NOTES.hide(); ARCADE.stop(); SOUND.stop();
   if (CUR[0]) savePos();
   const t0 = $('#postoast'); if (t0) t0.hidden = true;
   ST.subj = k; save(); CUR = [k, tab];
