@@ -6,128 +6,128 @@ DATA.re.sections[0].cards.push(
   { id:'re1us1', t:'美台對照①：產權、登記、房貸文件與擔保結構', en:'US vs Taiwan: title, recording and security instruments',
     plain:'兩邊最根本的差別在「產權怎麼確認」：美國的登記只是公示、決定順位，產權有沒有問題要靠產權調查和產權保險；台灣是政府登記就生效、登記有公信力，所以幾乎不需要產權保險。擔保結構上，美國有 mortgage 和 deed of trust 兩種，各州還分 lien theory、title theory；台灣只有民法的抵押權，概念上接近 lien theory。',
     life:'美國像二手車私下交易：要自己查車籍、買保險防止買到贓車；台灣像在監理站過戶：登記上寫誰就是誰的，政府背書。',
-    body: '<h4>總對照表</h4>' + reCmp([
-        ['不動產的範圍', 'Real property ＝ 土地＋定著物，<b>一個</b>產權', '<b>土地和建物分別登記</b>，各有權狀；可以只買建物、不買土地（例如地上權住宅）', '台灣要分別查土地和建物謄本；房貸也是土地＋建物一起設定抵押'],
-        ['所有權型態', 'Fee simple、life estate、leasehold、easement……依普通法，種類多', '<b>物權法定</b>（民法 §757）：所有權、地上權、不動產役權、典權、抵押權等，只能用法律規定的種類', '台灣沒有 life estate；典權是台灣特有'],
-        ['移轉何時生效', 'Deed <b>交付並受領</b>時就移轉；登記（recording）是為了<b>對抗</b>第三人、決定順位', '<b>登記生效</b>：不登記就不生效（民法 §758）', '美國：沒登記仍有效但可能輸給後手；台灣：沒登記根本沒取得'],
-        ['登記的效力', '只是公示；登記機關<b>不保證</b>產權正確（Torrens 制例外，少見）', '<b>公信力</b>：信賴登記取得權利的人受保護（民法 §759-1、土地法 §43）', '這是美國需要 title insurance、台灣不需要的根本原因'],
+    body: '<p class="ez lead">這組四張卡把美國制度和台灣<b>並排比較</b>。第一張比較「買房、登記、房貸文件」。看表格時先看最右邊一欄「差在哪」，再回頭看左邊兩欄。最大的差別只有一個：<b>台灣的登記簿可以相信，美國的不行</b>，其他差異大多從這裡來。</p><h4>總對照表</h4>' + reCmp([
+        ['不動產的範圍', 'Real property ＝ 土地＋定著物，<b>一個</b>產權', '<b>土地和建物分別登記</b>，各有權狀；可以只買建物、不買土地（例如地上權住宅）', '台灣要分別查土地和建物謄本；房貸也是土地＋建物一起設定抵押<span class="ez">美國把土地和房子當成一個東西；台灣分成兩樣，各有一張權狀。</span>'],
+        ['所有權型態', 'Fee simple、life estate、leasehold、easement……依普通法，種類多', '<b>物權法定</b>（民法 §757）：所有權、地上權、不動產役權、典權、抵押權等，只能用法律規定的種類', '台灣沒有 life estate；典權是台灣特有<span class="ez">物權法定＝台灣只承認法律列出來的權利種類，不能自己發明；美國的權利種類比較自由。</span>'],
+        ['移轉何時生效', 'Deed <b>交付並受領</b>時就移轉；登記（recording）是為了<b>對抗</b>第三人、決定順位', '<b>登記生效</b>：不登記就不生效（民法 §758）', '美國：沒登記仍有效但可能輸給後手；台灣：沒登記根本沒取得<span class="ez">美國簽好 deed、交給買方，房子就是買方的了，登記是為了讓別人知道；台灣一定要登記才算數。</span>'],
+        ['登記的效力', '只是公示；登記機關<b>不保證</b>產權正確（Torrens 制例外，少見）', '<b>公信力</b>：信賴登記取得權利的人受保護（民法 §759-1、土地法 §43）', '這是美國需要 title insurance、台灣不需要的根本原因<span class="ez">公信力＝登記簿上寫誰是主人，大家就可以相信。美國的登記處只負責收文件，不保證內容正確，所以要買保險。</span>'],
         ['產權確認', 'Title search、abstract of title、律師意見、<b>title insurance</b>（owner’s ＋ lender’s policy）', '調<b>登記謄本</b>（所有權部、他項權利部）即可', '考題：title insurance 保什麼、為什麼一次付清'],
-        ['交割', '<b>Escrow agent</b>／title company 保管價金和文件，一起 closing', '<b>地政士</b>（代書）辦理過戶；<b>價金履約保證</b>（履保專戶）保管價金', '功能相同：中立第三人防止一手交錢一手不交貨'],
-        ['債務文件', '<b>Promissory note</b>（紐約等州叫 bond）：可轉讓，次級市場買賣的就是 note', '<b>借款契約</b>＋部分銀行要求<b>本票</b>（票據法 §123：可聲請法院裁定後強制執行）', '台灣本票的用途是<b>快速取得執行名義</b>，不是為了流通'],
-        ['擔保文件', '<b>Mortgage</b>（兩方）或 <b>deed of trust</b>（三方、有 power of sale）', '<b>抵押權設定契約書</b>，到地政事務所登記，發他項權利證明書', '台灣沒有 deed of trust；不動產信託存在，但不是房貸的擔保方式'],
-        ['擔保的法律性質', '依州分 <b>lien theory</b>（多數）、<b>title theory</b>、intermediate theory', '抵押權<b>不移轉占有和所有權</b> → 接近 lien theory；實務上的<b>讓與擔保</b>（把所有權移轉給債權人當擔保）則接近 title theory', '考題：哪一種理論下貸方持有 legal title'],
-        ['擔保未來債務', 'Future advance clause、open-end mortgage、HELOC', '<b>最高限額抵押權</b>（民法 §881-1）', '台灣銀行房貸常設定「貸款金額 × 1.2」的最高限額'],
-        ['當事人名稱', 'Mortgagor（借款人）、mortgagee（貸方）；trustor、trustee、beneficiary', '抵押人（借款人或第三人）、抵押權人（銀行）', '台灣抵押人可以是<b>第三人</b>（例如用父母的房子擔保子女的借款）']
+        ['交割', '<b>Escrow agent</b>／title company 保管價金和文件，一起 closing', '<b>地政士</b>（代書）辦理過戶；<b>價金履約保證</b>（履保專戶）保管價金', '功能相同：中立第三人防止一手交錢一手不交貨<span class="ez">買賣房子時，都需要一個中立的人先保管錢，等過戶完成才把錢交給賣方。</span>'],
+        ['債務文件', '<b>Promissory note</b>（紐約等州叫 bond）：可轉讓，次級市場買賣的就是 note', '<b>借款契約</b>＋部分銀行要求<b>本票</b>（票據法 §123：可聲請法院裁定後強制執行）', '台灣本票的用途是<b>快速取得執行名義</b>，不是為了流通<span class="ez">美國的 note 可以被買賣（所以能證券化）；台灣的本票主要是讓銀行追債更快。</span>'],
+        ['擔保文件', '<b>Mortgage</b>（兩方）或 <b>deed of trust</b>（三方、有 power of sale）', '<b>抵押權設定契約書</b>，到地政事務所登記，發他項權利證明書', '台灣沒有 deed of trust；不動產信託存在，但不是房貸的擔保方式<span class="ez">台灣房貸只有一種擔保方式：抵押權。</span>'],
+        ['擔保的法律性質', '依州分 <b>lien theory</b>（多數）、<b>title theory</b>、intermediate theory', '抵押權<b>不移轉占有和所有權</b> → 接近 lien theory；實務上的<b>讓與擔保</b>（把所有權移轉給債權人當擔保）則接近 title theory', '考題：哪一種理論下貸方持有 legal title<span class="ez">台灣的抵押權不會讓銀行變成房子的主人，所以像美國大多數州的 lien theory。</span>'],
+        ['擔保未來債務', 'Future advance clause、open-end mortgage、HELOC', '<b>最高限額抵押權</b>（民法 §881-1）', '台灣銀行房貸常設定「貸款金額 × 1.2」的最高限額<span class="ez">例：借 1,000 萬，抵押權設定 1,200 萬，多的部分用來涵蓋利息、違約金等。</span>'],
+        ['當事人名稱', 'Mortgagor（借款人）、mortgagee（貸方）；trustor、trustee、beneficiary', '抵押人（借款人或第三人）、抵押權人（銀行）', '台灣抵押人可以是<b>第三人</b>（例如用父母的房子擔保子女的借款）<span class="ez">台灣借錢的人和提供房子擔保的人可以不同。</span>']
       ])
       + '<h4>為什麼不一樣（點開看細項）</h4>'
       + reD('法系', '普通法 vs 大陸法', '美國靠判例和州法，台灣靠法典', [
-          '美國不動產法是<b>州法</b>，承襲英國普通法：所以會有 lien theory／title theory、judicial／nonjudicial 等各州差異，考題常說 “in most states”。',
-          '台灣是<b>大陸法系</b>（繼受德國、日本）：全國一套民法、土地法、強制執行法，規則統一。',
-          '讀美國制度時要記得「<b>各州不同</b>」；讀台灣制度時記「<b>條號</b>」。' ])
+          '美國不動產法是<b>州法</b>，承襲英國普通法：所以會有 lien theory／title theory、judicial／nonjudicial 等各州差異，考題常說 “in most states”。<span class="ez">美國每一州的不動產法都不一樣，所以課本常寫「大多數州」。</span>',
+          '台灣是<b>大陸法系</b>（繼受德國、日本）：全國一套民法、土地法、強制執行法，規則統一。<span class="ez">台灣全國用同一套法律。</span>',
+          '讀美國制度時要記得「<b>各州不同</b>」；讀台灣制度時記「<b>條號</b>」。<span class="ez">讀書方法：美國記「多數州怎麼做、有哪些例外」；台灣記法條。</span>' ])
       + reD('登記制度', 'Recording（契據登記） vs 權利登記', '登記的是「文件」還是「權利」', [
-          '美國郡政府登記的是<b>文件</b>（deed、mortgage）：只要文件放進去，不審查實質內容 → 誰真的有產權要自己從產權鏈（chain of title）判斷。',
-          '台灣地政事務所登記的是<b>權利</b>：審查後登記，登記簿上就是權利狀態（類似 <b>Torrens system</b>）。',
-          '所以美國發展出產權保險產業；台灣的交易風險主要在<b>價金交付</b>（所以有履約保證）而不是產權本身。' ])
+          '美國郡政府登記的是<b>文件</b>（deed、mortgage）：只要文件放進去，不審查實質內容 → 誰真的有產權要自己從產權鏈（chain of title）判斷。<span class="ez">美國登記處像一個大檔案櫃：你把文件放進去，它不管內容對不對。要知道房子到底是誰的，得自己把歷年的文件一份一份往回查。</span>',
+          '台灣地政事務所登記的是<b>權利</b>：審查後登記，登記簿上就是權利狀態（類似 <b>Torrens system</b>）。<span class="ez">台灣地政事務所會先審查，登記簿上寫的就是現在的權利狀態，直接看就知道。</span>',
+          '所以美國發展出產權保險產業；台灣的交易風險主要在<b>價金交付</b>（所以有履約保證）而不是產權本身。<span class="ez">所以美國人花錢買產權保險；台灣人擔心的是「錢交出去後對方跑掉」，所以用履約保證。</span>' ])
       + reD('考試怎麼用', '答題提示', '英文申論題可以這樣比較', [
-          '“Unlike the U.S. recording system, Taiwan adopts a registration system in which registration is required for the transfer of real property rights and is backed by public credibility; therefore title insurance is rarely needed.”',
-          '“A Taiwanese mortgage (抵押權) does not transfer possession or title to the lender, which is similar to the lien theory in most U.S. states.”' ]),
+          '“Unlike the U.S. recording system, Taiwan adopts a registration system in which registration is required for the transfer of real property rights and is backed by public credibility; therefore title insurance is rarely needed.”<span class="ez">中文意思：台灣採登記生效且有公信力，所以很少需要產權保險。</span>',
+          '“A Taiwanese mortgage (抵押權) does not transfer possession or title to the lender, which is similar to the lien theory in most U.S. states.”<span class="ez">中文意思：台灣的抵押權不移轉占有和所有權，類似美國多數州的 lien theory。</span>' ]),
     terms:[['recording system','契據登記制（美國）'],['registration with public credibility','權利登記＋公信力（台灣）'],['物權法定','物權種類由法律規定'],['讓與擔保','以移轉所有權作擔保（接近 title theory）'],['最高限額抵押權','≈ open-end mortgage／future advances'],['地政士／履約保證','≈ escrow agent']] },
 
   { id:'re1us2', t:'美台對照②：房貸條款與 Lien 順位', en:'US vs Taiwan: mortgage clauses and lien priority',
     plain:'美國房貸用全國標準化的條款（Fannie／Freddie uniform instrument），每一條都有名字；台灣房貸契約由金管會的「定型化契約應記載事項」規範，很多美國條款在台灣有對應的概念，但名稱和做法不同。最大的實務差異：台灣沒有 escrow 代管帳戶、沒有普及的 PMI、房子賣掉時通常由買方的銀行代償舊貸款。',
     life:'同一款遊戲的美版和台版：功能差不多，但選單名稱不一樣，有些功能（例如 escrow）台版直接沒有。',
-    body: '<h4>條款對照</h4>' + reCmp([
-        ['加速條款', '<b>Acceleration clause</b>：optional，加速前通知至少 30 天', '「<b>喪失期限利益</b>」：借款契約約定遲延或違約時，銀行得請求立即清償', '概念相同；台灣分期付款買賣另有民法 §389（遲付達 1/5）的限制'],
-        ['出售時的舊貸款', '<b>Due-on-sale</b>：貸方可要求還清；FHA、VA 貸款可 <b>assumption</b>', '實務上買方的銀行撥款<b>代償</b>賣方舊貸款，再塗銷抵押權；承接舊貸款（債務承擔）要銀行同意，少見', '台灣抵押權有<b>追及效力</b>（民法 §867），所以買方一定會要求塗銷'],
-        ['提前還款', '住宅房貸多數<b>可自由提前還款</b>；QM 違約金限前 3 年；商用有 <b>lockout</b>、yield maintenance、defeasance', '常約定前 1–3 年提前清償要付<b>違約金</b>；定型化契約要求提供不收違約金的方案供選擇', '原因見對照④：美國的固定利率讓提前還款權很有價值'],
-        ['稅和保險', '<b>Escrow account</b>：每月 PITI，由 servicer 代繳', '<b>沒有</b> escrow；房屋稅、地價稅由屋主自己繳', '台灣欠稅一樣優先於抵押權（稅捐稽徵法 §6），但銀行沒有代繳機制'],
+    body: '<p class="ez lead">第二張比較「房貸條款」和「誰先拿錢」。大部分條款兩邊<b>概念一樣、名字不同</b>，表格最右欄會告訴你對應關係。特別小心最後一列「寬限期」：同一個中文詞，美國和台灣的意思完全不同。</p><h4>條款對照</h4>' + reCmp([
+        ['加速條款', '<b>Acceleration clause</b>：optional，加速前通知至少 30 天', '「<b>喪失期限利益</b>」：借款契約約定遲延或違約時，銀行得請求立即清償', '概念相同；台灣分期付款買賣另有民法 §389（遲付達 1/5）的限制<span class="ez">美國叫 acceleration，台灣叫「喪失期限利益」，都是違約就要求全部還清。</span>'],
+        ['出售時的舊貸款', '<b>Due-on-sale</b>：貸方可要求還清；FHA、VA 貸款可 <b>assumption</b>', '實務上買方的銀行撥款<b>代償</b>賣方舊貸款，再塗銷抵押權；承接舊貸款（債務承擔）要銀行同意，少見', '台灣抵押權有<b>追及效力</b>（民法 §867），所以買方一定會要求塗銷<span class="ez">台灣買房時，買方的銀行直接把錢撥去還賣方的舊貸款，舊抵押權塗銷後再設定新的，所以不會有「接手舊貸款」的問題。</span>'],
+        ['提前還款', '住宅房貸多數<b>可自由提前還款</b>；QM 違約金限前 3 年；商用有 <b>lockout</b>、yield maintenance、defeasance', '常約定前 1–3 年提前清償要付<b>違約金</b>；定型化契約要求提供不收違約金的方案供選擇', '原因見對照④：美國的固定利率讓提前還款權很有價值<span class="ez">美國可以免費提早還；台灣常綁約 1–3 年。</span>'],
+        ['稅和保險', '<b>Escrow account</b>：每月 PITI，由 servicer 代繳', '<b>沒有</b> escrow；房屋稅、地價稅由屋主自己繳', '台灣欠稅一樣優先於抵押權（稅捐稽徵法 §6），但銀行沒有代繳機制<span class="ez">美國銀行每月多收錢幫你繳稅和保險；台灣自己繳。</span>'],
         ['財產保險', 'Hazard insurance＋mortgagee clause；洪水區要 flood insurance', '<b>住宅火災保險＋基本地震險</b>，銀行為抵押權人', '概念相同'],
-        ['房貸保險', '<b>PMI</b>（LTV &gt; 80%）、FHA 政府保險：保護<b>貸方</b>', '沒有普及的 PMI；常見的是<b>房貸壽險</b>（借款人身故時清償貸款，保護借款人家屬和銀行）', '保險的對象不同：PMI 保違約，房貸壽險保死亡'],
-        ['付款抵充', 'Application of payments：escrow → 利息 → 本金 → 費用', '民法 §323：<b>費用 → 利息 → 原本</b>', '台灣有法律明文'],
-        ['維護擔保品', 'Preservation（waste）、right of entry、abandonment', '民法 §871（停止減損行為）、§872（價值減少時回復或提供擔保）', '台灣沒有 right of entry 的明文條款'],
-        ['徵收／滅失', 'Condemnation clause：補償金先還貸款', '民法 §881 <b>物上代位</b>：賠償金、保險金、補償金仍受抵押權拘束', '台灣是法律直接規定'],
-        ['債權轉讓', 'Assignment clause：不需借款人同意，常賣進 MBS', '民法 §295、§297：抵押權隨債權移轉，通知債務人才生效', '台灣房貸很少證券化，多由銀行自己持有'],
+        ['房貸保險', '<b>PMI</b>（LTV &gt; 80%）、FHA 政府保險：保護<b>貸方</b>', '沒有普及的 PMI；常見的是<b>房貸壽險</b>（借款人身故時清償貸款，保護借款人家屬和銀行）', '保險的對象不同：PMI 保違約，房貸壽險保死亡<span class="ez">PMI：借款人不還錢時賠銀行。房貸壽險：借款人過世時幫家人把房貸還清。</span>'],
+        ['付款抵充', 'Application of payments：escrow → 利息 → 本金 → 費用', '民法 §323：<b>費用 → 利息 → 原本</b>', '台灣有法律明文<span class="ez">每筆錢先抵什麼，兩邊順序差不多：費用、利息、本金。</span>'],
+        ['維護擔保品', 'Preservation（waste）、right of entry、abandonment', '民法 §871（停止減損行為）、§872（價值減少時回復或提供擔保）', '台灣沒有 right of entry 的明文條款<span class="ez">兩邊都不准屋主讓房子變不值錢。</span>'],
+        ['徵收／滅失', 'Condemnation clause：補償金先還貸款', '民法 §881 <b>物上代位</b>：賠償金、保險金、補償金仍受抵押權拘束', '台灣是法律直接規定<span class="ez">房子沒了，保險金、補償金還是先給銀行。</span>'],
+        ['債權轉讓', 'Assignment clause：不需借款人同意，常賣進 MBS', '民法 §295、§297：抵押權隨債權移轉，通知債務人才生效', '台灣房貸很少證券化，多由銀行自己持有<span class="ez">兩邊都可以把貸款賣掉，但台灣很少這麼做。</span>'],
         ['順位讓與', 'Subordination clause／agreement', '民法 §870-1：抵押權次序的<b>讓與、拋棄</b>，須登記', '概念相同'],
-        ['還清後', 'Satisfaction／release of mortgage；deed of trust 是 reconveyance', '清償證明＋<b>抵押權塗銷</b>登記', '台灣要記得去地政事務所塗銷，否則謄本上抵押權還在'],
-        ['寬限期', '<b>Grace period</b>：每月付款晚幾天不罰（約 15 天）', '<b>寬限期</b>：前幾年<b>只繳息不還本</b>（一般最長 3 年，新青安 5 年）', '同一個中文詞，意思完全不同！']
+        ['還清後', 'Satisfaction／release of mortgage；deed of trust 是 reconveyance', '清償證明＋<b>抵押權塗銷</b>登記', '台灣要記得去地政事務所塗銷，否則謄本上抵押權還在<span class="ez">還清後都要把抵押權解除。</span>'],
+        ['寬限期', '<b>Grace period</b>：每月付款晚幾天不罰（約 15 天）', '<b>寬限期</b>：前幾年<b>只繳息不還本</b>（一般最長 3 年，新青安 5 年）', '同一個中文詞，意思完全不同！<span class="ez">美國 grace period：每月繳款可以晚幾天不罰。台灣寬限期：前幾年只繳利息、不還本金。</span>']
       ])
       + '<h4>Lien 順位對照</h4>' + reCmp([
-        ['稅捐', 'Property tax、special assessment：<b>super priority</b>；聯邦所得稅 lien 依登記時間', '土地增值稅、地價稅、房屋稅優先於一切債權及抵押權（稅捐稽徵法 §6）', '兩邊都是「不動產本身的稅」最優先'],
-        ['抵押權之間', 'First in time, first in right；依 recording statute（race／notice／race-notice）', '依<b>登記先後</b>（民法 §865）', '台灣登記生效，沒有 notice 規則的問題'],
-        ['判決債權', '<b>Judgment lien</b>：登記判決就產生一般 lien', '<b>沒有</b> judgment lien；要聲請強制執行、<b>查封</b>（或先<b>假扣押</b>）', '台灣一般債權人<b>沒有</b>優先順位，只能和其他普通債權人按比例分配'],
-        ['工程款', '<b>Mechanic’s lien</b>：可溯及開工日', '承攬人的<b>法定抵押權</b>（民法 §513），要登記', '台灣不會溯及，依登記時間'],
+        ['稅捐', 'Property tax、special assessment：<b>super priority</b>；聯邦所得稅 lien 依登記時間', '土地增值稅、地價稅、房屋稅優先於一切債權及抵押權（稅捐稽徵法 §6）', '兩邊都是「不動產本身的稅」最優先<span class="ez">兩邊都是房子的稅排第一。</span>'],
+        ['抵押權之間', 'First in time, first in right；依 recording statute（race／notice／race-notice）', '依<b>登記先後</b>（民法 §865）', '台灣登記生效，沒有 notice 規則的問題<span class="ez">兩邊都是先登記先拿錢；台灣不登記就不算數，所以不會有「沒登記但對方知道」的爭議。</span>'],
+        ['判決債權', '<b>Judgment lien</b>：登記判決就產生一般 lien', '<b>沒有</b> judgment lien；要聲請強制執行、<b>查封</b>（或先<b>假扣押</b>）', '台灣一般債權人<b>沒有</b>優先順位，只能和其他普通債權人按比例分配<span class="ez">美國打贏官司就能在房子上掛 lien、取得順位；台灣打贏官司還是普通債權人，要去查封才行。</span>'],
+        ['工程款', '<b>Mechanic’s lien</b>：可溯及開工日', '承攬人的<b>法定抵押權</b>（民法 §513），要登記', '台灣不會溯及，依登記時間<span class="ez">台灣包商的抵押權看登記時間，不能往前算到開工日。</span>'],
         ['購屋貸款的優先', 'Purchase-money mortgage 優先於原有 judgment lien', '沒有特別規定（因為沒有 judgment lien）', '—'],
-        ['拍賣後', 'Senior 法拍塗銷 junior；junior 法拍的買受人 <b>subject to</b> senior', '<b>塗銷主義</b>：拍定後所有抵押權都消滅，依次序分配（強制執行法 §98）', '台灣拍定人拿到的是<b>沒有抵押權</b>的房子']
+        ['拍賣後', 'Senior 法拍塗銷 junior；junior 法拍的買受人 <b>subject to</b> senior', '<b>塗銷主義</b>：拍定後所有抵押權都消滅，依次序分配（強制執行法 §98）', '台灣拍定人拿到的是<b>沒有抵押權</b>的房子<span class="ez">台灣法拍後所有抵押權都清掉；美國只清掉發動法拍那一順位「後面」的。</span>']
       ])
       + reD('為什麼台灣沒有 escrow', '延伸', '制度與習慣', [
-          '台灣房屋稅、地價稅<b>金額低</b>（相對房價），每年各繳一次，欠稅的風險和影響都小。',
-          '美國房地產稅常是房價的 <b>1–2% 以上</b>，每年金額接近好幾個月的房貸，欠稅會讓 tax lien 排到房貸前面 → 貸方必須控制。',
-          '美國房貸賣進 MBS 後，投資人需要擔保品被保護的<b>標準化機制</b>，escrow 就是其中之一。' ]),
+          '台灣房屋稅、地價稅<b>金額低</b>（相對房價），每年各繳一次，欠稅的風險和影響都小。<span class="ez">台灣房屋稅、地價稅相對房價很便宜，一年繳一次，銀行不太擔心。</span>',
+          '美國房地產稅常是房價的 <b>1–2% 以上</b>，每年金額接近好幾個月的房貸，欠稅會讓 tax lien 排到房貸前面 → 貸方必須控制。<span class="ez">美國房地產稅很貴，每年可能是房價的 1–2%，欠稅還會排到銀行前面，銀行一定要管。</span>',
+          '美國房貸賣進 MBS 後，投資人需要擔保品被保護的<b>標準化機制</b>，escrow 就是其中之一。<span class="ez">房貸被賣給投資人後，需要一套標準方法確保稅和保險都有繳。</span>' ]),
     terms:[['喪失期限利益','≈ acceleration'],['代償','買方銀行還清賣方舊貸款'],['追及效力','抵押權跟著房子走（民法 §867）'],['房貸壽險','借款人身故時清償貸款'],['物上代位','≈ condemnation／insurance proceeds'],['塗銷主義','拍定後所有抵押權消滅'],['grace period vs 寬限期','晚繳不罰 vs 只繳息']] },
 
   { id:'re1us3', t:'美台對照③：違約、Workout、法拍、贖回與追索', en:'US vs Taiwan: default, workouts, foreclosure, redemption and recourse',
     plain:'美國的違約處理很多樣：各州有不同的法拍方式、贖回權和不足額判決的限制，部分州的房貸實質上是無追索權，所以會出現策略性違約。台灣全國統一走法院拍賣，沒有法拍後的贖回權，房貸全部有追索權，拍賣不夠還的部分銀行可以一直追，所以策略性違約很少見。',
     life:'美國像每個州規則不同的比賽，有些州輸了只要交出房子就結束；台灣是全國同一套規則，輸了房子被拍掉，不夠的錢還要繼續還。',
-    body: reCmp([
-        ['違約的認定', 'Delinquency 30／60／90+；逾期 120 天後才能啟動法拍（聯邦法規）', '<b>逾期放款</b>：本金逾期 3 個月或利息延滯 6 個月以上 → <b>催收款</b> → <b>呆帳</b>；記錄於<b>聯徵中心</b>', '台灣的分類是銀行會計與監理用語'],
-        ['違約率', '2008 年前後很高；負權益與無追索權造成策略性違約', '房貸逾放比<b>很低</b>（長期遠低於 1%）', '原因見下方「為什麼不一樣」'],
-        ['協商（workout）', 'Forbearance、repayment plan、modification（HAMP）、short sale、deed in lieu；servicer 要做 NPV test', '<b>展延</b>、<b>只繳息</b>、調降利率；天災疫情時的<b>紓困方案</b>', '台灣較少本金寬減，也很少 short sale、deed in lieu（代物清償）'],
-        ['個人債務清理', 'Chapter 7（清算）、Chapter 13（3–5 年重整，可保住自住房）', '<b>消費者債務清理條例</b>：前置協商／調解 → <b>更生</b>（原則 6 年內清償）或<b>清算</b>（之後裁定免責）', '更生 ≈ Ch.13；清算 ≈ Ch.7'],
-        ['企業重整', 'Chapter 11、cramdown、<b>prepackaged bankruptcy</b>', '<b>公司重整</b>（公司法 §282 以下）', '擔保債權在台灣破產程序中是<b>別除權</b>（不依程序直接就擔保物受償），重整時則依重整計畫'],
-        ['法拍方式', 'Judicial、nonjudicial（power of sale）、strict foreclosure、by entry；<b>各州不同</b>', '<b>只有法院拍賣</b>：拍賣抵押物裁定 → 強制執行 → 查封、鑑價 → 拍賣（最多三次減價）→ 特別變賣', '台灣沒有不經法院的拍賣'],
-        ['法拍得標', '貸方 <b>credit bid</b>；沒人出價 → <b>REO</b>', '抵押權人可以<b>承受</b>（≈ REO）；拍定分<b>點交／不點交</b>', '不點交的法拍屋買方要自己處理占用人，價格更低'],
-        ['後順位', 'Junior 被塗銷，可代繳 senior、買下 senior 債權、出價', '塗銷主義＋<b>無益執行</b>：後順位分不到錢時法院通常不准拍', '台灣後順位很難自己發動拍賣'],
-        ['拍賣前贖回', '<b>Equity of redemption</b>（各州都有）；加速後還有 <b>right to reinstate</b>', '拍定<b>前</b>清償債務及費用，可撤銷執行', '台灣沒有法定的 reinstatement，要和銀行協商'],
-        ['拍賣後贖回', '<b>Statutory redemption</b>：約一半的州，數月到一年以上', '<b>沒有</b>：拍定、繳足價金後發權利移轉證書', '台灣拍定人的產權比較確定'],
-        ['不足額', '<b>Deficiency judgment</b>；受 anti-deficiency、fair value、one-action rule 限制；部分州實質<b>無追索權</b>', '<b>全部有追索權</b>：法院發<b>債權憑證</b>，銀行之後可以再執行借款人的其他財產、薪資', '台灣違約成本高很多'],
-        ['事先約定把房子給貸方', '<b>Clogging the equity of redemption</b>：無效', '<b>流抵約款</b>（民法 §873-1）：可以約定，但要登記，且抵押權人負<b>清算</b>義務（超過債權的部分返還）', '台灣允許，但用清算義務保護借款人'],
-        ['被免除債務的稅', '<b>COD income</b> 原則上要課所得稅（有排除規定）', '一般沒有對應的課稅爭議', '美國 workout 要考慮稅']
+    body: '<p class="ez lead">第三張比較「出事之後」：違約、協商、破產、法拍、贖回、追差額。最大的差別是<b>追索權</b>：美國有些州「房子交出去就沒事」，台灣「房子賣了不夠，你還是要還」。所以台灣人很少故意違約。</p>' + reCmp([
+        ['違約的認定', 'Delinquency 30／60／90+；逾期 120 天後才能啟動法拍（聯邦法規）', '<b>逾期放款</b>：本金逾期 3 個月或利息延滯 6 個月以上 → <b>催收款</b> → <b>呆帳</b>；記錄於<b>聯徵中心</b>', '台灣的分類是銀行會計與監理用語<span class="ez">美國用「晚幾天」分階段；台灣用「逾期放款 → 催收款 → 呆帳」分類。</span>'],
+        ['違約率', '2008 年前後很高；負權益與無追索權造成策略性違約', '房貸逾放比<b>很低</b>（長期遠低於 1%）', '原因見下方「為什麼不一樣」<span class="ez">台灣房貸違約的人非常少。</span>'],
+        ['協商（workout）', 'Forbearance、repayment plan、modification（HAMP）、short sale、deed in lieu；servicer 要做 NPV test', '<b>展延</b>、<b>只繳息</b>、調降利率；天災疫情時的<b>紓困方案</b>', '台灣較少本金寬減，也很少 short sale、deed in lieu（代物清償）<span class="ez">台灣的協商通常是延長期限、先只繳利息；很少直接減少本金。</span>'],
+        ['個人債務清理', 'Chapter 7（清算）、Chapter 13（3–5 年重整，可保住自住房）', '<b>消費者債務清理條例</b>：前置協商／調解 → <b>更生</b>（原則 6 年內清償）或<b>清算</b>（之後裁定免責）', '更生 ≈ Ch.13；清算 ≈ Ch.7<span class="ez">更生＝有收入的人分期還、保住房子；清算＝把財產賣掉、剩下的債可能免除。</span>'],
+        ['企業重整', 'Chapter 11、cramdown、<b>prepackaged bankruptcy</b>', '<b>公司重整</b>（公司法 §282 以下）', '擔保債權在台灣破產程序中是<b>別除權</b>（不依程序直接就擔保物受償），重整時則依重整計畫<span class="ez">別除權＝有抵押的銀行可以不管破產程序，直接拿房子優先受償。</span>'],
+        ['法拍方式', 'Judicial、nonjudicial（power of sale）、strict foreclosure、by entry；<b>各州不同</b>', '<b>只有法院拍賣</b>：拍賣抵押物裁定 → 強制執行 → 查封、鑑價 → 拍賣（最多三次減價）→ 特別變賣', '台灣沒有不經法院的拍賣<span class="ez">台灣一定要透過法院拍賣。</span>'],
+        ['法拍得標', '貸方 <b>credit bid</b>；沒人出價 → <b>REO</b>', '抵押權人可以<b>承受</b>（≈ REO）；拍定分<b>點交／不點交</b>', '不點交的法拍屋買方要自己處理占用人，價格更低<span class="ez">銀行自己承接沒賣掉的房子，台灣叫「承受」，美國叫 REO。</span>'],
+        ['後順位', 'Junior 被塗銷，可代繳 senior、買下 senior 債權、出價', '塗銷主義＋<b>無益執行</b>：後順位分不到錢時法院通常不准拍', '台灣後順位很難自己發動拍賣<span class="ez">如果拍賣後輪不到二胎分錢，法院就不准二胎發動拍賣。</span>'],
+        ['拍賣前贖回', '<b>Equity of redemption</b>（各州都有）；加速後還有 <b>right to reinstate</b>', '拍定<b>前</b>清償債務及費用，可撤銷執行', '台灣沒有法定的 reinstatement，要和銀行協商<span class="ez">拍賣前把錢還清就能停止拍賣，兩邊都可以。</span>'],
+        ['拍賣後贖回', '<b>Statutory redemption</b>：約一半的州，數月到一年以上', '<b>沒有</b>：拍定、繳足價金後發權利移轉證書', '台灣拍定人的產權比較確定<span class="ez">台灣拍賣完就結束了，原屋主不能再買回；買法拍屋比較安心。</span>'],
+        ['不足額', '<b>Deficiency judgment</b>；受 anti-deficiency、fair value、one-action rule 限制；部分州實質<b>無追索權</b>', '<b>全部有追索權</b>：法院發<b>債權憑證</b>，銀行之後可以再執行借款人的其他財產、薪資', '台灣違約成本高很多<span class="ez">台灣房子賣了不夠，銀行還可以拿著債權憑證追你一輩子（時效可以中斷重算）。</span>'],
+        ['事先約定把房子給貸方', '<b>Clogging the equity of redemption</b>：無效', '<b>流抵約款</b>（民法 §873-1）：可以約定，但要登記，且抵押權人負<b>清算</b>義務（超過債權的部分返還）', '台灣允許，但用清算義務保護借款人<span class="ez">美國不准事先約定「違約房子歸銀行」；台灣准，但房子比債值錢的部分要還給屋主。</span>'],
+        ['被免除債務的稅', '<b>COD income</b> 原則上要課所得稅（有排除規定）', '一般沒有對應的課稅爭議', '美國 workout 要考慮稅<span class="ez">美國被免除的債可能要繳稅；台灣一般沒有這個問題。</span>']
       ])
       + '<h4>為什麼不一樣（點開看細項）</h4>'
       + reD('追索權', '最關鍵的差別', '能不能「交出房子就結束」', [
-          '美國部分州（例如加州的自住購屋貸款）有 anti-deficiency 法規 → 房價跌破貸款時，交出房子就沒事 → 違約賣權的價值大，<b>strategic default</b> 多。',
-          '台灣全部有追索權，拍賣不足額還有債權憑證 → 違約的「履約成本」很高，借款人會盡量繼續付款。' ])
+          '美國部分州（例如加州的自住購屋貸款）有 anti-deficiency 法規 → 房價跌破貸款時，交出房子就沒事 → 違約賣權的價值大，<b>strategic default</b> 多。<span class="ez">美國有些州：把房子交出去，剩下的債就不用還了，所以房價大跌時很多人選擇放棄房子。</span>',
+          '台灣全部有追索權，拍賣不足額還有債權憑證 → 違約的「履約成本」很高，借款人會盡量繼續付款。<span class="ez">台灣：交出房子也還要繼續還差額，所以大家會盡量繳。</span>' ])
       + reD('利率結構', '浮動利率改變了違約的誘因', '理性違約的履約價不同', [
-          '美國 30 年<b>固定利率</b>：市場利率上升時，舊貸款的市場價值下降，借款人更不想違約（低利貸款很值錢）；市場利率下降時則相反。',
-          '台灣以<b>浮動利率</b>為主：貸款的市場價值大約等於 UPB → 違約的判斷接近「房價 &lt; 貸款餘額」，沒有利率帶來的額外價值。',
-          '但浮動利率讓借款人承擔<b>升息</b>的付款衝擊 → 台灣的違約風險主要來自流動性（付不起），而不是負權益。' ])
+          '美國 30 年<b>固定利率</b>：市場利率上升時，舊貸款的市場價值下降，借款人更不想違約（低利貸款很值錢）；市場利率下降時則相反。<span class="ez">美國人手上的 3% 固定利率房貸在市場利率 7% 時很珍貴，捨不得違約。</span>',
+          '台灣以<b>浮動利率</b>為主：貸款的市場價值大約等於 UPB → 違約的判斷接近「房價 &lt; 貸款餘額」，沒有利率帶來的額外價值。<span class="ez">台灣的浮動利率房貸跟著市場走，沒有「便宜的舊貸款」可以珍惜。</span>',
+          '但浮動利率讓借款人承擔<b>升息</b>的付款衝擊 → 台灣的違約風險主要來自流動性（付不起），而不是負權益。<span class="ez">台灣人違約多半是因為收入出問題、或升息後繳不起，而不是房價跌破貸款。</span>' ])
       + reD('房價與成數', '負權益比較少發生', '下檔保護不同', [
-          '台灣房價長期上漲、央行限制特定族群的貸款成數，大部分借款人有權益緩衝。',
-          '美國 2008 年前的高 LTV、piggyback、低文件貸款，讓房價一跌就大量負權益。' ])
+          '台灣房價長期上漲、央行限制特定族群的貸款成數，大部分借款人有權益緩衝。<span class="ez">台灣房價長期上漲、加上央行限制成數，大多數人房子的價值還高於貸款。</span>',
+          '美國 2008 年前的高 LTV、piggyback、低文件貸款，讓房價一跌就大量負權益。<span class="ez">美國 2008 年前很多人幾乎沒付頭期款，房價一跌馬上欠得比房子還多。</span>' ])
       + reD('文化與信用紀錄', '社會因素', '聯徵紀錄、家族擔保', [
-          '台灣聯徵紀錄影響很大，加上常有家人當<b>連帶保證人</b>，違約的社會成本高。',
-          '美國信用分數也會受傷，但策略性違約在 2009–2010 年曾被部分人視為合理的財務決策。' ])
+          '台灣聯徵紀錄影響很大，加上常有家人當<b>連帶保證人</b>，違約的社會成本高。<span class="ez">台灣常有家人當保證人，違約會連累家人。</span>',
+          '美國信用分數也會受傷，但策略性違約在 2009–2010 年曾被部分人視為合理的財務決策。<span class="ez">美國那時候有人覺得「房子不值錢就放棄」很合理。</span>' ])
       + reD('考試怎麼用', '答題提示', '英文申論題可以這樣比較', [
-          '“Because mortgages in Taiwan are full-recourse and lenders can obtain a certificate of claims (債權憑證) after the auction, strategic default is much less common than in U.S. states with anti-deficiency statutes.”',
-          '“Taiwan relies solely on court-supervised auctions, with no statutory redemption period after the sale, whereas many U.S. states permit nonjudicial foreclosure under a power of sale.”' ]),
+          '“Because mortgages in Taiwan are full-recourse and lenders can obtain a certificate of claims (債權憑證) after the auction, strategic default is much less common than in U.S. states with anti-deficiency statutes.”<span class="ez">中文意思：台灣房貸全部有追索權，拍賣後銀行可以拿到債權憑證，所以策略性違約比美國少很多。</span>',
+          '“Taiwan relies solely on court-supervised auctions, with no statutory redemption period after the sale, whereas many U.S. states permit nonjudicial foreclosure under a power of sale.”<span class="ez">中文意思：台灣只有法院拍賣、拍賣後沒有贖回期；美國很多州可以不經法院拍賣。</span>' ]),
     terms:[['逾期放款／催收款／呆帳','台灣的違約分類'],['更生 ≈ Chapter 13','個人重整'],['清算 ≈ Chapter 7','個人清算'],['別除權','擔保債權不依破產程序受償'],['承受 ≈ REO','銀行承受法拍物'],['債權憑證','拍賣不足額後的執行名義'],['流抵約款','可約定但有清算義務'],['full recourse','全部有追索權']] },
 
   { id:'re1us4', t:'美台對照④：房貸市場與制度（利率、提前還款、證券化、政府角色）', en:'US vs Taiwan: mortgage market structure',
     plain:'美國的典型房貸是 30 年固定利率、可以隨時免費提前還款，銀行把貸款賣給 Fannie Mae、Freddie Mac 包成 MBS，利率風險和提前還款風險由投資人承擔。台灣的典型房貸是浮動利率、前幾年可能有提前清償違約金，銀行把貸款留在自己的資產負債表上，利率風險由借款人承擔。這張卡把單元 1 的法律制度連到單元 2–9 的固定利率、浮動利率和 MBS。',
     life:'美國像買「固定價格的年票」，中途不去還能全額退費（提前還款），風險由賣票的人承擔；台灣像「浮動票價的月票」，票價每季調整，風險由買票的人承擔。',
-    body: reCmp([
-        ['典型產品', '<b>30 年固定利率</b>（FRM）為主；也有 15 年 FRM、ARM（例如 5/1 ARM）', '<b>浮動利率</b>為主（指數型房貸：定儲利率指數＋加碼），期限 20–30 年（新青安最長 40 年）', '對應單元 2–3（FRM）與單元 4（ARM）'],
-        ['利率風險', '固定利率：利率風險由<b>貸方／MBS 投資人</b>承擔', '浮動利率：利率風險由<b>借款人</b>承擔（升息就多付）', '銀行的資金來源是短期存款，所以台灣銀行偏好浮動利率（資產負債期限配合）'],
-        ['提前還款', '幾乎免費 → 利率下跌時大量<b>再融資</b> → MBS 的 prepayment risk、負凸性', '常有前 1–3 年違約金；浮動利率下提前還款的誘因主要來自<b>資金</b>，而不是利率', '對應單元 5–7：PSA、CPR 等提前還款模型'],
-        ['寬限期／只繳息', '2008 年前的 interest-only 貸款被 QM 規定限制', '寬限期（只繳息）普遍，<b>新青安</b>最長 5 年；央行對部分族群<b>取消寬限期</b>', '寬限期結束後的付款衝擊（payment shock）'],
-        ['資金來源', '<b>次級市場</b>：Fannie Mae、Freddie Mac 收購合格貸款，Ginnie Mae 保證 FHA／VA 貸款的 MBS；大部分新貸款被證券化', '<b>銀行存款</b>：銀行自己持有房貸；依金融資產證券化條例發行的房貸證券化只有少數幾檔', '單元 5–8 的 MBS 主要是美國市場'],
-        ['政府角色', 'GSE（2008 年起被政府接管）、FHA、VA 提供保證或保險 → 讓 30 年固定利率可以存在', '<b>政策性優惠房貸</b>（例如新青安：政府補貼利率、延長期限與寬限期）', '美國靠<b>保證與證券化</b>，台灣靠<b>利率補貼</b>'],
-        ['監理工具', 'Dodd-Frank：<b>ability-to-repay</b>、QM、證券化<b>風險保留</b>（5%）', '<b>央行選擇性信用管制</b>（限制 LTV、取消寬限期）、銀行法 §72-2（不動產放款上限）', '美國管「借款人付不付得起」；台灣管「成數和總量」'],
-        ['房貸保險', 'PMI、FHA 保險 → 可以低頭期款（3–5%）', '沒有普及的 PMI → 一般成數約 7–8 成（依央行規定與個案）', '頭期款比例差很多'],
-        ['利息的稅', '房貸利息可列舉扣除（2018 年起以 75 萬美元的貸款為上限）', '<b>自用住宅購屋借款利息</b>列舉扣除，每戶上限 30 萬元，並要減除儲蓄投資特別扣除額', '兩邊都有，但台灣的實際節稅效果較小'],
-        ['房市危機', '2008 次貸危機：高 LTV、低文件、證券化的道德風險', '1990 年代末到 2000 年代初的房市低迷與銀行逾放比上升；近年的課題是<b>房價所得比</b>過高', '單元 9']
+    body: '<p class="ez lead">第四張比較「整個房貸市場」：為什麼美國有 30 年固定利率、台灣大多是浮動利率？一句話：美國銀行可以把房貸<b>賣給投資人</b>，把利率風險丟出去；台灣銀行用<b>存款</b>放房貸、自己抱著，只好用浮動利率。其他差異大多從這裡延伸。</p>' + reCmp([
+        ['典型產品', '<b>30 年固定利率</b>（FRM）為主；也有 15 年 FRM、ARM（例如 5/1 ARM）', '<b>浮動利率</b>為主（指數型房貸：定儲利率指數＋加碼），期限 20–30 年（新青安最長 40 年）', '對應單元 2–3（FRM）與單元 4（ARM）<span class="ez">美國主流是 30 年固定利率；台灣主流是「定儲指數＋加碼」的浮動利率。</span>'],
+        ['利率風險', '固定利率：利率風險由<b>貸方／MBS 投資人</b>承擔', '浮動利率：利率風險由<b>借款人</b>承擔（升息就多付）', '銀行的資金來源是短期存款，所以台灣銀行偏好浮動利率（資產負債期限配合）<span class="ez">利率漲的時候誰倒楣：美國是銀行和投資人，台灣是借款人。</span>'],
+        ['提前還款', '幾乎免費 → 利率下跌時大量<b>再融資</b> → MBS 的 prepayment risk、負凸性', '常有前 1–3 年違約金；浮動利率下提前還款的誘因主要來自<b>資金</b>，而不是利率', '對應單元 5–7：PSA、CPR 等提前還款模型<span class="ez">美國利率一跌大家就轉貸；台灣的浮動利率會自己往下調，沒什麼轉貸的理由，提早還錢多半只是因為手上有錢。</span>'],
+        ['寬限期／只繳息', '2008 年前的 interest-only 貸款被 QM 規定限制', '寬限期（只繳息）普遍，<b>新青安</b>最長 5 年；央行對部分族群<b>取消寬限期</b>', '寬限期結束後的付款衝擊（payment shock）<span class="ez">台灣寬限期很常見；美國 2008 年後只繳息的房貸受到嚴格限制。</span>'],
+        ['資金來源', '<b>次級市場</b>：Fannie Mae、Freddie Mac 收購合格貸款，Ginnie Mae 保證 FHA／VA 貸款的 MBS；大部分新貸款被證券化', '<b>銀行存款</b>：銀行自己持有房貸；依金融資產證券化條例發行的房貸證券化只有少數幾檔', '單元 5–8 的 MBS 主要是美國市場<span class="ez">美國大部分房貸都被賣掉證券化；台灣銀行自己抱著。所以單元 5–8 學的 MBS 幾乎都是美國的東西。</span>'],
+        ['政府角色', 'GSE（2008 年起被政府接管）、FHA、VA 提供保證或保險 → 讓 30 年固定利率可以存在', '<b>政策性優惠房貸</b>（例如新青安：政府補貼利率、延長期限與寬限期）', '美國靠<b>保證與證券化</b>，台灣靠<b>利率補貼</b><span class="ez">美國政府用「保證和收購」支撐房貸市場；台灣政府用「補貼利息」幫首購族（例如新青安）。</span>'],
+        ['監理工具', 'Dodd-Frank：<b>ability-to-repay</b>、QM、證券化<b>風險保留</b>（5%）', '<b>央行選擇性信用管制</b>（限制 LTV、取消寬限期）、銀行法 §72-2（不動產放款上限）', '美國管「借款人付不付得起」；台灣管「成數和總量」<span class="ez">美國的監理重點：放款前一定要確認還得起。台灣：限制能借幾成、限制銀行房貸總量。</span>'],
+        ['房貸保險', 'PMI、FHA 保險 → 可以低頭期款（3–5%）', '沒有普及的 PMI → 一般成數約 7–8 成（依央行規定與個案）', '頭期款比例差很多<span class="ez">美國有房貸保險，頭期款 3–5% 也能買房；台灣通常要自備 2–3 成。</span>'],
+        ['利息的稅', '房貸利息可列舉扣除（2018 年起以 75 萬美元的貸款為上限）', '<b>自用住宅購屋借款利息</b>列舉扣除，每戶上限 30 萬元，並要減除儲蓄投資特別扣除額', '兩邊都有，但台灣的實際節稅效果較小<span class="ez">兩邊的房貸利息都可以抵稅，但台灣上限低，效果比較小。</span>'],
+        ['房市危機', '2008 次貸危機：高 LTV、低文件、證券化的道德風險', '1990 年代末到 2000 年代初的房市低迷與銀行逾放比上升；近年的課題是<b>房價所得比</b>過高', '單元 9<span class="ez">美國 2008 年是次貸危機；台灣近年的問題是房價相對收入太高。</span>']
       ])
       + '<h4>為什麼不一樣（點開看細項）</h4>'
       + reD('為什麼美國能有 30 年固定利率', '制度支撐', '證券化把利率風險移出銀行', [
-          '如果銀行用短期存款去放 30 年固定利率，升息時會像 1980 年代的<b>儲貸危機</b>（S&amp;L crisis）一樣虧損。',
-          '美國用 GSE 收購、包成 MBS 賣給長期投資人（退休基金、保險公司、外國央行），把<b>利率風險和提前還款風險</b>轉出銀行體系。',
-          '台灣沒有這麼大的次級市場，銀行只好用浮動利率來配合存款的短期資金。' ])
+          '如果銀行用短期存款去放 30 年固定利率，升息時會像 1980 年代的<b>儲貸危機</b>（S&amp;L crisis）一樣虧損。<span class="ez">如果銀行用短期存款去借 30 年固定利率，利率一漲就會大虧，美國 1980 年代就發生過。</span>',
+          '美國用 GSE 收購、包成 MBS 賣給長期投資人（退休基金、保險公司、外國央行），把<b>利率風險和提前還款風險</b>轉出銀行體系。<span class="ez">美國的解法：把房貸賣給退休基金、保險公司這些「想要長期穩定收入」的投資人，風險就不在銀行身上了。</span>',
+          '台灣沒有這麼大的次級市場，銀行只好用浮動利率來配合存款的短期資金。<span class="ez">台灣沒有這種買家，銀行只好讓房貸利率跟著存款利率一起變。</span>' ])
       + reD('對借款人的意義', '誰承擔什麼風險', '同樣叫房貸，風險分配相反', [
-          '美國借款人：付款固定、可以在降息時再融資（拿到選擇權），但要付較高的利率當作選擇權的代價。',
-          '台灣借款人：利率較低，但承擔升息風險；提前還款的選擇權價值低（還要付違約金）。',
-          '連結：單元 2–4 計算的每月付款、有效利率、APR，在兩種市場的意義不同。' ])
+          '美國借款人：付款固定、可以在降息時再融資（拿到選擇權），但要付較高的利率當作選擇權的代價。<span class="ez">美國借款人：月付款固定、降息時可以免費轉貸，代價是利率比較高。</span>',
+          '台灣借款人：利率較低，但承擔升息風險；提前還款的選擇權價值低（還要付違約金）。<span class="ez">台灣借款人：利率比較低，但升息時月付款就增加。</span>',
+          '連結：單元 2–4 計算的每月付款、有效利率、APR，在兩種市場的意義不同。<span class="ez">同樣的公式，在美國和台灣算出來的意義不同，寫申論題時可以提到。</span>' ])
       + reD('考試怎麼用', '答題提示', '英文申論題可以這樣比較', [
-          '“The U.S. 30-year fixed-rate mortgage is sustained by a deep secondary market, in which GSEs securitize loans and transfer interest rate and prepayment risk to MBS investors. In Taiwan, banks fund mortgages with deposits and hold them on balance sheet, so floating-rate mortgages dominate and borrowers bear the interest rate risk.”' ]),
+          '“The U.S. 30-year fixed-rate mortgage is sustained by a deep secondary market, in which GSEs securitize loans and transfer interest rate and prepayment risk to MBS investors. In Taiwan, banks fund mortgages with deposits and hold them on balance sheet, so floating-rate mortgages dominate and borrowers bear the interest rate risk.”<span class="ez">中文意思：美國的 30 年固定利率靠龐大的次級市場撐著，GSE 把貸款證券化，把利率和提前還款風險轉給 MBS 投資人；台灣銀行用存款放貸、自己持有，所以以浮動利率為主，由借款人承擔利率風險。</span>' ]),
     cfa:'Fixed Income：MBS, prepayment risk and agency securitization',
     terms:[['FRM / ARM','固定／浮動利率房貸'],['指數型房貸','台灣以定儲利率指數＋加碼的浮動利率房貸'],['secondary mortgage market','次級房貸市場'],['GSE','政府支持企業（Fannie、Freddie）'],['Ginnie Mae','保證 FHA／VA 貸款的 MBS'],['新青安','政府補貼的青年購屋貸款'],['ability-to-repay / QM','還款能力／合格房貸'],['S&L crisis','1980 年代儲貸危機'],['payment shock','付款衝擊']] }
 );
