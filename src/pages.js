@@ -41,6 +41,8 @@ function renderSettings(root) {
       <textarea id="bktext" rows="3" placeholder="把備份碼貼在這裡" aria-label="備份碼"></textarea>
       <div class="row wrap"><button class="btn ghost" id="bkload" type="button">匯入（會覆蓋目前紀錄）</button></div>
     </section>
+    <section class="setbox"><h3>筆記貼上有問題？</h3><p class="sm-p">從 Gemini 等地方貼到筆記的格式跑掉時，按這個複製「最近一次貼上的原始內容」，傳給我就能照著修。只記得這次開著網頁期間最後一次貼上的內容。</p>
+      <div class="row wrap"><button class="btn ghost" id="pastedbg" type="button">複製最近一次貼上的原始內容</button><span class="sm-p" id="pastemsg"></span></div></section>
     <section class="setbox danger"><h3>清除紀錄</h3><p class="sm-p">按一次會問你「確定嗎？」，3 秒內再按一次才會真的清除，不能復原。</p>
       <div class="clr"><div><b>錯題本</b><span>${wrongN} 題</span></div><button class="btn warn" id="clrwrong" type="button">清除錯題本</button></div>
       <div class="clr"><div><b>「我懂了」勾選</b><span>${doneN} 張卡（會一起扣回 ${doneN * 10} XP）</span></div><button class="btn warn" id="clrdone" type="button">清除勾選</button></div>
@@ -65,6 +67,8 @@ function renderSettings(root) {
     catch (e) { $('#bkmsg', root).textContent = '備份碼看起來不完整，請重新複製一次。'; }
   });
   SYNC.bindSettings(root);
+  $('#pastedbg', root).onclick = async () => { const raw = sessionStorage.getItem('rv26lastpaste'); if (!raw) { $('#pastemsg', root).textContent = '這次開著網頁期間還沒有貼上過東西。'; return; }
+    try { await navigator.clipboard.writeText(raw); $('#pastemsg', root).textContent = '已複製，可以貼給我了。'; } catch (e) { $('#pastemsg', root).textContent = '無法自動複製，請改用電腦版瀏覽器再試一次。'; } };
   armed($('#clrwrong', root), '清除錯題本', () => { ST.wrong2 = {}; save(); FUN.toast('錯題本清空了', 'happy'); renderSettings(root); });
   armed($('#clrdone', root), '清除勾選', () => { const n = Object.keys(ST.done).length; ST.done = {}; (ST.del = ST.del || {})['done|*'] = Date.now(); ST.xp = Math.max(0, ST.xp - n * 10); save(); FUN.hud(); updateCounts(); FUN.toast(`清除 ${n} 個勾選，XP 已扣回`, 'sad'); renderSettings(root); });
   armed($('#clrbest', root), '清除遊戲紀錄', () => { ST.best = {}; ST.stats = {}; ST.genOk = 0; save(); FUN.toast('遊戲紀錄清空了', 'happy'); renderSettings(root); });
