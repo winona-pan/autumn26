@@ -149,8 +149,22 @@ mark.hl{color:inherit;border-radius:3px;padding:0 1px;cursor:pointer;-webkit-box
 .nthead{display:block;font-size:12px;font-weight:700;color:var(--mute);margin-bottom:2px}
 .ntbox textarea{display:block;width:100%;box-sizing:border-box;font:inherit;color:var(--ink);background:var(--panel);border:2px solid var(--hair);border-radius:8px;padding:6px 8px;resize:vertical;min-height:64px}
 .ntbtn{font:inherit;font-size:12.5px;font-weight:700;color:var(--ink);background:var(--panel);border:2px solid var(--line);border-radius:8px;padding:2px 10px;cursor:pointer} .ntbtn:not(.ghost){background:var(--acc);border-color:var(--acc);color:#fff}
+:root{--tcr:#d1342f;--tco:#c2650a;--tcg:#2e8b57;--tcb:#2b6cd4;--tcv:#7a4fd6;--tck:#6f7787}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--tcr:#ff7b72;--tco:#ffab5e;--tcg:#6fdc8c;--tcb:#79b8ff;--tcv:#c2a5ff;--tck:#a7aec0}}
+:root[data-theme="dark"]{--tcr:#ff7b72;--tco:#ffab5e;--tcg:#6fdc8c;--tcb:#79b8ff;--tcv:#c2a5ff;--tck:#a7aec0}
+.tc-r{color:var(--tcr)} .tc-o{color:var(--tco)} .tc-g{color:var(--tcg)} .tc-b{color:var(--tcb)} .tc-v{color:var(--tcv)} .tc-k{color:var(--tck)}
+.ntrich .bg-y,.ntdot.bg-y{background:var(--hly)} .ntrich .bg-g,.ntdot.bg-g{background:var(--hlg)} .ntrich .bg-p,.ntdot.bg-p{background:var(--hlp)} .ntrich .bg-b,.ntdot.bg-b{background:var(--hlb)}
+.ntrich [class*="bg-"]{border-radius:3px;padding:0 1px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.ntgrp{display:inline-flex;flex-wrap:wrap;gap:4px;align-items:center;padding-right:8px;margin-right:2px;border-right:1px solid var(--hair)} .ntgrp:last-child{border-right:0}
+.ntfb{font:inherit;font-size:12.5px;font-weight:700;min-width:30px;height:28px;padding:0 7px;color:var(--ink);background:var(--panel);border:1.5px solid var(--hair);border-radius:7px;cursor:pointer}
+.ntfb:hover{border-color:var(--ink)} .ntfb.on{background:var(--ink);color:var(--panel);border-color:var(--ink)}
+.ntswl{font-size:11.5px;font-weight:700;color:var(--mute);margin-right:2px}
+.ntdot{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--hair);background:var(--panel);cursor:pointer;padding:0;display:inline-grid;place-items:center;font-size:12px;font-weight:800;color:var(--ink)}
+.ntdot.tc-r{color:var(--tcr)} .ntdot.tc-o{color:var(--tco)} .ntdot.tc-g{color:var(--tcg)} .ntdot.tc-b{color:var(--tcb)} .ntdot.tc-v{color:var(--tcv)} .ntdot.tc-k{color:var(--tck)}
+.ntrich s{text-decoration-thickness:1.5px} .ntrich u{text-underline-offset:2px}
+.ntdot:hover{border-color:var(--ink)} .ntdot.bgdot{font-size:11px;color:var(--mute)}
 .nthead small{display:block;font-weight:500;font-size:11.5px;margin-top:1px}
-.nttools{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 6px}
+.nttools{display:flex;flex-wrap:wrap;gap:6px 4px;margin:4px 0 6px}
 .nted{display:block;min-height:72px;max-height:60vh;overflow:auto;background:var(--panel);border:2px solid var(--hair);border-radius:8px;padding:8px 10px;color:var(--ink);outline:none;cursor:text}
 .nted:focus{border-color:var(--acc)} .nted:empty::before{content:attr(data-ph);color:var(--mute)}
 .ntrich{line-height:1.7;word-break:break-word} .ntrich>:first-child{margin-top:0} .ntrich>:last-child{margin-bottom:0}
@@ -344,4 +358,5 @@ body.notips .tipbox{display:none} body.calm *{animation:none!important;transitio
  :root{--rp:#7a5c3e} @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--rp:#d6b48e}} :root[data-theme="dark"]{--rp:#d6b48e}
 .pblk.rp,.plrow.rp{--acc:var(--rp)} .rpname{border:2px solid var(--line);border-radius:8px;padding:2px 8px;background:var(--bg);color:var(--ink);font:inherit;font-weight:700;width:150px} .plrow.rp input[type=date]{border:2px solid var(--line);border-radius:8px;padding:2px 6px;background:var(--bg);color:var(--ink);font:inherit}
 .savebar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:16px 0;max-width:860px;position:sticky;top:64px;z-index:5;background:var(--bg);padding:6px 0}
+@media (max-width:640px){.nttools{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px;scrollbar-width:thin} .ntgrp{flex-wrap:nowrap;flex:none}}
 </style>

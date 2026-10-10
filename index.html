@@ -161,8 +161,22 @@ mark.hl{color:inherit;border-radius:3px;padding:0 1px;cursor:pointer;-webkit-box
 .nthead{display:block;font-size:12px;font-weight:700;color:var(--mute);margin-bottom:2px}
 .ntbox textarea{display:block;width:100%;box-sizing:border-box;font:inherit;color:var(--ink);background:var(--panel);border:2px solid var(--hair);border-radius:8px;padding:6px 8px;resize:vertical;min-height:64px}
 .ntbtn{font:inherit;font-size:12.5px;font-weight:700;color:var(--ink);background:var(--panel);border:2px solid var(--line);border-radius:8px;padding:2px 10px;cursor:pointer} .ntbtn:not(.ghost){background:var(--acc);border-color:var(--acc);color:#fff}
+:root{--tcr:#d1342f;--tco:#c2650a;--tcg:#2e8b57;--tcb:#2b6cd4;--tcv:#7a4fd6;--tck:#6f7787}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--tcr:#ff7b72;--tco:#ffab5e;--tcg:#6fdc8c;--tcb:#79b8ff;--tcv:#c2a5ff;--tck:#a7aec0}}
+:root[data-theme="dark"]{--tcr:#ff7b72;--tco:#ffab5e;--tcg:#6fdc8c;--tcb:#79b8ff;--tcv:#c2a5ff;--tck:#a7aec0}
+.tc-r{color:var(--tcr)} .tc-o{color:var(--tco)} .tc-g{color:var(--tcg)} .tc-b{color:var(--tcb)} .tc-v{color:var(--tcv)} .tc-k{color:var(--tck)}
+.ntrich .bg-y,.ntdot.bg-y{background:var(--hly)} .ntrich .bg-g,.ntdot.bg-g{background:var(--hlg)} .ntrich .bg-p,.ntdot.bg-p{background:var(--hlp)} .ntrich .bg-b,.ntdot.bg-b{background:var(--hlb)}
+.ntrich [class*="bg-"]{border-radius:3px;padding:0 1px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.ntgrp{display:inline-flex;flex-wrap:wrap;gap:4px;align-items:center;padding-right:8px;margin-right:2px;border-right:1px solid var(--hair)} .ntgrp:last-child{border-right:0}
+.ntfb{font:inherit;font-size:12.5px;font-weight:700;min-width:30px;height:28px;padding:0 7px;color:var(--ink);background:var(--panel);border:1.5px solid var(--hair);border-radius:7px;cursor:pointer}
+.ntfb:hover{border-color:var(--ink)} .ntfb.on{background:var(--ink);color:var(--panel);border-color:var(--ink)}
+.ntswl{font-size:11.5px;font-weight:700;color:var(--mute);margin-right:2px}
+.ntdot{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--hair);background:var(--panel);cursor:pointer;padding:0;display:inline-grid;place-items:center;font-size:12px;font-weight:800;color:var(--ink)}
+.ntdot.tc-r{color:var(--tcr)} .ntdot.tc-o{color:var(--tco)} .ntdot.tc-g{color:var(--tcg)} .ntdot.tc-b{color:var(--tcb)} .ntdot.tc-v{color:var(--tcv)} .ntdot.tc-k{color:var(--tck)}
+.ntrich s{text-decoration-thickness:1.5px} .ntrich u{text-underline-offset:2px}
+.ntdot:hover{border-color:var(--ink)} .ntdot.bgdot{font-size:11px;color:var(--mute)}
 .nthead small{display:block;font-weight:500;font-size:11.5px;margin-top:1px}
-.nttools{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 6px}
+.nttools{display:flex;flex-wrap:wrap;gap:6px 4px;margin:4px 0 6px}
 .nted{display:block;min-height:72px;max-height:60vh;overflow:auto;background:var(--panel);border:2px solid var(--hair);border-radius:8px;padding:8px 10px;color:var(--ink);outline:none;cursor:text}
 .nted:focus{border-color:var(--acc)} .nted:empty::before{content:attr(data-ph);color:var(--mute)}
 .ntrich{line-height:1.7;word-break:break-word} .ntrich>:first-child{margin-top:0} .ntrich>:last-child{margin-bottom:0}
@@ -356,6 +370,7 @@ body.notips .tipbox{display:none} body.calm *{animation:none!important;transitio
  :root{--rp:#7a5c3e} @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--rp:#d6b48e}} :root[data-theme="dark"]{--rp:#d6b48e}
 .pblk.rp,.plrow.rp{--acc:var(--rp)} .rpname{border:2px solid var(--line);border-radius:8px;padding:2px 8px;background:var(--bg);color:var(--ink);font:inherit;font-weight:700;width:150px} .plrow.rp input[type=date]{border:2px solid var(--line);border-radius:8px;padding:2px 6px;background:var(--bg);color:var(--ink);font:inherit}
 .savebar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:16px 0;max-width:860px;position:sticky;top:64px;z-index:5;background:var(--bg);padding:6px 0}
+@media (max-width:640px){.nttools{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px;scrollbar-width:thin} .ntgrp{flex-wrap:nowrap;flex:none}}
 </style>
 <header class="top"><div class="topin"><span class="brand" id="brand"><span class="brandt">26 秋季複習本</span></span><nav id="stabs" aria-label="科目"></nav><div id="hud"></div></div></header>
 <main id="main"></main>
@@ -5105,6 +5120,18 @@ const RICH = (() => {
   const HEAD = { H1: 'H4', H2: 'H4', H3: 'H4' };
   const MATH = new Set('math mrow mi mo mn ms mtext mspace msup msub msubsup mfrac msqrt mroot munder mover munderover mtable mtr mtd mstyle mpadded mphantom menclose semantics mfenced'.split(' '));
   const DROP = 'script, style, meta, link, title, head, noscript, iframe, object, embed, svg, img, video, audio, canvas, button, input, textarea, select, form, annotation, annotation-xml, template';
+  // 筆記可用的顏色：編輯時用這些色碼下指令，存檔時轉成 class（深色模式另有配色）
+  const TC = { r: '#d1342f', o: '#d9730d', g: '#2e8b57', b: '#2b6cd4', v: '#7a4fd6', k: '#7d8597' };
+  const BG = { y: '#ffe866', g: '#b8f0b0', p: '#ffc2dc', b: '#bfe0ff' };
+  const hex = c => { if (!c) return ''; c = c.trim().toLowerCase(); let m = c.match(/^#([0-9a-f]{3})$/); if (m) return '#' + m[1].split('').map(x => x + x).join(''); if (/^#[0-9a-f]{6}$/.test(c)) return c; m = c.match(/^rgba?\(\s*(\d+)[,\s]+(\d+)[,\s]+(\d+)/); return m ? '#' + [m[1], m[2], m[3]].map(x => (+x).toString(16).padStart(2, '0')).join('') : ''; };
+  const find = (map, c) => { const h = hex(c); return Object.keys(map).find(k => map[k] === h); };
+  function colorCls(n) {
+    const out = new Set(((n.getAttribute('class') || '').match(/\b(tc|bg)-[a-z]\b/g) || []));
+    const st = n.getAttribute('style') || '';
+    const fc = (st.match(/(?:^|;)\s*color:\s*([^;]+)/i) || [])[1] || n.getAttribute('color'); const t = find(TC, fc); if (t) out.add('tc-' + t);
+    const bc = (st.match(/background(?:-color)?:\s*([^;]+)/i) || [])[1]; const b = find(BG, bc); if (b) out.add('bg-' + b);
+    return [...out];
+  }
   const escT = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
   // ---- 清理 HTML：只留白名單標籤與少數安全屬性 ----
@@ -5126,23 +5153,32 @@ const RICH = (() => {
         }
         let tag = n.tagName.toUpperCase(); tag = HEAD[tag] || tag;
         const st = n.getAttribute('style') || '';
+        if (tag === 'STRIKE') tag = 'S';
+        const cc = colorCls(n);
         if (!KEEP.has(tag)) {
-          // Google 文件等用 span＋樣式表示粗體、斜體
-          if (/font-weight:\s*(bold|[6-9]00)/.test(st)) { const b = document.createElement('b'); walk(n, b); dst.appendChild(b); }
-          else if (/font-style:\s*italic/.test(st)) { const i = document.createElement('i'); walk(n, i); dst.appendChild(i); }
-          else walk(n, dst);
+          // span／font 上的樣式（Google 文件、編輯器）轉成標籤：粗體、斜體、底線、刪除線、顏色
+          const st = n.getAttribute('style') || ''; let top = null, inner = null;
+          const add = el => { if (inner) inner.appendChild(el); else top = el; inner = el; };
+          if (/font-weight:\s*(bold|[6-9]00)/i.test(st)) add(document.createElement('b'));
+          if (/font-style:\s*italic/i.test(st)) add(document.createElement('i'));
+          if (/text-decoration[^;]*underline/i.test(st)) add(document.createElement('u'));
+          if (/text-decoration[^;]*line-through/i.test(st)) add(document.createElement('s'));
+          if (cc.length) { const sp = document.createElement('span'); sp.className = cc.join(' '); add(sp); }
+          if (top) { walk(n, inner); dst.appendChild(top); } else walk(n, dst);
           continue;
         }
         if (tag === 'A' && !/^https?:\/\//i.test(n.getAttribute('href') || '')) { walk(n, dst); continue; }
         const el = document.createElement(tag);
         if (tag === 'A') { const h = n.getAttribute('href') || ''; if (/^https?:\/\//i.test(h)) { el.href = h; el.target = '_blank'; el.rel = 'noopener noreferrer'; } }
         if (tag === 'TD' || tag === 'TH') ['colspan', 'rowspan'].forEach(a => { const v = parseInt(n.getAttribute(a), 10); if (v > 1 && v < 50) el.setAttribute(a, v); });
+        if (cc.length && !/^(TABLE|THEAD|TBODY|TR|UL|OL|PRE|HR|BR)$/.test(tag)) el.className = cc.join(' ');
         walk(n, el); dst.appendChild(el);
       }
     };
     walk(doc.body, out);
     // 去掉頭尾空段落
     const empty = e => e && e.nodeType === 1 && /^(P|DIV|BR)$/.test(e.tagName) && !e.textContent.trim() && !e.querySelector('math, hr');
+    out.querySelectorAll('p, div').forEach(e => { if (empty(e)) e.remove(); });
     while (empty(out.firstChild)) out.firstChild.remove();
     while (empty(out.lastChild)) out.lastChild.remove();
     return out.innerHTML;
@@ -5228,7 +5264,7 @@ const RICH = (() => {
   }
   // 舊筆記（純文字）轉成 HTML
   const fromText = t => t.split(/\n{2,}/).map(p => '<p>' + escT(p).replace(/\n/g, '<br>') + '</p>').join('');
-  return { clean, md, attach, fromText };
+  return { clean, md, attach, fromText, TC, BG, colorCls };
 })();
 // ===== 筆記與螢光筆：完整重點裡的每個列點都能寫筆記、選取文字畫重點 =====
 // 存在 ST.hl（重點）與 ST.nt（筆記），設定頁的備份碼會一起帶走。
@@ -5281,6 +5317,34 @@ const NOTES = (() => {
   }
 
   // ---- 筆記 ----
+  // ---- 筆記編輯列：顏色用固定色碼下指令，再把產生的 style 換成 class ----
+  function tidyColors(ed) {
+    ed.querySelectorAll('[style], font[color]').forEach(n => {
+      const cc = RICH.colorCls(n), keep = (n.className || '').split(/\s+/).filter(c => c && !/^(tc|bg)-/.test(c));
+      const rest = (n.getAttribute('style') || '').split(';').filter(x => x.trim() && !/^\s*(color|background(-color)?)\s*:/i.test(x)).join(';');
+      if (rest) n.setAttribute('style', rest); else n.removeAttribute('style'); n.removeAttribute('color');
+      const fin = [...new Set(keep.concat(cc))]; if (fin.length) n.className = fin.join(' '); else n.removeAttribute('class');
+    });
+  }
+  function stripColor(ed, re) {
+    // 預設色／移除底色：把選取範圍內的對應 class 拿掉
+    const sel = getSelection(); if (!sel.rangeCount) return; const r = sel.getRangeAt(0);
+    ed.querySelectorAll('[class]').forEach(n => { if (r.intersectsNode(n)) { n.className = n.className.split(/\s+/).filter(c => !re.test(c)).join(' '); if (!n.className) n.removeAttribute('class'); } });
+  }
+  function wireTools(box, ed) {
+    const css = on => { try { document.execCommand('styleWithCSS', false, on); } catch (e) { } };
+    const cmd = (c, v) => { ed.focus(); css(c === 'foreColor'); document.execCommand(c, false, v); css(false); tidyColors(ed); state(); };
+    box.querySelectorAll('.nttools button').forEach(bt => bt.addEventListener('mousedown', e => e.preventDefault()));
+    box.querySelectorAll('[data-fmt]').forEach(bt => bt.onclick = () => cmd(bt.dataset.fmt, null));
+    box.querySelectorAll('[data-blk]').forEach(bt => bt.onclick = () => cmd('formatBlock', '<' + bt.dataset.blk + '>'));
+    box.querySelectorAll('[data-tc]').forEach(bt => bt.onclick = () => { const c = bt.dataset.tc; if (c) cmd('foreColor', RICH.TC[c]); else { ed.focus(); stripColor(ed, /^tc-/); } });
+    box.querySelectorAll('[data-bg]').forEach(bt => bt.onclick = () => { const c = bt.dataset.bg; if (c) { ed.focus(); css(true); if (!document.execCommand('hiliteColor', false, RICH.BG[c])) document.execCommand('backColor', false, RICH.BG[c]); css(false); tidyColors(ed); } else { ed.focus(); stripColor(ed, /^bg-/); } });
+    // 游標所在的格式亮起來
+    const state = () => { ['bold', 'italic', 'underline', 'strikeThrough', 'insertUnorderedList', 'insertOrderedList'].forEach(c => { const b = box.querySelector(`[data-fmt="${c}"]`); if (b) { let on = false; try { on = document.queryCommandState(c); } catch (e) { } b.classList.toggle('on', on); } });
+      let blk = ''; try { blk = (document.queryCommandValue('formatBlock') || '').toLowerCase(); } catch (e) { } box.querySelectorAll('[data-blk]').forEach(b => b.classList.toggle('on', blk === b.dataset.blk)); };
+    ed.addEventListener('keyup', state); ed.addEventListener('mouseup', state); ed.addEventListener('input', () => tidyColors(ed));
+    ed.addEventListener('keydown', e => { if (e.key === 'Tab') { e.preventDefault(); cmd(e.shiftKey ? 'outdent' : 'indent', null); } });
+  }
   function noteBox(block, card, k, edit) {
     let box = [...block.children].find(x => x.classList.contains('ntbox'));
     const d = (NT()[cardId(card)] || {})[k];
@@ -5288,12 +5352,18 @@ const NOTES = (() => {
     if (!box) { box = document.createElement('span'); box.className = 'ntbox'; block.appendChild(box); }
     const html = d ? (d.h || RICH.fromText(d.t)) : '';
     box.innerHTML = edit
-      ? `<span class="nthead">我的筆記<small>可以直接貼上 Gemini、ChatGPT 或網頁內容，格式會保留</small></span><span class="nttools"><button type="button" class="ntbtn ghost" data-fmt="bold"><b>B</b></button><button type="button" class="ntbtn ghost" data-fmt="insertUnorderedList">• 清單</button><button type="button" class="ntbtn ghost" data-fmt="insertOrderedList">1. 清單</button><button type="button" class="ntbtn ghost" data-fmt="removeFormat">清除格式</button></span><div class="nted ntrich" contenteditable="true" role="textbox" aria-multiline="true" aria-label="筆記" data-ph="寫下你查到的補充、自己的理解、還不懂的地方⋯">${html}</div><span class="ntbtns"><button type="button" class="ntbtn" data-nt="done">完成</button>${d ? '<button type="button" class="ntbtn ghost" data-nt="del">刪除</button>' : '<button type="button" class="ntbtn ghost" data-nt="cancel">取消</button>'}</span>`
+      ? `<span class="nthead">我的筆記<small>可以直接貼上 Gemini、ChatGPT 或網頁內容，格式會保留</small></span><span class="nttools" role="toolbar" aria-label="筆記格式">
+        <span class="ntgrp"><button type="button" class="ntfb" data-blk="h4" title="大標題">大標</button><button type="button" class="ntfb" data-blk="h5" title="小標題">小標</button><button type="button" class="ntfb" data-blk="p" title="內文">內文</button><button type="button" class="ntfb" data-blk="blockquote" title="引用">引用</button></span>
+        <span class="ntgrp"><button type="button" class="ntfb" data-fmt="bold" title="粗體（⌘/Ctrl+B）"><b>B</b></button><button type="button" class="ntfb" data-fmt="italic" title="斜體（⌘/Ctrl+I）"><i>I</i></button><button type="button" class="ntfb" data-fmt="underline" title="底線（⌘/Ctrl+U）"><u>U</u></button><button type="button" class="ntfb" data-fmt="strikeThrough" title="刪除線"><s>S</s></button></span>
+        <span class="ntgrp"><button type="button" class="ntfb" data-fmt="insertUnorderedList" title="圓點清單">• 清單</button><button type="button" class="ntfb" data-fmt="insertOrderedList" title="數字清單">1. 清單</button><button type="button" class="ntfb" data-fmt="outdent" title="往外縮">⇤</button><button type="button" class="ntfb" data-fmt="indent" title="往內縮">⇥</button></span>
+        <span class="ntgrp ntsw"><span class="ntswl">文字</span>${Object.keys(RICH.TC).map(c => `<button type="button" class="ntdot tc-${c}" data-tc="${c}" aria-label="文字顏色"><span>A</span></button>`).join('')}<button type="button" class="ntdot" data-tc="" aria-label="預設文字顏色" title="預設顏色"><span>A</span></button></span>
+        <span class="ntgrp ntsw"><span class="ntswl">底色</span>${Object.keys(RICH.BG).map(c => `<button type="button" class="ntdot bgdot bg-${c}" data-bg="${c}" aria-label="底色"></button>`).join('')}<button type="button" class="ntdot bgdot" data-bg="" aria-label="移除底色" title="移除底色">✕</button></span>
+        <span class="ntgrp"><button type="button" class="ntfb" data-fmt="removeFormat" title="清除選取文字的格式">清除格式</button></span></span><div class="nted ntrich" contenteditable="true" role="textbox" aria-multiline="true" aria-label="筆記" data-ph="寫下你查到的補充、自己的理解、還不懂的地方⋯">${html}</div><span class="ntbtns"><button type="button" class="ntbtn" data-nt="done">完成</button>${d ? '<button type="button" class="ntbtn ghost" data-nt="del">刪除</button>' : '<button type="button" class="ntbtn ghost" data-nt="cancel">取消</button>'}</span>`
       : `<span class="nthead">我的筆記</span><div class="nttext ntrich">${html}</div><span class="ntbtns"><button type="button" class="ntbtn ghost" data-nt="edit">編輯</button></span>`;
     box.dataset.k = k;
     if (edit) {
       const ed = box.querySelector('.nted'); RICH.attach(ed);
-      box.querySelectorAll('[data-fmt]').forEach(bt => { bt.addEventListener('mousedown', e => e.preventDefault()); bt.onclick = () => { ed.focus(); document.execCommand(bt.dataset.fmt, false, null); }; });
+      wireTools(box, ed);
       ed.focus(); const r = document.createRange(); r.selectNodeContents(ed); r.collapse(false); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r);
     }
   }

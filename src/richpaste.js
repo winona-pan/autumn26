@@ -6,6 +6,18 @@ const RICH = (() => {
   const HEAD = { H1: 'H4', H2: 'H4', H3: 'H4' };
   const MATH = new Set('math mrow mi mo mn ms mtext mspace msup msub msubsup mfrac msqrt mroot munder mover munderover mtable mtr mtd mstyle mpadded mphantom menclose semantics mfenced'.split(' '));
   const DROP = 'script, style, meta, link, title, head, noscript, iframe, object, embed, svg, img, video, audio, canvas, button, input, textarea, select, form, annotation, annotation-xml, template';
+  // 筆記可用的顏色：編輯時用這些色碼下指令，存檔時轉成 class（深色模式另有配色）
+  const TC = { r: '#d1342f', o: '#d9730d', g: '#2e8b57', b: '#2b6cd4', v: '#7a4fd6', k: '#7d8597' };
+  const BG = { y: '#ffe866', g: '#b8f0b0', p: '#ffc2dc', b: '#bfe0ff' };
+  const hex = c => { if (!c) return ''; c = c.trim().toLowerCase(); let m = c.match(/^#([0-9a-f]{3})$/); if (m) return '#' + m[1].split('').map(x => x + x).join(''); if (/^#[0-9a-f]{6}$/.test(c)) return c; m = c.match(/^rgba?\(\s*(\d+)[,\s]+(\d+)[,\s]+(\d+)/); return m ? '#' + [m[1], m[2], m[3]].map(x => (+x).toString(16).padStart(2, '0')).join('') : ''; };
+  const find = (map, c) => { const h = hex(c); return Object.keys(map).find(k => map[k] === h); };
+  function colorCls(n) {
+    const out = new Set(((n.getAttribute('class') || '').match(/\b(tc|bg)-[a-z]\b/g) || []));
+    const st = n.getAttribute('style') || '';
+    const fc = (st.match(/(?:^|;)\s*color:\s*([^;]+)/i) || [])[1] || n.getAttribute('color'); const t = find(TC, fc); if (t) out.add('tc-' + t);
+    const bc = (st.match(/background(?:-color)?:\s*([^;]+)/i) || [])[1]; const b = find(BG, bc); if (b) out.add('bg-' + b);
+    return [...out];
+  }
   const escT = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
   // ---- 清理 HTML：只留白名單標籤與少數安全屬性 ----
@@ -27,23 +39,32 @@ const RICH = (() => {
         }
         let tag = n.tagName.toUpperCase(); tag = HEAD[tag] || tag;
         const st = n.getAttribute('style') || '';
+        if (tag === 'STRIKE') tag = 'S';
+        const cc = colorCls(n);
         if (!KEEP.has(tag)) {
-          // Google 文件等用 span＋樣式表示粗體、斜體
-          if (/font-weight:\s*(bold|[6-9]00)/.test(st)) { const b = document.createElement('b'); walk(n, b); dst.appendChild(b); }
-          else if (/font-style:\s*italic/.test(st)) { const i = document.createElement('i'); walk(n, i); dst.appendChild(i); }
-          else walk(n, dst);
+          // span／font 上的樣式（Google 文件、編輯器）轉成標籤：粗體、斜體、底線、刪除線、顏色
+          const st = n.getAttribute('style') || ''; let top = null, inner = null;
+          const add = el => { if (inner) inner.appendChild(el); else top = el; inner = el; };
+          if (/font-weight:\s*(bold|[6-9]00)/i.test(st)) add(document.createElement('b'));
+          if (/font-style:\s*italic/i.test(st)) add(document.createElement('i'));
+          if (/text-decoration[^;]*underline/i.test(st)) add(document.createElement('u'));
+          if (/text-decoration[^;]*line-through/i.test(st)) add(document.createElement('s'));
+          if (cc.length) { const sp = document.createElement('span'); sp.className = cc.join(' '); add(sp); }
+          if (top) { walk(n, inner); dst.appendChild(top); } else walk(n, dst);
           continue;
         }
         if (tag === 'A' && !/^https?:\/\//i.test(n.getAttribute('href') || '')) { walk(n, dst); continue; }
         const el = document.createElement(tag);
         if (tag === 'A') { const h = n.getAttribute('href') || ''; if (/^https?:\/\//i.test(h)) { el.href = h; el.target = '_blank'; el.rel = 'noopener noreferrer'; } }
         if (tag === 'TD' || tag === 'TH') ['colspan', 'rowspan'].forEach(a => { const v = parseInt(n.getAttribute(a), 10); if (v > 1 && v < 50) el.setAttribute(a, v); });
+        if (cc.length && !/^(TABLE|THEAD|TBODY|TR|UL|OL|PRE|HR|BR)$/.test(tag)) el.className = cc.join(' ');
         walk(n, el); dst.appendChild(el);
       }
     };
     walk(doc.body, out);
     // 去掉頭尾空段落
     const empty = e => e && e.nodeType === 1 && /^(P|DIV|BR)$/.test(e.tagName) && !e.textContent.trim() && !e.querySelector('math, hr');
+    out.querySelectorAll('p, div').forEach(e => { if (empty(e)) e.remove(); });
     while (empty(out.firstChild)) out.firstChild.remove();
     while (empty(out.lastChild)) out.lastChild.remove();
     return out.innerHTML;
@@ -129,5 +150,5 @@ const RICH = (() => {
   }
   // 舊筆記（純文字）轉成 HTML
   const fromText = t => t.split(/\n{2,}/).map(p => '<p>' + escT(p).replace(/\n/g, '<br>') + '</p>').join('');
-  return { clean, md, attach, fromText };
+  return { clean, md, attach, fromText, TC, BG, colorCls };
 })();
