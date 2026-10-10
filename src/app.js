@@ -6,7 +6,7 @@ const store = {
   set(v) { try { localStorage.setItem(this.k, JSON.stringify(v)); } catch (e) { } }
 };
 let ST = Object.assign({ done: {}, wrong2: {}, subj: 'home', tab: {}, best: {} }, store.get());
-const save = () => store.set(ST);
+const save = () => { store.set(ST); if (typeof SYNC !== 'undefined') SYNC.changed(); };
 const strip = h => h.replace(/<[^>]+>/g, ' ').replace(/&nbsp;|&lt;|&gt;|&amp;/g, ' ').replace(/\s+/g, ' ').trim();
 function subjCards(s) { return s.sections.reduce((a, x) => a.concat(x.cards), []); }
 function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; }
@@ -69,7 +69,7 @@ function renderLearn(key, root) {
   $$('[data-pre]', root).forEach(b => b.onclick = () => jumpCard('basic', b.dataset.pre));
   $$('[data-done]', root).forEach(cb => cb.addEventListener('change', () => {
     const id = cb.dataset.done;
-    if (cb.checked) { if (!ST.done[id]) { ST.done[id] = true; FUN.xp(10, cb); FUN.beep('ok'); } } else if (ST.done[id]) { delete ST.done[id]; FUN.xp(-10, cb); }
+    if (cb.checked) { if (!ST.done[id]) { ST.done[id] = Date.now(); FUN.xp(10, cb); FUN.beep('ok'); } } else if (ST.done[id]) { (ST.del = ST.del || {})['done|' + id] = Date.now(); delete ST.done[id]; FUN.xp(-10, cb); }
     save(); cb.closest('.card').classList.toggle('done', cb.checked); updateCounts(); FUN.checkCards();
   }));
   const q = $('#q-' + key, root);
@@ -233,7 +233,7 @@ function renderProblems(root) {
     $('.hint', pb).onclick = () => { const h = steps.find(s => s.hidden); if (h) h.hidden = false; else $('.ans', pb).hidden = false; };
     $('.reveal', pb).onclick = () => { steps.forEach(s => s.hidden = false); $('.ans', pb).hidden = false; };
   });
-  $$('[data-pd]', root).forEach(cb => cb.onchange = () => { const k = 'P' + cb.dataset.pd; if (cb.checked && !ST.done[k]) { ST.done[k] = true; FUN.xp(10, cb); } else if (!cb.checked && ST.done[k]) { delete ST.done[k]; FUN.xp(-10, cb); } save(); });
+  $$('[data-pd]', root).forEach(cb => cb.onchange = () => { const k = 'P' + cb.dataset.pd; if (cb.checked && !ST.done[k]) { ST.done[k] = Date.now(); FUN.xp(10, cb); } else if (!cb.checked && ST.done[k]) { (ST.del = ST.del || {})['done|' + k] = Date.now(); delete ST.done[k]; FUN.xp(-10, cb); } save(); });
   $$('[data-f]', root).forEach(b => b.onclick = () => { $$('[data-f]', root).forEach(x => { x.classList.toggle('on', x === b); x.classList.toggle('ghost', x !== b); }); $$('.prob', root).forEach(p => p.hidden = b.dataset.f !== 'all' && p.dataset.l !== b.dataset.f); });
 }
 
@@ -341,8 +341,8 @@ function renderHome(root) {
   updateCounts();
 }
 
-function jumpFormula(k, id) { go(k, 'formula', { top: 1 }); setTimeout(() => { const el = $('#f-' + id); if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); el.classList.add('flash'); setTimeout(() => el.classList.remove('flash'), 1600); } }, 60); }
-function jumpCard(k, id) { go(k, 'learn', { top: 1 }); setTimeout(() => { const el = $('#c-' + id); if (el) { const d = el.querySelector('details'); if (d) d.open = true; el.scrollIntoView({ behavior: 'smooth', block: 'start' }); el.classList.add('flash'); setTimeout(() => el.classList.remove('flash'), 1600); } }, 60); }
+function jumpFormula(k, id) { go(k, 'formula', { top: 1 }); setTimeout(() => { const el = $('#f-' + id); if (el) { window.scrollTo(0, Math.max(0, scrollY + el.getBoundingClientRect().top - topGap())); el.classList.add('flash'); setTimeout(() => el.classList.remove('flash'), 1600); } }, 60); }
+function jumpCard(k, id) { go(k, 'learn', { top: 1 }); setTimeout(() => { const el = $('#c-' + id); if (el) { const d = el.querySelector('details'); if (d) d.open = true; window.scrollTo(0, Math.max(0, scrollY + el.getBoundingClientRect().top - topGap())); el.classList.add('flash'); setTimeout(() => el.classList.remove('flash'), 1600); } }, 60); }
 
 // ---------- 記住每一頁讀到哪裡 ----------
 // 以「畫面最上方那張卡片／區塊」當錨點（版面寬度、展開收合改變也找得回來），找不到才用捲動距離。
@@ -398,10 +398,10 @@ function go(k, tab, opt) {
   $$('.stab').forEach(b => b.setAttribute('aria-current', b.dataset.s === k ? 'page' : 'false'));
   document.body.dataset.subj = k;
   const main = $('#main');
-  if (k === 'home') { renderHome(main); opt && opt.top ? window.scrollTo(0, 0) : restorePos(); return; }
-  if (k === 'settings') { renderSettings(main); opt && opt.top ? window.scrollTo(0, 0) : restorePos(); return; }
-  if (k === 'milestones') { renderMilestones(main); opt && opt.top ? window.scrollTo(0, 0) : restorePos(); return; }
-  if (k === 'plan') { renderPlan(main); opt && opt.top ? window.scrollTo(0, 0) : restorePos(); return; }
+  if (k === 'home') { renderHome(main); NOTES.bmPill(); opt && opt.top ? window.scrollTo(0, 0) : restorePos(); return; }
+  if (k === 'settings') { renderSettings(main); NOTES.bmPill(); opt && opt.top ? window.scrollTo(0, 0) : restorePos(); return; }
+  if (k === 'milestones') { renderMilestones(main); NOTES.bmPill(); opt && opt.top ? window.scrollTo(0, 0) : restorePos(); return; }
+  if (k === 'plan') { renderPlan(main); NOTES.bmPill(); opt && opt.top ? window.scrollTo(0, 0) : restorePos(); return; }
   const s = DATA[k]; tab = tab || ST.tab[k] || PANES[k][0][0]; CUR = [k, tab];
   main.innerHTML = `<div class="shead"><div><h2>${s.full}</h2><p class="intro">${s.intro}</p></div><div class="prog"><span class="bar" data-prog="${k}"><i></i></span><span data-progt="${k}"></span> 已掌握</div></div><div class="ptabs" role="tablist">${PANES[k].map(p => `<button role="tab" class="ptab" data-p="${p[0]}" aria-selected="${p[0] === tab}" type="button">${p[1]}</button>`).join('')}</div><div id="pane"></div>`;
   $$('.ptab', main).forEach(b => b.onclick = () => go(k, b.dataset.p));
@@ -410,6 +410,7 @@ function go(k, tab, opt) {
   ({ intro: () => renderCFA(pane), learn: () => renderLearn(k, pane), formula: () => renderFormulas(k, pane), mcq: () => renderMCQ(k, pane), prob: () => renderProblems(pane), gen: () => renderGens(pane), flash: () => renderFlash(pane), essay: () => renderEssay(pane), game: () => renderGames(k, pane), notes: () => NOTES.page(k, pane) })[tab]();
   updateCounts();
   opt && opt.top ? window.scrollTo(0, 0) : restorePos();
+  NOTES.bmPill();
 }
 window.rerender = () => go(CUR[0], CUR[1]);
 const NAVI = {

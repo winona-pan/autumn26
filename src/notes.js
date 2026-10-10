@@ -6,6 +6,9 @@ const NOTES = (() => {
   const BLK = 'li, p, td, th, dd, h4, .ez';
   const HL = () => (ST.hl = ST.hl || {});
   const NT = () => (ST.nt = ST.nt || {});
+  const BM = () => (ST.bm = ST.bm || {});
+  // 刪除紀錄（同步時才知道「這筆是被刪掉的」，不會從另一台裝置又長回來）
+  const tomb = k => { ST.del = ST.del || {}; ST.del[k] = Date.now(); };
   const hash = s => { let h = 5381; for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0; return (h >>> 0).toString(36); };
   const norm = s => s.replace(/\s+/g, ' ').trim();
   const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
@@ -77,6 +80,16 @@ const NOTES = (() => {
     // 游標所在的格式亮起來
     const state = () => { ['bold', 'italic', 'underline', 'strikeThrough', 'insertUnorderedList', 'insertOrderedList'].forEach(c => { const b = box.querySelector(`[data-fmt="${c}"]`); if (b) { let on = false; try { on = document.queryCommandState(c); } catch (e) { } b.classList.toggle('on', on); } });
       let blk = ''; try { blk = (document.queryCommandValue('formatBlock') || '').toLowerCase(); } catch (e) { } box.querySelectorAll('[data-blk]').forEach(b => b.classList.toggle('on', blk === b.dataset.blk)); };
+    // 圖片與公式
+    let saved = null; const keepSel = () => { const sel = getSelection(); saved = sel.rangeCount && ed.contains(sel.anchorNode) ? sel.getRangeAt(0).cloneRange() : null; };
+    const file = box.querySelector('.ntfile');
+    box.querySelector('[data-ins="img"]').onclick = () => { keepSel(); file.click(); };
+    file.onchange = async () => { if (file.files.length) await RICH.insertFiles(ed, file.files, saved); file.value = ''; };
+    box.querySelector('[data-ins="tex"]').onclick = async () => {
+      keepSel(); const t = prompt('輸入 LaTeX 公式（例：h^* = \\rho \\frac{\\sigma_S}{\\sigma_F}）。開頭加 $$ 會置中成獨立一行。'); if (!t || !t.trim()) return;
+      const disp = /^\s*\$\$/.test(t), body = t.replace(/^\s*\$\$?|\$\$?\s*$/g, '');
+      if (!(await RICH.insertTex(ed, body, disp, saved))) alert('公式排版需要網路（第一次使用時下載排版工具），請連上網路再試一次。');
+    };
     ed.addEventListener('keyup', state); ed.addEventListener('mouseup', state); ed.addEventListener('input', () => tidyColors(ed));
     ed.addEventListener('keydown', e => { if (e.key === 'Tab') { e.preventDefault(); cmd(e.shiftKey ? 'outdent' : 'indent', null); } });
   }
@@ -94,9 +107,10 @@ const NOTES = (() => {
         <span class="ntgrp"><button type="button" class="ntfb" data-fmt="insertUnorderedList" title="圓點清單">• 清單</button><button type="button" class="ntfb" data-fmt="insertOrderedList" title="數字清單">1. 清單</button><button type="button" class="ntfb" data-fmt="outdent" title="往外縮">⇤</button><button type="button" class="ntfb" data-fmt="indent" title="往內縮">⇥</button></span>
         <span class="ntgrp ntsw"><span class="ntswl">文字</span>${Object.keys(RICH.TC).map(c => `<button type="button" class="ntdot tc-${c}" data-tc="${c}" aria-label="文字顏色"><span>A</span></button>`).join('')}<button type="button" class="ntdot" data-tc="" aria-label="預設文字顏色" title="預設顏色"><span>A</span></button></span>
         <span class="ntgrp ntsw"><span class="ntswl">底色</span>${Object.keys(RICH.BG).map(c => `<button type="button" class="ntdot bgdot bg-${c}" data-bg="${c}" aria-label="底色"></button>`).join('')}<button type="button" class="ntdot bgdot" data-bg="" aria-label="移除底色" title="移除底色">✕</button></span>
+        <span class="ntgrp"><button type="button" class="ntfb" data-ins="img" title="插入圖片（也可以直接貼上或拖進來）">圖片</button><button type="button" class="ntfb" data-ins="tex" title="插入數學公式（LaTeX）">公式</button><input type="file" accept="image/*" multiple hidden class="ntfile"></span>
         <span class="ntgrp"><button type="button" class="ntfb" data-fmt="removeFormat" title="清除選取文字的格式">清除格式</button></span></span><div class="nted ntrich" contenteditable="true" role="textbox" aria-multiline="true" aria-label="筆記" data-ph="寫下你查到的補充、自己的理解、還不懂的地方⋯">${html}</div><span class="ntbtns"><button type="button" class="ntbtn" data-nt="done">完成</button>${d ? '<button type="button" class="ntbtn ghost" data-nt="del">刪除</button>' : '<button type="button" class="ntbtn ghost" data-nt="cancel">取消</button>'}</span>`
       : `<span class="nthead">我的筆記</span><div class="nttext ntrich">${html}</div><span class="ntbtns"><button type="button" class="ntbtn ghost" data-nt="edit">編輯</button></span>`;
-    box.dataset.k = k;
+    box.dataset.k = k; IMGS.hydrate(box);
     if (edit) {
       const ed = box.querySelector('.nted'); RICH.attach(ed);
       wireTools(box, ed);
@@ -108,7 +122,7 @@ const NOTES = (() => {
     const h = ed ? RICH.clean(ed.innerHTML) : '', tmp = document.createElement('div'); tmp.innerHTML = h;
     const text = (ed ? ed.innerText : '').trim(), has = text || tmp.querySelector('math, hr, table');
     if (has) { all[id] = all[id] || {}; const old = all[id][k]; all[id][k] = { t: text, h, q: norm(textOf(block)).slice(0, 80), at: old ? old.at : Date.now(), up: Date.now() }; }
-    else if (all[id]) { delete all[id][k]; if (!Object.keys(all[id]).length) delete all[id]; }
+    else if (all[id]) { if (all[id][k]) tomb('nt|' + id + '|' + k); delete all[id][k]; if (!Object.keys(all[id]).length) delete all[id]; }
     save(); noteBox(block, card, k, false); badge(card);
   }
   function showNotes(card) {
@@ -123,6 +137,44 @@ const NOTES = (() => {
   }
   function openNote(card, block) { const k = keysOf(card).get(block); if (k) noteBox(block, card, k, true); }
 
+  // ---- 書籤：「讀到這裡」可以插在某個列點或整張卡；每張卡最多一個 ----
+  let SUBJ = '';
+  function setBm(card, block) {
+    const id = cardId(card), keys = keysOf(card), k = block ? keys.get(block) || '' : '';
+    BM()[id] = { s: SUBJ, k, q: block ? norm(textOf(block)).slice(0, 80) : '', t: card.querySelector('header h4').textContent.trim(), at: Date.now() };
+    save(); showBm(card); bmPill(); FUN.beep('ok'); FUN.toast && FUN.toast('已插書籤：讀到這裡', 'happy');
+  }
+  function rmBm(id) { if (BM()[id]) { tomb('bm|' + id); delete BM()[id]; save(); } const card = $('#c-' + id); if (card) showBm(card); bmPill(); }
+  function showBm(card) {
+    card.querySelectorAll('.bmk').forEach(x => x.classList.remove('bmk')); card.classList.remove('bmkcard');
+    const d = BM()[cardId(card)], bt = card.querySelector('.bmbtn');
+    if (bt) { bt.classList.toggle('on', !!d); bt.textContent = d ? '已插書籤' : '書籤'; bt.setAttribute('aria-pressed', !!d); }
+    if (!d) return;
+    let b = d.k ? blockByKey(card, d.k) : null;
+    if (d.k && !b && d.q) for (const [bb, kk] of keysOf(card)) if (norm(textOf(bb)).startsWith(d.q.slice(0, 40))) { b = bb; d.k = kk; break; }
+    if (b) b.classList.add('bmk'); else card.classList.add('bmkcard');
+  }
+  function jumpBm(id) {
+    const d = BM()[id]; if (!d) return;
+    const go2 = () => { const card = $('#c-' + id); if (!card) return; const det = card.querySelector('details'); if (det) det.open = true; const el = card.querySelector('.bmk') || card; window.scrollTo(0, Math.max(0, scrollY + el.getBoundingClientRect().top - innerHeight / 3)); el.classList.add('flash'); setTimeout(() => el.classList.remove('flash'), 1600); };
+    if (CUR[0] === d.s && CUR[1] === 'learn' && $('#c-' + id)) go2(); else { go(d.s, 'learn', { top: 1 }); setTimeout(go2, 120); }
+  }
+  const ago = t => { const m = Math.round((Date.now() - t) / 60000); return m < 1 ? '剛剛' : m < 60 ? m + ' 分鐘前' : m < 1440 ? Math.round(m / 60) + ' 小時前' : Math.round(m / 1440) + ' 天前'; };
+  const bmsOf = s => Object.entries(BM()).filter(([id, d]) => d.s === s).sort((a, b) => b[1].at - a[1].at);
+  // 知識點頁右下角的「書籤」按鈕與清單
+  function bmPill() {
+    let p = $('#bmpill'); const pane = $('#pane');
+    if (!pane || !pane.querySelector('.learn')) { if (p) p.hidden = true; return; }
+    const list = bmsOf(SUBJ);
+    if (!p) { p = document.createElement('div'); p.id = 'bmpill'; p.className = 'bmpill'; document.body.appendChild(p);
+      p.addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return;
+        if (b.dataset.bmo) { p.classList.toggle('open'); return; }
+        if (b.dataset.bmj) { p.classList.remove('open'); jumpBm(b.dataset.bmj); }
+        if (b.dataset.bmd) { rmBm(b.dataset.bmd); } }); }
+    p.hidden = !list.length;
+    p.innerHTML = `<div class="bmlist" role="dialog" aria-label="書籤"><b>這科的書籤</b>${list.map(([id, d]) => `<div class="bmrow"><button type="button" class="bmgo" data-bmj="${id}"><span>${escH(d.t)}</span>${d.q ? `<small>「${escH(d.q.slice(0, 36))}${d.q.length > 36 ? '⋯' : ''}」</small>` : ''}<small>${ago(d.at)}</small></button><button type="button" class="ntbtn ghost" data-bmd="${id}" aria-label="移除書籤">移除</button></div>`).join('')}</div><button type="button" class="bmopen" data-bmo="1">書籤 ${list.length}</button>`;
+  }
+
   // ---- 卡片上的計數與筆記模式按鈕 ----
   function badge(card) {
     const id = cardId(card), h = (HL()[id] || []).length, n = Object.keys(NT()[id] || {}).length;
@@ -133,7 +185,7 @@ const NOTES = (() => {
   }
   function decorate(card) {
     const hd = card.querySelector('header'); if (!hd || hd.querySelector('.ntmode')) return;
-    hd.insertAdjacentHTML('beforeend', '<span class="ntside"><span class="ntcnt"></span><button type="button" class="ntmode" aria-pressed="false" title="打開後，點任何一個列點就能寫筆記">＋筆記</button></span>');
+    hd.insertAdjacentHTML('beforeend', '<span class="ntside"><span class="ntcnt"></span><button type="button" class="bmbtn" aria-pressed="false" title="在這張卡插書籤；想插在某一點，選取那段文字後按工具列的「書籤」">書籤</button><button type="button" class="ntmode" aria-pressed="false" title="打開後，點任何一個列點就能寫筆記">＋筆記</button></span>');
   }
 
   // ---- 選取工具列（全頁共用一個） ----
@@ -142,16 +194,16 @@ const NOTES = (() => {
     if (bar) return bar;
     bar = document.createElement('div'); bar.className = 'hlbar'; bar.hidden = true; bar.setAttribute('role', 'toolbar'); bar.setAttribute('aria-label', '螢光筆');
     bar.innerHTML = COLORS.map(c => `<button type="button" class="hlc hl-${c[0]}" data-c="${c[0]}" aria-label="${c[1]}色螢光筆" title="${c[1]}色"></button>`).join('')
-      + '<button type="button" class="hlb" data-a="note">筆記</button><button type="button" class="hlb" data-a="clear">移除重點</button>';
+      + '<button type="button" class="hlb" data-a="note">筆記</button><button type="button" class="hlb" data-a="bm">書籤</button><button type="button" class="hlb" data-a="clear">移除重點</button>';
     bar.addEventListener('mousedown', e => e.preventDefault());
-    bar.addEventListener('click', e => { const b = e.target.closest('button'); if (!b || !cur) return; b.dataset.c ? color(b.dataset.c) : b.dataset.a === 'note' ? noteFromBar() : clear(); });
+    bar.addEventListener('click', e => { const b = e.target.closest('button'); if (!b || !cur) return; b.dataset.c ? color(b.dataset.c) : b.dataset.a === 'note' ? noteFromBar() : b.dataset.a === 'bm' ? bmFromBar() : clear(); });
     document.body.appendChild(bar); return bar;
   }
-  const hide = () => { if (bar) bar.hidden = true; cur = null; };
+  const hide = () => { if (bar) bar.hidden = true; cur = null; const p = $('#bmpill'); if (p && !($('#pane') && $('#pane').querySelector('.learn'))) p.hidden = true; };
   function place(rect) {
     ensureBar(); bar.hidden = false;
     const w = bar.offsetWidth, x = Math.min(Math.max(8, rect.left + rect.width / 2 - w / 2 + scrollX), scrollX + document.documentElement.clientWidth - w - 8);
-    bar.style.left = x + 'px'; bar.style.top = (rect.bottom + scrollY + 10) + 'px';
+    bar.style.left = x + 'px'; bar.style.top = (rect.bottom + scrollY + (matchMedia('(pointer: coarse)').matches ? 30 : 10)) + 'px';
   }
   // 選取範圍 → 每個碰到的最外層列點各自的 [起, 迄]
   function pieces(card, range) {
@@ -171,24 +223,27 @@ const NOTES = (() => {
   }
   function color(c) {
     const { card } = cur; const id = cardId(card), list = HL()[id] = HL()[id] || [], keys = keysOf(card);
-    if (cur.mark) { list.filter(h => h.id === cur.mark).forEach(h => h.c = c); }
+    if (cur.mark) { list.filter(h => h.id === cur.mark).forEach(h => { h.c = c; h.up = Date.now(); }); }
     else cur.ps.forEach(([b, s, e]) => { const k = keys.get(b), x = textOf(b).slice(s, e); list.push({ id: uid(), k, s, e, c, x, at: Date.now() }); });
     save(); paint(card); badge(card); getSelection().removeAllRanges(); hide(); FUN.beep('ok');
   }
   function clear() {
     const { card } = cur; const id = cardId(card), keys = keysOf(card); let list = HL()[id] || [];
-    if (cur.mark) list = list.filter(h => h.id !== cur.mark);
-    else cur.ps.forEach(([b, s, e]) => { const k = keys.get(b); list = list.filter(h => !(h.k === k && h.s < e && h.e > s)); });
+    const gone = h => { tomb('hl|' + h.id); return false; };
+    if (cur.mark) list = list.filter(h => h.id !== cur.mark || gone(h));
+    else cur.ps.forEach(([b, s, e]) => { const k = keys.get(b); list = list.filter(h => !(h.k === k && h.s < e && h.e > s) || gone(h)); });
     if (list.length) HL()[id] = list; else delete HL()[id];
     save(); paint(card); badge(card); getSelection().removeAllRanges(); hide();
   }
+  function bmFromBar() { const { card } = cur; const b = cur.mark ? card.querySelector(`mark[data-h="${cur.mark}"]`).parentElement.closest(BLK) : cur.ps[0][0]; getSelection().removeAllRanges(); hide(); setBm(card, b); }
   function noteFromBar() { const { card } = cur; const b = cur.mark ? card.querySelector(`mark[data-h="${cur.mark}"]`).parentElement.closest(BLK) : cur.ps[0][0]; getSelection().removeAllRanges(); hide(); openNote(card, b); }
 
   // ---- 掛到知識點頁 ----
   let globalBound = false;
   function mount(key, root) {
-    hide();
-    $$('.card', root).forEach(card => { decorate(card); paint(card); showNotes(card); badge(card); });
+    hide(); SUBJ = key;
+    $$('.card', root).forEach(card => { decorate(card); paint(card); showNotes(card); badge(card); showBm(card); });
+    bmPill();
     let t; const check = () => { clearTimeout(t); t = setTimeout(() => onSelect(root), 180); };
     root.addEventListener('mouseup', check); root.addEventListener('keyup', check); root.addEventListener('touchend', check);
     if (!globalBound) { globalBound = true;
@@ -197,6 +252,7 @@ const NOTES = (() => {
       window.addEventListener('resize', hide); }
     root.addEventListener('click', e => {
       const card = e.target.closest('.card'); if (!card) return;
+      const bb = e.target.closest('.bmbtn'); if (bb) { BM()[cardId(card)] ? rmBm(cardId(card)) : setBm(card, null); return; }
       const tg = e.target.closest('.ntmode'); if (tg) { const on = card.classList.toggle('nmode'); tg.setAttribute('aria-pressed', on); tg.textContent = on ? '完成筆記' : '＋筆記'; if (on) { const d = card.querySelector('details'); if (d) d.open = true; } return; }
       const nb = e.target.closest('[data-nt]');
       if (nb) { const box = nb.closest('.ntbox'), block = box.parentElement, k = box.dataset.k, a = nb.dataset.nt;
@@ -234,7 +290,11 @@ const NOTES = (() => {
           ${ns.map(d => `<div class="ntitem"><p class="ntq">「${escH(d.q)}${d.q.length >= 80 ? '⋯' : ''}」${d.lost ? '<span class="ntlost">原文已更新</span>' : ''}</p><div class="ntt ntrich">${d.h || RICH.fromText(d.t)}</div></div>`).join('')}</article>`;
       }).join('');
       $('.ntlist', root).innerHTML = items || `<div class="win">${PIG('happy', 90)}<p>${q || view.c || view.f !== 'all' ? '沒有符合的重點或筆記。' : '還沒有重點或筆記。到「知識點」打開完整重點，選取文字就能畫重點；按卡片右上角的「＋筆記」就能在列點下面寫筆記。'}</p></div>`;
-      $('.ntsum', root).textContent = `重點 ${nh}・筆記 ${nn}`;
+      const bms = bmsOf(k);
+      $('.ntbms', root).innerHTML = bms.length && view.f !== 'hl' && view.f !== 'note' ? `<h3 class="nth3">書籤</h3>${bms.map(([id, d]) => `<div class="bmrow"><button type="button" class="bmgo" data-bmj="${id}"><span>${escH(d.t)}</span>${d.q ? `<small>「${escH(d.q.slice(0, 50))}${d.q.length > 50 ? '⋯' : ''}」</small>` : ''}<small>${ago(d.at)}</small></button></div>`).join('')}` : '';
+      $$('[data-bmj]', root).forEach(b => b.onclick = () => jumpBm(b.dataset.bmj));
+      IMGS.hydrate(root);
+      $('.ntsum', root).textContent = `重點 ${nh}・筆記 ${nn}・書籤 ${bms.length}`;
       $$('[data-jump]', root).forEach(b => b.onclick = () => jumpCard(k, b.dataset.jump));
       $$('[data-f]', root).forEach(b => b.classList.toggle('on', b.dataset.f === view.f));
       $$('[data-fc]', root).forEach(b => b.classList.toggle('on', b.dataset.fc === view.c));
@@ -243,12 +303,12 @@ const NOTES = (() => {
       <div class="ntbar"><input type="search" id="ntq" placeholder="搜尋重點或筆記" aria-label="搜尋重點或筆記">
       <div class="uchips"><button type="button" class="uchip" data-f="all">全部</button><button type="button" class="uchip" data-f="hl">只看重點</button><button type="button" class="uchip" data-f="note">只看筆記</button></div>
       <div class="uchips">${COLORS.map(c => `<button type="button" class="uchip hlchip" data-fc="${c[0]}"><span class="hlc hl-${c[0]}"></span>${c[1]}</button>`).join('')}</div>
-      <span class="sm-p ntsum"></span></div><div class="ntlist"></div></div>`;
+      <span class="sm-p ntsum"></span></div><div class="ntbms"></div><div class="ntlist"></div></div>`;
     $('#ntq', root).addEventListener('input', draw);
     $$('[data-f]', root).forEach(b => b.onclick = () => { view.f = b.dataset.f; save(); draw(); });
     $$('[data-fc]', root).forEach(b => b.onclick = () => { view.c = view.c === b.dataset.fc ? '' : b.dataset.fc; save(); draw(); });
     draw();
   }
 
-  return { mount, page, hide };
+  return { mount, page, hide, bmPill };
 })();
