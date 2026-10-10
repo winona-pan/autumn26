@@ -157,6 +157,8 @@ mark.hl{color:inherit;border-radius:3px;padding:0 1px;cursor:pointer;-webkit-box
 .nthl{margin:0 0 6px;padding-left:18px} .nthl li{margin:4px 0}
 .ntitem{border-top:1px dashed var(--hair);padding-top:8px;margin-top:8px} .ntq{margin:0;font-size:13px;color:var(--mute)} .ntt{margin:4px 0 0}
 .ntlost{margin-left:8px;font-size:11.5px;font-weight:700;color:var(--bad)}
+.postoast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:70;display:flex;gap:10px;align-items:center;max-width:calc(100vw - 32px);box-sizing:border-box;padding:8px 10px 8px 14px;background:var(--panel);color:var(--ink);border:2px solid var(--line);border-radius:12px;box-shadow:3px 3px 0 var(--line);font-size:13.5px}
+.postoast[hidden]{display:none} .postoast span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap} .postoast button{flex:none}
 .ez{display:block;margin:6px 0 2px;padding:7px 11px 7px 12px;background:color-mix(in srgb,var(--acc) 8%,var(--panel));border-left:4px solid color-mix(in srgb,var(--acc) 55%,var(--panel));border-radius:4px 10px 10px 4px;font-size:.94em;line-height:1.7;color:var(--ink);font-weight:400}
 .ez::before{content:'白話';display:inline-block;margin-right:6px;padding:0 7px;border-radius:999px;background:color-mix(in srgb,var(--acc) 22%,var(--panel));font-size:12px;font-weight:700;letter-spacing:.05em;vertical-align:1px}
 .ez.lead{margin:0 0 12px} .ez.lead::before{content:'先看懂'}

@@ -341,8 +341,43 @@ function renderHome(root) {
   updateCounts();
 }
 
-function jumpFormula(k, id) { go(k, 'formula'); setTimeout(() => { const el = $('#f-' + id); if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); el.classList.add('flash'); setTimeout(() => el.classList.remove('flash'), 1600); } }, 60); }
-function jumpCard(k, id) { go(k, 'learn'); setTimeout(() => { const el = $('#c-' + id); if (el) { const d = el.querySelector('details'); if (d) d.open = true; el.scrollIntoView({ behavior: 'smooth', block: 'start' }); el.classList.add('flash'); setTimeout(() => el.classList.remove('flash'), 1600); } }, 60); }
+function jumpFormula(k, id) { go(k, 'formula', { top: 1 }); setTimeout(() => { const el = $('#f-' + id); if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); el.classList.add('flash'); setTimeout(() => el.classList.remove('flash'), 1600); } }, 60); }
+function jumpCard(k, id) { go(k, 'learn', { top: 1 }); setTimeout(() => { const el = $('#c-' + id); if (el) { const d = el.querySelector('details'); if (d) d.open = true; el.scrollIntoView({ behavior: 'smooth', block: 'start' }); el.classList.add('flash'); setTimeout(() => el.classList.remove('flash'), 1600); } }, 60); }
+
+// ---------- 記住每一頁讀到哪裡 ----------
+// 以「畫面最上方那張卡片／區塊」當錨點（版面寬度、展開收合改變也找得回來），找不到才用捲動距離。
+const POS_SEL = '.card[id], .fcardx[id], .grpbox[id], .sec[id], .prob, .ntcard, .flashcard, article, section';
+const posKey = () => CUR[1] ? CUR[0] + ':' + CUR[1] : CUR[0];
+const topGap = () => { const h = $('.top'); return (h ? h.getBoundingClientRect().bottom : 0) + 8; };
+function savePos() {
+  if (!CUR[0]) return; ST.pos = ST.pos || {};
+  const y = Math.round(scrollY); if (y < 80) { delete ST.pos[posKey()]; save(); return; }
+  const gap = topGap(), list = $$(POS_SEL, $('#main'));
+  const line = gap + 40, hit = list.filter(e => { const r = e.getBoundingClientRect(); return r.height && r.top <= line && r.bottom > line; });
+  const el = hit.length ? hit[hit.length - 1] : list.find(e => { const r = e.getBoundingClientRect(); return r.height && r.bottom > line; });
+  let a = null;
+  if (el) { const all = $$(POS_SEL, $('#main')); a = el.id ? { id: el.id } : { i: all.indexOf(el) }; a.off = Math.round(el.getBoundingClientRect().top - gap); a.t = (el.querySelector('h3, h4, header b, b') || el).textContent.trim().slice(0, 40); }
+  ST.pos[posKey()] = Object.assign({ y }, a || {}); save();
+}
+function restorePos() {
+  const p = (ST.pos || {})[posKey()];
+  if (!p) { window.scrollTo(0, 0); return; }
+  const go2 = () => { let el = p.id ? document.getElementById(p.id) : (p.i != null ? $$(POS_SEL, $('#main'))[p.i] : null);
+    if (el) { const d = el.matches('.card') && el.querySelector('details'); if (d) d.open = true; window.scrollTo(0, scrollY + el.getBoundingClientRect().top - topGap() - (p.off || 0)); } else window.scrollTo(0, p.y); };
+  posTimers.forEach(clearTimeout); posTimers = [0, 300, 900].map(ms => setTimeout(go2, ms));
+  if (p.y > 300) posToast(p);
+}
+function posToast(p) {
+  let t = $('#postoast'); if (!t) { t = document.createElement('div'); t.id = 'postoast'; t.className = 'postoast'; t.setAttribute('role', 'status'); document.body.appendChild(t); }
+  t.innerHTML = `<span>已回到上次讀到的地方${p.t ? `：<b>${esc(p.t)}</b>` : ''}</span><button type="button" class="ntbtn ghost">回到頂端</button>`;
+  t.hidden = false; t.querySelector('button').onclick = () => { delete ST.pos[posKey()]; save(); window.scrollTo({ top: 0, behavior: 'smooth' }); t.hidden = true; };
+  clearTimeout(t._h); t._h = setTimeout(() => t.hidden = true, 5000);
+}
+let posTimers = [];
+['wheel', 'touchstart', 'keydown'].forEach(ev => window.addEventListener(ev, () => { posTimers.forEach(clearTimeout); posTimers = []; }, { passive: true }));
+{ let tm; window.addEventListener('scroll', () => { clearTimeout(tm); tm = setTimeout(savePos, 400); }, { passive: true }); }
+document.addEventListener('visibilitychange', () => document.visibilityState === 'hidden' && savePos());
+window.addEventListener('pagehide', savePos);
 
 // ---------- Routing ----------
 const PANES = {
@@ -354,17 +389,19 @@ const PANES = {
   re: [['learn', '知識點'], ['mcq', '打怪＆選擇題'], ['notes', '我的筆記']],
   cfa: [['intro', '考試指南'], ['learn', 'Level I 完整筆記'], ['mcq', '打怪＆選擇題'], ['notes', '我的筆記']]
 };
-let CUR = ['home'];
-function go(k, tab) {
+let CUR = [];
+function go(k, tab, opt) {
   NOTES.hide();
+  if (CUR[0]) savePos();
+  const t0 = $('#postoast'); if (t0) t0.hidden = true;
   ST.subj = k; save(); CUR = [k, tab];
   $$('.stab').forEach(b => b.setAttribute('aria-current', b.dataset.s === k ? 'page' : 'false'));
   document.body.dataset.subj = k;
   const main = $('#main');
-  if (k === 'home') { renderHome(main); window.scrollTo(0, 0); return; }
-  if (k === 'settings') { renderSettings(main); window.scrollTo(0, 0); return; }
-  if (k === 'milestones') { renderMilestones(main); window.scrollTo(0, 0); return; }
-  if (k === 'plan') { renderPlan(main); window.scrollTo(0, 0); return; }
+  if (k === 'home') { renderHome(main); opt && opt.top ? window.scrollTo(0, 0) : restorePos(); return; }
+  if (k === 'settings') { renderSettings(main); opt && opt.top ? window.scrollTo(0, 0) : restorePos(); return; }
+  if (k === 'milestones') { renderMilestones(main); opt && opt.top ? window.scrollTo(0, 0) : restorePos(); return; }
+  if (k === 'plan') { renderPlan(main); opt && opt.top ? window.scrollTo(0, 0) : restorePos(); return; }
   const s = DATA[k]; tab = tab || ST.tab[k] || PANES[k][0][0]; CUR = [k, tab];
   main.innerHTML = `<div class="shead"><div><h2>${s.full}</h2><p class="intro">${s.intro}</p></div><div class="prog"><span class="bar" data-prog="${k}"><i></i></span><span data-progt="${k}"></span> 已掌握</div></div><div class="ptabs" role="tablist">${PANES[k].map(p => `<button role="tab" class="ptab" data-p="${p[0]}" aria-selected="${p[0] === tab}" type="button">${p[1]}</button>`).join('')}</div><div id="pane"></div>`;
   $$('.ptab', main).forEach(b => b.onclick = () => go(k, b.dataset.p));
@@ -372,6 +409,7 @@ function go(k, tab) {
   const pane = $('#pane');
   ({ intro: () => renderCFA(pane), learn: () => renderLearn(k, pane), formula: () => renderFormulas(k, pane), mcq: () => renderMCQ(k, pane), prob: () => renderProblems(pane), gen: () => renderGens(pane), flash: () => renderFlash(pane), essay: () => renderEssay(pane), game: () => renderGames(k, pane), notes: () => NOTES.page(k, pane) })[tab]();
   updateCounts();
+  opt && opt.top ? window.scrollTo(0, 0) : restorePos();
 }
 window.rerender = () => go(CUR[0], CUR[1]);
 const NAVI = {
