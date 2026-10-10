@@ -1,5 +1,5 @@
 // ===== 設定頁、里程碑頁 =====
-const PREF_KEYS = ['lang', 'sound', 'theme', 'zoom', 'calm', 'notips'];
+const PREF_KEYS = ['lang', 'sound', 'theme', 'zoom', 'calm', 'notips', 'plan'];
 function applyPrefs() {
   const r = document.documentElement;
   if (ST.theme === 'light' || ST.theme === 'dark') r.dataset.theme = ST.theme;
