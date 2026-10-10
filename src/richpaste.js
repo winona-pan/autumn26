@@ -207,7 +207,7 @@ const RICH = (() => {
   let plainNext = false;
   function attach(ed) {
     ed.addEventListener('keydown', e => { if ((e.metaKey || e.ctrlKey) && e.shiftKey && (e.key === 'v' || e.key === 'V')) { plainNext = true; setTimeout(() => plainNext = false, 1000); } });
-    const run = async (data, range) => { ed.classList.add('busy'); try { const h = await convert(data); if (h) { ed.focus(); const sel = getSelection(); if (!range || !ed.contains(range.startContainer)) { range = document.createRange(); range.selectNodeContents(ed); range.collapse(false); } sel.removeAllRanges(); sel.addRange(range); insertHTML(h); ed.dispatchEvent(new Event('input')); } } finally { ed.classList.remove('busy'); } };
+    const run = async (data, range) => { ed.classList.add('busy'); try { const h = await convert(data); if (h) { ed.focus(); const sel = getSelection(); if (!range || !ed.contains(range.startContainer)) { range = document.createRange(); range.selectNodeContents(ed); range.collapse(false); } sel.removeAllRanges(); sel.addRange(range); insertHTML(h); ed.dispatchEvent(new Event('input', { bubbles: true })); } } finally { ed.classList.remove('busy'); } };
     const keep = () => { const sel = getSelection(); return sel.rangeCount && ed.contains(sel.anchorNode) ? sel.getRangeAt(0).cloneRange() : null; };
     ed.addEventListener('paste', e => { const cd = e.clipboardData; if (!cd) return; e.preventDefault(); const d = readClip(cd);
       try { sessionStorage.setItem('rv26lastpaste', JSON.stringify({ html: d.html.slice(0, 200000), txt: d.txt.slice(0, 50000), at: Date.now() })); } catch (err) { }
@@ -216,8 +216,8 @@ const RICH = (() => {
     ed.addEventListener('drop', e => { const cd = e.dataTransfer; if (!cd) return; e.preventDefault(); let r = null; if (document.caretRangeFromPoint) r = document.caretRangeFromPoint(e.clientX, e.clientY); run(readClip(cd), r || keep()); });
   }
   // 插入圖片（檔案選擇器／相機）與公式
-  async function insertFiles(ed, files, range) { const h = await convert({ html: '', txt: '', files: [...files] }); if (h) { ed.focus(); if (range) { const sel = getSelection(); sel.removeAllRanges(); sel.addRange(range); } insertHTML(h); } }
-  async function insertTex(ed, t, display, range) { if (!(await loadKatex())) return false; const h = tex(t, display); if (!h) return false; ed.focus(); if (range) { const sel = getSelection(); sel.removeAllRanges(); sel.addRange(range); } insertHTML(clean(h) + '&nbsp;'); return true; }
+  async function insertFiles(ed, files, range) { const h = await convert({ html: '', txt: '', files: [...files] }); if (h) { ed.focus(); if (range) { const sel = getSelection(); sel.removeAllRanges(); sel.addRange(range); } insertHTML(h); ed.dispatchEvent(new Event('input', { bubbles: true })); } }
+  async function insertTex(ed, t, display, range) { if (!(await loadKatex())) return false; const h = tex(t, display); if (!h) return false; ed.focus(); if (range) { const sel = getSelection(); sel.removeAllRanges(); sel.addRange(range); } insertHTML(clean(h) + '&nbsp;'); ed.dispatchEvent(new Event('input', { bubbles: true })); return true; }
   // 舊筆記（純文字）轉成 HTML
   const fromText = t => t.split(/\n{2,}/).map(p => '<p>' + escT(p).replace(/\n/g, '<br>') + '</p>').join('');
   return { clean, md, mdMath, attach, insertFiles, insertTex, loadKatex, fromText, TC, BG, colorCls };

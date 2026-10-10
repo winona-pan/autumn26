@@ -5406,7 +5406,7 @@ const RICH = (() => {
   let plainNext = false;
   function attach(ed) {
     ed.addEventListener('keydown', e => { if ((e.metaKey || e.ctrlKey) && e.shiftKey && (e.key === 'v' || e.key === 'V')) { plainNext = true; setTimeout(() => plainNext = false, 1000); } });
-    const run = async (data, range) => { ed.classList.add('busy'); try { const h = await convert(data); if (h) { ed.focus(); const sel = getSelection(); if (!range || !ed.contains(range.startContainer)) { range = document.createRange(); range.selectNodeContents(ed); range.collapse(false); } sel.removeAllRanges(); sel.addRange(range); insertHTML(h); ed.dispatchEvent(new Event('input')); } } finally { ed.classList.remove('busy'); } };
+    const run = async (data, range) => { ed.classList.add('busy'); try { const h = await convert(data); if (h) { ed.focus(); const sel = getSelection(); if (!range || !ed.contains(range.startContainer)) { range = document.createRange(); range.selectNodeContents(ed); range.collapse(false); } sel.removeAllRanges(); sel.addRange(range); insertHTML(h); ed.dispatchEvent(new Event('input', { bubbles: true })); } } finally { ed.classList.remove('busy'); } };
     const keep = () => { const sel = getSelection(); return sel.rangeCount && ed.contains(sel.anchorNode) ? sel.getRangeAt(0).cloneRange() : null; };
     ed.addEventListener('paste', e => { const cd = e.clipboardData; if (!cd) return; e.preventDefault(); const d = readClip(cd);
       try { sessionStorage.setItem('rv26lastpaste', JSON.stringify({ html: d.html.slice(0, 200000), txt: d.txt.slice(0, 50000), at: Date.now() })); } catch (err) { }
@@ -5415,8 +5415,8 @@ const RICH = (() => {
     ed.addEventListener('drop', e => { const cd = e.dataTransfer; if (!cd) return; e.preventDefault(); let r = null; if (document.caretRangeFromPoint) r = document.caretRangeFromPoint(e.clientX, e.clientY); run(readClip(cd), r || keep()); });
   }
   // 插入圖片（檔案選擇器／相機）與公式
-  async function insertFiles(ed, files, range) { const h = await convert({ html: '', txt: '', files: [...files] }); if (h) { ed.focus(); if (range) { const sel = getSelection(); sel.removeAllRanges(); sel.addRange(range); } insertHTML(h); } }
-  async function insertTex(ed, t, display, range) { if (!(await loadKatex())) return false; const h = tex(t, display); if (!h) return false; ed.focus(); if (range) { const sel = getSelection(); sel.removeAllRanges(); sel.addRange(range); } insertHTML(clean(h) + '&nbsp;'); return true; }
+  async function insertFiles(ed, files, range) { const h = await convert({ html: '', txt: '', files: [...files] }); if (h) { ed.focus(); if (range) { const sel = getSelection(); sel.removeAllRanges(); sel.addRange(range); } insertHTML(h); ed.dispatchEvent(new Event('input', { bubbles: true })); } }
+  async function insertTex(ed, t, display, range) { if (!(await loadKatex())) return false; const h = tex(t, display); if (!h) return false; ed.focus(); if (range) { const sel = getSelection(); sel.removeAllRanges(); sel.addRange(range); } insertHTML(clean(h) + '&nbsp;'); ed.dispatchEvent(new Event('input', { bubbles: true })); return true; }
   // 舊筆記（純文字）轉成 HTML
   const fromText = t => t.split(/\n{2,}/).map(p => '<p>' + escT(p).replace(/\n/g, '<br>') + '</p>').join('');
   return { clean, md, mdMath, attach, insertFiles, insertTex, loadKatex, fromText, TC, BG, colorCls };
@@ -5490,6 +5490,44 @@ const NOTES = (() => {
     const sel = getSelection(); if (!sel.rangeCount) return; const r = sel.getRangeAt(0);
     ed.querySelectorAll('[class]').forEach(n => { if (r.intersectsNode(n)) { n.className = n.className.split(/\s+/).filter(c => !re.test(c)).join(' '); if (!n.className) n.removeAttribute('class'); } });
   }
+  // ---- 區塊進出：跳出引用、在表格／程式碼後面開新行 ----
+  const caretAt = (el, end) => { const r = document.createRange(); r.selectNodeContents(el); r.collapse(!end); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); };
+  const newP = () => { const p = document.createElement('p'); p.appendChild(document.createElement('br')); return p; };
+  const anchorEl = ed => { const sel = getSelection(); if (!sel.rangeCount) return null; let n = sel.anchorNode; if (!n || !ed.contains(n)) return null; return n.nodeType === 1 ? n : n.parentElement; };
+  const topBlock = (ed, el) => { while (el && el.parentElement && el.parentElement !== ed) el = el.parentElement; return el && el.parentElement === ed ? el : null; };
+  const isEmptyBlock = el => !el.textContent.replace(/\u200b/g, '').trim() && !el.querySelector('img, math, table, hr');
+  // 編輯框最後如果是表格、程式碼、引用、公式、圖片、分隔線，就補一行空白，才點得到後面
+  function ensureTail(ed) {
+    const last = ed.lastElementChild;
+    const blocky = last && (/^(TABLE|PRE|BLOCKQUOTE|HR|UL|OL|H4|H5|H6)$/.test(last.tagName) || (last.tagName === 'P' && last.querySelector('img, math') && !last.textContent.replace(/[\s\u200b]/g, '') ));
+    if (blocky) ed.appendChild(newP());
+  }
+  // 把 child（blockquote 的直接子元素）移出引用；它後面的內容留在另一個引用裡
+  function liftOut(bq, child) {
+    const after = [...bq.childNodes].slice([...bq.childNodes].indexOf(child) + 1);
+    let target = child;
+    if (child.nodeType === 3 || !/^(P|DIV|H4|H5|H6|UL|OL|PRE)$/.test(child.tagName)) { target = document.createElement('p'); target.appendChild(child); }
+    bq.after(target);
+    if (after.length) { const bq2 = document.createElement('blockquote'); after.forEach(n => bq2.appendChild(n)); target.after(bq2); }
+    if (!bq.textContent.trim() && !bq.querySelector('img, math')) bq.remove();
+    if (isEmptyBlock(target)) { target.innerHTML = '<br>'; }
+    return target;
+  }
+  function unquote(ed) {
+    const el = anchorEl(ed); const bq = el && el.closest('blockquote'); if (!bq || !ed.contains(bq)) return false;
+    let child = el; while (child.parentElement !== bq) child = child.parentElement;
+    if (child === bq) { // 游標直接在引用裡的文字上
+      const sel = getSelection(); child = sel.anchorNode; while (child.parentNode !== bq) child = child.parentNode;
+    }
+    const t = liftOut(bq, child); caretAt(t, true); return true;
+  }
+  function exitBlock(ed) {
+    const el = anchorEl(ed); if (!el) { const p = newP(); ed.appendChild(p); caretAt(p); return; }
+    const top = topBlock(ed, el) || el; const nx = top.nextElementSibling;
+    if (nx && nx.tagName === 'P' && isEmptyBlock(nx)) { caretAt(nx); return; } // 後面已經有空白行就直接用
+    const p = newP(); top.after(p); caretAt(p);
+  }
+
   function wireTools(box, ed) {
     const css = on => { try { document.execCommand('styleWithCSS', false, on); } catch (e) { } };
     const cmd = (c, v) => { ed.focus(); css(c === 'foreColor'); document.execCommand(c, false, v); css(false); tidyColors(ed); state(); };
@@ -5497,7 +5535,13 @@ const NOTES = (() => {
     box.querySelectorAll('[data-fmt]').forEach(bt => bt.onclick = () => cmd(bt.dataset.fmt, null));
     // 字級：用 fontSize 指令（產生 <font size>），再換成 class；「中」= 拿掉字級
     box.querySelectorAll('[data-fs]').forEach(bt => bt.onclick = () => { ed.focus(); if (bt.dataset.fs === '3') { stripColor(ed, /^fs-/); return; } css(false); document.execCommand('fontSize', false, bt.dataset.fs); tidyColors(ed); state(); });
-    box.querySelectorAll('[data-blk]').forEach(bt => bt.onclick = () => cmd('formatBlock', '<' + bt.dataset.blk + '>'));
+    box.querySelectorAll('[data-blk]').forEach(bt => bt.onclick = () => {
+      const b = bt.dataset.blk; ed.focus();
+      if (b === 'blockquote' && unquote(ed)) { state(); return; }        // 已經在引用裡 → 再按一次就取消引用
+      if (b !== 'blockquote' && unquote(ed) && b === 'p') { state(); return; } // 按「內文」也會跳出引用
+      cmd('formatBlock', '<' + b + '>'); ensureTail(ed);
+    });
+    box.querySelector('[data-exit]').onclick = () => { ed.focus(); exitBlock(ed); state(); };
     box.querySelectorAll('[data-tc]').forEach(bt => bt.onclick = () => { const c = bt.dataset.tc; if (c) cmd('foreColor', RICH.TC[c]); else { ed.focus(); stripColor(ed, /^tc-/); } });
     box.querySelectorAll('[data-bg]').forEach(bt => bt.onclick = () => { const c = bt.dataset.bg; if (c) { ed.focus(); css(true); if (!document.execCommand('hiliteColor', false, RICH.BG[c])) document.execCommand('backColor', false, RICH.BG[c]); css(false); tidyColors(ed); } else { ed.focus(); stripColor(ed, /^bg-/); } });
     // 游標所在的格式亮起來
@@ -5514,7 +5558,32 @@ const NOTES = (() => {
       if (!(await RICH.insertTex(ed, body, disp, saved))) alert('公式排版需要網路（第一次使用時下載排版工具），請連上網路再試一次。');
     };
     ed.addEventListener('keyup', state); ed.addEventListener('mouseup', state); ed.addEventListener('input', () => tidyColors(ed));
-    ed.addEventListener('keydown', e => { if (e.key === 'Tab') { e.preventDefault(); cmd(e.shiftKey ? 'outdent' : 'indent', null); } });
+    ed.addEventListener('keydown', e => {
+      if (e.isComposing || e.keyCode === 229) return; // 注音、拼音選字中不攔截
+      const el = anchorEl(ed);
+      if (e.key === 'Tab') {
+        const cell = el && el.closest('td, th');
+        if (cell && ed.contains(cell)) { e.preventDefault(); const cells = [...cell.closest('table').querySelectorAll('td, th')]; const nx = cells[cells.indexOf(cell) + (e.shiftKey ? -1 : 1)]; if (nx) caretAt(nx, true); else if (!e.shiftKey) { const t = cell.closest('table'); const p = t.nextElementSibling && t.nextElementSibling.tagName === 'P' ? t.nextElementSibling : (() => { const q = newP(); t.after(q); return q; })(); caretAt(p); } return; }
+        e.preventDefault(); cmd(e.shiftKey ? 'outdent' : 'indent', null); return;
+      }
+      if (e.key !== 'Enter') return;
+      if (e.metaKey || e.ctrlKey) { e.preventDefault(); exitBlock(ed); state(); return; }
+      if (e.shiftKey || !el) return;
+      const bq = el.closest('blockquote');
+      if (bq && ed.contains(bq)) { // 引用裡的空白行按 Enter → 跳出引用
+        let child = el; while (child && child.parentElement !== bq) child = child.parentElement;
+        if (child && child !== bq && isEmptyBlock(child)) { e.preventDefault(); const t = liftOut(bq, child); caretAt(t, true); state(); return; }
+        if (!child || child === bq) { const sel = getSelection(); const tn = sel.anchorNode; if (tn && tn.nodeType === 3 && !tn.data.trim() && tn.parentNode === bq) { e.preventDefault(); const t = liftOut(bq, tn); caretAt(t, true); return; } }
+      }
+      const pre = el.closest('pre');
+      if (pre && ed.contains(pre)) { // 程式碼最後一行是空的再按 Enter → 跳出
+        const sel = getSelection(), r = sel.getRangeAt(0), tail = document.createRange(); tail.setStart(r.endContainer, r.endOffset); tail.setEnd(pre, pre.childNodes.length);
+        const before = document.createRange(); before.setStart(pre, 0); before.setEnd(r.startContainer, r.startOffset);
+        if (!tail.toString().length && /\n$/.test(before.toString())) { e.preventDefault(); const last = pre.querySelector('code') || pre; last.innerHTML = last.innerHTML.replace(/(\n|<br>)+$/, ''); const p = newP(); pre.after(p); caretAt(p); return; }
+      }
+    });
+    ed.addEventListener('input', () => ensureTail(ed));
+    ensureTail(ed);
   }
   function noteBox(block, card, k, edit) {
     let box = [...block.children].find(x => x.classList.contains('ntbox'));
@@ -5524,7 +5593,7 @@ const NOTES = (() => {
     const html = d ? (d.h || RICH.fromText(d.t)) : '';
     box.innerHTML = edit
       ? `<span class="nthead">我的筆記<small>可以直接貼上 Gemini、ChatGPT 或網頁內容，格式會保留；⌘/Ctrl+Shift+V 貼純文字</small></span><span class="nttools" role="toolbar" aria-label="筆記格式">
-        <span class="ntgrp"><button type="button" class="ntfb" data-blk="h4" title="大標題">大標</button><button type="button" class="ntfb" data-blk="h5" title="小標題">小標</button><button type="button" class="ntfb" data-blk="p" title="內文">內文</button><button type="button" class="ntfb" data-blk="blockquote" title="引用">引用</button></span>
+        <span class="ntgrp"><button type="button" class="ntfb" data-blk="h4" title="大標題">大標</button><button type="button" class="ntfb" data-blk="h5" title="小標題">小標</button><button type="button" class="ntfb" data-blk="p" title="內文">內文</button><button type="button" class="ntfb" data-blk="blockquote" title="引用（在引用裡再按一次＝取消引用）">引用</button><button type="button" class="ntfb" data-exit="1" title="在引用、表格、程式碼、公式後面開新的一行（⌘/Ctrl+Enter）">↵ 跳出</button></span>
         <span class="ntgrp"><button type="button" class="ntfb" data-fmt="bold" title="粗體（⌘/Ctrl+B）"><b>B</b></button><button type="button" class="ntfb" data-fmt="italic" title="斜體（⌘/Ctrl+I）"><i>I</i></button><button type="button" class="ntfb" data-fmt="underline" title="底線（⌘/Ctrl+U）"><u>U</u></button><button type="button" class="ntfb" data-fmt="strikeThrough" title="刪除線"><s>S</s></button></span>
         <span class="ntgrp"><span class="ntswl">字級</span><button type="button" class="ntfb" data-fs="2" title="小字" style="font-size:11px">小</button><button type="button" class="ntfb" data-fs="3" title="一般大小">中</button><button type="button" class="ntfb" data-fs="5" title="大字" style="font-size:15px">大</button><button type="button" class="ntfb" data-fs="6" title="特大字" style="font-size:17px">特大</button></span>
         <span class="ntgrp"><button type="button" class="ntfb" data-fmt="insertUnorderedList" title="圓點清單">• 清單</button><button type="button" class="ntfb" data-fmt="insertOrderedList" title="數字清單">1. 清單</button><button type="button" class="ntfb" data-fmt="outdent" title="往外縮">⇤</button><button type="button" class="ntfb" data-fmt="indent" title="往內縮">⇥</button></span>
