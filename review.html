@@ -20,7 +20,7 @@
   --basic:#6fb6ff; --deriv:#3fe0cf; --invest:#ffa64d; --law:#ff7aa6; --mgmt:#a68cff; --cfa:#6fdc86; --plain:#173b3d; --life:#3d3020; --exam:#2f2a5a; --why:#3b3718; --good:#5ee09a; --bad:#ff8a73; --hit:#4a4316; --pig:#f2a0ba; --pigd:#c95f80; color-scheme:dark }
 *{box-sizing:border-box} [hidden]{display:none!important}
 body{background:var(--bg) radial-gradient(var(--dot) 1.5px,transparent 1.6px) 0 0/22px 22px;color:var(--ink);font-family:var(--f-body);font-size:15.5px;line-height:1.75}
-body[data-subj="basic"]{--acc:var(--basic)} body[data-subj="invest"]{--acc:var(--invest)} body[data-subj="law"]{--acc:var(--law)} body[data-subj="mgmt"]{--acc:var(--mgmt)} body[data-subj="cfa"]{--acc:var(--cfa)}
+body[data-subj="basic"]{--acc:var(--basic)} body[data-subj="re"]{--acc:var(--re)} body[data-subj="invest"]{--acc:var(--invest)} body[data-subj="law"]{--acc:var(--law)} body[data-subj="mgmt"]{--acc:var(--mgmt)} body[data-subj="cfa"]{--acc:var(--cfa)}
 h1,h2,h3,h4{font-family:var(--f-display);text-wrap:balance;line-height:1.3;margin:0;font-weight:600}
 button,input,select,textarea{font:inherit;color:inherit}
 :focus-visible{outline:3px solid var(--gold);outline-offset:2px}
@@ -30,7 +30,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 #stabs{display:flex;gap:6px;flex-wrap:wrap}
 .stab{border:2.5px solid var(--line);background:var(--panel);border-radius:999px;padding:3px 14px 6px;cursor:pointer;position:relative;font-weight:700;font-family:var(--f-display);box-shadow:2px 2px 0 var(--line);transition:transform .12s}
 .stab:hover{transform:translateY(-2px)}
-.stab[aria-current="page"]{color:#fff} .stab.basic[aria-current="page"]{background:var(--basic)} .stab.deriv[aria-current="page"]{background:var(--deriv)} .stab.invest[aria-current="page"]{background:var(--invest)} .stab.law[aria-current="page"]{background:var(--law)} .stab.mgmt[aria-current="page"]{background:var(--mgmt)} .stab.home[aria-current="page"]{background:var(--pigd)} .stab.cfa[aria-current="page"]{background:var(--cfa)}
+.stab[aria-current="page"]{color:#fff} .stab.basic[aria-current="page"]{background:var(--basic)} .stab.re[aria-current="page"]{background:var(--re)} .stab.deriv[aria-current="page"]{background:var(--deriv)} .stab.invest[aria-current="page"]{background:var(--invest)} .stab.law[aria-current="page"]{background:var(--law)} .stab.mgmt[aria-current="page"]{background:var(--mgmt)} .stab.home[aria-current="page"]{background:var(--pigd)} .stab.cfa[aria-current="page"]{background:var(--cfa)}
 #hud{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-left:auto;font-size:13px}
 #hud .lv{font-family:var(--f-display);font-weight:700;background:var(--gold);color:#22264a;border:2px solid var(--line);border-radius:8px;padding:0 7px}
 #hud .ttl{font-family:var(--f-zh);font-weight:700} .xpbar{width:90px;height:12px;border:2px solid var(--line);border-radius:8px;overflow:hidden;background:var(--soft)} .xpbar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--pigd))}
@@ -41,7 +41,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 .bar{display:block;height:8px;border-radius:5px;background:var(--soft);overflow:hidden;--p:0%;border:1.5px solid var(--line)}
 .bar i{display:block;height:100%;width:var(--p);background:var(--acc);transition:width .4s}
 .bar.mini{position:absolute;left:14px;right:14px;bottom:2px;height:3px;border:0;background:transparent}
-.stab.basic .bar i{background:var(--basic)} .stab.deriv .bar i{background:var(--deriv)} .stab.invest .bar i{background:var(--invest)} .stab.law .bar i{background:var(--law)} .stab.mgmt .bar i{background:var(--mgmt)} .stab[aria-current="page"] .bar i{background:#fff}
+.stab.basic .bar i{background:var(--basic)} .stab.re .bar i{background:var(--re)} .stab.deriv .bar i{background:var(--deriv)} .stab.invest .bar i{background:var(--invest)} .stab.law .bar i{background:var(--law)} .stab.mgmt .bar i{background:var(--mgmt)} .stab[aria-current="page"] .bar i{background:#fff}
 main{max-width:1200px;margin:0 auto;padding-block:20px 80px;padding-inline:16px}
 .shead{display:flex;justify-content:space-between;gap:20px;align-items:flex-end;flex-wrap:wrap;padding-bottom:12px}
 .shead h2{font-size:34px;color:var(--acc);font-family:var(--f-zh);font-weight:700}
@@ -161,13 +161,13 @@ details summary{cursor:pointer;font-weight:700;color:var(--acc)} .body{max-width
 .stats{display:flex;gap:8px;flex-wrap:wrap} .stats span{background:var(--panel);border:2px solid var(--line);border-radius:10px;padding:0 10px;font-family:var(--f-display);font-weight:600;box-shadow:2px 2px 0 var(--line)}
 .subjgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}
 .sg{text-align:left;border:2.5px solid var(--line);background:var(--panel);border-radius:18px;padding:16px;cursor:pointer;display:flex;flex-direction:column;gap:8px;box-shadow:var(--sh);transition:transform .15s;border-top:12px solid var(--acc)}
-.sg:hover{transform:translateY(-4px) rotate(-.5deg)} .sg.basic{--acc:var(--basic)} .sg.deriv{--acc:var(--deriv)} .sg.invest{--acc:var(--invest)} .sg.law{--acc:var(--law)} .sg.mgmt{--acc:var(--mgmt)}
+.sg:hover{transform:translateY(-4px) rotate(-.5deg)} .sg.basic{--acc:var(--basic)} .sg.re{--acc:var(--re)} .sg.deriv{--acc:var(--deriv)} .sg.invest{--acc:var(--invest)} .sg.law{--acc:var(--law)} .sg.mgmt{--acc:var(--mgmt)}
 .sgn{font-family:var(--f-zh);font-size:25px;font-weight:700;color:var(--acc)} .sgm{font-size:13px;color:var(--mute)} .sgp{font-size:12px;color:var(--mute);font-weight:700} .sgi{font-size:13px}
 .hh{font-family:var(--f-zh);font-size:24px;margin:28px 0 10px}
 .badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
 .badge{background:var(--panel);border:2.5px solid var(--line);border-radius:14px;padding:8px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:2px;opacity:.45;filter:grayscale(1)} .badge.got{opacity:1;filter:none;box-shadow:3px 3px 0 var(--line)}
 .badge .medal svg{width:40px;height:40px} .badge .md{fill:var(--gold);stroke:var(--line);stroke-width:2.5} .badge .mr{fill:none;stroke:var(--law);stroke-width:4} .badge .mt2{font-size:14px;fill:#22264a} .badge b{font-size:13px} .badge small{font-size:11px;color:var(--mute);line-height:1.3}
-.cfalist{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;margin-top:8px} .cfai{text-align:left;border:2px solid var(--line);background:var(--panel);border-radius:12px;padding:8px 10px;cursor:pointer;display:flex;flex-direction:column;border-left:8px solid var(--acc)} .cfai.basic{--acc:var(--basic)} .cfai.deriv{--acc:var(--deriv)} .cfai.invest{--acc:var(--invest)} .cfai.mgmt{--acc:var(--mgmt)} .cfai span{font-size:12px;color:var(--mute)}
+.cfalist{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;margin-top:8px} .cfai{text-align:left;border:2px solid var(--line);background:var(--panel);border-radius:12px;padding:8px 10px;cursor:pointer;display:flex;flex-direction:column;border-left:8px solid var(--acc)} .cfai.basic{--acc:var(--basic)} .cfai.re{--acc:var(--re)} .cfai.deriv{--acc:var(--deriv)} .cfai.invest{--acc:var(--invest)} .cfai.mgmt{--acc:var(--mgmt)} .cfai span{font-size:12px;color:var(--mute)}
 .dates{margin-top:24px;background:var(--panel);border:2.5px solid var(--line);border-radius:18px;padding:14px 18px;max-width:800px;box-shadow:var(--sh)} .dates h3{font-size:19px;font-family:var(--f-zh)}
 #toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translate(-50%,calc(100% + 120px));opacity:0;visibility:hidden;background:var(--panel);border:3px solid var(--line);border-radius:18px;padding:6px 16px 6px 8px;display:flex;align-items:center;gap:8px;box-shadow:var(--sh);z-index:50;transition:transform .3s,opacity .3s,visibility .3s;font-weight:700;max-width:calc(100vw - 32px)} #toast.show{transform:translate(-50%,0);opacity:1;visibility:visible}
 #confetti{position:fixed;inset:0;pointer-events:none;z-index:60}
@@ -203,7 +203,7 @@ body.notips .tipbox{display:none} body.calm *{animation:none!important;transitio
   .topin{padding:6px 12px;gap:6px;flex-wrap:nowrap}
   .brand{font-size:16px} .brand .pig{width:30px;height:30px} .brandt{display:none}
   #hud{margin-left:auto;gap:5px;font-size:12px;flex-wrap:nowrap} #hud .ttl{display:none} .xpbar{width:38px} .snd{display:none} .hbtn{width:26px}
-  #stabs{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--panel);border-top:3px solid var(--line);display:grid;grid-template-columns:repeat(7,1fr);gap:0;padding:4px 2px calc(4px + env(safe-area-inset-bottom,0px))}
+  #stabs{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--panel);border-top:3px solid var(--line);display:grid;grid-template-columns:repeat(8,1fr);gap:0;padding:4px 2px calc(4px + env(safe-area-inset-bottom,0px))}
   .stab{border:0;box-shadow:none;border-radius:12px;padding:4px 0 6px;display:flex;flex-direction:column;align-items:center;gap:1px;font-size:11.5px;background:transparent}
   .stab:hover{transform:none} .stab .navi{width:22px;height:22px;margin:0}
   .stab[aria-current="page"]{color:#fff} .bar.mini{left:10px;right:10px;bottom:1px}
@@ -226,7 +226,7 @@ body.notips .tipbox{display:none} body.calm *{animation:none!important;transitio
   #toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
   .wg input[type=range]{width:100%}
 }
-@media (max-width:380px){.lang button{padding:0 5px} .stab{font-size:10.5px}}
+@media (max-width:380px){.lang button{padding:0 5px} .stab{font-size:10px}}
 
 /* CFA 特區 */
 .cfahome{display:flex;align-items:center;gap:14px;width:100%;max-width:860px;margin-top:22px;text-align:left;background:var(--panel);border:2.5px solid var(--line);border-left:10px solid var(--cfa);border-radius:18px;padding:14px 18px;box-shadow:var(--sh);cursor:pointer;color:var(--ink);font:inherit;transition:transform .12s} .cfahome:hover{transform:translateY(-3px)}
@@ -251,7 +251,7 @@ body.notips .tipbox{display:none} body.calm *{animation:none!important;transitio
 .steps2{display:flex;flex-direction:column;gap:4px}
 .cfaq{display:flex;flex-direction:column;gap:10px} .cq{font-size:16.5px;font-weight:700;line-height:1.6} .copts{display:flex;flex-direction:column;gap:8px} .cexp{background:var(--soft);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:8px;align-items:flex-start}
 .cfalinks{columns:2 260px} .msbox .tbl th:first-child{white-space:nowrap} .lvtbl{min-width:620px} .lvtbl td{width:33%}
-.fcardx.flash{animation:pop .8s 2} .stab.cfa .bar i{background:var(--cfa)} .mscard.cfa{--acc:var(--cfa)} .cfatonotes{margin:0 0 16px} .qtext .pill{margin-right:4px;vertical-align:2px}
+.fcardx.flash{animation:pop .8s 2} .stab.cfa .bar i{background:var(--cfa)} .mscard.cfa{--acc:var(--cfa)} .mscard.re{--acc:var(--re)} .cfatonotes{margin:0 0 16px} .qtext .pill{margin-right:4px;vertical-align:2px}
 @media (max-width:760px){.l1t summary{flex-wrap:wrap} .l1w{width:100%} .pagehead h2{font-size:28px}}
  .plhome{border-left-color:var(--pigd)} .plhome .navi{stroke:var(--pigd)} .plhome .cfago{color:var(--pigd)}
 .plsubs input[type=date],.plsubs select,.wkrow input,.setbox input[type=date],.setbox select{border:2px solid var(--line);border-radius:8px;padding:2px 6px;background:var(--bg);color:var(--ink);font:inherit}
@@ -1992,6 +1992,165 @@ DATA.basic.formulas = [
     calc:v=>`${v.r} × ${v.si} ÷ ${v.sm} = <b>${fx(v.r*v.si/v.sm,3)}</b>`,
     oops:['除以 σ<sub>M</sub> 而不是 σ<sub>M</sub>²（用 Cov 的寫法時）'], exam:'Beta equals the covariance of the asset with the market divided by the variance of the market.', cfa:'CFA Level I：beta、CAPM 必考。' }
 ];
+// ===== 不動產財管（清大磨課師）：依九個單元標題整理的複習卡 =====
+// 內容為依單元主題自行整理的重點，數字與法規以課程講義和最新公告為準
+DATA.re = {
+  name: '不動產', full: '不動產財管', hue: 're',
+  intro: '清大磨課師（影片課）。期中 11/12：單元 1–6（法規、固定利率與浮動利率房貸、MBS Ⅰ–Ⅱ）；期末 12/17：單元 7–9（MBS Ⅲ與衍生品、逆向房貸與房市危機）。這裡依單元標題整理重點，看完影片後用來複習；細節以老師的講義為準。',
+  sections: [
+  { id:'re1', t:'1. 房地產相關法規', cards: [
+    { id:'re1a', t:'抵押權：房貸的法律基礎', en:'Mortgage (hypothec) under the Civil Code',
+      plain:'借錢買房時，銀行會在房子上設定「抵押權」。房子還是你的、你照樣住，但如果你不還錢，銀行可以聲請法院拍賣房子，從拍賣價金優先拿回借款。',
+      life:'把機車借據交給朋友保管當擔保：機車照樣是你在騎，但你不還錢，朋友可以把機車賣掉抵債，而且比其他債主先拿錢。',
+      body:'<ul><li><b>普通抵押權</b>（民法 §860）：對債務人或第三人<b>不移轉占有</b>而供擔保的不動產，得就其賣得價金<b>優先受償</b>。</li><li><b>最高限額抵押權</b>（民法 §881-1）：在約定的最高金額內，擔保一定範圍內<b>不特定</b>的債權（例如企業和銀行的往來借款、可循環動用的房貸）。</li><li>債務到期沒清償 → 抵押權人可以<b>聲請法院拍賣</b>抵押物（民法 §873）。</li><li><b>順位</b>：同一不動產可設定多個抵押權，依登記先後受償（第一順位最優先）→ 二胎房貸利率較高。</li><li>抵押權具有<b>從屬性</b>（跟著債權走）與<b>不可分性</b>（債權還沒全部清償前，抵押物全部都擔保）。</li><li>抵押權要<b>登記</b>才生效（不動產物權變動採登記生效主義）。</li></ul>' },
+    { id:'re1b', t:'金融監理：銀行法 §72-2 與央行選擇性信用管制', en:'Bank lending limits and selective credit controls',
+      plain:'政府擔心銀行把太多錢借給房地產、房價過熱，所以限制銀行的不動產放款比例，央行也會限制特定族群（例如買第二戶、公司買房）的貸款成數。',
+      life:'學校規定福利社一天最多只能賣多少零食，避免大家都只吃零食；央行就是在限制「借錢買房」這種零食。',
+      body:'<ul><li><b>銀行法 §72-2</b>：商業銀行的住宅與企業建築放款總額，原則上不得超過存款總餘額加金融債券發售額的 <b>30%</b>（部分項目如特定自用住宅貸款可排除）。目的是控制銀行對不動產的集中度風險。</li><li><b>央行選擇性信用管制</b>：針對特定對象限制<b>貸款成數（LTV）</b>、取消<b>寬限期</b>等，例如：公司法人購置住宅、自然人第二戶以上購屋、高價住宅、餘屋與購地貸款。央行近年多次加碼調整，<b>確切成數以央行最新規定為準</b>。</li><li><b>LTV</b>（loan-to-value）＝ 貸款金額 ÷ 房屋價值：LTV 越高，借款人自備款越少，違約風險越高。</li><li><b>DTI</b>（debt-to-income）＝ 每月還款 ÷ 每月所得：銀行用來評估還款能力，一般希望在約 1/3 以內。</li><li>總體審慎政策（macroprudential）：用 LTV、DTI 上限等工具抑制房市與信用過度擴張。</li></ul>' },
+    { id:'re1c', t:'交易與稅制：實價登錄、平均地權條例、房地合一稅', en:'Transaction disclosure and property taxation',
+      plain:'為了讓房市透明、打擊炒房，政府要求成交價格公開（實價登錄），限制預售屋轉售，並對短期買賣的房地課較高的所得稅（房地合一稅）。',
+      life:'二手球鞋平台公開每筆成交價，就不容易被亂喊價；如果平台還規定「買到限量鞋一年內轉賣要多繳手續費」，就能減少黃牛。',
+      body:'<ul><li><b>實價登錄 2.0</b>（2021 年起施行）：成交資訊<b>門牌完整揭露</b>、<b>預售屋</b>在銷售前要報備且成交後即時申報、紅單交易納管。</li><li><b>平均地權條例修正</b>（2023）：<ul><li>預售屋及新建成屋<b>禁止換約轉售</b>（有例外）。</li><li><b>私法人</b>購買住宅改採<b>許可制</b>。</li><li>炒作行為（例如散布不實資訊、聯合哄抬）可處罰；設檢舉獎金。</li><li>預售屋解約要申報。</li></ul></li><li><b>房地合一稅 2.0</b>（2021/7/1 起）：個人出售房地依<b>持有期間</b>課稅：2 年內 45%、超過 2 年未滿 5 年 35%、5–10 年 20%、超過 10 年 15%；<b>自住</b>房地符合條件（本人、配偶或未成年子女設籍並居住滿 6 年）稅率 10%，且有 400 萬元免稅額。</li><li>持有成本：<b>地價稅</b>、<b>房屋稅</b>（「囤房稅 2.0」對非自住多戶提高稅率）。</li></ul>' },
+    { id:'re1d', t:'證券化法規：金融資產證券化與不動產證券化條例', en:'Securitization acts in Taiwan', cfa:'Fixed Income：securitization',
+      plain:'台灣有兩部法律讓「房貸」和「房地產」可以切成證券賣給投資人：一部處理貸款債權（例如 MBS），一部處理不動產本身（REITs、REATs）。',
+      life:'把一整棟大樓切成很多小股份，讓每個人都能用小錢投資收租 → 不動產證券化。',
+      body:'<ul><li><b>金融資產證券化條例</b>（2002）：銀行可以把房貸、車貸等債權信託或讓與給特殊目的機構（SPV／特殊目的信託），發行受益證券或資產基礎證券 → 例如<b>住宅貸款證券（MBS）</b>。</li><li><b>不動產證券化條例</b>（2003）：<ul><li><b>REITs</b>（不動產投資信託）：先向投資人<b>募集資金</b>，再去<b>買</b>不動產或相關權利，收租金分配給投資人。</li><li><b>REATs</b>（不動產資產信託）：不動產所有人<b>把不動產信託</b>給受託機構，換成受益證券賣給投資人（先有不動產、後有錢）。</li></ul></li><li>證券化的好處：資產流動化、發起銀行取得資金、分散風險、投資人有新的投資工具；風險：資訊不對稱、結構複雜（2008 年金融海嘯的教訓）。</li></ul>' }
+  ]},
+  { id:'re2', t:'2. 固定利率抵押貸款Ⅰ', cards: [
+    { id:'re2a', t:'固定利率房貸與本息平均攤還（CPM）', en:'Fixed-rate constant payment mortgage', pre:['bpv','bint'], cfa:'Fixed Income：mortgage cash flows',
+      plain:'固定利率房貸最常見的是「本息平均攤還」：每個月繳一樣的金額，前期大部分是利息，後期大部分是本金。每月付款額就是把貸款當成年金的現值去反推。',
+      life:'借 1,000 萬、年利率 2%、20 年：每月大約繳 5 萬 589 元。第一個月利息就有約 1 萬 6,667 元，本金只還了約 3 萬 3,900 元。',
+      body:'<p class="formula">每月付款 PMT = L × r ÷ [1 − (1 + r)<sup>−n</sup>]</p><ul><li>L：貸款金額；r：<b>月利率</b>（年利率 ÷ 12）；n：總期數（年數 × 12）。</li><li>每期付款拆成：<b>利息 = 期初餘額 × r</b>；<b>本金 = PMT − 利息</b>。</li><li>期末餘額 = 期初餘額 − 本期本金。</li><li><b>剩餘本金</b>（貸款餘額）= 剩下所有付款以原利率折現的<b>現值</b>：B<sub>k</sub> = PMT × [1 − (1 + r)<sup>−(n−k)</sup>] ÷ r。</li><li>例：L = 1,000 萬、年利率 2%、20 年 → r = 0.1667%、n = 240 → PMT ≈ <b>50,589</b> 元；總利息 ≈ 50,589 × 240 − 1,000 萬 ≈ 214 萬。</li><li>期限越長，每月付款越少，但<b>總利息越多</b>；利率越高，前期利息占比越高。</li><li>計算機：N = 240、I/Y = 2/12、PV = 1,000 萬、FV = 0 → CPT PMT。</li></ul>',
+      terms:[['攤還表','amortization schedule：列出每期的付款、利息、本金、餘額'],['LTV','貸款成數 = 貸款 ÷ 房價'],['寬限期','只繳利息、不還本金的期間，之後每月付款會變高']] },
+    { id:'re2b', t:'本金平均攤還（CAM）與其他還款方式', en:'Constant amortization mortgage and alternatives',
+      plain:'除了本息平均攤還，還可以選「本金平均攤還」：每期還一樣多的本金，利息隨餘額遞減，所以每月付款一開始最高、之後越來越少，總利息比較少。',
+      life:'分期還朋友 12,000 元：每月固定還 1,000 本金再加利息（本金攤還），第一個月最辛苦；或每月繳一樣多（本息攤還），比較好規劃。',
+      body:'<ul><li><b>本金平均攤還 CAM</b>：每期本金 = L ÷ n；利息 = 期初餘額 × r → 付款逐期<b>遞減</b>。前期負擔重，但總利息比 CPM 少（因為本金還得比較快）。</li><li><b>本息平均攤還 CPM</b>：付款固定，最常見，方便規劃。</li><li><b>只付利息＋到期一次還本</b>（interest-only / balloon）：每期只付利息，到期有大筆氣球款 → 再融資風險高。</li><li><b>漸增型付款 GPM</b>（graduated payment mortgage）：前幾年付款較低、逐年增加，適合所得預期會成長的年輕人；前期付款可能小於利息 → <b>負攤還</b>（餘額增加）。</li><li><b>寬限期</b>：前幾年只付利息，寬限期結束後要在剩下的期間攤還全部本金 → 付款會突然跳升（央行選擇性信用管制常限制寬限期）。</li><li>台灣例子：「新青安」貸款提供較長期限（最長 40 年）與寬限期，降低年輕人前期負擔（實際條件以政府公告為準）。</li></ul>' },
+    { id:'re2c', t:'借款人的實際成本：手續費、點數與 APR', en:'Effective borrowing cost, points and APR',
+      plain:'除了利率，房貸還有開辦費、點數（預付利息）等費用，借款人實際拿到的錢比較少，所以真正的借款成本比表定利率高。提前還款時，費用攤提的期間變短，實際成本會更高。',
+      life:'借 100 元、利率 5%，但要先付 2 元手續費，你實際只拿到 98 元，卻要照 100 元還本付息 → 實際利率超過 5%。',
+      body:'<ul><li><b>點數</b>（discount points）：1 點 = 貸款金額的 1%，在貸款時先付給貸方，換取較低的利率。</li><li><b>有效借款成本</b>：解出讓「實際拿到的金額 = 未來付款的現值」的折現率（就是 IRR）：</li></ul><p class="formula">L − 費用 = Σ PMT ÷ (1 + i)<sup>t</sup> + 提前還款時的餘額 ÷ (1 + i)<sup>k</sup></p><ul><li>持有期間越<b>短</b>，前期費用攤提的期間越短 → 有效成本越<b>高</b>。</li><li><b>APR</b>（美國 Truth in Lending 規定的年百分率）：假設持有到期計算，所以會<b>低估</b>提前還款者的實際成本。台灣則要求揭露「總費用年百分率」。</li><li><b>提前清償違約金</b>：通常在前 1–3 年提前還款要付一定比例（例如餘額的 1%），也會提高有效成本。</li><li>選擇「低利率＋高費用」或「高利率＋低費用」：預計<b>持有越久</b>，越適合付點數換低利率。</li></ul>' }
+  ]},
+  { id:'re3', t:'3. 固定利率抵押貸款Ⅱ', cards: [
+    { id:'re3a', t:'貸方的報酬與風險：收益率、提前還款、利率風險', en:'Lender yield and risks of fixed-rate mortgages', cfa:'Fixed Income：prepayment risk',
+      plain:'對銀行來說，固定利率房貸的收益要算上收的費用；但它也承擔很多風險：利率上升時錢被綁在低利率（利率風險），利率下降時借款人提前還款（提前還款風險），還有借款人違約。',
+      life:'你借朋友錢約定 10 年都收 2% 利息，後來銀行定存都 5% 了，你很虧；但如果利率掉到 1%，朋友會馬上借別人的錢來還你，你又沒得賺。',
+      body:'<ul><li><b>貸方收益率</b>（lender yield）：用貸方實際付出的金額（L − 費用）和收到的付款算 IRR，會高於表定利率。</li><li><b>利率風險</b>：市場利率上升，固定利率房貸的價值下跌；而且銀行的資金來源（存款）多為短期 → <b>期限錯配</b>（1980 年代美國儲貸危機的主因之一）。</li><li><b>提前還款風險</b>：利率下跌時借款人轉貸或提前還款，貸方只能以較低利率再投資（借款人等於擁有一個<b>買權</b>）。</li><li><b>違約風險</b>：LTV 越高、DTI 越高、房價下跌時，違約機率越高。</li><li><b>流動性風險</b>：個別房貸不容易賣 → 證券化可以解決。</li><li>房貸利率 ≈ 無風險實質利率 + 預期通膨 + 違約風險溢酬 + 利率風險溢酬 + 提前還款風險溢酬 + 流動性溢酬。</li><li>貸款的市場價值 = 剩餘付款以<b>目前市場利率</b>折現；市場利率高於合約利率 → 貸款價值低於餘額。</li></ul>' },
+    { id:'re3b', t:'轉貸（再融資）決策', en:'Refinancing decision',
+      plain:'利率下跌時，可以考慮借新的低利貸款還掉舊的高利貸款。要比較的是：未來每月省下的錢折現回來，有沒有超過轉貸要付的成本（違約金、手續費、代書費）。',
+      life:'換電信方案：新方案每月便宜 200 元，但解約要付 3,000 元違約金。如果還會用超過 15 個月才划算。',
+      body:'<ul><li><b>轉貸的效益</b> = 每月付款的節省 → 在預計持有期間內的<b>現值</b>（用新貸款利率折現）＋ 期末餘額差異的現值。</li><li><b>轉貸的成本</b>：舊貸款的提前清償違約金、新貸款的開辦費、點數、設定費、代書費等。</li><li>決策：效益現值 &gt; 成本 → 轉貸（NPV &gt; 0）。</li><li>也可以算<b>轉貸的報酬率</b>（IRR）：成本當期初投入、每月節省當報酬，和新貸款利率比較。</li><li>預計持有期間越<b>短</b>，轉貸越不划算（省的時間不夠攤回成本）。</li><li>簡單判斷：<b>回收期</b> = 轉貸成本 ÷ 每月節省（但忽略時間價值）。</li><li>轉貸也可以順便調整期限或增貸，但延長期限會增加總利息。</li></ul>' },
+    { id:'re3c', t:'貸款承作：還款能力、擔保品與房價評估', en:'Mortgage underwriting',
+      plain:'銀行決定要不要借、借多少，會看「人」（所得、信用、負債）和「房子」（估價、地點、屋況），常用 LTV 和 DTI 兩個指標。',
+      life:'朋友跟你借錢，你會想：他有沒有穩定打工收入（還款能力）、之前借錢有沒有準時還（信用）、他抵押的東西值多少（擔保品）。',
+      body:'<ul><li><b>借款人</b>：所得與工作穩定性、信用紀錄（台灣看聯徵中心）、既有負債、自備款來源。</li><li><b>擔保品</b>：不動產<b>估價</b>（比較法、收益法、成本法）、區位、屋齡、用途、是否為特殊建物。</li><li><b>LTV</b>：越高風險越高 → 成數高的貸款利率較高或需要房貸保險。</li><li><b>DTI／負債比</b>：每月總還款 ÷ 每月所得。</li><li><b>寬限期與期限</b>：影響每月負擔與違約風險。</li><li>不動產估價三方法：<ul><li><b>比較法</b>：參考附近類似物件的成交價（實價登錄）。</li><li><b>收益法</b>：價值 = 淨營業收入 ÷ 資本化率（出租型不動產）。</li><li><b>成本法</b>：土地價值 + 重建成本 − 折舊。</li></ul></li></ul>' }
+  ]},
+  { id:'re4', t:'4. 浮動利率抵押貸款', cards: [
+    { id:'re4a', t:'浮動利率房貸（ARM）：指標利率＋加碼', en:'Adjustable-rate mortgage: index and margin',
+      plain:'浮動利率房貸的利率不是固定的，而是「指標利率＋固定加碼」，定期調整。利率風險從銀行轉給借款人，所以初始利率通常比固定利率低。台灣大部分房貸就是這種。',
+      life:'台灣的房貸常寫「郵局兩年期定儲機動利率 + 0.555%」：郵局利率調升，你的房貸利率就跟著升。',
+      body:'<ul><li><b>合約利率 = 指標利率（index）+ 加碼（margin）</b>。</li><li>指標利率：美國常用公債利率、SOFR 等；台灣常用<b>中華郵政二年期定儲機動利率</b>或各銀行的<b>定儲利率指數</b>。</li><li><b>調整頻率</b>：例如每月、每季、每年調整一次。</li><li><b>風險分擔</b>：利率上升 → 借款人付款增加（<b>付款衝擊</b> payment shock）；貸方的利率風險較低，但借款人<b>違約風險</b>可能上升。</li><li>因為貸方承擔較少利率風險，ARM 的<b>初始利率通常低於</b>固定利率房貸。</li><li><b>優惠起始利率</b>（teaser rate）：前幾期利率特別低，之後跳回指標 + 加碼，可能造成付款大幅增加（次貸危機的問題之一）。</li><li><b>混合型</b>：前幾年固定、之後浮動（例如 5/1 ARM：前 5 年固定，之後每年調整）。</li></ul>' },
+    { id:'re4b', t:'利率上下限、負攤還與 ARM 的預期收益', en:'Caps, negative amortization and ARM yields',
+      plain:'為了保護借款人，浮動利率房貸可能設定利率上限（每次最多調多少、整個期間最高多少）。如果付款被設上限但利率還是升，就會出現負攤還：沒付的利息加回本金。',
+      life:'手機吃到飽方案說「每年漲價不超過 50 元、總共最多漲到 999 元」→ 就像利率的每期上限和終身上限。',
+      body:'<ul><li><b>每期調整上限</b>（periodic cap）：每次調整利率最多變動多少（例如 2%）。</li><li><b>終身上限</b>（lifetime cap）：整個貸款期間利率最高不超過多少。</li><li><b>付款上限</b>（payment cap）：限制付款金額的增加幅度；若利率上升導致利息超過付款 → <b>負攤還</b>（negative amortization），貸款餘額反而增加。</li><li>利率上下限讓<b>貸方</b>又承擔部分利率風險 → 有上限的 ARM 加碼或初始利率會比較高。</li><li><b>ARM 的預期收益率</b>：根據預期的指標利率路徑，算出每期利率與付款，再求貸方的 IRR（含費用）。</li><li>計算步驟：①用期初利率算付款 → ②算期末餘額 → ③下一期用新利率和剩餘期數重新計算付款 → 重複。</li><li><b>選擇 FRM 還是 ARM</b>：預期利率上升、想要穩定付款、持有很久 → 偏好固定利率；預期利率下降、持有期間短、能承擔波動 → 偏好浮動利率。</li></ul>' },
+    { id:'re4c', t:'固定 vs 浮動：風險如何在借貸雙方之間分配', en:'Risk allocation between borrower and lender',
+      plain:'固定利率：利率風險在銀行、付款穩定在借款人。浮動利率：利率風險轉給借款人，銀行承擔的是借款人付不出來的違約風險。沒有免費的午餐，承擔風險的一方會要求補償。',
+      life:'包車旅遊：說好固定價格，油價漲由司機吸收（固定利率）；照里程跳錶，油價漲你自己承擔（浮動利率），但通常起價比較便宜。',
+      body:'<div class="tblwrap"><table class="tbl"><tr><th></th><th>固定利率 FRM</th><th>浮動利率 ARM</th></tr><tr><td>利率風險</td><td>貸方承擔</td><td>主要由借款人承擔</td></tr><tr><td>初始利率</td><td>較高</td><td>較低</td></tr><tr><td>付款</td><td>固定、好規劃</td><td>會變動、有付款衝擊</td></tr><tr><td>提前還款誘因</td><td>利率下跌時很高</td><td>較低（利率會自動調降）</td></tr><tr><td>違約風險</td><td>較低</td><td>利率大漲時上升</td></tr></table></div><ul><li>美國以 30 年固定利率為主（有 Fannie Mae、Freddie Mac 收購並證券化）；台灣以浮動利率為主（銀行資金來源多為短期存款）。</li><li>利率走升時，浮動利率房貸族的負擔會明顯增加，也是央行升息會影響房市的管道之一。</li></ul>' }
+  ]},
+  { id:'re5', t:'5. 不動產抵押貸款證券Ⅰ', cards: [
+    { id:'re5a', t:'次級房貸市場與證券化的流程', en:'Secondary mortgage market and securitization', cfa:'Fixed Income：securitization',
+      plain:'銀行放出房貸後，可以把一堆房貸打包賣給專門的機構，再切成證券賣給投資人。銀行拿回現金可以再放款，投資人得到房貸的現金流。',
+      life:'麵包店把做好的麵包批發給超商賣（次級市場），自己就有錢買材料再做新的麵包（初級市場）。',
+      body:'<ul><li><b>初級市場</b>：借款人向銀行借房貸。<b>次級市場</b>：房貸或房貸證券在投資人之間買賣。</li><li>美國的關鍵機構：<ul><li><b>Ginnie Mae（GNMA）</b>：政府機構，保證以政府保險房貸（FHA、VA）組成的證券，有美國政府完全保證。</li><li><b>Fannie Mae（FNMA）</b>、<b>Freddie Mac（FHLMC）</b>：政府支持企業（GSE），收購符合標準（conforming）的房貸並證券化，提供保證；2008 年被政府接管。</li></ul></li><li>證券化流程：銀行（發起人）放貸 → 把房貸賣給 SPV（破產隔離）→ SPV 發行證券 → 服務機構收款、分配給投資人；可加上保證或信用增強。</li><li>好處：銀行取得流動性、轉移利率風險、標準化讓資金跨區流動、降低房貸利率。</li><li>問題：<b>發起後即出售</b>（originate-to-distribute）模式讓銀行審核鬆散（反正會賣掉），是 2008 年次貸危機的原因之一 → 後來要求發起人<b>保留部分風險</b>（risk retention）。</li><li>台灣：依《金融資產證券化條例》，銀行曾發行住宅貸款證券，但市場規模小（台灣房貸以浮動利率為主、銀行資金充裕）。</li></ul>' },
+    { id:'re5b', t:'不動產抵押貸款證券的種類：MBB、MPTS、MPTB', en:'Mortgage-backed bonds, pass-throughs and pay-through bonds', cfa:'Fixed Income：MBS',
+      plain:'房貸證券有幾種結構：抵押擔保債券（房貸留在發行機構帳上、當擔保）、轉付證券（投資人直接分到房貸的本息）、轉手債券（介於兩者之間）。差別在於「誰承擔提前還款風險」和「資產在不在發行人帳上」。',
+      life:'朋友用一堆借據當擔保跟你借錢，固定付你利息（MBB）；或直接把借據收到的錢原封不動轉給你（MPTS）。',
+      body:'<div class="tblwrap"><table class="tbl"><tr><th></th><th>抵押擔保債券 MBB</th><th>轉付證券 MPTS</th><th>轉手債券 MPTB</th></tr><tr><td>性質</td><td>發行人的<b>債務</b></td><td>投資人<b>擁有</b>房貸池的權益</td><td>發行人的債務</td></tr><tr><td>房貸在誰帳上</td><td>發行人</td><td>移出（賣給投資人）</td><td>發行人</td></tr><tr><td>投資人收到</td><td>固定票息，到期還本</td><td>房貸池的本金＋利息（扣服務費）</td><td>依房貸池的本息流量支付</td></tr><tr><td>提前還款風險</td><td>發行人承擔</td><td><b>投資人</b>承擔</td><td>投資人承擔</td></tr><tr><td>超額擔保</td><td>需要（通常很多）</td><td>不需要</td><td>通常需要</td></tr></table></div><ul><li><b>MBB</b>：超額擔保保護投資人，若擔保品價值下降，發行人要補足。</li><li><b>MPTS</b>（轉付證券）最常見：每月把房貸池收到的本金（含提前還款）和利息，扣除服務費和保證費後，按比例轉付給投資人。</li><li><b>CMO</b>（下一單元）是把轉付現金流重新切成不同分券。</li></ul>' }
+  ]},
+  { id:'re6', t:'6. 不動產抵押貸款證券Ⅱ', cards: [
+    { id:'re6a', t:'轉付證券的現金流與提前還款', en:'Pass-through cash flows and prepayment', cfa:'Fixed Income：MBS、prepayment risk',
+      plain:'轉付證券每月的現金流 = 房貸池的利息（扣費）+ 預定本金 + 提前還款。提前還款的速度用 CPR、SMM、PSA 來描述，速度不同，投資人拿回錢的時間就不同。',
+      life:'你借錢給 100 個人買房，每個月除了照表收錢，還會有人突然把剩下的全還清（搬家、轉貸），你收到錢的時間就會比預期早。',
+      body:'<ul><li><b>WAC</b>（加權平均票面利率）：房貸池的平均利率。<b>轉付利率</b> = WAC − 服務費 − 保證費。</li><li><b>WAM</b>：加權平均到期期間。</li><li><b>SMM</b>（單月提前還款率）= 當月提前還款 ÷ (月初餘額 − 當月預定本金)。</li><li><b>CPR</b>（年化）= 1 − (1 − SMM)<sup>12</sup>。</li><li><b>PSA 基準</b>：100% PSA = 第 1 個月 CPR 0.2%，每月增加 0.2%，第 30 個月達 6% 後固定。150% PSA 就是速度的 1.5 倍。</li><li>每月現金流計算：①利息 = 月初餘額 × 轉付利率/12；②預定本金（用 WAC 算的攤還）；③提前還款 = SMM × (月初餘額 − 預定本金)；④月末餘額 = 月初 − ② − ③。</li><li>提前還款的原因：<b>利率下跌轉貸</b>（最主要）、搬家換屋、違約後由保證機構清償、部分提前還款。</li><li>其他影響：<b>耗竭效應</b>（burnout，對利率敏感的人已經轉貸過，剩下的不太會轉）、季節性、房價。</li></ul>' },
+    { id:'re6b', t:'MBS 的定價、收益與風險', en:'Pricing and risks of mortgage-backed securities', cfa:'Fixed Income：MBS pricing',
+      plain:'MBS 的價格是預期現金流的現值，但現金流取決於提前還款速度，所以利率下跌時價格漲不多（負凸性），利率上升時又因為還款變慢而跌更多。投資人會要求比公債高的收益率作為補償。',
+      life:'你買了一張「可以被隨時提前還款」的借據，利率下跌時對方會馬上還清，你賺不到漲價的好處；利率上升時對方拖著不還，你只能一直收低利息。',
+      body:'<ul><li><b>定價</b>：在假設的提前還款速度（例如 150% PSA）下，預測每月現金流，以要求的收益率折現。</li><li>折價 MBS（票面利率低於市場）：提前還款<b>越快</b>對投資人越<b>有利</b>（早拿回面額）；溢價 MBS 則相反。</li><li><b>收縮風險</b>：利率下跌 → 提前還款加速 → 再投資利率低、價格上漲有限（<b>負凸性</b>）。</li><li><b>延伸風險</b>：利率上升 → 提前還款減慢 → 存續期間變長、價格下跌更多。</li><li><b>平均存續期</b>（weighted average life）：提前還款越快越短。</li><li><b>選擇權調整利差 OAS</b>：考慮利率路徑與提前還款選擇權後，MBS 相對公債的額外利差，用來比較不同 MBS 的相對價值。</li><li>其他風險：違約風險（非機構 MBS）、流動性風險、模型風險（提前還款模型錯誤）。</li></ul>' }
+  ]},
+  { id:'re7', t:'7. 不動產抵押貸款證券Ⅲ及其衍生品Ⅰ', cards: [
+    { id:'re7a', t:'擔保房貸憑證 CMO：循序償還與 Z 分券', en:'Collateralized mortgage obligations', cfa:'Fixed Income：CMO',
+      plain:'CMO 把轉付證券的現金流重新切成好幾個分券（tranche），依序分配本金。短的分券先拿回本金，長的分券後拿，讓不同投資期間的投資人都能找到適合的證券。',
+      life:'一家人輪流用一台電腦：老大先用到完成作業，接著換老二，再換老三。早用完的人（短分券）不用等很久，最後的人要等比較久，但可以用比較久。',
+      body:'<ul><li><b>循序償還</b>（sequential-pay）：所有本金（含提前還款）先付給 A 分券，A 還完再付 B，依此類推；利息則按各分券的餘額支付。</li><li>效果：A 分券期間短、收縮風險較小（但仍有）；後面的分券延伸風險較小、期間較長。CMO <b>重新分配</b>提前還款風險，但<b>沒有消除</b>。</li><li><b>Z 分券</b>（累積分券 accrual tranche）：在前面分券還清前<b>不收現金</b>，應得的利息加到本金裡（類似零息債），讓前面分券更快還完。</li><li>剩餘權益分券（residual）：所有分券付完後剩下的現金流，通常由發行人保留。</li><li>CMO 是<b>轉手債券（pay-through）</b>結構的應用：發行人的債務，用房貸池的現金流支付。</li></ul>' },
+    { id:'re7b', t:'PAC、支撐分券、浮動與反向浮動分券', en:'PAC/support tranches and floaters', cfa:'Fixed Income：PAC、support tranches',
+      plain:'計畫攤還分券（PAC）只要提前還款速度在一定範圍內，就照表還本金，現金流很穩定；代價是由支撐分券吸收提前還款的變動，所以支撐分券風險很高。',
+      life:'搭捷運：VIP 車廂（PAC）保證準時、不擁擠；其他車廂（支撐分券）吸收所有尖峰人潮，時快時慢。',
+      body:'<ul><li><b>PAC</b>（planned amortization class）：在 PSA 的上下限範圍內（<b>PAC collar</b>，例如 100%–300% PSA），本金依預定時間表償還。</li><li><b>支撐分券</b>（support / companion）：提前還款太快時先吸收多出來的本金，太慢時先少拿 → 保護 PAC。支撐分券收縮與延伸風險都很大，收益率較高。</li><li>如果支撐分券被還光，PAC 就會「破表」（busted PAC），變得和一般分券一樣。</li><li><b>TAC</b>（targeted amortization class）：只保護一個方向（通常是收縮風險）。</li><li><b>浮動利率分券</b>（floater）：票息 = 參考利率 + 利差（有上限）；<b>反向浮動分券</b>（inverse floater）：票息 = K − L × 參考利率，利率上升時票息下降，價格對利率非常敏感。兩者合起來的現金流等於原本的固定利率分券。</li></ul>' },
+    { id:'re7c', t:'剝離式 MBS：只收利息（IO）與只收本金（PO）', en:'Stripped MBS: interest-only and principal-only', cfa:'Fixed Income：IO、PO',
+      plain:'把房貸池的現金流拆成兩張證券：IO 只拿利息、PO 只拿本金。兩者對提前還款的反應完全相反，是很極端的利率衍生品。',
+      life:'一棵果樹：一個人只收果實（利息，樹活越久收越多），另一個人只拿最後的木材（本金，越早拿到越好）。',
+      body:'<ul><li><b>PO</b>（principal-only）：以深度折價買進，最後一定拿回全部本金。<b>提前還款越快越好</b>（越早拿回面額）→ 利率<b>下跌</b>時價值大漲。</li><li><b>IO</b>（interest-only）：收入取決於餘額；提前還款越快，未來利息越少 → 利率<b>下跌</b>時價值<b>下跌</b>（可能拿不回成本）；利率上升時價值上升（少見的「和利率同方向」的資產）。</li><li>IO 有<b>負的存續期間</b>，可以用來避險（例如抵銷 MBS 投資組合的利率風險）。</li><li>IO + PO = 原本的轉付證券。</li><li>風險極高，價格對提前還款模型非常敏感。</li></ul>' }
+  ]},
+  { id:'re8', t:'8. 不動產抵押貸款衍生品Ⅱ', cards: [
+    { id:'re8a', t:'次級房貸、CDO 與再證券化', en:'Subprime mortgages, CDOs and re-securitization', cfa:'Fixed Income：CDO',
+      plain:'次級房貸是借給信用差、所得證明不足的人。這些房貸被證券化後，風險較高的分券又被打包成 CDO 再切一次，甚至做出 CDO 的 CDO。評等機構給了太高的評等，風險被層層隱藏。',
+      life:'把一堆爛蘋果混在一箱好蘋果裡，再把箱子分成「上層」和「下層」賣；接著把很多箱的下層再混一次分層賣 → 最後誰也搞不清楚自己買到多少爛蘋果。',
+      body:'<ul><li><b>次級房貸</b>（subprime）：借款人信用分數低、高 LTV、所得文件不全（例如低文件或無文件貸款），常搭配<b>優惠起始利率</b>的 ARM。</li><li><b>CDO</b>（collateralized debt obligation）：以一池債務工具（公司債、貸款、MBS 的中間分券等）為擔保，再切成優先、中間、權益分券。</li><li><b>再證券化</b>：用次貸 MBS 的中間分券組成 CDO，靠分散和分層，讓大部分分券得到 AAA 評等；<b>CDO²</b> 再拿 CDO 分券組一次。</li><li>問題：<ul><li>低估了房價<b>同時下跌</b>時違約的<b>相關性</b>，分散效果其實很小。</li><li>評等機構的利益衝突（發行人付費）與模型風險。</li><li>結構太複雜，投資人無法評估真實風險。</li></ul></li><li><b>合成 CDO</b>：不實際持有債券，而是用 CDS 取得信用風險。</li></ul>' },
+    { id:'re8b', t:'信用違約交換 CDS 與房貸衍生品的風險', en:'Credit default swaps and systemic risk',
+      plain:'CDS 像是債券的保險：買方定期付保費，標的違約時賣方賠償。但 CDS 可以在沒持有債券的情況下買賣，被大量拿來投機；當房貸大量違約，賣出大量 CDS 的公司（例如 AIG）就撐不住，引發系統性風險。',
+      life:'很多人幫別人的房子買火災險，不是為了保障，而是在賭會不會失火；一旦真的燒起來，保險公司要賠的錢遠超過它的資本。',
+      body:'<ul><li><b>CDS</b>：保護買方支付 CDS 利差（保費），參考實體或證券發生信用事件時，保護賣方賠償損失。</li><li><b>裸 CDS</b>（naked CDS）：買方沒有持有標的債券 → 純粹投機或避險其他曝險。</li><li>CDS 名目金額可以遠大於實際債券金額 → 損失被放大。</li><li><b>交易對手風險</b>：保護賣方本身可能倒閉（2008 年 <b>AIG</b> 需要美國政府紓困）。</li><li>房貸相關指數：例如 ABX 指數，讓投資人可以放空次貸。</li><li><b>系統性風險</b>：金融機構互相持有大量衍生品部位，一家倒閉會連鎖影響（例如雷曼兄弟 2008/9/15 破產）。</li><li>危機後改革：標準化 OTC 衍生品要透過<b>中央結算</b>、提高資本與保證金要求、交易資訊申報。</li></ul>' }
+  ]},
+  { id:'re9', t:'9. 不動產逆向抵押貸款與房市危機解決方案', cards: [
+    { id:'re9a', t:'逆向抵押貸款（以房養老）', en:'Reverse mortgage',
+      plain:'一般房貸是「先拿錢、再慢慢還」，餘額越來越少；逆向房貸是年長者把房子抵押給銀行，銀行每月撥款給他，欠款越來越多，等到期或過世後再處分房子還錢。適合「有房子、但缺現金」的長者。',
+      life:'阿公有一間房子但每月生活費不夠，他可以把房子抵押給銀行，每個月領一筆錢生活，房子照樣住到最後。',
+      body:'<ul><li><b>現金流方向和一般房貸相反</b>：貸款餘額隨撥款和利息<b>累積上升</b>，屋主的權益（房價 − 餘額）逐漸下降。</li><li>撥款方式：每月定額（終身或固定期間）、一次撥付、信用額度。</li><li><b>非追索權</b>（美國 HECM 等）：到期時若房屋價值不足以償還，借款人或繼承人不需補足，差額由保險承擔。</li><li>貸方承擔的風險：<ul><li><b>長壽風險</b>：借款人活得比預期久，撥款期間變長。</li><li><b>利率風險</b>：利率上升，欠款累積更快。</li><li><b>房價風險</b>：房價下跌，擔保不足。</li><li>維修風險：屋主沒有好好維護房子。</li></ul></li><li><b>台灣「以房養老」</b>：內政部曾辦理公益型試辦，土地銀行等銀行自 2015 年起推出商業型；一般要求年滿一定年齡、房屋無貸款或負擔，撥貸成數、期間依各銀行規定。</li><li>計算撥款金額：在預計期間內，每月撥款的終值（加上利息）不超過「預期房價 × 可貸成數」。</li></ul>' },
+    { id:'re9b', t:'2008 房市危機：成因回顧', en:'Causes of the 2008 housing crisis', cfa:'Fixed Income：MBS、securitization',
+      plain:'房價長期上漲讓大家以為不會跌，放款標準放寬（次貸、低文件貸款、優惠利率），證券化讓銀行不在乎借款人會不會還錢，加上高槓桿和衍生品，房價一反轉就全面崩盤。',
+      life:'大家都覺得某款球鞋只會漲，借錢搶購；店家也不管你付不付得起，因為帳款會轉賣給別人。等價格一跌，借錢的人還不出錢，整條鏈一起倒。',
+      body:'<ul><li><b>低利率</b>與資金充沛（2001 年後），推升房價。</li><li><b>放款標準放寬</b>：次貸、Alt-A、低首付、優惠起始利率 ARM、負攤還貸款。</li><li><b>發起後即出售</b>模式：發起人不承擔風險 → 道德風險。</li><li><b>證券化與再證券化</b>（MBS → CDO → CDO²）掩蓋風險；評等機構評等過高。</li><li><b>高槓桿</b>：投資銀行、特殊投資工具（SIV）以短期資金支應長期資產。</li><li><b>CDS</b> 大量發行，集中在少數機構。</li><li>引爆：2006 年起房價下跌、ARM 重設利率 → 違約大增 → MBS 和 CDO 大跌 → 金融機構虧損、資金市場凍結 → 雷曼破產（2008/9）。</li><li>影響：全球金融海嘯、經濟衰退、大量法拍屋。</li></ul>' },
+    { id:'re9c', t:'房市危機的解決方案', en:'Housing crisis solutions',
+      plain:'危機後政府從幾個方向處理：救金融機構（注資、收購不良資產）、救屋主（貸款修改、轉貸）、救市場（央行買 MBS、壓低利率），以及事後修法避免重演。',
+      life:'一場大火之後：先救火（紓困金融機構）、再救人（幫屋主保住房子）、最後修訂建築法規避免下一次失火（金融監理改革）。',
+      body:'<h4>穩定金融體系</h4><ul><li><b>TARP</b>（2008）：問題資產紓困計畫，主要用來對銀行<b>注資</b>。</li><li>Fannie Mae、Freddie Mac 被政府<b>接管</b>（conservatorship）。</li><li>央行<b>量化寬鬆</b>：Fed 大量購買機構 MBS 和公債，壓低房貸利率、提供流動性。</li></ul><h4>協助屋主</h4><ul><li><b>貸款修改</b>（loan modification）：降低利率、延長期限、本金寬減，讓付款降到可負擔水準（例如美國 <b>HAMP</b>）。</li><li><b>轉貸計畫</b>：讓房價低於貸款（underwater）的屋主也能以較低利率轉貸（例如 <b>HARP</b>）。</li><li><b>容忍期</b>（forbearance）：暫時減少或暫停付款。</li><li>處理不良貸款的方式：<b>短售</b>（short sale，以低於貸款餘額出售，貸方接受損失）、<b>以屋抵債</b>（deed in lieu of foreclosure）、<b>法拍</b>（foreclosure，成本最高、對社區影響最大）。</li></ul><h4>監理改革</h4><ul><li><b>Dodd-Frank 法案</b>（2010）：要求評估借款人<b>還款能力</b>（ability-to-repay）、合格房貸（QM）標準、證券化發起人<b>保留風險</b>（約 5%）、設立消費者金融保護局（CFPB）、衍生品中央結算。</li><li>巴塞爾協定 Ⅲ：提高銀行資本與流動性要求。</li></ul>' }
+  ]}
+  ],
+  mcq: [
+    { q:'抵押權人在債務人不清償時，最主要的權利是：', o:['直接取得房屋所有權','聲請法院拍賣抵押物並優先受償','要求債務人搬離房屋','終止債務人所有其他契約'], a:1, e:'抵押權不移轉占有，債務不清償時可聲請拍賣，從價金優先受償。' },
+    { q:'在約定的最高金額內擔保不特定債權的抵押權是：', o:['普通抵押權','最高限額抵押權','權利抵押權','法定抵押權'], a:1, e:'民法 §881-1 最高限額抵押權，常見於企業往來或循環額度。' },
+    { q:'LTV（貸款成數）越高，代表：', o:['借款人自備款越多','違約風險通常越高','貸款利率一定越低','房價一定越高'], a:1, e:'LTV = 貸款 ÷ 房價，自備款越少，房價下跌時越容易資不抵債。' },
+    { q:'依房地合一稅 2.0，個人持有房地 2 年內出售，稅率為：', o:['15%','20%','35%','45%'], a:3, e:'2 年內 45%、2–5 年 35%、5–10 年 20%、超過 10 年 15%（自住符合條件 10%）。' },
+    { q:'REITs 和 REATs 最主要的差別是：', o:['REITs 先募資再買不動產；REATs 先有不動產再信託發行證券','REITs 只能投資住宅','REATs 不需要受託機構','兩者完全相同'], a:0, e:'不動產投資信託先有錢後有物；不動產資產信託先有物後有錢。' },
+    { q:'借 1,000 萬、年利率 2%、20 年、本息平均攤還，每月付款最接近：', o:['41,667 元','50,589 元','58,333 元','66,667 元'], a:1, e:'PMT = L × r ÷ [1 − (1 + r)^−n]，r = 2%/12、n = 240 → 約 50,589。' },
+    { q:'本息平均攤還房貸，越後期的付款中：', o:['利息比例越高','本金比例越高','本金和利息各半','付款金額越來越少'], a:1, e:'付款固定，但餘額變少、利息變少，所以本金比例越來越高。' },
+    { q:'和本息平均攤還相比，本金平均攤還（CAM）：', o:['每月付款固定','前期付款較高、總利息較少','總利息較多','永遠不會還完本金'], a:1, e:'每期還固定本金，前期餘額大所以利息多、付款高；本金還得快，總利息較少。' },
+    { q:'貸款時支付點數和手續費，若借款人提前還款，有效借款成本會：', o:['降低','不變','提高','變成零'], a:2, e:'前期費用攤提的期間變短，實際成本（IRR）上升。' },
+    { q:'美國的 APR 通常會低估哪一種借款人的實際成本？', o:['持有到期的借款人','提前還款的借款人','沒有支付任何費用的借款人','浮動利率借款人'], a:1, e:'APR 假設持有到期，提前還款時費用攤提期間變短，實際成本更高。' },
+    { q:'決定是否轉貸時，應比較：', o:['新舊利率哪個低就好','每月節省金額的現值與轉貸成本','新貸款的期限是否較長','銀行的服務態度'], a:1, e:'轉貸是一個 NPV 決策：節省的現值 > 成本才划算，持有期間越短越不划算。' },
+    { q:'固定利率房貸中，利率下跌時對貸方最主要的風險是：', o:['違約風險','提前還款風險','付款衝擊','負攤還'], a:1, e:'借款人會轉貸或提前還款，貸方只能用較低利率再投資。' },
+    { q:'台灣常見的浮動利率房貸，指標利率多參考：', o:['美國 30 年期公債','中華郵政或銀行的定儲機動利率','台股加權指數','消費者物價指數'], a:1, e:'例如「郵局兩年期定儲機動利率 + 加碼」。' },
+    { q:'浮動利率房貸（ARM）的初始利率通常低於固定利率房貸，因為：', o:['ARM 沒有違約風險','利率風險主要轉給借款人','ARM 的期限比較短','政府補貼'], a:1, e:'貸方承擔的利率風險較少，所以要求的溢酬較低。' },
+    { q:'付款上限使付款低於應付利息時，會發生：', o:['提前還款','負攤還，貸款餘額增加','利率自動下降','貸款立即到期'], a:1, e:'沒付到的利息加回本金 → negative amortization。' },
+    { q:'在轉付證券（MPTS）中，提前還款風險由誰承擔？', o:['發行人','投資人','服務機構','政府'], a:1, e:'MPTS 投資人直接收到房貸池的本金（含提前還款）與利息。' },
+    { q:'抵押擔保債券（MBB）的特徵是：', o:['房貸移出發行人帳上','發行人承擔提前還款風險並需超額擔保','投資人直接擁有房貸池','沒有固定票息'], a:1, e:'MBB 是發行人的債務，房貸留在帳上當擔保，通常大幅超額擔保。' },
+    { q:'若 SMM 為 0.5%，CPR 最接近：', o:['0.5%','5.8%','6.0%','12.0%'], a:1, e:'CPR = 1 − (1 − 0.005)^12 ≈ 5.8%。' },
+    { q:'100% PSA 假設提前還款率在第幾個月達到 6% CPR 後固定？', o:['第 12 個月','第 24 個月','第 30 個月','第 60 個月'], a:2, e:'每月增加 0.2%，第 30 個月達 6%。' },
+    { q:'利率下跌時，MBS 價格上漲有限，這種特性稱為：', o:['正凸性','負凸性','延伸風險','流動性溢酬'], a:1, e:'提前還款加速，類似可贖回債券，有負凸性。' },
+    { q:'在循序償還 CMO 中，最先收到本金的是：', o:['Z 分券','第一個分券（A 分券）','剩餘權益分券','所有分券按比例'], a:1, e:'本金依序先付給 A 分券，A 還完才付 B。' },
+    { q:'Z 分券在前面分券還清前：', o:['收到全部利息','不收現金，利息累積加到本金','優先收到本金','收到固定的保證金'], a:1, e:'Z（accrual）分券像零息債，利息累積到本金。' },
+    { q:'支撐分券（support tranche）的主要功能是：', o:['提供政府保證','吸收提前還款速度的變動，保護 PAC 分券','降低房貸利率','承擔違約損失'], a:1, e:'PAC 現金流穩定的代價，是支撐分券承擔較大的收縮與延伸風險。' },
+    { q:'利率下跌時，價值通常會下跌的是：', o:['PO（只收本金）','IO（只收利息）','固定利率公債','轉付證券'], a:1, e:'利率下跌 → 提前還款加速 → 未來利息變少，IO 價值下跌。' },
+    { q:'次貸 CDO 在 2008 年出問題的關鍵原因之一是：', o:['房貸違約的相關性被低估','CDO 沒有分券','CDO 只投資公債','評等過低'], a:0, e:'房價全面下跌時違約高度相關，分散效果遠低於模型假設。' },
+    { q:'CDS 保護買方支付的是：', o:['債券本金','定期的保費（CDS 利差）','標的債券的票息','保證金給交易所'], a:1, e:'像保險：定期付費，信用事件發生時由賣方賠償。' },
+    { q:'逆向抵押貸款中，隨時間經過：', o:['貸款餘額下降、屋主權益上升','貸款餘額上升、屋主權益下降','每月由屋主付款給銀行','房屋立即過戶給銀行'], a:1, e:'銀行撥款給屋主，餘額和利息累積，權益逐漸減少。' },
+    { q:'逆向房貸的貸方承擔的「長壽風險」是指：', o:['房屋使用年限太長','借款人活得比預期久，撥款期間變長','利率長期不變','貸款期限太短'], a:1, e:'撥款期間延長、欠款累積，可能超過房屋價值。' },
+    { q:'以低於貸款餘額的價格出售房屋，且貸方同意承擔差額損失，稱為：', o:['法拍','短售（short sale）','轉貸','以屋抵債'], a:1, e:'短售由屋主出售、貸方接受損失；以屋抵債是直接把房屋移轉給貸方。' },
+    { q:'Dodd-Frank 法案要求證券化發起人保留部分風險，主要是為了解決：', o:['利率風險','發起後即出售造成的道德風險','匯率風險','流動性風險'], a:1, e:'發起人要承擔約 5% 風險，才會認真審核借款人。' }
+  ]
+};
 // ===== English layer: exam sentences, CFA tags, English problems & questions =====
 const EX = {
   d1:'A derivative is an instrument whose value depends on, or is derived from, the value of an underlying asset.',
@@ -2293,14 +2452,14 @@ const PIG = (mood = 'happy', size = 86) => {
   return `<svg class="pig" width="${size}" height="${size}" viewBox="0 0 94 94" aria-hidden="true"><path d="M20,24 L26,6 L38,20 Z" class="pk-b"/><path d="M74,24 L68,6 L56,20 Z" class="pk-b"/><ellipse cx="47" cy="50" rx="36" ry="32" class="pk-b"/><rect x="38" y="16" width="18" height="4" rx="2" class="pk-d"/><ellipse cx="26" cy="54" rx="5" ry="3.5" class="pk-c"/><ellipse cx="68" cy="54" rx="5" ry="3.5" class="pk-c"/>${eye}<ellipse cx="47" cy="51" rx="11" ry="8" class="pk-s"/><circle cx="43" cy="51" r="2" class="pk-d"/><circle cx="51" cy="51" r="2" class="pk-d"/><path d="${mouth}" class="pk-m"/><rect x="24" y="76" width="10" height="12" rx="4" class="pk-b"/><rect x="60" y="76" width="10" height="12" rx="4" class="pk-b"/><circle cx="80" cy="70" r="9" class="pk-coin"/><text x="80" y="74" text-anchor="middle" class="pk-ct">$</text></svg>`;
 };
 const MONSTER = (hpPct, hurt) => `<svg class="mon${hurt ? ' hurt' : ''}" viewBox="0 0 120 110" aria-hidden="true"><path d="M20,95 C5,60 15,15 60,12 C105,15 115,60 100,95 C90,88 80,100 70,92 C62,100 55,90 48,97 C40,89 30,100 20,95 Z" class="mn-b"/><circle cx="44" cy="48" r="11" class="mn-w"/><circle cx="78" cy="48" r="11" class="mn-w"/><circle cx="${hurt ? 41 : 46}" cy="50" r="5" class="mn-e"/><circle cx="${hurt ? 75 : 80}" cy="50" r="5" class="mn-e"/><path d="${hpPct > 0.4 ? 'M42,74 L50,68 L58,74 L66,68 L74,74 L80,68' : 'M44,76 Q61,64 78,76'}" class="mn-m"/><path d="M30,20 L22,4 L40,16 Z M90,20 L98,4 L80,16 Z" class="mn-b"/></svg>`;
-const BOSSES = { basic: ['利滾利精靈', 'Compound Goblin'], deriv: ['保證金怪', 'Margin Monster'], invest: ['泡沫怪', 'Bubble Beast'], law: ['條文龍', 'Article Dragon'], mgmt: ['偏誤魔王', 'Bias Boss'], cfa: ['考場大魔王', 'Exam Day Boss'] };
+const BOSSES = { basic: ['利滾利精靈', 'Compound Goblin'], deriv: ['保證金怪', 'Margin Monster'], invest: ['泡沫怪', 'Bubble Beast'], law: ['條文龍', 'Article Dragon'], mgmt: ['偏誤魔王', 'Bias Boss'], cfa: ['考場大魔王', 'Exam Day Boss'], re: ['法拍屋幽靈', 'Foreclosure Ghost'] };
 const TITLES = ['豬寶寶', '小存錢筒', '零用錢管家', '理財小鬼', '期貨學徒', '避險高手', '華爾街實習生', '分析師', 'CFA 候選人', '投資大師'];
 const CHEERS = ['好厲害！', '答對了！豬豬為你驕傲', 'Nice! 繼續保持', '你就是未來的 CFA！', '完美 ✓', '這題很難耶，你做到了', 'Correct! 💰'.replace(' 💰', '')];
 const COMFORT = ['沒關係，錯了才記得住！', '豬豬也常錯，看一下解釋就懂了', 'Almost! 再看一次說明', '加入錯題本了，下次一定會'];
 const BADGES = [
   ['first', '第一步', '勾選第一張「我懂了」'], ['c25', '小書蟲', '掌握 25 個知識點'], ['c75', '大書蟲', '掌握 75 個知識點'], ['allbasic', '基礎打底', '基礎補給站全部掌握'], ['allderiv', '衍金通關', '衍金知識點全部掌握'], ['allinvest', '投資通關', '投資學知識點全部掌握'], ['alllaw', '民商通關', '民商法知識點全部掌握'], ['allmgmt', '管理通關', '管理學知識點全部掌握'],
   ['combo5', '五連勝', '選擇題連續答對 5 題'], ['combo10', '十連勝', '連續答對 10 題'], ['bossbasic', '打倒利滾利精靈', '基礎打怪勝利'], ['bossderiv', '打倒保證金怪', '衍金打怪勝利'], ['bossinvest', '戳破泡沫', '投資學打怪勝利'], ['bosslaw', '屠龍者', '民商法打怪勝利'], ['bossmgmt', '擊敗偏誤魔王', '管理學打怪勝利'],
-  ['speed', '閃電手', '限時賽答對 12 題以上'], ['match', '配對王', '完成一次配對遊戲'], ['sortp', '分類達人', '分類遊戲全對'], ['calc5', '公式小玩家', '玩過 5 個公式計算器'], ['gen10', '計算機器', '變化題答對 10 題'], ['essay', '交卷了', '送出第一份申論批改'], ['s3', '三天不間斷', '連續 3 天打開複習'], ['s7', '一週全勤', '連續 7 天打開複習'], ['cfaq', 'CFA 小試身手', 'CFA 小測驗 10 題答對 8 題以上'], ['bosscfa', '打倒考場大魔王', 'CFA 打怪勝利']
+  ['speed', '閃電手', '限時賽答對 12 題以上'], ['match', '配對王', '完成一次配對遊戲'], ['sortp', '分類達人', '分類遊戲全對'], ['calc5', '公式小玩家', '玩過 5 個公式計算器'], ['gen10', '計算機器', '變化題答對 10 題'], ['essay', '交卷了', '送出第一份申論批改'], ['s3', '三天不間斷', '連續 3 天打開複習'], ['s7', '一週全勤', '連續 7 天打開複習'], ['cfaq', 'CFA 小試身手', 'CFA 小測驗 10 題答對 8 題以上'], ['bosscfa', '打倒考場大魔王', 'CFA 打怪勝利'], ['allre', '不動產通關', '不動產財管知識點全部掌握'], ['bossre', '趕走法拍屋幽靈', '不動產財管打怪勝利']
 ];
 
 const FUN = {
@@ -3328,7 +3487,7 @@ const planHue = k => DATA[planBase(k)] ? DATA[planBase(k)].hue : /^rp/.test(k) ?
 const PLAN_HAB = { fr: ['法文', '單字複習＋聽力或跟讀'], ielts: ['雅思', ''] };
 const IELTS_DAY = { 1: '聽力：一回真題＋對答案', 2: '閱讀：一篇限時＋檢討', 3: '寫作：Task 1 或 Task 2 一篇', 4: '口說：Part 1–3 錄音自評', 5: '單字＋本週錯題', 6: '模擬或補進度', 0: '模擬或補進度' };
 // 不動產財管（清大磨課師，看影片＋複習）：[單元, 期中/期末, 相關的 CFA 筆記卡]
-const RE_UNITS = [['房地產相關法規', 'mid'], ['固定利率抵押貸款Ⅰ', 'mid', 'xi16'], ['固定利率抵押貸款Ⅱ', 'mid', 'xi16'], ['浮動利率抵押貸款', 'mid', 'xi16'], ['不動產抵押貸款證券Ⅰ', 'mid', 'xi14'], ['不動產抵押貸款證券Ⅱ', 'mid', 'xi16'], ['不動產抵押貸款證券Ⅲ及其衍生品Ⅰ', 'fin', 'xi16'], ['不動產抵押貸款衍生品Ⅱ', 'fin', 'xi16'], ['不動產逆向抵押貸款與房市危機解決方案', 'fin']];
+const RE_UNITS = [['房地產相關法規', 'mid'], ['固定利率抵押貸款Ⅰ', 'mid'], ['固定利率抵押貸款Ⅱ', 'mid'], ['浮動利率抵押貸款', 'mid'], ['不動產抵押貸款證券Ⅰ', 'mid'], ['不動產抵押貸款證券Ⅱ', 'mid'], ['不動產抵押貸款證券Ⅲ及其衍生品Ⅰ', 'fin'], ['不動產抵押貸款衍生品Ⅱ', 'fin'], ['不動產逆向抵押貸款與房市危機解決方案', 'fin']];
 const PLAN_MIN = { basic: 12, deriv: 18, invest: 15, law: 15, mgmt: 15 }; // 每張知識卡估計分鐘
 const PLAN_FAM = [['熟', 0.6], ['普通', 1], ['不熟', 1.5]];
 const planPd = s => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
@@ -3338,7 +3497,7 @@ const planMD = s => { const d = planPd(s); return `${d.getMonth() + 1}/${d.getDa
 const planH = m => { const h = Math.round(m / 60 * 10) / 10; return h + ' 小時'; };
 
 function planSettings() {
-  const D = { start: '', dates: { mgmt: '2026-11-04', deriv: '2026-11-16', invest: '2026-11-03', law: '2026-10-28', re: '2026-11-12', reF: '2026-12-17', mgmtF: '2026-12-23', derivF: '2026-12-21', investF: '2026-12-22', lawF: '2026-12-23' }, on: { basic: true, deriv: true, invest: true, law: true, mgmt: true, re: true }, fam: {}, wk: [4, 2, 2, 2, 2, 2, 4], off: [], review: 120, mode: 'seq', reH: 3.5, reDone: {}, gmatH: 200, gmatDone: 0, finR: 1, reports: [{ n: '史記報告', d: '2026-11-26', h: 0 }, { n: 'ESG報告', d: '2026-12-04', h: 0 }, { n: '衍金報告', d: '2026-12-07', h: 0 }, { n: '投資學期末報告', d: '2026-12-15', h: 0 }, { n: '管理學報告', d: '', h: 0 }], habits: { fr: { on: true, min: 30, days: [0, 1, 2, 3, 4, 5, 6] }, ielts: { on: true, min: 45, days: [1, 2, 3, 4, 5] } } };
+  const D = { start: '', dates: { mgmt: '2026-11-04', deriv: '2026-11-16', invest: '2026-11-03', law: '2026-10-28', re: '2026-11-12', reF: '2026-12-17', mgmtF: '2026-12-23', derivF: '2026-12-21', investF: '2026-12-22', lawF: '2026-12-23' }, on: { basic: true, deriv: true, invest: true, law: true, mgmt: true, re: true }, fam: {}, wk: [4, 2, 2, 2, 2, 2, 4], off: [], review: 120, mode: 'seq', reH: 3.5, reDone: {}, gmatH: 200, gmatDone: 0, gmatDays: [0, 1, 2, 3, 4, 5, 6], finR: 1, reports: [{ n: '史記報告', d: '2026-11-26', h: 0 }, { n: 'ESG報告', d: '2026-12-04', h: 0 }, { n: '衍金報告', d: '2026-12-07', h: 0 }, { n: '投資學期末報告', d: '2026-12-15', h: 0 }, { n: '管理學報告', d: '', h: 0 }], habits: { fr: { on: true, min: 30, days: [0, 1, 2, 3, 4, 5, 6] }, ielts: { on: true, min: 45, days: [1, 2, 3, 4, 5] } } };
   D.dates.gmat = '2026-12-30'; D.on.gmat = true;
   // 直接補在 ST.plan 上（不換新物件），畫面上拿到的設定才會一直是同一份、改了都存得到
   const S = ST.plan = ST.plan || {};
@@ -3361,17 +3520,16 @@ function planTasks(k, f) {
     return [['找資料與分工', .3], ['撰寫內容', .5], ['做簡報、修改、演練', .2]].map(([t, p]) => ({ k, sec: r.n, t, min: Math.round(n * p), kind: 'v' })).filter(t => t.min > 0);
   }
   if (k === 'gmat') {
-    // GMAT：診斷模考 → Quant／Verbal／Data Insights 每輪約 10 小時輪流 → 最後約 20% 做全真模考＋檢討
+    // GMAT：Quant／Verbal／Data Insights 每輪約 10 小時輪流 → 最後約 20% 做全真模考＋檢討
     const P = ST.plan, tot = Math.max(0, (+P.gmatH - +P.gmatDone) * 60); if (!tot) return [];
-    const T = +P.gmatDone ? [] : [{ k, sec: '起步', t: '診斷模考（官方 Practice Exam）＋找出弱點', min: Math.min(240, tot), kind: 'v' }];
-    const rest = tot - (T[0] ? T[0].min : 0), mock = Math.min(Math.round(rest * 0.2), 6 * 240), study = rest - mock, rounds = Math.max(1, Math.round(study / 600));
+    const T = [], rest = tot, mock = Math.min(Math.round(rest * 0.2), 6 * 240), study = rest - mock, rounds = Math.max(1, Math.round(study / 600));
     for (let r = 1; r <= rounds; r++) [['Quant：觀念＋題組練習', .35], ['Verbal（CR、RC）：練習＋錯題檢討', .35], ['Data Insights（DS、圖表、雙欄位、多來源推理）', .3]].forEach(p => T.push({ k, sec: `第 ${r} 輪`, t: p[0], min: Math.round(study * p[1] / rounds), kind: 'v' }));
     const nm = Math.max(1, Math.round(mock / 240)); for (let i = 1; i <= nm; i++) T.push({ k, sec: '模考衝刺', t: `全真模考 ${i}＋逐題檢討`, min: Math.round(mock / nm), kind: 'v' });
     return T;
   }
   if (k === 're' || k === 'reF') {
     const P = ST.plan;
-    return RE_UNITS.map((u, i) => [u, i]).filter(([u, i]) => (u[1] === 'mid') === (k === 're') && !P.reDone[i]).map(([u, i]) => ({ k, id: u[2] || '', sec: `單元 ${i + 1}`, t: `${u[0]}：看影片＋複習`, min: Math.round(+P.reH * 60 * f), kind: u[2] ? 'cfa' : 'v' }));
+    return RE_UNITS.map((u, i) => [u, i]).filter(([u, i]) => (u[1] === 'mid') === (k === 're') && !P.reDone[i]).map(([u, i]) => ({ k, id: `re${i + 1}a`, sec: `單元 ${i + 1}`, t: `${u[0]}：看影片＋複習`, min: Math.round(+P.reH * 60 * f), kind: 'rec' }));
   }
   const T = [], s = DATA[k], m = PLAN_MIN[k] * f;
   s.sections.forEach(x => x.cards.forEach(c => { if (!ST.done[c.id]) T.push({ k, id: c.id, sec: x.t, t: c.t, min: m, kind: 'c' }); }));
@@ -3457,7 +3615,7 @@ function buildPlan() {
   // GMAT：考期長，用期中考內容排完後剩下的時間，依比例平均分到每一天（期中考後自然會變多）
   subs.filter(s => s.steady).forEach(s => {
     s.left = s.need;
-    const idx = days.map((D, i) => i).filter(i => days[i].d < s.exam && days[i].cap >= 30), sum = idx.reduce((a, i) => a + days[i].cap, 0);
+    const idx = days.map((D, i) => i).filter(i => days[i].d < s.exam && days[i].cap >= 30 && P.gmatDays.includes(planPd(days[i].d).getDay())), sum = idx.reduce((a, i) => a + days[i].cap, 0);
     if (!sum) return;
     const f = Math.min(1, s.need * 1.05 / sum), put = (i, m) => { const D = days[i], t = Math.min(m, D.cap, s.left); if (t > 0) { D.cap -= t; s.left -= t; add(D, s.k, t, 'learn'); } };
     idx.forEach(i => put(i, Math.round(days[i].cap * f / 30) * 30));
@@ -3480,7 +3638,7 @@ function planBlockHTML(k, b, exam, d) {
   if (PLAN_HAB[k]) return `<div class="pblk ${k}"><div class="pbh"><b>${PLAN_HAB[k][0]}</b><span>${b.learn} 分鐘</span></div><p>${k === 'ielts' ? IELTS_DAY[planPd(d).getDay()] : PLAN_HAB[k][1]}</p></div>`;
   const groups = []; (b.items || []).forEach(t => { const g = groups.find(x => x.sec === t.sec); g ? g.items.push(t) : groups.push({ sec: t.sec, items: [t] }); });
   return `<div class="pblk ${planHue(k)}"><div class="pbh"><b>${PLAN_NAME[k]}${/F$/.test(k) ? '（期末範圍）' : /^rp/.test(k) ? '（報告）' : ''}</b><span>${planH(b.learn + b.rev)}</span></div>
-    ${groups.map(g => `<p><span class="psec">${g.sec}</span>${g.items.map(t => t.kind === 'v' ? t.t : t.kind === 'cfa' ? `${t.t} <button type="button" class="linkish refcfa" data-pj="cfa|${t.id}|c|">參考 CFA 筆記</button>` : `<button type="button" class="linkish" data-pj="${t.k}|${t.id || ''}|${t.kind}|${t.tab || ''}">${t.t}</button>`).join('、')}</p>`).join('')}
+    ${groups.map(g => `<p><span class="psec">${g.sec}</span>${g.items.map(t => t.kind === 'v' ? t.t : t.kind === 'rec' ? `${t.t} <button type="button" class="linkish refcfa" data-pj="re|${t.id}|c|">看複習卡</button>` : `<button type="button" class="linkish" data-pj="${t.k}|${t.id || ''}|${t.kind}|${t.tab || ''}">${t.t}</button>`).join('、')}</p>`).join('')}
     ${b.rev ? `<p><span class="psec">考前總複習</span>${DATA[planBase(k)] ? `<button type="button" class="linkish" data-pj="${planBase(k)}||x|mcq">打怪模式＋錯題本</button>，再快速翻過所有卡片的「白話」${planBase(k) === 'deriv' ? '，整理 A4 小抄' : ''}` : k === 'gmat' ? '最後一份模考、看錯題本、確認考試流程和作息' : '重看各單元筆記和影片重點，整理考試範圍的公式與名詞'}${exam ? `（${planMD(exam)} 考試）` : ''}</p>` : ''}</div>`;
 }
 
@@ -3499,9 +3657,9 @@ function renderPlan(root) {
     <p class="sm-p">填「需要幾小時」之後才會排進去，排在繳交日前三週內。小組報告只要填你自己要花的時間。</p></section>
   <section class="setbox"><h3>3. GMAT 與每日語言練習</h3><div class="plsubs">
     <div class="plrow gmat"><label class="pln"><input type="checkbox" data-on="gmat"${P.on.gmat ? ' checked' : ''}> <b>GMAT</b></label><label class="pld">考試 <input type="date" data-date="gmat" value="${P.dates.gmat || ''}"></label>
-      <label>總共 <input type="number" class="plnum" id="plgh" min="10" max="600" step="10" value="${P.gmatH}" inputmode="numeric"> 小時</label><label>已讀 <input type="number" class="plnum" id="plgd" min="0" max="600" step="1" value="${P.gmatDone}" inputmode="numeric"> 小時</label><span class="sm-p">還要 <b data-need="gmat"></b></span></div>
+      <label>總共 <input type="number" class="plnum" id="plgh" min="10" max="600" step="10" value="${P.gmatH}" inputmode="numeric"> 小時</label><label>已讀 <input type="number" class="plnum" id="plgd" min="0" max="600" step="1" value="${P.gmatDone}" inputmode="numeric"> 小時</label><span class="sm-p">還要 <b data-need="gmat"></b></span><span class="hdays">${[1, 2, 3, 4, 5, 6, 0].map(i => `<label><input type="checkbox" data-gday="${i}"${P.gmatDays.includes(i) ? ' checked' : ''}>${'日一二三四五六'[i]}</label>`).join('')}</span></div>
     ${Object.keys(PLAN_HAB).map(h => { const c = P.habits[h]; return `<div class="plrow ${h}"><label class="pln"><input type="checkbox" data-hon="${h}"${c.on ? ' checked' : ''}> <b>${PLAN_HAB[h][0]}</b></label><label>每次 <select data-hmin="${h}">${[15, 30, 45, 60, 90].map(m => `<option value="${m}"${m === +c.min ? ' selected' : ''}>${m} 分鐘</option>`).join('')}</select></label><span class="hdays">${[1, 2, 3, 4, 5, 6, 0].map(i => `<label><input type="checkbox" data-hday="${h}|${i}"${c.days.includes(i) ? ' checked' : ''}>${'日一二三四五六'[i]}</label>`).join('')}</span></div>`; }).join('')}
-    </div><p class="sm-p">GMAT 會在期中考的進度排好之後，用每天剩下的時間平均分配，所以期中考後每天會變多。「已讀」填你目前讀了幾小時，進度表會扣掉。語言練習每天最先保留。</p></section>
+    </div><p class="sm-p">GMAT 只排在你勾的星期幾，在學校進度排好之後，用那幾天剩下的時間平均分配，所以期中考後每天會變多。「已讀」填你目前讀了幾小時，進度表會扣掉。語言練習每天最先保留。</p></section>
   <section class="setbox"><h3>4. 每天能讀幾小時</h3>
     <div class="wkrow">${[1, 2, 3, 4, 5, 6, 0].map(i => `<label><span>週${'日一二三四五六'[i]}</span><input type="number" min="0" max="16" step="0.5" data-wk="${i}" value="${P.wk[i]}" inputmode="decimal"></label>`).join('')}</div>
     <div class="row wrap"><label>從哪天開始 <input type="date" id="plstart" value="${P.start || planToday()}"></label>
@@ -3556,6 +3714,7 @@ function renderPlan(root) {
   $$('[data-wk]', root).forEach(i => i.oninput = () => { P.wk[+i.dataset.wk] = Math.max(0, Math.min(16, +i.value || 0)); upd(); });
   $('#plstart', root).onchange = e => { P.start = e.target.value; upd(); };
   $('#plgh', root).oninput = e => { P.gmatH = Math.max(0, +e.target.value || 0); upd(); };
+  $$('[data-gday]', root).forEach(cb => cb.onchange = () => { const i = +cb.dataset.gday; P.gmatDays = cb.checked ? P.gmatDays.concat(i) : P.gmatDays.filter(x => x !== i); upd(); });
   $('#plgd', root).oninput = e => { P.gmatDone = Math.max(0, +e.target.value || 0); upd(); };
   $$('[data-hon]', root).forEach(cb => cb.onchange = () => { P.habits[cb.dataset.hon].on = cb.checked; upd(); });
   $$('[data-hmin]', root).forEach(s => s.onchange = () => { P.habits[s.dataset.hmin].min = +s.value; upd(); });
@@ -3591,7 +3750,7 @@ function planReRow(P) {
     <details class="reunits"><summary>單元進度（看完的打勾，就不會再排）</summary>${RE_UNITS.map((u, i) => `<label><input type="checkbox" data-redone="${i}"${P.reDone[i] ? ' checked' : ''}> ${i + 1}. ${u[0]} <span class="pill">${u[1] === 'mid' ? '期中' : '期末'}</span></label>`).join('')}</details></div>`;
 }
 // ===== App =====
-const ORDER = ['basic', 'deriv', 'invest', 'law', 'mgmt'];
+const ORDER = ['basic', 'deriv', 'invest', 'law', 'mgmt', 're'];
 const store = {
   k: 'rv26autumn',
   get() { try { return JSON.parse(localStorage.getItem(this.k)) || {}; } catch (e) { return {}; } },
@@ -3906,7 +4065,7 @@ function md(t) {
 function renderHome(root) {
   const hello = new Date().getHours() < 12 ? '早安' : new Date().getHours() < 18 ? '午安' : '晚安';
   root.innerHTML = `<div class="home"><div class="hero">${PIG('happy', 120)}<div><h2>${hello}！我是豬豬老師</h2><p>今天也一起存一點知識吧。看卡片、玩遊戲、打怪物都會得到 XP，升級後會換新稱號。你已經連續 <b>${FUN.streak()}</b> 天來複習了！</p><p class="stats"><span>Lv.${FUN.level()}</span><span>${ST.xp} XP</span><span>${Object.keys(ST.badges).length}/${BADGES.length} 徽章</span></p></div></div>
-    <div class="subjgrid">${ORDER.map(k => { const s = DATA[k]; const n = subjCards(s).length; const lang = k === 'basic' ? '<span class="pill en-pill">先備知識</span>' : k === 'deriv' || k === 'mgmt' ? '<span class="pill en-pill">英文考試</span>' : ''; return `<button class="sg ${s.hue}" data-go="${k}" type="button"><span class="sgn">${s.full} ${lang}</span><span class="sgm">${n} 個知識點${s.formulas ? ` · ${s.formulas.length} 個公式` : ''}</span><span class="bar" data-prog="${k}"><i></i></span><span class="sgp" data-progt="${k}"></span><span class="sgi">${s.intro}</span></button>`; }).join('')}</div>
+    <div class="subjgrid">${ORDER.map(k => { const s = DATA[k]; const n = subjCards(s).length; const lang = k === 'basic' ? '<span class="pill en-pill">先備知識</span>' : k === 'deriv' || k === 'mgmt' ? '<span class="pill en-pill">英文考試</span>' : k === 're' ? '<span class="pill en-pill">影片課</span>' : ''; return `<button class="sg ${s.hue}" data-go="${k}" type="button"><span class="sgn">${s.full} ${lang}</span><span class="sgm">${n} 個知識點${s.formulas ? ` · ${s.formulas.length} 個公式` : ''}</span><span class="bar" data-prog="${k}"><i></i></span><span class="sgp" data-progt="${k}"></span><span class="sgi">${s.intro}</span></button>`; }).join('')}</div>
     ${planTodayHTML()}
     <div class="homelinks"><button class="btn big" type="button" id="tomile">看我的里程碑（徽章 ${Object.keys(ST.badges).length}/${BADGES.length}）</button><button class="btn big ghost" type="button" id="toset">設定與備份</button></div>
     <button type="button" class="cfahome" id="tocfa"><span class="cfahi">${navIcon('cfa')}</span><span><b>CFA 特區</b><span>Level I 完整筆記（93 個學習單元）、考試指南、費用與日程、打怪題庫</span></span><span class="cfago">→</span></button>
@@ -3927,6 +4086,7 @@ const PANES = {
   invest: [['learn', '知識點'], ['formula', '公式教室'], ['flash', '講義問題'], ['game', '小遊戲'], ['mcq', '打怪＆選擇題']],
   law: [['learn', '知識點＋條文'], ['game', '小遊戲'], ['mcq', '打怪＆選擇題']],
   mgmt: [['learn', '知識點'], ['formula', '公式教室'], ['essay', '申論批改'], ['game', '小遊戲'], ['mcq', '打怪＆選擇題']],
+  re: [['learn', '知識點'], ['mcq', '打怪＆選擇題']],
   cfa: [['intro', '考試指南'], ['learn', 'Level I 完整筆記'], ['mcq', '打怪＆選擇題']]
 };
 let CUR = ['home'];
@@ -3954,6 +4114,7 @@ const NAVI = {
   deriv: '<path d="M3 19 L9 12 L13 15 L21 6"/><path d="M16 6 H21 V11"/>',
   invest: '<rect x="4" y="12" width="4" height="8" rx="1"/><rect x="10" y="8" width="4" height="12" rx="1"/><rect x="16" y="4" width="4" height="16" rx="1"/>',
   law: '<path d="M12 4 V20 M7 20 H17 M5 7 H19"/><path d="M5 7 L2.5 13 H7.5 Z M19 7 L16.5 13 H21.5 Z"/>',
+  re: '<path d="M3 11 L12 4 L21 11"/><path d="M5 10 V20 H19 V10"/><rect x="10" y="14" width="4" height="6"/>',
   plan: '<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10 H20 M9 3 V7 M15 3 V7 M8 14 L10.5 16.5 L16 12"/>',
   cfa: '<circle cx="12" cy="9" r="5"/><path d="M9 13.5 L7 21 L12 18.5 L17 21 L15 13.5"/>',
   mgmt: '<circle cx="9" cy="8" r="3"/><circle cx="16.5" cy="9" r="2.5"/><path d="M3 20 C3 15 15 15 15 20 M14 15.5 C17 14.5 21 15.5 21 19"/>'
