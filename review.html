@@ -149,6 +149,18 @@ mark.hl{color:inherit;border-radius:3px;padding:0 1px;cursor:pointer;-webkit-box
 .nthead{display:block;font-size:12px;font-weight:700;color:var(--mute);margin-bottom:2px}
 .ntbox textarea{display:block;width:100%;box-sizing:border-box;font:inherit;color:var(--ink);background:var(--panel);border:2px solid var(--hair);border-radius:8px;padding:6px 8px;resize:vertical;min-height:64px}
 .ntbtn{font:inherit;font-size:12.5px;font-weight:700;color:var(--ink);background:var(--panel);border:2px solid var(--line);border-radius:8px;padding:2px 10px;cursor:pointer} .ntbtn:not(.ghost){background:var(--acc);border-color:var(--acc);color:#fff}
+.nthead small{display:block;font-weight:500;font-size:11.5px;margin-top:1px}
+.nttools{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 6px}
+.nted{display:block;min-height:72px;max-height:60vh;overflow:auto;background:var(--panel);border:2px solid var(--hair);border-radius:8px;padding:8px 10px;color:var(--ink);outline:none;cursor:text}
+.nted:focus{border-color:var(--acc)} .nted:empty::before{content:attr(data-ph);color:var(--mute)}
+.ntrich{line-height:1.7;word-break:break-word} .ntrich>:first-child{margin-top:0} .ntrich>:last-child{margin-bottom:0}
+.ntrich p{margin:.35em 0} .ntrich ul,.ntrich ol{margin:.35em 0;padding-left:1.4em} .ntrich li{margin:.15em 0}
+.ntrich h4,.ntrich h5,.ntrich h6{margin:.6em 0 .25em;font-size:1.02em} .ntrich h4{font-size:1.08em}
+.ntrich table{border-collapse:collapse;margin:.5em 0;font-size:.95em;display:block;overflow-x:auto;max-width:100%} .ntrich th,.ntrich td{border:1px solid var(--hair);padding:4px 8px;text-align:left;vertical-align:top} .ntrich th{background:var(--soft)}
+.ntrich code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9em;background:var(--soft);padding:1px 4px;border-radius:4px}
+.ntrich pre{background:var(--soft);padding:8px 10px;border-radius:8px;overflow-x:auto;white-space:pre} .ntrich pre code{background:none;padding:0}
+.ntrich blockquote{margin:.4em 0;padding:2px 10px;border-left:3px solid var(--hair);color:var(--mute)}
+.ntrich hr{border:0;border-top:1px dashed var(--hair);margin:.6em 0} .ntrich a{color:var(--acc)} .ntrich math{font-size:1.05em}
 .ntbtns{display:flex;gap:6px;margin-top:6px} .nttext{display:block;white-space:normal;word-break:break-word}
 .ntpage .ntbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:12px 0 16px} .ntpage #ntq{flex:1 1 220px;min-width:0;border:2px solid var(--line);border-radius:10px;padding:7px 10px;font:inherit;background:var(--panel);color:var(--ink)}
 .hlchip{display:inline-flex;align-items:center;gap:6px} .hlchip .hlc{width:14px;height:14px}
@@ -5073,6 +5085,139 @@ function planReRow(P) {
     <label>熟悉度 <select data-fam="re">${PLAN_FAM.map(f => `<option${(P.fam.re || '普通') === f[0] ? ' selected' : ''}>${f[0]}</option>`).join('')}</select></label><span class="sm-p">需要 <b data-need="re"></b></span>
     <details class="reunits"><summary>單元進度（看完的打勾，就不會再排）</summary>${RE_UNITS.map((u, i) => `<label><input type="checkbox" data-redone="${i}"${P.reDone[i] ? ' checked' : ''}> ${i + 1}. ${u[0]} <span class="pill">${u[1] === 'mid' ? '期中' : '期末'}</span></label>`).join('')}</details></div>`;
 }
+// ===== 筆記的格式：貼上 Gemini／ChatGPT／網頁內容時保留粗體、列點、標題、表格、程式碼、數學式 =====
+// 選取後 Ctrl/⌘+C 會帶 HTML → 清理後保留格式；用「複製」按鈕拿到的是 Markdown 純文字 → 轉成 HTML。
+const RICH = (() => {
+  const MML = 'http://www.w3.org/1998/Math/MathML';
+  const KEEP = new Set(['B', 'STRONG', 'I', 'EM', 'U', 'S', 'DEL', 'CODE', 'PRE', 'P', 'BR', 'UL', 'OL', 'LI', 'TABLE', 'THEAD', 'TBODY', 'TR', 'TH', 'TD', 'BLOCKQUOTE', 'A', 'SUB', 'SUP', 'HR', 'DIV', 'MARK', 'H4', 'H5', 'H6']);
+  const HEAD = { H1: 'H4', H2: 'H4', H3: 'H4' };
+  const MATH = new Set('math mrow mi mo mn ms mtext mspace msup msub msubsup mfrac msqrt mroot munder mover munderover mtable mtr mtd mstyle mpadded mphantom menclose semantics mfenced'.split(' '));
+  const DROP = 'script, style, meta, link, title, head, noscript, iframe, object, embed, svg, img, video, audio, canvas, button, input, textarea, select, form, annotation, annotation-xml, template';
+  const escT = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+  // ---- 清理 HTML：只留白名單標籤與少數安全屬性 ----
+  function clean(html) {
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    // KaTeX（Gemini 的數學式）：保留裡面的 MathML，丟掉重複的排版用 HTML
+    doc.querySelectorAll('.katex').forEach(k => { const m = k.querySelector('math'); k.replaceWith(m || doc.createTextNode(k.textContent)); });
+    doc.querySelectorAll(DROP).forEach(n => n.remove());
+    const out = document.createElement('div');
+    const walk = (src, dst) => {
+      for (const n of [...src.childNodes]) {
+        if (n.nodeType === 3) { dst.appendChild(document.createTextNode(n.data)); continue; }
+        if (n.nodeType !== 1) continue;
+        if (n.namespaceURI === MML || n.localName === 'math') {
+          if (!MATH.has(n.localName)) { walk(n, dst); continue; }
+          const m = document.createElementNS(MML, n.localName);
+          ['display', 'mathvariant', 'stretchy', 'fence', 'separator', 'accent', 'lspace', 'rspace'].forEach(a => n.hasAttribute(a) && m.setAttribute(a, n.getAttribute(a)));
+          walk(n, m); dst.appendChild(m); continue;
+        }
+        let tag = n.tagName.toUpperCase(); tag = HEAD[tag] || tag;
+        const st = n.getAttribute('style') || '';
+        if (!KEEP.has(tag)) {
+          // Google 文件等用 span＋樣式表示粗體、斜體
+          if (/font-weight:\s*(bold|[6-9]00)/.test(st)) { const b = document.createElement('b'); walk(n, b); dst.appendChild(b); }
+          else if (/font-style:\s*italic/.test(st)) { const i = document.createElement('i'); walk(n, i); dst.appendChild(i); }
+          else walk(n, dst);
+          continue;
+        }
+        if (tag === 'A' && !/^https?:\/\//i.test(n.getAttribute('href') || '')) { walk(n, dst); continue; }
+        const el = document.createElement(tag);
+        if (tag === 'A') { const h = n.getAttribute('href') || ''; if (/^https?:\/\//i.test(h)) { el.href = h; el.target = '_blank'; el.rel = 'noopener noreferrer'; } }
+        if (tag === 'TD' || tag === 'TH') ['colspan', 'rowspan'].forEach(a => { const v = parseInt(n.getAttribute(a), 10); if (v > 1 && v < 50) el.setAttribute(a, v); });
+        walk(n, el); dst.appendChild(el);
+      }
+    };
+    walk(doc.body, out);
+    // 去掉頭尾空段落
+    const empty = e => e && e.nodeType === 1 && /^(P|DIV|BR)$/.test(e.tagName) && !e.textContent.trim() && !e.querySelector('math, hr');
+    while (empty(out.firstChild)) out.firstChild.remove();
+    while (empty(out.lastChild)) out.lastChild.remove();
+    return out.innerHTML;
+  }
+
+  // ---- Markdown → HTML（標題、粗斜體、刪除線、行內程式碼、連結、清單（可巢狀）、表格、引用、程式碼區塊、分隔線） ----
+  function inline(s) {
+    const codes = []; s = s.replace(/`([^`]+)`/g, (m, c) => { codes.push(c); return '\u0000' + (codes.length - 1) + '\u0000'; });
+    s = escT(s)
+      .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
+      .replace(/\*\*\*(.+?)\*\*\*/g, '<b><i>$1</i></b>').replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/__(.+?)__/g, '<b>$1</b>')
+      .replace(/(^|[^*\w])\*(?!\s)(.+?)(?<!\s)\*(?!\*)/g, '$1<i>$2</i>').replace(/(^|[^_\w])_(?!\s)(.+?)(?<!\s)_(?!\w)/g, '$1<i>$2</i>')
+      .replace(/~~(.+?)~~/g, '<s>$1</s>');
+    return s.replace(/\u0000(\d+)\u0000/g, (m, i) => '<code>' + escT(codes[+i]) + '</code>');
+  }
+  const cells = l => l.trim().replace(/^\|/, '').replace(/\|$/, '').split('|').map(c => c.trim());
+  function md(src) {
+    const L = src.replace(/\r\n?/g, '\n').split('\n'); let i = 0; const out = [];
+    const isList = l => /^\s*([-*+]|\d+[.)])\s+/.test(l);
+    while (i < L.length) {
+      const l = L[i];
+      if (!l.trim()) { i++; continue; }
+      let m;
+      if ((m = l.match(/^\s*```/))) { const buf = []; i++; while (i < L.length && !/^\s*```/.test(L[i])) buf.push(L[i++]); i++; out.push('<pre><code>' + escT(buf.join('\n')) + '</code></pre>'); continue; }
+      if ((m = l.match(/^\s*(#{1,6})\s+(.*)$/))) { const n = m[1].length; out.push(`<${n <= 2 ? 'h4' : n === 3 ? 'h5' : 'h6'}>${inline(m[2].replace(/\s*#+\s*$/, ''))}</${n <= 2 ? 'h4' : n === 3 ? 'h5' : 'h6'}>`); i++; continue; }
+      if (/^\s*([-*_])(\s*\1){2,}\s*$/.test(l)) { out.push('<hr>'); i++; continue; }
+      if (/\|/.test(l) && i + 1 < L.length && /^\s*\|?\s*:?-{2,}:?\s*(\|\s*:?-{2,}:?\s*)*\|?\s*$/.test(L[i + 1])) {
+        const head = cells(l); i += 2; const rows = [];
+        while (i < L.length && /\|/.test(L[i]) && L[i].trim()) rows.push(cells(L[i++]));
+        out.push('<table><thead><tr>' + head.map(c => `<th>${inline(c)}</th>`).join('') + '</tr></thead><tbody>' + rows.map(r => '<tr>' + head.map((_, j) => `<td>${inline(r[j] || '')}</td>`).join('') + '</tr>').join('') + '</tbody></table>');
+        continue;
+      }
+      if (/^\s*>/.test(l)) { const buf = []; while (i < L.length && /^\s*>/.test(L[i])) buf.push(L[i++].replace(/^\s*>\s?/, '')); out.push('<blockquote>' + md(buf.join('\n')) + '</blockquote>'); continue; }
+      if (isList(l)) {
+        // 用縮排建樹，支援巢狀清單；項目之間的空行不會打斷清單
+        const root = { kids: [] }, stack = [];
+        const nextNonBlank = j => { while (j < L.length && !L[j].trim()) j++; return j; };
+        while (i < L.length) {
+          let x = L[i];
+          if (!x.trim()) { const j = nextNonBlank(i); if (j < L.length && (isList(L[j]) || (/^\s{2,}/.test(L[j]) && stack.length))) { i = j; continue; } break; }
+          const lm = x.match(/^(\s*)([-*+]|\d+[.)])\s+(.*)$/);
+          if (!lm) { if (!(/^\s{2,}/.test(x) && stack.length)) break; const top = stack[stack.length - 1]; top.list.items[top.list.items.length - 1].text += '<br>' + inline(x.trim()); i++; continue; }
+          i++;
+          const ind = lm[1].replace(/\t/g, '    ').length, type = /\d/.test(lm[2]) ? 'ol' : 'ul';
+          while (stack.length && ind < stack[stack.length - 1].ind) stack.pop();
+          let top = stack[stack.length - 1];
+          if (!top || ind > top.ind) { const parent = top ? top.list.items[top.list.items.length - 1] : root; const list = { type, items: [] }; parent.kids.push(list); top = { ind, list, parent }; stack.push(top); }
+          else if (top.list.type !== type) { const list = { type, items: [] }; top.parent.kids.push(list); top.list = list; }
+          top.list.items.push({ text: inline(lm[3]), kids: [] });
+        }
+        const render = n => n.kids.map(list => `<${list.type}>` + list.items.map(it => `<li>${it.text}${render(it)}</li>`).join('') + `</${list.type}>`).join('');
+        out.push(render(root)); continue;
+      }
+      const buf = [];
+      while (i < L.length && L[i].trim() && !isList(L[i]) && !/^\s*(#{1,6}\s|```|>)/.test(L[i]) && !(/\|/.test(L[i]) && i + 1 < L.length && /^\s*\|?\s*:?-{2,}/.test(L[i + 1]))) buf.push(inline(L[i++].trim()));
+      out.push('<p>' + buf.join('<br>') + '</p>');
+    }
+    return out.join('');
+  }
+
+  // ---- 貼上：判斷用 HTML、Markdown 還是純文字 ----
+  const looksMd = t => /(^|\n)\s{0,3}(#{1,6}\s|[-*+]\s+\S|\d+[.)]\s+\S|>\s|```)|\*\*[^*\n]+\*\*|\n\s*\|.*\|\s*\n\s*\|?\s*:?-{2,}/.test(t);
+  function fromClipboard(cd) {
+    const html = cd.getData('text/html'), txt = cd.getData('text/plain');
+    if (html) {
+      const c = clean(html), plain = (new DOMParser().parseFromString(c, 'text/html').body.textContent || '');
+      const structured = /<(ul|ol|table|h[4-6]|b|strong|i|em|pre|code|blockquote|math)[\s>]/i.test(c);
+      // HTML 裡其實只是 Markdown 原文（例如從編輯器複製）→ 改用 Markdown 轉換
+      if (txt && looksMd(txt) && (!structured || /\*\*[^*]+\*\*|(^|\n)#{1,6}\s/.test(plain))) return clean(md(txt));
+      if (c.trim()) return c;
+    }
+    if (txt) return looksMd(txt) ? clean(md(txt)) : txt.split(/\n{2,}/).map(p => '<p>' + escT(p).replace(/\n/g, '<br>') + '</p>').join('');
+    return '';
+  }
+  function insertHTML(html) {
+    if (document.queryCommandSupported && document.queryCommandSupported('insertHTML') && document.execCommand('insertHTML', false, html)) return;
+    const sel = getSelection(); if (!sel.rangeCount) return; const r = sel.getRangeAt(0); r.deleteContents();
+    const frag = r.createContextualFragment(html); const last = frag.lastChild; r.insertNode(frag); if (last) { r.setStartAfter(last); r.collapse(true); sel.removeAllRanges(); sel.addRange(r); }
+  }
+  function attach(ed) {
+    ed.addEventListener('paste', e => { const cd = e.clipboardData; if (!cd) return; e.preventDefault(); const h = fromClipboard(cd); if (h) insertHTML(h); });
+    ed.addEventListener('drop', e => { const cd = e.dataTransfer; if (!cd) return; e.preventDefault(); const h = fromClipboard(cd); if (h) insertHTML(h); });
+  }
+  // 舊筆記（純文字）轉成 HTML
+  const fromText = t => t.split(/\n{2,}/).map(p => '<p>' + escT(p).replace(/\n/g, '<br>') + '</p>').join('');
+  return { clean, md, attach, fromText };
+})();
 // ===== 筆記與螢光筆：完整重點裡的每個列點都能寫筆記、選取文字畫重點 =====
 // 存在 ST.hl（重點）與 ST.nt（筆記），設定頁的備份碼會一起帶走。
 // 每個列點用「卡片 id + 列點文字的雜湊」當鑰匙；內容改版找不到原位置時，用存下來的原文片段重新定位。
@@ -5092,7 +5237,7 @@ const NOTES = (() => {
   const posIn = (block, node, off) => { const r = document.createRange(); r.setStart(block, 0); r.setEnd(node, off); const f = r.cloneContents(); f.querySelectorAll('.ntbox').forEach(x => x.remove()); return f.textContent.length; };
 
   // ---- 卡片裡的列點與鑰匙 ----
-  const blocksOf = card => { const b = card.querySelector('.body'); return b ? [...b.querySelectorAll(BLK)] : []; };
+  const blocksOf = card => { const b = card.querySelector('.body'); return b ? [...b.querySelectorAll(BLK)].filter(x => !x.closest('.ntbox')) : []; };
   const keysOf = card => { const seen = {}; const m = new Map(); blocksOf(card).forEach(b => { const h = hash(norm(textOf(b))); seen[h] = (seen[h] || 0) + 1; m.set(b, h + (seen[h] > 1 ? '.' + seen[h] : '')); }); return m; };
   const cardId = card => card.id.replace(/^c-/, '');
   const blockByKey = (card, k) => { for (const [b, kk] of keysOf(card)) if (kk === k) return b; return null; };
@@ -5129,15 +5274,22 @@ const NOTES = (() => {
     const d = (NT()[cardId(card)] || {})[k];
     if (!d && !edit) { if (box) box.remove(); return; }
     if (!box) { box = document.createElement('span'); box.className = 'ntbox'; block.appendChild(box); }
+    const html = d ? (d.h || RICH.fromText(d.t)) : '';
     box.innerHTML = edit
-      ? `<span class="nthead">我的筆記</span><textarea rows="3" placeholder="寫下你查到的補充、自己的理解、還不懂的地方⋯" aria-label="筆記">${escH(d ? d.t : '')}</textarea><span class="ntbtns"><button type="button" class="ntbtn" data-nt="done">完成</button>${d ? '<button type="button" class="ntbtn ghost" data-nt="del">刪除</button>' : '<button type="button" class="ntbtn ghost" data-nt="cancel">取消</button>'}</span>`
-      : `<span class="nthead">我的筆記</span><span class="nttext">${escH(d.t).replace(/\n/g, '<br>')}</span><span class="ntbtns"><button type="button" class="ntbtn ghost" data-nt="edit">編輯</button></span>`;
+      ? `<span class="nthead">我的筆記<small>可以直接貼上 Gemini、ChatGPT 或網頁內容，格式會保留</small></span><span class="nttools"><button type="button" class="ntbtn ghost" data-fmt="bold"><b>B</b></button><button type="button" class="ntbtn ghost" data-fmt="insertUnorderedList">• 清單</button><button type="button" class="ntbtn ghost" data-fmt="insertOrderedList">1. 清單</button><button type="button" class="ntbtn ghost" data-fmt="removeFormat">清除格式</button></span><div class="nted ntrich" contenteditable="true" role="textbox" aria-multiline="true" aria-label="筆記" data-ph="寫下你查到的補充、自己的理解、還不懂的地方⋯">${html}</div><span class="ntbtns"><button type="button" class="ntbtn" data-nt="done">完成</button>${d ? '<button type="button" class="ntbtn ghost" data-nt="del">刪除</button>' : '<button type="button" class="ntbtn ghost" data-nt="cancel">取消</button>'}</span>`
+      : `<span class="nthead">我的筆記</span><div class="nttext ntrich">${html}</div><span class="ntbtns"><button type="button" class="ntbtn ghost" data-nt="edit">編輯</button></span>`;
     box.dataset.k = k;
-    if (edit) { const ta = box.querySelector('textarea'); ta.focus(); ta.addEventListener('input', () => { ta.style.height = 'auto'; ta.style.height = ta.scrollHeight + 'px'; }); }
+    if (edit) {
+      const ed = box.querySelector('.nted'); RICH.attach(ed);
+      box.querySelectorAll('[data-fmt]').forEach(bt => { bt.addEventListener('mousedown', e => e.preventDefault()); bt.onclick = () => { ed.focus(); document.execCommand(bt.dataset.fmt, false, null); }; });
+      ed.focus(); const r = document.createRange(); r.selectNodeContents(ed); r.collapse(false); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r);
+    }
   }
-  function saveNote(card, block, k, text) {
-    const id = cardId(card), all = NT(); text = text.trim();
-    if (text) { all[id] = all[id] || {}; all[id][k] = { t: text, q: norm(textOf(block)).slice(0, 80), at: Date.now() }; }
+  function saveNote(card, block, k, ed) {
+    const id = cardId(card), all = NT();
+    const h = ed ? RICH.clean(ed.innerHTML) : '', tmp = document.createElement('div'); tmp.innerHTML = h;
+    const text = (ed ? ed.innerText : '').trim(), has = text || tmp.querySelector('math, hr, table');
+    if (has) { all[id] = all[id] || {}; const old = all[id][k]; all[id][k] = { t: text, h, q: norm(textOf(block)).slice(0, 80), at: old ? old.at : Date.now(), up: Date.now() }; }
     else if (all[id]) { delete all[id][k]; if (!Object.keys(all[id]).length) delete all[id]; }
     save(); noteBox(block, card, k, false); badge(card);
   }
@@ -5194,7 +5346,7 @@ const NOTES = (() => {
     const range = sel.getRangeAt(0); const anc = range.commonAncestorContainer; const el = anc.nodeType === 1 ? anc : anc.parentElement;
     const card = el && el.closest('.card'), body = card && card.querySelector('.body');
     if (!card || !root.contains(card) || !body || !range.intersectsNode(body)) { hide(); return; }
-    if (el.closest('.ntbox, textarea')) return;
+    if (el.closest('.ntbox, textarea, [contenteditable]')) return;
     const ps = pieces(card, range); if (!ps.length) { hide(); return; }
     cur = { sel: 1, card, range: range.cloneRange(), ps }; ensureBar(); bar.querySelector('[data-a="clear"]').hidden = !card.querySelector('mark.hl') || !ps.some(([b]) => b.querySelector('mark.hl'));
     bar.querySelector('[data-a="note"]').hidden = false; place(range.getBoundingClientRect());
@@ -5231,8 +5383,8 @@ const NOTES = (() => {
       const nb = e.target.closest('[data-nt]');
       if (nb) { const box = nb.closest('.ntbox'), block = box.parentElement, k = box.dataset.k, a = nb.dataset.nt;
         if (a === 'edit') noteBox(block, card, k, true);
-        else if (a === 'done') saveNote(card, block, k, box.querySelector('textarea').value);
-        else if (a === 'del') { if (confirm('刪除這則筆記？')) saveNote(card, block, k, ''); }
+        else if (a === 'done') saveNote(card, block, k, box.querySelector('.nted'));
+        else if (a === 'del') { if (confirm('刪除這則筆記？')) saveNote(card, block, k, null); }
         else noteBox(block, card, k, false);
         return; }
       if (card.classList.contains('nmode') && getSelection().isCollapsed && !e.target.closest('a, button, input, textarea, summary, label, .ntbox')) {
@@ -5261,7 +5413,7 @@ const NOTES = (() => {
         if (!hs.length && !ns.length) return '';
         return `<article class="ntcard"><header><b>${c.t}</b><button type="button" class="ntbtn" data-jump="${c.id}">到卡片</button></header>
           ${hs.length ? `<ul class="nthl">${hs.map(h => `<li><mark class="hl hl-${h.c}">${escH(h.x)}</mark>${h.lost ? '<span class="ntlost">原文已更新</span>' : ''}</li>`).join('')}</ul>` : ''}
-          ${ns.map(d => `<div class="ntitem"><p class="ntq">「${escH(d.q)}${d.q.length >= 80 ? '⋯' : ''}」${d.lost ? '<span class="ntlost">原文已更新</span>' : ''}</p><p class="ntt">${escH(d.t).replace(/\n/g, '<br>')}</p></div>`).join('')}</article>`;
+          ${ns.map(d => `<div class="ntitem"><p class="ntq">「${escH(d.q)}${d.q.length >= 80 ? '⋯' : ''}」${d.lost ? '<span class="ntlost">原文已更新</span>' : ''}</p><div class="ntt ntrich">${d.h || RICH.fromText(d.t)}</div></div>`).join('')}</article>`;
       }).join('');
       $('.ntlist', root).innerHTML = items || `<div class="win">${PIG('happy', 90)}<p>${q || view.c || view.f !== 'all' ? '沒有符合的重點或筆記。' : '還沒有重點或筆記。到「知識點」打開完整重點，選取文字就能畫重點；按卡片右上角的「＋筆記」就能在列點下面寫筆記。'}</p></div>`;
       $('.ntsum', root).textContent = `重點 ${nh}・筆記 ${nn}`;

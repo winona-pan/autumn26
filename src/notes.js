@@ -17,7 +17,7 @@ const NOTES = (() => {
   const posIn = (block, node, off) => { const r = document.createRange(); r.setStart(block, 0); r.setEnd(node, off); const f = r.cloneContents(); f.querySelectorAll('.ntbox').forEach(x => x.remove()); return f.textContent.length; };
 
   // ---- 卡片裡的列點與鑰匙 ----
-  const blocksOf = card => { const b = card.querySelector('.body'); return b ? [...b.querySelectorAll(BLK)] : []; };
+  const blocksOf = card => { const b = card.querySelector('.body'); return b ? [...b.querySelectorAll(BLK)].filter(x => !x.closest('.ntbox')) : []; };
   const keysOf = card => { const seen = {}; const m = new Map(); blocksOf(card).forEach(b => { const h = hash(norm(textOf(b))); seen[h] = (seen[h] || 0) + 1; m.set(b, h + (seen[h] > 1 ? '.' + seen[h] : '')); }); return m; };
   const cardId = card => card.id.replace(/^c-/, '');
   const blockByKey = (card, k) => { for (const [b, kk] of keysOf(card)) if (kk === k) return b; return null; };
@@ -54,15 +54,22 @@ const NOTES = (() => {
     const d = (NT()[cardId(card)] || {})[k];
     if (!d && !edit) { if (box) box.remove(); return; }
     if (!box) { box = document.createElement('span'); box.className = 'ntbox'; block.appendChild(box); }
+    const html = d ? (d.h || RICH.fromText(d.t)) : '';
     box.innerHTML = edit
-      ? `<span class="nthead">我的筆記</span><textarea rows="3" placeholder="寫下你查到的補充、自己的理解、還不懂的地方⋯" aria-label="筆記">${escH(d ? d.t : '')}</textarea><span class="ntbtns"><button type="button" class="ntbtn" data-nt="done">完成</button>${d ? '<button type="button" class="ntbtn ghost" data-nt="del">刪除</button>' : '<button type="button" class="ntbtn ghost" data-nt="cancel">取消</button>'}</span>`
-      : `<span class="nthead">我的筆記</span><span class="nttext">${escH(d.t).replace(/\n/g, '<br>')}</span><span class="ntbtns"><button type="button" class="ntbtn ghost" data-nt="edit">編輯</button></span>`;
+      ? `<span class="nthead">我的筆記<small>可以直接貼上 Gemini、ChatGPT 或網頁內容，格式會保留</small></span><span class="nttools"><button type="button" class="ntbtn ghost" data-fmt="bold"><b>B</b></button><button type="button" class="ntbtn ghost" data-fmt="insertUnorderedList">• 清單</button><button type="button" class="ntbtn ghost" data-fmt="insertOrderedList">1. 清單</button><button type="button" class="ntbtn ghost" data-fmt="removeFormat">清除格式</button></span><div class="nted ntrich" contenteditable="true" role="textbox" aria-multiline="true" aria-label="筆記" data-ph="寫下你查到的補充、自己的理解、還不懂的地方⋯">${html}</div><span class="ntbtns"><button type="button" class="ntbtn" data-nt="done">完成</button>${d ? '<button type="button" class="ntbtn ghost" data-nt="del">刪除</button>' : '<button type="button" class="ntbtn ghost" data-nt="cancel">取消</button>'}</span>`
+      : `<span class="nthead">我的筆記</span><div class="nttext ntrich">${html}</div><span class="ntbtns"><button type="button" class="ntbtn ghost" data-nt="edit">編輯</button></span>`;
     box.dataset.k = k;
-    if (edit) { const ta = box.querySelector('textarea'); ta.focus(); ta.addEventListener('input', () => { ta.style.height = 'auto'; ta.style.height = ta.scrollHeight + 'px'; }); }
+    if (edit) {
+      const ed = box.querySelector('.nted'); RICH.attach(ed);
+      box.querySelectorAll('[data-fmt]').forEach(bt => { bt.addEventListener('mousedown', e => e.preventDefault()); bt.onclick = () => { ed.focus(); document.execCommand(bt.dataset.fmt, false, null); }; });
+      ed.focus(); const r = document.createRange(); r.selectNodeContents(ed); r.collapse(false); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r);
+    }
   }
-  function saveNote(card, block, k, text) {
-    const id = cardId(card), all = NT(); text = text.trim();
-    if (text) { all[id] = all[id] || {}; all[id][k] = { t: text, q: norm(textOf(block)).slice(0, 80), at: Date.now() }; }
+  function saveNote(card, block, k, ed) {
+    const id = cardId(card), all = NT();
+    const h = ed ? RICH.clean(ed.innerHTML) : '', tmp = document.createElement('div'); tmp.innerHTML = h;
+    const text = (ed ? ed.innerText : '').trim(), has = text || tmp.querySelector('math, hr, table');
+    if (has) { all[id] = all[id] || {}; const old = all[id][k]; all[id][k] = { t: text, h, q: norm(textOf(block)).slice(0, 80), at: old ? old.at : Date.now(), up: Date.now() }; }
     else if (all[id]) { delete all[id][k]; if (!Object.keys(all[id]).length) delete all[id]; }
     save(); noteBox(block, card, k, false); badge(card);
   }
@@ -119,7 +126,7 @@ const NOTES = (() => {
     const range = sel.getRangeAt(0); const anc = range.commonAncestorContainer; const el = anc.nodeType === 1 ? anc : anc.parentElement;
     const card = el && el.closest('.card'), body = card && card.querySelector('.body');
     if (!card || !root.contains(card) || !body || !range.intersectsNode(body)) { hide(); return; }
-    if (el.closest('.ntbox, textarea')) return;
+    if (el.closest('.ntbox, textarea, [contenteditable]')) return;
     const ps = pieces(card, range); if (!ps.length) { hide(); return; }
     cur = { sel: 1, card, range: range.cloneRange(), ps }; ensureBar(); bar.querySelector('[data-a="clear"]').hidden = !card.querySelector('mark.hl') || !ps.some(([b]) => b.querySelector('mark.hl'));
     bar.querySelector('[data-a="note"]').hidden = false; place(range.getBoundingClientRect());
@@ -156,8 +163,8 @@ const NOTES = (() => {
       const nb = e.target.closest('[data-nt]');
       if (nb) { const box = nb.closest('.ntbox'), block = box.parentElement, k = box.dataset.k, a = nb.dataset.nt;
         if (a === 'edit') noteBox(block, card, k, true);
-        else if (a === 'done') saveNote(card, block, k, box.querySelector('textarea').value);
-        else if (a === 'del') { if (confirm('刪除這則筆記？')) saveNote(card, block, k, ''); }
+        else if (a === 'done') saveNote(card, block, k, box.querySelector('.nted'));
+        else if (a === 'del') { if (confirm('刪除這則筆記？')) saveNote(card, block, k, null); }
         else noteBox(block, card, k, false);
         return; }
       if (card.classList.contains('nmode') && getSelection().isCollapsed && !e.target.closest('a, button, input, textarea, summary, label, .ntbox')) {
@@ -186,7 +193,7 @@ const NOTES = (() => {
         if (!hs.length && !ns.length) return '';
         return `<article class="ntcard"><header><b>${c.t}</b><button type="button" class="ntbtn" data-jump="${c.id}">到卡片</button></header>
           ${hs.length ? `<ul class="nthl">${hs.map(h => `<li><mark class="hl hl-${h.c}">${escH(h.x)}</mark>${h.lost ? '<span class="ntlost">原文已更新</span>' : ''}</li>`).join('')}</ul>` : ''}
-          ${ns.map(d => `<div class="ntitem"><p class="ntq">「${escH(d.q)}${d.q.length >= 80 ? '⋯' : ''}」${d.lost ? '<span class="ntlost">原文已更新</span>' : ''}</p><p class="ntt">${escH(d.t).replace(/\n/g, '<br>')}</p></div>`).join('')}</article>`;
+          ${ns.map(d => `<div class="ntitem"><p class="ntq">「${escH(d.q)}${d.q.length >= 80 ? '⋯' : ''}」${d.lost ? '<span class="ntlost">原文已更新</span>' : ''}</p><div class="ntt ntrich">${d.h || RICH.fromText(d.t)}</div></div>`).join('')}</article>`;
       }).join('');
       $('.ntlist', root).innerHTML = items || `<div class="win">${PIG('happy', 90)}<p>${q || view.c || view.f !== 'all' ? '沒有符合的重點或筆記。' : '還沒有重點或筆記。到「知識點」打開完整重點，選取文字就能畫重點；按卡片右上角的「＋筆記」就能在列點下面寫筆記。'}</p></div>`;
       $('.ntsum', root).textContent = `重點 ${nh}・筆記 ${nn}`;
