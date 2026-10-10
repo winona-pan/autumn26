@@ -140,6 +140,12 @@ const SYNC = (() => {
     await run();
   }
   // 之後如果發現另一台蓋掉了這台的 XP／錯題本：以這台為準再同步一次（筆記、重點、書籤一樣是合併）
+  // 換 token（重新產生、過期）：沿用原本的雲端存檔與修改時間，不用重新選哪台比較新
+  async function changeToken(token) {
+    const old = cfg.token; cfg.token = token.trim();
+    try { const u = await api('GET', '/user'); cfg.user = u.login; cfg.err = ''; keep(); await run(); }
+    catch (e) { cfg.token = old; keep(); throw e; }
+  }
   async function preferLocal() { cfg.mt = Date.now(); keep(); await run(); }
   function disconnect() { cfg = {}; keep(); status(); }
 
@@ -155,6 +161,9 @@ const SYNC = (() => {
       <p class="sm-p" id="syncst"></p>
       <p class="sm-p">筆記、重點、書籤、圖片、「我懂了」、XP、錯題本、讀書計畫都會自動同步。每台裝置的主題、字級、閱讀位置各自保留。</p>
       <div class="row wrap"><button class="btn" id="syncnow" type="button">立即同步</button><button class="btn ghost" id="syncmine" type="button">以這台為準再同步</button><button class="btn ghost" id="syncoff" type="button">這台不再同步</button></div>
+      <details class="synctokbox"${/token/.test(cfg.err || '') ? ' open' : ''}><summary>更換 token（重新產生過、或顯示 token 無效時）</summary>
+        <div class="row wrap"><input type="password" id="synctok2" autocomplete="off" spellcheck="false" placeholder="貼上新的 ghp_ 開頭 token" aria-label="新的 GitHub token"><button class="btn" id="syncnew" type="button">更換</button></div>
+        <p class="sm-p">換 token 會繼續用原本的雲端存檔，進度不會重來。每台裝置都要換成新的這一組。</p></details>
       <p class="sm-p">「以這台為準再同步」：XP、錯題本、讀書計畫改用這台的；筆記、重點、書籤、「我懂了」照樣兩邊合併，不會不見。</p>` : `
       <p class="sm-p">用你 GitHub 帳號裡的一個<b>私人 Gist</b> 當雲端存檔。每台裝置都做一次下面的步驟，之後就會自動同步。</p>
       <ol class="syncsteps"><li>打開 <a href="${TOKEN_URL}" target="_blank" rel="noopener">GitHub 建立 token 的頁面</a>（會自動勾好 <b>gist</b>，其他都不用勾）。</li><li><b>Expiration</b> 選一年或 No expiration，按最下面的 <b>Generate token</b>。</li><li>複製 <code>ghp_</code> 開頭的那串，貼到下面按「連線」。另一台裝置貼<b>同一串</b>就好（建議先存在你的密碼管理工具裡）。</li></ol>
@@ -181,6 +190,8 @@ const SYNC = (() => {
         if (r.choose) { showChoice(root, r); return; }
         FUN.toast('同步完成！', 'wow'); renderSettings(root);
       } catch (e) { status('連線失敗：' + e.message); go1.disabled = false; } };
+    const nw = root.querySelector('#syncnew'); if (nw) nw.onclick = async () => { const v = root.querySelector('#synctok2').value; if (!/^\s*(ghp_|github_pat_)\w+\s*$/.test(v)) { status('看起來不像 token：應該是 ghp_ 或 github_pat_ 開頭。'); return; } nw.disabled = true; status('更換中⋯');
+      try { await changeToken(v); FUN.toast('token 已更換，同步完成', 'happy'); renderSettings(root); } catch (e) { status('更換失敗：' + e.message); nw.disabled = false; } };
     const mine = root.querySelector('#syncmine'); if (mine) armed(mine, '以這台為準再同步', async () => { status('同步中⋯'); await preferLocal(); if (!cfg.err) FUN.toast('已以這台為準同步', 'happy'); renderSettings(root); });
     const now = root.querySelector('#syncnow'); if (now) now.onclick = async () => { await run(); if (!cfg.err) FUN.toast('同步完成', 'happy'); };
     const off = root.querySelector('#syncoff'); if (off) armed(off, '這台不再同步', () => { disconnect(); renderSettings(root); });
