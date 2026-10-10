@@ -23,7 +23,7 @@ const LAWART = [
 ];
 
 const TIPS = {
-  learn: ['每張卡先看「白話」和「生活比喻」，懂了再打開完整重點。勾「我懂了」+10 XP！', '看不懂的英文專有名詞，用上面的搜尋框找找看。'],
+  learn: ['每張卡先看「白話」和「生活比喻」，懂了再打開完整重點。勾「我懂了」+10 XP！', '看不懂的英文專有名詞，用上面的搜尋框找找看。', '在完整重點裡<b>選取文字</b>就能畫螢光筆；按卡片右上角的「＋筆記」，點任何列點就能寫自己的補充。'],
   formula: ['點公式裡<b>有顏色的符號</b>，我會告訴你它是什麼意思！再拉拉看下面的計算機。', '公式不用死背：先懂「它在回答什麼問題」，再記長相。'],
   prob: ['先自己算，卡住再按「下一步提示」。小考會從這裡出題或類題喔！'],
   gen: ['每題數字都不一樣，答對 +15 XP。可以用上面切換成英文題目，練英文考試。'],
@@ -76,6 +76,7 @@ function renderLearn(key, root) {
   q.addEventListener('input', () => { const v = q.value.trim().toLowerCase(); $$('.card', root).forEach(c => c.hidden = v && !c.dataset.search.includes(v)); $$('details.deep', root).forEach(d => d.open = !!v && d.textContent.toLowerCase().includes(v)); $$('.grpbox', root).forEach(g => g.hidden = v && !$$('.card', g).some(c => !c.hidden)); $$('.sec', root).forEach(sec => sec.hidden = v && !$$('.card', sec).some(c => !c.hidden)); });
   const ah = $('#arthide', root); if (ah) ah.addEventListener('click', () => { const t = root.querySelector('.arts'); t.classList.toggle('masked'); ah.textContent = t.classList.contains('masked') ? '顯示內容' : '遮住內容'; });
   $$('.arts tr', root).forEach(tr => tr.addEventListener('click', () => tr.classList.toggle('peek')));
+  NOTES.mount(key, root);
   updateCounts();
 }
 function updateCounts() {
@@ -345,16 +346,17 @@ function jumpCard(k, id) { go(k, 'learn'); setTimeout(() => { const el = $('#c-'
 
 // ---------- Routing ----------
 const PANES = {
-  basic: [['learn', '基礎卡片'], ['formula', '公式教室'], ['game', '小遊戲'], ['mcq', '打怪＆選擇題']],
-  deriv: [['learn', '知識點'], ['formula', '公式教室'], ['prob', '課本習題'], ['gen', '變化題'], ['game', '小遊戲'], ['mcq', '打怪＆選擇題']],
-  invest: [['learn', '知識點'], ['formula', '公式教室'], ['flash', '講義問題'], ['game', '小遊戲'], ['mcq', '打怪＆選擇題']],
-  law: [['learn', '知識點＋條文'], ['game', '小遊戲'], ['mcq', '打怪＆選擇題']],
-  mgmt: [['learn', '知識點'], ['formula', '公式教室'], ['essay', '申論批改'], ['game', '小遊戲'], ['mcq', '打怪＆選擇題']],
-  re: [['learn', '知識點'], ['mcq', '打怪＆選擇題']],
-  cfa: [['intro', '考試指南'], ['learn', 'Level I 完整筆記'], ['mcq', '打怪＆選擇題']]
+  basic: [['learn', '基礎卡片'], ['formula', '公式教室'], ['game', '小遊戲'], ['mcq', '打怪＆選擇題'], ['notes', '我的筆記']],
+  deriv: [['learn', '知識點'], ['formula', '公式教室'], ['prob', '課本習題'], ['gen', '變化題'], ['game', '小遊戲'], ['mcq', '打怪＆選擇題'], ['notes', '我的筆記']],
+  invest: [['learn', '知識點'], ['formula', '公式教室'], ['flash', '講義問題'], ['game', '小遊戲'], ['mcq', '打怪＆選擇題'], ['notes', '我的筆記']],
+  law: [['learn', '知識點＋條文'], ['game', '小遊戲'], ['mcq', '打怪＆選擇題'], ['notes', '我的筆記']],
+  mgmt: [['learn', '知識點'], ['formula', '公式教室'], ['essay', '申論批改'], ['game', '小遊戲'], ['mcq', '打怪＆選擇題'], ['notes', '我的筆記']],
+  re: [['learn', '知識點'], ['mcq', '打怪＆選擇題'], ['notes', '我的筆記']],
+  cfa: [['intro', '考試指南'], ['learn', 'Level I 完整筆記'], ['mcq', '打怪＆選擇題'], ['notes', '我的筆記']]
 };
 let CUR = ['home'];
 function go(k, tab) {
+  NOTES.hide();
   ST.subj = k; save(); CUR = [k, tab];
   $$('.stab').forEach(b => b.setAttribute('aria-current', b.dataset.s === k ? 'page' : 'false'));
   document.body.dataset.subj = k;
@@ -368,7 +370,7 @@ function go(k, tab) {
   $$('.ptab', main).forEach(b => b.onclick = () => go(k, b.dataset.p));
   ST.tab[k] = tab; save();
   const pane = $('#pane');
-  ({ intro: () => renderCFA(pane), learn: () => renderLearn(k, pane), formula: () => renderFormulas(k, pane), mcq: () => renderMCQ(k, pane), prob: () => renderProblems(pane), gen: () => renderGens(pane), flash: () => renderFlash(pane), essay: () => renderEssay(pane), game: () => renderGames(k, pane) })[tab]();
+  ({ intro: () => renderCFA(pane), learn: () => renderLearn(k, pane), formula: () => renderFormulas(k, pane), mcq: () => renderMCQ(k, pane), prob: () => renderProblems(pane), gen: () => renderGens(pane), flash: () => renderFlash(pane), essay: () => renderEssay(pane), game: () => renderGames(k, pane), notes: () => NOTES.page(k, pane) })[tab]();
   updateCounts();
 }
 window.rerender = () => go(CUR[0], CUR[1]);
