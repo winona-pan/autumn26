@@ -122,17 +122,26 @@ function bankFor(key) {
   else DATA[key].mcq.forEach((m, i) => b.push(Object.assign({ id: 'z' + i }, m)));
   return b;
 }
+const unitName = s => s.t.replace(/（[^）]*）\s*$/, '').replace(/\s+[A-Za-z][A-Za-z &]*$/, '');
 function renderMCQ(key, root) {
-  const bank = bankFor(key); const wrong = () => new Set(ST.wrong2[key] || []);
+  const all = bankFor(key); const wrong = () => new Set(ST.wrong2[key] || []);
+  const units = DATA[key].sections.map(s => ({ id: s.id, t: unitName(s), n: all.filter(m => m.u === s.id).length })).filter(u => u.n);
+  ST.mu = ST.mu || {}; const sel = new Set((ST.mu[key] || []).filter(id => units.some(u => u.id === id)));
+  let bank = all;
+  const pool = () => { bank = sel.size ? all.filter(m => sel.has(m.u)) : all; };
   root.innerHTML = `<div class="tipbox"></div><div class="modes">
     <button class="mode boss" data-m="boss" type="button"><b>打怪模式</b><span>10 題 · 3 顆心</span></button>
     <button class="mode speed" data-m="speed" type="button"><b>60 秒限時賽</b><span>能答幾題就幾題</span></button>
     <button class="mode prac" data-m="prac" type="button"><b>慢慢練習</b><span>每題都有解釋</span></button>
     <button class="mode wrong" data-m="wrong" type="button"><b>錯題本</b><span class="wc"></span></button></div>
-    <p class="sm-p">題庫 ${bank.length} 題${key === 'deriv' ? '（右上角可切換中文、英文或雙語題目）' : ''}</p><div class="arena"></div>`;
+    <div class="ubar"><span class="lbl">出題範圍（可多選，混合幾個單元一起考）</span><div class="uchips"><button class="uchip" data-u="" type="button">全部混合 <i>${all.length}</i></button>${units.map(u => `<button class="uchip" data-u="${u.id}" type="button">${u.t} <i>${u.n}</i></button>`).join('')}</div></div>
+    <p class="sm-p ucount"></p><div class="arena"></div>`;
   FUN.say($('.tipbox', root), tip('boss'));
-  const wc = () => $('.wc', root).textContent = `${wrong().size} 題待複習`; wc();
-  const arena = $('.arena', root);
+  const wc = () => $('.wc', root).textContent = `${bank.filter(m => wrong().has(m.id)).length} 題待複習`;
+  const scope = () => { pool(); $$('.uchip', root).forEach(b => { const on = b.dataset.u ? sel.has(b.dataset.u) : !sel.size; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
+    $('.ucount', root).textContent = `${sel.size ? `已選 ${sel.size} 個單元，共 ${bank.length} 題（全部 ${all.length} 題）` : `全部單元混合出題，共 ${all.length} 題`}${key === 'deriv' ? '（右上角可切換中文、英文或雙語題目）' : ''}`; wc(); };
+  $$('.uchip', root).forEach(b => b.onclick = () => { const u = b.dataset.u; if (!u) sel.clear(); else sel.has(u) ? sel.delete(u) : sel.add(u); ST.mu[key] = [...sel]; save(); scope(); FUN.beep('ok'); arena.innerHTML = `<div class="win">${PIG('happy', 100)}<p>範圍設定好了，選一個模式開始吧！</p></div>`; });
+  const arena = $('.arena', root); scope();
   const mark = (m, ok) => { const w = wrong(); ok ? w.delete(m.id) : w.add(m.id); ST.wrong2[key] = [...w]; save(); wc(); };
   let combo = 0;
   const qhtml = (m, meta) => { const ord = shuffle(m.o.map((t, j) => [t, j])); return `<div class="qmeta">${meta}</div><p class="qtext">${m.q}</p><div class="opts">${ord.map((o, n) => `<button class="opt" data-j="${o[1]}" type="button"><span class="key">${'ABCD'[n]}</span>${o[0]}</button>`).join('')}</div>`; };

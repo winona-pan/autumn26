@@ -129,6 +129,14 @@ details summary{cursor:pointer;font-weight:700;color:var(--acc)} .body{max-width
 .btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--line)} .btn.ghost{background:var(--panel);color:var(--ink)} .btn.on{background:var(--acc);color:#fff} .btn:disabled{opacity:.5;cursor:not-allowed} .btn.big{padding:10px 24px;font-size:17px}
 .quizbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:16px} .quizbar select{border:2px solid var(--line);border-radius:10px;padding:6px;background:var(--panel);max-width:100%}
 .quizbar label{display:flex;gap:6px;align-items:center;flex-wrap:wrap;min-width:0;font-weight:700}
+.ez{display:block;margin:6px 0 2px;padding:7px 11px 7px 12px;background:color-mix(in srgb,var(--acc) 8%,var(--panel));border-left:4px solid color-mix(in srgb,var(--acc) 55%,var(--panel));border-radius:4px 10px 10px 4px;font-size:.94em;line-height:1.7;color:var(--ink);font-weight:400}
+.ez::before{content:'白話';display:inline-block;margin-right:6px;padding:0 7px;border-radius:999px;background:color-mix(in srgb,var(--acc) 22%,var(--panel));font-size:12px;font-weight:700;letter-spacing:.05em;vertical-align:1px}
+.ez.lead{margin:0 0 12px} .ez.lead::before{content:'先看懂'}
+.ez b{font-weight:700}
+.ubar{margin:0 0 10px} .ubar .lbl{margin-bottom:6px} .uchips{display:flex;flex-wrap:wrap;gap:8px}
+.uchip{font:inherit;font-size:13px;font-weight:700;color:var(--ink);background:var(--panel);border:2px solid var(--line);border-radius:999px;padding:4px 12px;cursor:pointer;text-align:left;max-width:100%} .uchip i{font-style:normal;color:var(--mute);font-weight:600;margin-left:2px}
+.uchip:hover{background:var(--why)} .uchip.on{background:var(--acc);border-color:var(--acc);color:#fff} .uchip.on i{color:#fff;opacity:.85}
+.ucount{margin-bottom:12px}
 .modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:14px}
 .mode{border:2.5px solid var(--line);border-radius:16px;padding:12px 14px;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:2px;box-shadow:var(--sh);transition:transform .12s;color:#22264a}
 .mode:hover{transform:translateY(-3px) rotate(-.6deg)} .mode b{font-family:var(--f-zh);font-size:19px} .mode span{font-size:13px}

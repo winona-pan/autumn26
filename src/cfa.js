@@ -279,4 +279,5 @@ function renderCFA(root) {
 }
 
 // 打怪＆選擇題題庫：小測驗題目＋完整題庫
-DATA.cfa.mcq = CFA_Q.concat(CFA_Q2).map(m => ({ q: `<span class="pill">${m.t}</span> ${m.q}`, o: m.o, a: m.a, e: m.e }));
+const CFA_T2U = { 'Ethics': 'x-eth', 'Quant': 'x-quant', 'Economics': 'x-econ', 'Corporate Issuers': 'x-corp', 'FSA': 'x-fsa', 'Equity': 'x-eq', 'Fixed Income': 'x-fi', 'Derivatives': 'x-der', 'Alternatives': 'x-alt', 'Portfolio Mgmt': 'x-pm' };
+DATA.cfa.mcq = CFA_Q.concat(CFA_Q2).map(m => ({ u: CFA_T2U[m.t], q: `<span class="pill">${m.t}</span> ${m.q}`, o: m.o, a: m.a, e: m.e }));
