@@ -2207,6 +2207,69 @@ DATA.re.mcq.push(
   { q:'依票據法，本票執票人向發票人行使追索權時，可以：', o:['直接到地政事務所過戶','聲請法院裁定後強制執行','要求警察扣押財產','不需任何程序直接拍賣房屋'], a:1, e:'票據法 §123：本票可聲請法院裁定後強制執行，比一般訴訟快。' },
   { q:'Buying a property “subject to” the existing mortgage means the buyer:', o:['becomes personally liable for the loan','takes the property without personal liability; the seller remains liable','must pay off the loan immediately','receives a new loan from the lender'], a:1, e:'Subject to：買方不負個人責任；assumption：買方承受並負個人責任。' }
 );
+
+// ===== 單元 1 補充（二）：房貸條款總整理、產權與契據、lien 排序、法拍流程 =====
+DATA.re.sections[0].cards.push(
+  { id:'re1l', t:'房貸契約條款總整理（Mortgage clauses）', en:'Common mortgage covenants and clauses',
+    plain:'美國標準房貸契約（例如 Fannie Mae／Freddie Mac 的 uniform instrument）有一系列固定條款，規範借款人要做什麼、貸方有什麼權利。考試常考每個條款的英文名稱和用途。',
+    life:'就像租屋契約的每一條：房租怎麼繳、壞了誰修、能不能轉租、押金什麼時候退……房貸契約也一樣，每條都有名字。',
+    body:'<div class="tblwrap"><table class="tbl"><tr><th>條款</th><th>內容</th></tr>'
+      + '<tr><td><b>Payment of principal and interest</b></td><td>借款人依 note 按時支付本金和利息（及遲延費用）。</td></tr>'
+      + '<tr><td><b>Prepayment clause</b></td><td>可不可以提前還款（prepayment privilege）、有沒有提前清償違約金（prepayment penalty）。</td></tr>'
+      + '<tr><td><b>Funds for taxes and insurance</b>（escrow）</td><td>每月另繳一筆錢到代管帳戶，由貸方代繳房地產稅和保險費。</td></tr>'
+      + '<tr><td><b>Application of payments</b>（付款的抵充順序）</td><td>規定每筆付款先沖抵什麼。常見順序：<b>費用／違約金 → 代管帳戶（稅、保險） → 利息 → 本金</b>（實際順序依契約與法律）。先沖利息再沖本金，對貸方有利。</td></tr>'
+      + '<tr><td><b>Charges; liens</b></td><td>借款人要繳清所有可能優先於房貸的稅捐和 lien，避免貸方的順位被擠下去。</td></tr>'
+      + '<tr><td><b>Hazard insurance</b></td><td>借款人要為房屋投保火災等財產險，貸方列為受益人（mortgagee clause）。</td></tr>'
+      + '<tr><td><b>Preservation and maintenance</b></td><td>借款人要維護房屋，不得毀損或讓價值減損（防止 waste）。</td></tr>'
+      + '<tr><td><b>Protection of lender’s security</b></td><td>借款人沒繳稅、沒保險時，貸方可以先代墊，金額加到貸款裡。</td></tr>'
+      + '<tr><td><b>Inspection</b></td><td>貸方可以在合理通知後檢查房屋。</td></tr>'
+      + '<tr><td><b>Condemnation</b></td><td>房屋被政府徵收時，補償金先用來償還貸款。</td></tr>'
+      + '<tr><td><b>Borrower not released; forbearance by lender not a waiver</b></td><td>貸方延長付款期限不代表借款人責任解除；貸方一時<b>容忍</b>（forbearance）沒行使權利（例如晚繳沒罰），<b>不代表放棄</b>以後行使的權利。</td></tr>'
+      + '<tr><td><b>Successors and assigns bound; joint and several liability</b></td><td>契約效力及於繼承人和受讓人；多位借款人負<b>連帶責任</b>。</td></tr>'
+      + '<tr><td><b>Future advances clause</b>（追加貸款條款）</td><td>貸方之後再借給借款人的款項（例如追加貸款、建築分期撥款），也由<b>同一個抵押</b>擔保，不用重新設定。類似台灣的<b>最高限額抵押權</b>。</td></tr>'
+      + '<tr><td><b>Due-on-sale clause</b>（transfer of the property）</td><td>房屋出售或移轉時，貸方可以要求全部還清。</td></tr>'
+      + '<tr><td><b>Assumption clause</b>／<b>assumable loan</b></td><td>允許買方<b>承接</b>原貸款（通常要貸方同意、可能收手續費）。低利率時期買方很想承接舊貸款。若貸方同意解除原借款人責任，稱為 <b>novation</b>（債務更替）。</td></tr>'
+      + '<tr><td><b>Assignment clause</b></td><td>貸方可以把 note 和 mortgage <b>轉讓（assign）</b>給第三人（例如賣到次級市場），<b>不需借款人同意</b>；借款人的權利義務不變，只是改付款給新的持有人或服務機構。</td></tr>'
+      + '<tr><td><b>Assignment of rents</b></td><td>（多見於商用不動產）違約時貸方可以直接收取租金。</td></tr>'
+      + '<tr><td><b>Acceleration clause; remedies</b></td><td>違約時全部到期，貸方可以法拍。</td></tr>'
+      + '<tr><td><b>Release clause</b>（release of lien by lender）</td><td>借款人<b>還清</b>後，貸方要<b>解除 lien</b>：出具 <b>satisfaction of mortgage／release of mortgage</b> 並登記（deed of trust 則是 <b>reconveyance</b>）；整批抵押時，可以約定賣掉一部分就釋放那部分（partial release）。</td></tr>'
+      + '<tr><td><b>Subordination clause</b></td><td>同意自己的 lien 排在之後的貸款後面。</td></tr>'
+      + '</table></div><ul><li><b>台灣對照</b>：借款契約常見「加速條款」（喪失期限利益）、抵押物保險、提前清償違約金、<b>抵押權塗銷</b>（還清後銀行出具清償證明及抵押權塗銷同意書，到地政事務所辦理塗銷登記，相當於 release of lien）。</li></ul>',
+    terms:[['future advances clause','追加貸款條款'],['application of payments','付款抵充順序'],['forbearance by lender not a waiver','貸方容忍不代表放棄權利'],['assumable loan','可承接的貸款'],['novation','債務更替（解除原借款人責任）'],['assignment clause','貸方可轉讓債權'],['release of lien / satisfaction of mortgage','解除抵押（抵押權塗銷）'],['joint and several liability','連帶責任'],['condemnation','政府徵收']] },
+  { id:'re1m', t:'Title、Deed、Grantor／Grantee 與 Title assurance', en:'Title, deeds and title assurance',
+    plain:'Title 是「所有權」這個法律狀態；deed 是把所有權從賣方（grantor）移轉給買方（grantee）的書面文件。買方和貸方都要確定產權沒有問題，所以要做產權調查、買產權保險，這些方法統稱 title assurance。',
+    life:'買二手機車：行照上的名字是所有權（title），過戶文件是 deed，賣方是 grantor、買方是 grantee；去監理站查有沒有被查封或欠罰單，就是 title assurance。',
+    body:'<h4>基本名詞</h4><ul><li><b>Title</b>（所有權／產權）：擁有不動產的法律權利，以及證明這個權利的證據。</li><li><b>Deed</b>（契據）：移轉所有權的書面文件。</li><li><b>Grantor</b>（讓與人）：<b>賣方</b>、移轉所有權的人；<b>Grantee</b>（受讓人）：<b>買方</b>、取得所有權的人。（拼法是 grantor，不是 granter）</li><li>有效 deed 的要件：書面、讓與人有行為能力、指明受讓人、法定描述（legal description）、讓與的文字（words of conveyance）、讓與人簽名、<b>交付並受領</b>（delivery and acceptance）；再<b>登記</b>（recording）以對抗第三人。</li></ul><h4>Deed 的種類（保證程度由高到低）</h4><ul><li><b>General warranty deed</b>（一般保證契據）：賣方保證產權完整，包含<b>過去所有人</b>造成的瑕疵。主要保證（covenants）：seisin（確實擁有）、right to convey（有權移轉）、against encumbrances（沒有未揭露的負擔）、quiet enjoyment（不會被第三人主張權利干擾）、warranty forever。</li><li><b>Special warranty deed</b>（特別保證契據）：只保證<b>賣方持有期間</b>沒有產生瑕疵。</li><li><b>Bargain and sale deed</b>：表示賣方擁有產權，但不做保證。</li><li><b>Quitclaim deed</b>（放棄契據）：只移轉賣方「如果有的話」的權利，<b>完全不保證</b>，常用來消除產權疑慮（cloud on title）或家人之間移轉。</li></ul><h4>Title assurance（產權保障）的方法</h4><ul><li><b>Abstract of title ＋ attorney’s opinion</b>：整理該不動產所有登記紀錄的摘要（產權鏈 <b>chain of title</b>），由律師判斷產權是否可交易（<b>marketable title</b>）。缺點：律師只對自己的過失負責，看不到的瑕疵（偽造、未登記的權利）沒有保障。</li><li><b>Title insurance</b>（產權保險）：保險公司調查產權後承保，未來發現瑕疵造成損失由保險理賠。<b>一次付清保費</b>，保障到所有權移轉為止。<ul><li><b>Owner’s policy</b>：保障買方，金額通常是買價。</li><li><b>Lender’s policy</b>（mortgagee’s policy）：保障貸方，金額隨貸款餘額遞減；通常是貸方要求、借款人付費。</li></ul></li><li><b>Torrens system</b>（托崙斯登記制）：政府登記機關直接<b>確認並登記產權</b>，發給產權證書，登記本身就有公信力；美國只有少數地方使用。</li><li><b>Quiet title action</b>（確認產權之訴）：向法院請求確認產權，消除爭議。</li></ul><h4>台灣對照</h4><ul><li>台灣採<b>登記生效＋公信力</b>（類似 Torrens）：不動產物權依法律行為取得、設定、移轉，<b>非經登記不生效力</b>（民法 §758）；信賴登記而取得權利的人受保護（土地法 §43、民法 §759-1）→ 所以台灣幾乎不需要產權保險。</li><li>買賣時查<b>土地及建物登記謄本</b>，看所有權部和<b>他項權利部</b>（抵押權、地上權等）。</li></ul>',
+    terms:[['title','所有權／產權'],['deed','移轉所有權的契據'],['grantor / grantee','讓與人（賣方）／受讓人（買方）'],['general warranty deed','一般保證契據'],['special warranty deed','特別保證契據'],['quitclaim deed','放棄契據（不保證）'],['chain of title','產權鏈'],['abstract of title','產權摘要'],['marketable title','可交易的產權'],['title insurance','產權保險'],['Torrens system','托崙斯登記制'],['cloud on title','產權疑慮']] },
+  { id:'re1n', t:'Lien 的排序（Priority of liens）', en:'Lien priority',
+    plain:'同一間房子上可能有很多 lien。拍賣後的錢依順位分配：稅捐通常排最前面，其他大多依「登記時間先後」排序。排越前面越安全，所以貸方很在意自己是不是第一順位。',
+    life:'排隊領便當：VIP（稅捐）不用排隊直接拿；其他人照抵達時間（登記先後）排；有人可以讓位（subordination）；便當不夠時，排在後面的人就領不到。',
+    body:'<h4>一般的排序原則</h4><ol><li><b>法拍費用</b>（拍賣、法院、受託人的費用）先扣除。</li><li><b>房地產稅、特別課徵（special assessments）的 lien</b>：通常<b>優先於所有其他 lien</b>，不論登記時間。</li><li>其他 lien 原則上依<b>登記時間先後</b>（first in time, first in right）：先登記的第一順位房貸 → 第二順位房貸 → 判決 lien……</li><li>全部清償後如果還有剩，才給借款人（原屋主）。</li></ol><h4>例外與調整</h4><ul><li><b>登記法</b>（recording statutes）：多數州規定未登記的權利不能對抗善意且已登記的後手（notice / race-notice 規則）→ 所以一定要<b>盡快登記</b>。</li><li><b>Mechanic’s lien</b>：在許多州可以<b>溯及</b>到工程開始（或材料交付）的日期，可能排在之後才登記的房貸前面 → 建築融資的貸方要特別注意。</li><li><b>Purchase-money mortgage</b>：為購買該不動產而設定的抵押，通常優先於借款人<b>原本</b>就有的判決 lien 等一般 lien。</li><li><b>Subordination agreement</b>：原本順位在前的債權人<b>同意讓位</b>（例如土地賣方讓建築貸款排在前面）。</li><li><b>Future advances</b>：追加的貸款是否保有原本的順位，依各州法律及是「義務性」（obligatory）或「選擇性」（optional）撥款而不同。</li><li>聯邦稅捐 lien 等也有特殊規定。</li></ul><h4>排序的影響</h4><ul><li><b>Senior lien</b>（前順位）的法拍：拍賣後，<b>後順位 lien 被塗銷</b>（wiped out），只能從剩餘價金受償，不夠就變成無擔保債權。</li><li><b>Junior lien</b>（後順位）的法拍：買受人取得的房子<b>仍附帶前順位的 lien</b>（subject to the senior lien）。</li><li>所以後順位貸款（二胎、HELOC）風險高、利率高；後順位債權人常會代繳前順位的欠款，避免前順位法拍把自己塗銷。</li></ul><h4>台灣對照</h4><ul><li>民法 §865：同一不動產設定數個抵押權，其次序<b>依登記之先後</b>定之。</li><li>稅捐稽徵法 §6：<b>土地增值稅、地價稅、房屋稅</b>在法院拍賣時<b>優先於一切債權及抵押權</b>。</li><li>法拍價金分配：執行費用 → 優先稅捐 → 抵押權依次序 → 一般債權。</li></ul>',
+    terms:[['priority','順位'],['first in time, first in right','先登記先受償'],['special assessment','特別課徵（例如公共工程費）'],['recording statute','登記法'],['subordination agreement','順位讓與協議'],['senior / junior lien','前順位／後順位'],['wiped out','（後順位）被塗銷']] },
+  { id:'re1o', t:'Foreclose：法拍的完整流程', en:'The foreclosure process',
+    plain:'Foreclose 是貸方在借款人違約後，透過拍賣房子來收回欠款的程序。從違約通知、加速到期、拍賣、分配價金，到買受人取得所有權，每一步都有固定的英文名詞。',
+    life:'就像學校處理欠繳的社費：先寄提醒（notice of default）、宣布全部一次繳清（acceleration）、最後把抵押的東西拍賣，賣得的錢先還欠款，剩的才退給你。',
+    body:'<ol><li><b>Default</b>（違約）：未依約付款，或違反其他條款（例如沒繳稅、沒保險、未經同意出售）。</li><li><b>Notice of default</b>（違約通知）：通知借款人並給予補救期間（cure period）。</li><li><b>Acceleration</b>（加速到期）：未補救時，貸方依加速條款宣告全部到期。</li><li>協商（workouts）：forbearance、loan modification、short sale、deed in lieu。</li><li><b>Foreclosure</b>（法拍程序）：<ul><li><b>Judicial foreclosure</b>：向法院起訴，登記 <b>lis pendens</b>（訴訟繫屬通知，警告第三人這筆不動產有訴訟），法院判決後由法院人員拍賣（<b>sheriff’s sale</b>）。</li><li><b>Nonjudicial foreclosure</b>：依 power of sale，由受託人公告後拍賣（<b>trustee’s sale</b>）。</li></ul></li><li><b>Foreclosure sale</b>（拍賣）：公開競價；貸方可以用債權金額直接出價（<b>credit bid</b>）。沒人出更高價時，房子由貸方取得，成為 <b>REO</b>（real estate owned，銀行承受的不動產）。</li><li><b>Distribution</b>（價金分配）：依 lien 的順位分配；剩餘款（surplus）給原屋主。</li><li>買受人取得 <b>sheriff’s deed / trustee’s deed</b>。</li><li>之後：<b>statutory redemption</b>（部分州允許的法拍後贖回期間）、<b>deficiency judgment</b>（有追索權時追討不足額）。</li></ol><ul><li>法拍的成本高：法律費用、時間（數月到數年）、房屋閒置貶值、拍賣價通常低於市價 → 貸方常偏好先協商。</li><li><b>Non-recourse loan</b>（無追索權貸款）：貸方只能就房子受償，拍賣不足也不能追討借款人 → 借款人違約的成本較低，貸方會要求較低的 LTV 或較高利率。商用不動產貸款常見 non-recourse（但有 carve-outs，例如詐欺、環境污染時恢復追索）。</li><li><b>台灣</b>：抵押權人聲請<b>拍賣抵押物裁定</b> → 取得執行名義 → 聲請<b>強制執行</b> → 法院查封、鑑價、拍賣（最多數次減價拍賣）→ 分配價金；銀行也可以承受（類似 REO）。</li></ul>',
+    terms:[['foreclose / foreclosure','法拍（取消贖回權）'],['notice of default','違約通知'],['cure period','補救期間'],['lis pendens','訴訟繫屬通知'],['sheriff’s sale / trustee’s sale','法院拍賣／受託人拍賣'],['credit bid','以債權金額出價'],['REO','銀行承受的不動產'],['surplus','拍賣剩餘款'],['non-recourse','無追索權']] }
+);
+
+DATA.re.mcq.push(
+  { q:'A clause allowing additional loans to be secured by the same mortgage is the:', o:['assignment clause','future advances clause','release clause','condemnation clause'], a:1, e:'Future advances clause（追加貸款條款），類似台灣的最高限額抵押權。' },
+  { q:'The clause that specifies the order in which a borrower’s payment is applied (e.g., escrow, interest, then principal) is the:', o:['application of payments clause','acceleration clause','due-on-sale clause','prepayment clause'], a:0, e:'Application of payments：每筆付款依序沖抵費用、代管帳戶、利息、本金。' },
+  { q:'“Forbearance by lender not a waiver” means that:', o:['the lender must forgive late payments','the lender’s failure to enforce a right once does not waive that right later','the borrower may skip payments','the loan becomes non-recourse'], a:1, e:'貸方一時沒有行使權利，不代表以後放棄。' },
+  { q:'An assignment clause allows the:', o:['borrower to transfer the loan to a buyer without approval','lender to sell the note and mortgage to another party','borrower to subordinate the mortgage','lender to raise the interest rate'], a:1, e:'貸方可以轉讓債權（例如賣到次級市場），借款人義務不變。' },
+  { q:'When a buyer assumes a loan and the lender releases the original borrower from liability, this is called:', o:['subordination','novation','reconveyance','condemnation'], a:1, e:'Novation（債務更替）：新債務人取代舊債務人。' },
+  { q:'After a mortgage is paid off, the lender provides a document releasing its lien, called a:', o:['lis pendens','satisfaction (release) of mortgage','quitclaim deed','notice of default'], a:1, e:'Satisfaction / release of mortgage；deed of trust 則是 reconveyance。台灣是抵押權塗銷。' },
+  { q:'In a deed, the party conveying the property is the:', o:['grantee','grantor','mortgagee','beneficiary'], a:1, e:'Grantor = 讓與人（賣方）；grantee = 受讓人（買方）。' },
+  { q:'Which deed provides the greatest protection to the buyer?', o:['Quitclaim deed','Special warranty deed','General warranty deed','Bargain and sale deed'], a:2, e:'General warranty deed 保證包含前手造成的瑕疵；quitclaim 完全不保證。' },
+  { q:'Which method of title assurance is a one-time premium policy that pays for losses from covered title defects?', o:['Abstract of title','Title insurance','Torrens certificate','Attorney’s opinion'], a:1, e:'Title insurance：owner’s policy 保障買方、lender’s policy 保障貸方。' },
+  { q:'Under the Torrens system:', o:['a private insurer guarantees title','title is registered and certified by a government authority','no recording is needed','only lenders are protected'], a:1, e:'政府登記並確認產權，登記有公信力；台灣制度類似。' },
+  { q:'Generally, which lien is paid first from foreclosure proceeds (after sale costs)?', o:['The first recorded mortgage','Property tax liens','Judgment liens','Second mortgages'], a:1, e:'房地產稅 lien 通常優先於所有 lien；其他依登記先後。台灣稅捐稽徵法 §6 也規定土增稅、地價稅、房屋稅優先。' },
+  { q:'If a senior mortgage is foreclosed, a junior lien on the property is typically:', o:['moved to first priority','wiped out, with any surplus available to it','unaffected and remains on the property','converted to a tax lien'], a:1, e:'前順位法拍後，後順位 lien 被塗銷，只能從剩餘價金受償。' },
+  { q:'依民法，同一不動產上的數個抵押權，其次序依：', o:['債權金額大小','登記之先後','借款利率高低','債權人的身分'], a:1, e:'民法 §865：依登記之先後定其次序。' },
+  { q:'A notice recorded to warn third parties that a lawsuit (such as a judicial foreclosure) affects the property is a:', o:['lis pendens','deed in lieu','credit bid','subordination agreement'], a:0, e:'Lis pendens（訴訟繫屬通知）。' },
+  { q:'Property acquired by the lender at a foreclosure sale is referred to as:', o:['REO (real estate owned)','HELOC','PMI','PITI'], a:0, e:'貸方用 credit bid 得標後持有的不動產稱為 REO。' }
+);
 // ===== English layer: exam sentences, CFA tags, English problems & questions =====
 const EX = {
   d1:'A derivative is an instrument whose value depends on, or is derived from, the value of an underlying asset.',
