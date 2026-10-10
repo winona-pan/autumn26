@@ -6,7 +6,7 @@ cd "$(dirname "$0")"
   echo '<main id="main"></main>'
   echo '<script>'
   echo 'const DATA = {};'
-  cat d_deriv.js d_invest.js d_law.js d_mgmt.js gen.js figs.js widgets.js formulas.js d_basic.js d_re.js d_re2.js d_re3.js d_re4.js d_re5.js d_re_groups.js en.js games.js more.js q_more.js q_re.js fun.js pages.js d_cfa1.js d_cfa2.js d_cfa3.js d_cfa4.js d_cfa_q.js d_cfa_q2.js cfa.js plan.js media.js richpaste.js notes.js sync.js app.js
+  cat d_deriv.js d_invest.js d_law.js d_mgmt.js gen.js figs.js widgets.js formulas.js d_basic.js d_re.js d_re2.js d_re3.js d_re4.js d_re5.js d_re_groups.js en.js sound.js games.js arcade.js more.js q_more.js q_re.js fun.js pages.js d_cfa1.js d_cfa2.js d_cfa3.js d_cfa4.js d_cfa_q.js d_cfa_q2.js cfa.js plan.js media.js richpaste.js notes.js sync.js app.js
   echo 'document.getElementById("brand").insertAdjacentHTML("afterbegin", PIG("happy", 34));'
   echo '</script>'
 } > ../review.html
