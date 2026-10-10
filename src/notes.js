@@ -120,7 +120,9 @@ const NOTES = (() => {
   function saveNote(card, block, k, ed) {
     const id = cardId(card), all = NT();
     const h = ed ? RICH.clean(ed.innerHTML) : '', tmp = document.createElement('div'); tmp.innerHTML = h;
-    const text = (ed ? ed.innerText : '').trim(), has = text || tmp.querySelector('math, hr, table');
+    // 純文字版（搜尋用）：直接從內容算，不依賴畫面是否顯示
+    tmp.querySelectorAll('p, li, h4, h5, h6, tr, blockquote, pre, br').forEach(e => e.after(document.createTextNode('\n')));
+    const text = tmp.textContent.replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim(), has = text || tmp.querySelector('math, hr, table, img');
     if (has) { all[id] = all[id] || {}; const old = all[id][k]; all[id][k] = { t: text, h, q: norm(textOf(block)).slice(0, 80), at: old ? old.at : Date.now(), up: Date.now() }; }
     else if (all[id]) { if (all[id][k]) tomb('nt|' + id + '|' + k); delete all[id][k]; if (!Object.keys(all[id]).length) delete all[id]; }
     save(); noteBox(block, card, k, false); badge(card);

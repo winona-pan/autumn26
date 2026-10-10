@@ -66,6 +66,8 @@ const RICH = (() => {
         if (tag === 'A' && !/^https?:\/\//i.test(n.getAttribute('href') || '')) { walk(n, dst); continue; }
         const el = document.createElement(tag);
         if (tag === 'A') { const h = n.getAttribute('href') || ''; if (/^https?:\/\//i.test(h)) { el.href = h; el.target = '_blank'; el.rel = 'noopener noreferrer'; } }
+        if (tag === 'OL') { const v = parseInt(n.getAttribute('start'), 10); if (v > 1 && v < 10000) el.setAttribute('start', v); }
+        if (tag === 'LI') { const v = parseInt(n.getAttribute('value'), 10); if (v > 0 && v < 10000 && n.parentElement && n.parentElement.tagName === 'OL') el.setAttribute('value', v); }
         if (tag === 'TD' || tag === 'TH') ['colspan', 'rowspan'].forEach(a => { const v = parseInt(n.getAttribute(a), 10); if (v > 1 && v < 50) el.setAttribute(a, v); });
         if (cc.length && !/^(TABLE|THEAD|TBODY|TR|UL|OL|PRE|HR|BR)$/.test(tag)) el.className = cc.join(' ');
         walk(n, el); dst.appendChild(el);
@@ -143,11 +145,12 @@ const RICH = (() => {
           const ind = lm[1].replace(/\t/g, '    ').length, type = /\d/.test(lm[2]) ? 'ol' : 'ul';
           while (stack.length && ind < stack[stack.length - 1].ind) stack.pop();
           let top = stack[stack.length - 1];
-          if (!top || ind > top.ind) { const parent = top ? top.list.items[top.list.items.length - 1] : root; const list = { type, items: [] }; parent.kids.push(list); top = { ind, list, parent }; stack.push(top); }
-          else if (top.list.type !== type) { const list = { type, items: [] }; top.parent.kids.push(list); top.list = list; }
+          const num = type === 'ol' ? parseInt(lm[2], 10) : 0;
+          if (!top || ind > top.ind) { const parent = top ? top.list.items[top.list.items.length - 1] : root; const list = { type, items: [], start: num }; parent.kids.push(list); top = { ind, list, parent }; stack.push(top); }
+          else if (top.list.type !== type) { const list = { type, items: [], start: num }; top.parent.kids.push(list); top.list = list; }
           top.list.items.push({ text: inline(lm[3]), kids: [] });
         }
-        const render = n => n.kids.map(list => `<${list.type}>` + list.items.map(it => `<li>${it.text}${render(it)}</li>`).join('') + `</${list.type}>`).join('');
+        const render = n => n.kids.map(list => `<${list.type}${list.start > 1 ? ` start="${list.start}"` : ''}>` + list.items.map(it => `<li>${it.text}${render(it)}</li>`).join('') + `</${list.type}>`).join('');
         out.push(render(root)); continue;
       }
       const buf = [];
@@ -186,7 +189,7 @@ const RICH = (() => {
     const frag = r.createContextualFragment(html); const last = frag.lastChild; r.insertNode(frag); if (last) { r.setStartAfter(last); r.collapse(true); sel.removeAllRanges(); sel.addRange(r); }
   }
   function attach(ed) {
-    const run = async (data, range) => { ed.classList.add('busy'); try { const h = await convert(data); if (h) { ed.focus(); if (range) { const sel = getSelection(); sel.removeAllRanges(); sel.addRange(range); } insertHTML(h); ed.dispatchEvent(new Event('input')); } } finally { ed.classList.remove('busy'); } };
+    const run = async (data, range) => { ed.classList.add('busy'); try { const h = await convert(data); if (h) { ed.focus(); const sel = getSelection(); if (!range || !ed.contains(range.startContainer)) { range = document.createRange(); range.selectNodeContents(ed); range.collapse(false); } sel.removeAllRanges(); sel.addRange(range); insertHTML(h); ed.dispatchEvent(new Event('input')); } } finally { ed.classList.remove('busy'); } };
     const keep = () => { const sel = getSelection(); return sel.rangeCount && ed.contains(sel.anchorNode) ? sel.getRangeAt(0).cloneRange() : null; };
     ed.addEventListener('paste', e => { const cd = e.clipboardData; if (!cd) return; e.preventDefault(); run(readClip(cd), keep()); });
     ed.addEventListener('drop', e => { const cd = e.dataTransfer; if (!cd) return; e.preventDefault(); let r = null; if (document.caretRangeFromPoint) r = document.caretRangeFromPoint(e.clientX, e.clientY); run(readClip(cd), r || keep()); });
