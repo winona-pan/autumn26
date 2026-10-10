@@ -162,8 +162,9 @@ const NOTES = (() => {
     ed.addEventListener('input', () => ensureTail(ed));
     ensureTail(ed);
   }
-  function noteBox(block, card, k, edit) {
+  function noteBox(block, card, k, edit, force) {
     let box = [...block.children].find(x => x.classList.contains('ntbox'));
+    if (!edit && !force && box && box.querySelector('.nted')) return; // 正在寫的筆記不被同步蓋掉
     const d = (NT()[cardId(card)] || {})[k];
     if (!d && !edit) { if (box) box.remove(); return; }
     if (!box) { box = document.createElement('span'); box.className = 'ntbox'; block.appendChild(box); }
@@ -194,7 +195,7 @@ const NOTES = (() => {
     const text = tmp.textContent.replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim(), has = text || tmp.querySelector('math, hr, table, img');
     if (has) { all[id] = all[id] || {}; const old = all[id][k]; all[id][k] = { t: text, h, q: norm(textOf(block)).slice(0, 80), at: old ? old.at : Date.now(), up: Date.now() }; }
     else if (all[id]) { if (all[id][k]) tomb('nt|' + id + '|' + k); delete all[id][k]; if (!Object.keys(all[id]).length) delete all[id]; }
-    save(); noteBox(block, card, k, false); badge(card);
+    save(); noteBox(block, card, k, false, true); badge(card);
   }
   function showNotes(card) {
     const id = cardId(card), notes = NT()[id]; if (!notes) return;
@@ -330,7 +331,7 @@ const NOTES = (() => {
         if (a === 'edit') noteBox(block, card, k, true);
         else if (a === 'done') saveNote(card, block, k, box.querySelector('.nted'));
         else if (a === 'del') { if (confirm('刪除這則筆記？')) saveNote(card, block, k, null); }
-        else noteBox(block, card, k, false);
+        else noteBox(block, card, k, false, true);
         return; }
       if (card.classList.contains('nmode') && getSelection().isCollapsed && !e.target.closest('a, button, input, textarea, summary, label, .ntbox')) {
         const b = e.target.closest(BLK); if (b && card.querySelector('.body').contains(b)) { openNote(card, b); return; }
@@ -381,5 +382,14 @@ const NOTES = (() => {
     draw();
   }
 
-  return { mount, page, hide, bmPill };
+  // 同步拿到新資料時就地更新（不重畫頁面）：正在編輯的筆記框不動
+  function refresh(root) {
+    $$('.card', root).forEach(card => {
+      card.querySelectorAll('.ntbox').forEach(b => { if (!b.querySelector('.nted')) b.remove(); });
+      paint(card); showNotes(card); badge(card); showBm(card);
+      const cb = card.querySelector('[data-done]'); if (cb) { const on = !!ST.done[cb.dataset.done]; cb.checked = on; card.classList.toggle('done', on); }
+    });
+    bmPill();
+  }
+  return { mount, page, hide, bmPill, refresh };
 })();

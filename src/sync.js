@@ -10,6 +10,8 @@ const SYNC = (() => {
   const keep = () => { try { localStorage.setItem(LK, JSON.stringify(cfg)); } catch (e) { } };
   let busy = false, again = false, tChange = 0, tPush = 0;
 
+  // 內容一樣就要比對相等（欄位順序不同不算改變），否則每次同步都會以為有新資料而重畫頁面
+  const canon = v => JSON.stringify(v, (k, x) => x && typeof x === 'object' && !Array.isArray(x) ? Object.keys(x).sort().reduce((o, kk) => (o[kk] = x[kk], o), {}) : x);
   const syncable = st => { const o = {}; for (const k in st) if (!LOCAL_ONLY.has(k)) o[k] = st[k]; return o; };
   const hash = s => { let h = 5381; for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0; return (h >>> 0).toString(36) + ':' + s.length; };
   const ts = v => typeof v === 'number' ? v : (v && (v.up || v.at)) || 1;
@@ -71,13 +73,16 @@ const SYNC = (() => {
   }
 
   // ---- 套用合併結果到這台 ----
-  function apply(data) {
+  function apply(data, before) {
     for (const k of Object.keys(ST)) if (!LOCAL_ONLY.has(k) && !(k in data)) delete ST[k];
     Object.assign(ST, data); store.set(ST);
     try { FUN.hud(); updateCounts(); } catch (e) { }
-    // 正在寫筆記、選文字或答題時不重畫，下次換頁就會看到
-    const busyUI = document.querySelector('[contenteditable="true"]') || !getSelection().isCollapsed || (CUR[1] && !['learn', 'notes'].includes(CUR[1]));
-    if (!busyUI && CUR[0]) window.rerender(); else if (CUR[1] === 'learn') NOTES.bmPill();
+    // 只有筆記、重點、書籤、勾選有變，畫面才需要更新；而且就地更新，不重畫整頁、不跳通知、不動捲動位置
+    const vis = d => canon({ nt: d.nt, hl: d.hl, bm: d.bm, done: d.done });
+    if (before && vis(before) === vis(data)) return;
+    const pane = document.getElementById('pane');
+    if (CUR[1] === 'learn' && pane) NOTES.refresh(pane);
+    else if (CUR[1] === 'notes' && pane && !pane.querySelector('#ntq:focus')) { const y = scrollY; NOTES.page(CUR[0], pane); window.scrollTo(0, y); }
   }
 
   // ---- 同步一次：抓雲端 → 合併 → 寫回本機與雲端 → 補傳／補抓圖片 ----
@@ -89,12 +94,12 @@ const SYNC = (() => {
       const g = await api('GET', '/gists/' + cfg.gist);
       const f = g.files[FILE]; let remote = null;
       if (f) { try { remote = JSON.parse(await fileText(f)); } catch (e) { remote = null; } }
-      const localData = syncable(ST), lj = JSON.stringify(localData);
+      const localData = syncable(ST), lj = canon(localData);
       const merged = remote && remote.data ? merge({ mt: cfg.mt || 0, data: localData }, remote) : localData;
-      const mj = JSON.stringify(merged);
-      if (mj !== lj) apply(JSON.parse(mj));
+      const mj = canon(merged);
+      if (mj !== lj) apply(JSON.parse(mj), localData);
       const mt = Math.max(cfg.mt || 0, (remote && remote.mt) || 0);
-      if (!remote || JSON.stringify(remote.data) !== mj) await api('PATCH', '/gists/' + cfg.gist, { files: { [FILE]: { content: JSON.stringify({ v: 1, mt, at: Date.now(), data: merged }) } } });
+      if (!remote || canon(remote.data) !== mj) await api('PATCH', '/gists/' + cfg.gist, { files: { [FILE]: { content: JSON.stringify({ v: 1, mt, at: Date.now(), data: merged }) } } });
       // 圖片：這台有、雲端沒有 → 上傳；雲端有、這台沒有 → 下載
       const used = IMGS.usedIds(merged), have = new Set(await IMGS.keys());
       for (const id of used) {
@@ -111,7 +116,7 @@ const SYNC = (() => {
   function changed() {
     if (!cfg.token) return;
     clearTimeout(tChange); tChange = setTimeout(() => {
-      const h = hash(JSON.stringify(syncable(ST)));
+      const h = hash(canon(syncable(ST)));
       if (h !== cfg.h) { cfg.h = h; cfg.mt = Date.now(); keep(); clearTimeout(tPush); tPush = setTimeout(run, 2500); }
     }, 1500);
   }
@@ -130,13 +135,13 @@ const SYNC = (() => {
         if (f) { try { remote = JSON.parse(await fileText(f)); } catch (e) { } }
         if (remote && remote.data) { pending = { token: cfg.token, user: u.login, gist: gid, remote: summary(remote.data), at: remote.at || 0 }; cfg = {}; return { choose: pending, local: summary(ST) }; }
       }
-      cfg = { token: token.trim(), user: u.login, gist: gid || undefined, mt: 0, h: hash(JSON.stringify(syncable(ST))) }; keep(); await run(); return { ok: !cfg.err };
+      cfg = { token: token.trim(), user: u.login, gist: gid || undefined, mt: 0, h: hash(canon(syncable(ST))) }; keep(); await run(); return { ok: !cfg.err };
     } catch (e) { const m = e.message; cfg = {}; keep(); throw new Error(m); }
   }
   // prefer：'local' = 這台比較新（XP、錯題本、計畫以這台為準）；'remote' = 雲端比較新
   async function finish(prefer) {
     if (!pending) return; const p = pending; pending = null;
-    cfg = { token: p.token, user: p.user, gist: p.gist, mt: prefer === 'local' ? Date.now() : 0, h: hash(JSON.stringify(syncable(ST))) }; keep();
+    cfg = { token: p.token, user: p.user, gist: p.gist, mt: prefer === 'local' ? Date.now() : 0, h: hash(canon(syncable(ST))) }; keep();
     await run();
   }
   // 之後如果發現另一台蓋掉了這台的 XP／錯題本：以這台為準再同步一次（筆記、重點、書籤一樣是合併）
