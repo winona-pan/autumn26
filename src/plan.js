@@ -52,7 +52,7 @@ const planMD = s => { const d = planPd(s); return `${d.getMonth() + 1}/${d.getDa
 const planH = m => { const h = Math.round(m / 60 * 10) / 10; return h + ' 小時'; };
 
 function planSettings() {
-  const D = { start: '', dates: { mgmt: '2026-11-04', deriv: '2026-11-16', invest: '2026-11-03', law: '2026-10-28', re: '2026-11-12', reF: '2026-12-17', mgmtF: '2026-12-23', derivF: '2026-12-21', investF: '2026-12-22', lawF: '2026-12-23' }, on: { basic: true, deriv: true, invest: true, law: true, mgmt: true, re: true }, fam: {}, wk: [4, 2, 2, 2, 2, 2, 4], off: [], review: 120, mode: 'seq', reH: 3.5, reDone: {}, gmatX: 1.8, gmatU: {}, gmatProg: {}, gmatDays: [0, 1, 2, 3, 4, 5, 6], finR: 1, reports: [{ n: '史記報告', d: '2026-11-26', h: 0 }, { n: 'ESG報告', d: '2026-12-04', h: 0 }, { n: '衍金報告', d: '2026-12-07', h: 0 }, { n: '投資學期末報告', d: '2026-12-15', h: 0 }, { n: '管理學報告', d: '', h: 0 }], habits: { fr: { on: true, min: 30, days: [0, 1, 2, 3, 4, 5, 6] }, ielts: { on: true, min: 45, days: [1, 2, 3, 4, 5] }, invHw: { on: true, min: 60, days: [0], until: '2026-12-23' }, mgmtHw: { on: true, min: 30, days: [5], until: '2026-12-23' } } };
+  const D = { start: '', dates: { mgmt: '2026-11-04', deriv: '2026-11-16', invest: '2026-11-03', law: '2026-10-28', re: '2026-11-12', reF: '2026-12-17', mgmtF: '2026-12-23', derivF: '2026-12-21', investF: '2026-12-22', lawF: '2026-12-23' }, on: { basic: true, deriv: true, invest: true, law: true, mgmt: true, re: true }, fam: {}, wk: [4, 2, 2, 2, 2, 2, 4], off: [], review: 120, mode: 'seq', reH: 3.5, reDone: {}, gmatX: 1.8, gmatU: {}, gmatProg: {}, taskProg: {}, gmatDays: [0, 1, 2, 3, 4, 5, 6], finR: 1, reports: [{ n: '史記報告', d: '2026-11-26', h: 0 }, { n: 'ESG報告', d: '2026-12-04', h: 0 }, { n: '衍金報告', d: '2026-12-07', h: 0 }, { n: '投資學期末報告', d: '2026-12-15', h: 0 }, { n: '管理學報告', d: '', h: 0 }], habits: { fr: { on: true, min: 30, days: [0, 1, 2, 3, 4, 5, 6] }, ielts: { on: true, min: 45, days: [1, 2, 3, 4, 5] }, invHw: { on: true, min: 60, days: [0], until: '2026-12-23' }, mgmtHw: { on: true, min: 30, days: [5], until: '2026-12-23' } } };
   D.dates.gmat = '2026-12-30'; D.on.gmat = true;
   // 直接補在 ST.plan 上（不換新物件），畫面上拿到的設定才會一直是同一份、改了都存得到
   const S = ST.plan = ST.plan || {};
@@ -64,7 +64,19 @@ function planSettings() {
 }
 
 // 一科要做的事（依序）：還沒勾「我懂了」的卡片 → 習題 → 公式、講義、條文、申論等固定複習
+// 每一項的代號；卡片（我懂了）和不動產單元（看複習卡）以外都能在今天打勾
+const planTK = t => t.gu || `${t.k}|${t.id || t.sec + '|' + t.t}`;
+const planCheckable = t => t.kind !== 'c' && t.kind !== 'rec';
+// 報告、期末範圍、公式教室等：今天打勾的份量記在 taskProg，扣掉後才排（GMAT 記在 gmatProg）
 function planTasks(k, f) {
+  const pr = ST.plan.taskProg || {};
+  return planTasksAll(k, f).map(t => {
+    t.key = planTK(t); if (t.gu || !planCheckable(t) || !pr[t.key]) return t;
+    const m = t.min - pr[t.key]; return m > 0.5 ? Object.assign({}, t, { min: m, note: `（剩約 ${planH(m)}）` }) : null;
+  }).filter(Boolean);
+}
+
+function planTasksAll(k, f) {
   const P = ST.plan;
   const chunks = (n, sec, label) => { const T = [], c = Math.max(1, Math.round(n / 90)); for (let i = 1; i <= c; i++) T.push({ k, sec, t: label(i, c), min: Math.round(n / c), kind: 'v' }); return T; };
   if (/F$/.test(k) && PLAN_FIN.includes(planBase(k))) {
@@ -112,7 +124,7 @@ function buildPlan() {
   subs.sort((a, b) => a.exam < b.exam ? -1 : a.exam > b.exam ? 1 : a.pre ? -1 : 1);
   const last = subs.reduce((m, s) => s.exam > m ? s.exam : m, start);
   const days = [];
-  for (let d = planPd(start); planPs(d) < last; d.setDate(d.getDate() + 1)) { const s = planPs(d), pd = ST.planDone && ST.planDone[s]; days.push({ d: s, cap: P.off.includes(s) || (pd && pd.snap) ? 0 : Math.round((+P.wk[d.getDay()] || 0) * 60), total: 0, blocks: {} }); }
+  for (let d = planPd(start); planPs(d) < last; d.setDate(d.getDate() + 1)) { const s = planPs(d), fz = ST.planFrz && ST.planFrz[s]; days.push({ d: s, cap: P.off.includes(s) || fz ? 0 : Math.round((+P.wk[d.getDay()] || 0) * 60), total: 0, blocks: {} }); }
   const add = (D, k, m, kind) => { const b = D.blocks[k] = D.blocks[k] || { learn: 0, rev: 0 }; b[kind] += m; D.total += m; };
   subs.forEach(s => {
     const f = (PLAN_FAM.find(x => x[0] === (P.fam[planBase(s.k)] || '普通')) || [0, 1])[1];
@@ -134,13 +146,14 @@ function buildPlan() {
       const t = s.tasks[s.cur.ti], a = Math.min(t.min - s.cur.used, max - got);
       l.unit[s.k] = unitOf(t); got += a; s.cur.used += a;
       const it = l.items[s.k] = l.items[s.k] || []; if (!it.includes(t)) it.push(t);
-      if (t.gu) { const g = l.gm[s.k] = l.gm[s.k] || {}, rg = l.rng[s.k] = l.rng[s.k] || {}, from = t.off + s.cur.used - a; g[t.gu] = (g[t.gu] || 0) + a; rg[t.gu] = [rg[t.gu] ? rg[t.gu][0] : from, t.off + s.cur.used]; }
+      if (t.key) { const g = l.tm[s.k] = l.tm[s.k] || {}; g[t.key] = (g[t.key] || 0) + a; }
+      if (t.gu) { const rg = l.rng[s.k] = l.rng[s.k] || {}, from = t.off + s.cur.used - a; rg[t.gu] = [rg[t.gu] ? rg[t.gu][0] : from, t.off + s.cur.used]; }
       if (s.cur.used >= t.min - 0.01) { s.cur.ti++; s.cur.used = 0; }
     }
     s.left -= got; return got;
   };
-  const newL = () => ({ learn: {}, unit: {}, items: {}, gm: {}, rng: {} });
-  const commit = (D, l) => Object.entries(l.learn).forEach(([k, m]) => { if (m <= 0) return; add(D, k, m, 'learn'); D.blocks[k].items = l.items[k] || []; if (l.gm[k]) D.blocks[k].gm = l.gm[k]; if (l.rng[k]) D.blocks[k].rng = l.rng[k]; });
+  const newL = () => ({ learn: {}, unit: {}, items: {}, tm: {}, rng: {} });
+  const commit = (D, l) => Object.entries(l.learn).forEach(([k, m]) => { if (m <= 0) return; add(D, k, m, 'learn'); D.blocks[k].items = l.items[k] || []; if (l.tm[k]) D.blocks[k].tm = l.tm[k]; if (l.rng[k]) D.blocks[k].rng = l.rng[k]; });
   // 先在考前最後幾天保留總複習時間
   subs.filter(s => s.rev).forEach(s => {
     let r = s.rev;
@@ -193,20 +206,30 @@ function buildPlan() {
     Object.entries(L).forEach(([i, l]) => { const D = days[i]; D.cap -= l.learn[s.k]; commit(D, l); });
   });
   subs.forEach(s => s.got = s.need - Math.max(0, s.left));
+  // 今天打過勾就固定今天的內容（不會因為扣掉進度又塞新的進來）
+  days.forEach(D => { const fz = ST.planFrz && ST.planFrz[D.d]; if (fz) { D.blocks = fz.blocks; D.total = fz.total; D.frozen = true; } });
   return { P, start, subs, days, habits };
 }
 
-function planBlockHTML(k, b, exam, d) {
-  if (PLAN_HAB[k]) return `<div class="pblk ${k}"><div class="pbh"><b>${PLAN_HAB[k][0]}</b><span>${b.learn} 分鐘</span></div><p>${k === 'ielts' ? IELTS_DAY[planPd(d).getDay()] : PLAN_HAB[k][1]}</p></div>`;
+function planBlockHTML(k, b, exam, d, chk) {
+  // chk：今天才有，每項前面加勾勾（卡片用「我懂了」、不動產單元用設定裡的勾，所以不加）
+  const ck = ik => chk ? `<input type="checkbox" class="ick" data-ick="${ik}"${chk[ik] ? ' checked' : ''} aria-label="這項完成">` : '';
+  const line = (ik, html) => chk ? `<span class="pit${chk[ik] ? ' ok' : ''}">${ck(ik)}<span>${html}</span></span>` : html;
+  if (PLAN_HAB[k]) return `<div class="pblk ${k}"><div class="pbh"><b>${PLAN_HAB[k][0]}</b><span>${b.learn} 分鐘</span></div><p>${line(k + '§hab', k === 'ielts' ? IELTS_DAY[planPd(d).getDay()] : PLAN_HAB[k][1])}</p></div>`;
   const groups = []; (b.items || []).forEach(t => { const g = groups.find(x => x.sec === t.sec); g ? g.items.push(t) : groups.push({ sec: t.sec, items: [t] }); });
+  const item = t => t.kind === 'g' ? `${t.t}${(x => x ? `<br><b class="gseg">▶ ${x}</b>` : '')(gmatSeg(t, b.rng && b.rng[t.gu]))} <button type="button" class="linkish" data-gu="${t.gu}">整個單元讀完了 ✓</button>`
+    : t.kind === 'v' ? t.t + (t.note || '') : t.kind === 'rec' ? `${t.t} <button type="button" class="linkish refcfa" data-pj="re|${t.id}|c|">看複習卡</button>`
+    : `<button type="button" class="linkish" data-pj="${t.k}|${t.id || ''}|${t.kind}|${t.tab || ''}">${t.t}</button>${t.note || ''}`;
+  const list = items => { let h = '', prev = false; items.forEach(t => { const c = chk && planCheckable(t); if (!c && prev) h += '、'; h += c ? line(k + '§' + t.key, item(t)) : item(t); prev = !c; }); return h; };
+  const rev = DATA[planBase(k)] ? `<button type="button" class="linkish" data-pj="${planBase(k)}||x|mcq">打怪模式＋錯題本</button>，再快速翻過所有卡片的「白話」${planBase(k) === 'deriv' ? '，整理 A4 小抄' : ''}` : k === 'gmat' ? '最後一份模考、看錯題本、確認考試流程和作息' : '重看各單元筆記和影片重點，整理考試範圍的公式與名詞';
   return `<div class="pblk ${planHue(k)}"><div class="pbh"><b>${PLAN_NAME[k]}${/F$/.test(k) ? '（期末範圍）' : /^rp/.test(k) ? '（報告）' : ''}</b><span>${planH(b.learn + b.rev)}</span></div>
-    ${groups.map(g => `<p><span class="psec">${g.sec}</span>${g.items.map(t => t.kind === 'g' ? `${t.t}${(x => x ? `<br><b class="gseg">▶ ${x}</b>` : '')(gmatSeg(t, b.rng && b.rng[t.gu]))} <button type="button" class="linkish" data-gu="${t.gu}">讀完了 ✓</button>` : t.kind === 'v' ? t.t : t.kind === 'rec' ? `${t.t} <button type="button" class="linkish refcfa" data-pj="re|${t.id}|c|">看複習卡</button>` : `<button type="button" class="linkish" data-pj="${t.k}|${t.id || ''}|${t.kind}|${t.tab || ''}">${t.t}</button>`).join('、')}</p>`).join('')}
-    ${k === 'gmat' && b.learn && (b.items || []).length && (b.items || []).every(t => t.ui > 0 && !['RC', 'Verbal 練習', '模考'].includes(t.sec)) ? '<p><span class="psec">RC 保溫</span>每天順手 1 篇 RC（約 15 分鐘），讀完的單元才不會退步</p>' : ''}
-    ${b.rev ? `<p><span class="psec">考前總複習</span>${DATA[planBase(k)] ? `<button type="button" class="linkish" data-pj="${planBase(k)}||x|mcq">打怪模式＋錯題本</button>，再快速翻過所有卡片的「白話」${planBase(k) === 'deriv' ? '，整理 A4 小抄' : ''}` : k === 'gmat' ? '最後一份模考、看錯題本、確認考試流程和作息' : '重看各單元筆記和影片重點，整理考試範圍的公式與名詞'}${exam ? `（${planMD(exam)} 考試）` : ''}</p>` : ''}</div>`;
+    ${groups.map(g => `<p><span class="psec">${g.sec}</span>${list(g.items)}</p>`).join('')}
+    ${b.rev ? `<p><span class="psec">考前總複習</span>${line(k + '§rev', rev + (exam ? `（${planMD(exam)} 考試）` : ''))}</p>` : ''}</div>`;
 }
 
 function renderPlan(root) {
   const P = planSettings();
+  ['planFrz', 'planChk'].forEach(n => { if (ST[n]) Object.keys(ST[n]).forEach(d => { if (d < planToday()) delete ST[n][d]; }); });
   root.innerHTML = `<div class="pagehead"><h2>讀書進度表</h2><p class="intro">依考試先後，把各科還沒掌握的卡片、習題、影片課和 GMAT 排進每一天，加上每天的法文和雅思練習，考前一天留給總複習。卡片勾「我懂了」之後會自動從進度表拿掉，每次打開都會依剩下的內容重新排。</p></div>
   <div class="setgrid">
   <section class="setbox"><h3>1. 期中考日期與熟悉度</h3>
@@ -223,7 +246,7 @@ function renderPlan(root) {
       <label>每堂課 ≈ 影片長度的 <select id="plgx">${[1.3, 1.5, 1.8, 2, 2.5].map(x => `<option value="${x}"${x === +P.gmatX ? ' selected' : ''}>${x} 倍</option>`).join('')}</select>（看影片＋做題）</label><span class="sm-p">還要 <b data-need="gmat"></b></span><span class="hdays">${[1, 2, 3, 4, 5, 6, 0].map(i => `<label><input type="checkbox" data-gday="${i}"${P.gmatDays.includes(i) ? ' checked' : ''}>${'日一二三四五六'[i]}</label>`).join('')}</span>
       <details class="reunits"><summary>單元進度（照順序一次讀一個；讀完打勾，就不會再排）</summary>${GMAT_UNITS.map((u, i) => [u[0], `${i + 1}. ${u[1]}｜${u[2]}`]).map(([g, n]) => `<label><input type="checkbox" data-gud="${g}"${P.gmatU[g] ? ' checked' : ''}> ${n}</label>`).join('')}</details></div>
     ${Object.keys(PLAN_HAB).map(h => { const c = P.habits[h]; return `<div class="plrow ${h}"><label class="pln"><input type="checkbox" data-hon="${h}"${c.on ? ' checked' : ''}> <b>${PLAN_HAB[h][0]}</b></label><label>每次 <select data-hmin="${h}">${[15, 30, 45, 60, 90].map(m => `<option value="${m}"${m === +c.min ? ' selected' : ''}>${m} 分鐘</option>`).join('')}</select></label><span class="hdays">${[1, 2, 3, 4, 5, 6, 0].map(i => `<label><input type="checkbox" data-hday="${h}|${i}"${c.days.includes(i) ? ' checked' : ''}>${'日一二三四五六'[i]}</label>`).join('')}</span>${c.until !== undefined ? `<label>排到 <input type="date" data-huntil="${h}" value="${c.until || ''}"></label>` : ''}</div>`; }).join('')}
-    </div><p class="sm-p">GMAT 照補習班進階區的上課順序（RC1 → CR1 → 數學1 → …），課程上完再輪流做數學練習計畫和 GWD，最後 PP 模考。每天只讀一個單元（一科），一個單元可能分兩三天，讀完當天不會接著開下一個。只排在你勾的星期幾，期中考後每天會變多。<b>今天沒讀完也沒關係</b>：當天按「完成」才會記下讀過的份量，沒按就整份留著重排；單元沒按「讀完了」也會留著（按錯了可以在今天的格子或單元清單取消，XP 會退回），每次打開都把剩下的平均分到考前每一天，不會全部堆到明天。語言練習和每週作業（週日投資學報告、週五管理學作業，排到寒假前 12/23）每天最先保留。</p></section>
+    </div><p class="sm-p">GMAT 照補習班進階區的上課順序（RC1 → CR1 → 數學1 → …），課程上完再輪流做數學練習計畫和 GWD，最後 PP 模考。每天只讀一個單元（一科），一個單元可能分兩三天，讀完當天不會接著開下一個。只排在你勾的星期幾，期中考後每天會變多。<b>今天沒讀完也沒關係</b>：今天每一項讀完就打勾（或直接勾「完成」），會記下讀過的份量；沒勾的整份留著重排；單元沒按「讀完了」也會留著（按錯了可以在今天的格子或單元清單取消，XP 會退回），每次打開都把剩下的平均分到考前每一天，不會全部堆到明天。語言練習和每週作業（週日投資學報告、週五管理學作業，排到寒假前 12/23）每天最先保留。</p></section>
   <section class="setbox"><h3>4. 每天能讀幾小時</h3>
     <div class="wkrow">${[1, 2, 3, 4, 5, 6, 0].map(i => `<label><span>週${'日一二三四五六'[i]}</span><input type="number" min="0" max="16" step="0.5" data-wk="${i}" value="${P.wk[i]}" inputmode="decimal"></label>`).join('')}</div>
     <div class="row wrap"><label>從哪天開始 <input type="date" id="plstart" value="${P.start || planToday()}"></label>
@@ -250,14 +273,13 @@ function renderPlan(root) {
       ${R.subs.length ? `<div class="tblwrap"><table class="tbl"><thead><tr><th>順序</th><th>科目</th><th>考試</th><th>需要</th><th>排進去的</th><th>狀態</th></tr></thead><tbody>${R.subs.map((s, i) => { const short = s.left + (s.revShort || 0); return `<tr><td>${i + 1}</td><td><b>${PLAN_NAME[s.k]}${s.report ? '（報告）' : s.final ? '（期末）' : ''}</b></td><td>${s.pre ? `先讀完（${planMD(s.exam)} 前）` : planMD(s.exam)}</td><td>${planH(s.need + s.rev)}</td><td>${planH(s.got + s.rev - (s.revShort || 0))}</td><td>${short > 0 ? `<span class="pill bad">還差 ${planH(short)}</span>` : '<span class="pill good">排得完</span>'}</td></tr>`; }).join('')}</tbody></table></div>
       ${R.habits.length ? `<p class="sm-p">固定練習與每週作業：${R.habits.map(h => `${PLAN_HAB[h.k][0]} ${planH(h.got)}${h.got < h.want ? `（還差 ${planH(h.want - h.got)}）` : ''}`).join('、')}</p>` : ''}<p class="sm-p">到 ${planMD(R.days[R.days.length - 1] ? R.days[R.days.length - 1].d : R.start)} 為止，可讀時間共 ${planH(have)}（平均每天 ${planH(have / nd)}），全部排完需要 ${planH(need)}（<b>平均每天 ${planH(need / nd)}</b>）。${R.subs.some(s => s.left + (s.revShort || 0) > 0) || R.habits.some(h => h.got < h.want) ? '<b class="warnt">時間不夠：可以增加每天的時數、把比較熟的科目改成「熟」，或先讀進度表排到的部分。</b>' : `時間足夠，每天只排需要的量${have > need * 1.2 ? '，多出來的時間可以玩小遊戲或複習錯題本' : ''}。`}</p>` : '<p>先在上面填期中考日期，就會產生進度表。</p>'}`;
     const exams = {}; R.subs.filter(s => !s.pre).forEach(s => (exams[s.exam] = exams[s.exam] || []).push(PLAN_NAME[s.k] + (s.report ? ' 繳交' : s.final ? '期末考' : s.steady ? ' 考試' : '期中考')));
-    let html = '', wk = ''; const dayHTML = {};
+    let html = '', wk = '';
     R.days.forEach(D => {
       const d = planPd(D.d), mon = new Date(d); mon.setDate(d.getDate() - (d.getDay() + 6) % 7);
       const wkKey = planPs(mon); if (wkKey !== wk) { wk = wkKey; const sun = new Date(mon); sun.setDate(mon.getDate() + 6); html += `<h4 class="pweek">${mon.getMonth() + 1}/${mon.getDate()} – ${sun.getMonth() + 1}/${sun.getDate()} 這週</h4>`; }
-      const ks = Object.keys(D.blocks), done = ST.planDone && ST.planDone[D.d], snap = done && done.snap;
-      const inner = snap || ks.map(k => planBlockHTML(k, D.blocks[k], R.subs.find(s => s.k === k && D.blocks[k].rev) ? R.subs.find(s => s.k === k).exam : '', D.d)).join('');
-      if (!snap) dayHTML[D.d] = inner;
-      html += `<div class="pday${D.d === today ? ' today' : ''}${done ? ' done' : ''}" id="pd-${D.d}"><div class="pdh"><b>${planMD(D.d)}${D.d === today ? ' · 今天' : ''}</b><span class="sm-p">${P.off.includes(D.d) ? '不讀書' : snap ? '今天的進度完成 ✓' : ks.length ? planH(D.total) : '休息'}</span>${ks.length || snap ? `<label class="chk"><input type="checkbox" data-pdone="${D.d}"${done ? ' checked' : ''}> 完成</label>` : ''}</div>
+      const ks = Object.keys(D.blocks), done = ST.planDone && ST.planDone[D.d], chk = D.d === today ? (ST.planChk && ST.planChk[today]) || {} : null;
+      const inner = ks.map(k => planBlockHTML(k, D.blocks[k], R.subs.find(s => s.k === k && D.blocks[k].rev) ? R.subs.find(s => s.k === k).exam : '', D.d, chk)).join('');
+      html += `<div class="pday${D.d === today ? ' today' : ''}${done ? ' done' : ''}" id="pd-${D.d}"><div class="pdh"><b>${planMD(D.d)}${D.d === today ? ' · 今天' : ''}</b><span class="sm-p">${P.off.includes(D.d) ? '不讀書' : D.frozen && done ? '今天的進度完成 ✓' : ks.length ? planH(D.total) : '休息'}</span>${ks.length ? `<label class="chk"><input type="checkbox" data-pdone="${D.d}"${done ? ' checked' : ''}> 完成</label>` : ''}</div>
         ${inner}${D.d === today ? gmatDoneToday() : ''}</div>`;
       const nd = new Date(d); nd.setDate(d.getDate() + 1); const ns = planPs(nd);
       if (exams[ns]) html += `<div class="pexam"><b>${planMD(ns)}</b> ${exams[ns].map(n => `<span class="pill bad">${n}</span>`).join(' ')}</div>`;
@@ -266,17 +288,34 @@ function renderPlan(root) {
     $$('[data-pj]', root).forEach(b => b.onclick = () => planJump(b.dataset.pj));
     $$('[data-gu]', root).forEach(b => b.onclick = () => gmatMark(b.dataset.gu, true, b));
     $$('[data-gun]', root).forEach(b => b.onclick = () => gmatMark(b.dataset.gun, false, b));
+    // 今天每一項打勾：記下這項今天排的份量（報告、期末範圍、GMAT…），取消就扣回；全部勾完自動算今天完成
+    const todayD = R.days.find(x => x.d === today);
+    const freeze = () => { ST.planFrz = ST.planFrz || {}; if (!ST.planFrz[today] && todayD) ST.planFrz[today] = { blocks: JSON.parse(JSON.stringify(todayD.blocks)), total: todayD.total }; };
+    const allIk = () => { const B = (ST.planFrz && ST.planFrz[today] || todayD || {}).blocks || {}; return Object.entries(B).flatMap(([k, b]) => PLAN_HAB[k] ? [k + '§hab'] : (b.items || []).filter(planCheckable).map(t => k + '§' + t.key).concat(b.rev ? [k + '§rev'] : [])); };
+    const progAdd = (key, m) => { const map = GMAT_UNITS.some(u => u[0] === key) ? P.gmatProg : (P.taskProg = P.taskProg || {}); map[key] = Math.max(0, (+map[key] || 0) + m); if (map[key] < 0.5) delete map[key]; };
+    const setItem = (ik, on, el, quiet) => {
+      ST.planChk = ST.planChk || {}; const c = ST.planChk[today] = ST.planChk[today] || {};
+      if (!!c[ik] === on) return;
+      freeze();
+      const [k, key] = ik.split('§'), b = ST.planFrz[today].blocks[k], m = b && b.tm ? +b.tm[key] || 0 : 0;
+      if (on) { c[ik] = { m, q: !!quiet }; if (m) progAdd(key, m); if (!quiet) { FUN.xp(2, el); FUN.beep('ok'); } }
+      else { const r = c[ik]; delete c[ik]; if (r.m) progAdd(key, -r.m); if (!r.q) FUN.xp(-2, el); }
+      if (!Object.keys(c).length) delete ST.planChk[today];
+    };
+    const unfreeze = () => { if (!(ST.planChk && ST.planChk[today]) && !(ST.planDone && ST.planDone[today]) && ST.planFrz) delete ST.planFrz[today]; };
+    $$('[data-ick]', root).forEach(cb => cb.onchange = () => {
+      setItem(cb.dataset.ick, cb.checked, cb);
+      ST.planDone = ST.planDone || {};
+      const c = ST.planChk && ST.planChk[today] || {}, all = allIk();
+      if (all.length && all.every(ik => c[ik]) && !ST.planDone[today]) { ST.planDone[today] = 1; FUN.xp(5, cb); FUN.toast('今天的進度全部完成！', 'happy'); }
+      else if (!all.every(ik => c[ik]) && ST.planDone[today]) { delete ST.planDone[today]; FUN.xp(-5, cb); }
+      unfreeze(); upd();
+    });
     $$('[data-pdone]', root).forEach(cb => cb.onchange = () => {
-      ST.planDone = ST.planDone || {}; const d = cb.dataset.pdone, rec = ST.planDone[d];
-      if (cb.checked && !rec) {
-        // 記下這天 GMAT 各單元讀了幾分鐘；今天的內容存起來，今天就不再排新的
-        const D = R.days.find(x => x.d === d), gm = D && D.blocks.gmat && D.blocks.gmat.gm || {};
-        Object.entries(gm).forEach(([g, m]) => P.gmatProg[g] = (+P.gmatProg[g] || 0) + m);
-        ST.planDone[d] = { gm, snap: d === today ? dayHTML[d] : '' }; FUN.xp(5, cb); FUN.beep('ok');
-      } else if (!cb.checked && rec) {
-        if (rec.gm) Object.entries(rec.gm).forEach(([g, m]) => { P.gmatProg[g] = Math.max(0, (+P.gmatProg[g] || 0) - m); if (!P.gmatProg[g]) delete P.gmatProg[g]; });
-        delete ST.planDone[d]; FUN.xp(-5, cb);
-      } else return;
+      ST.planDone = ST.planDone || {}; const d = cb.dataset.pdone;
+      if (cb.checked === !!ST.planDone[d]) return;
+      if (cb.checked) { if (d === today) { freeze(); allIk().forEach(ik => setItem(ik, true, cb, true)); } ST.planDone[d] = 1; FUN.xp(5, cb); FUN.beep('ok'); }
+      else { delete ST.planDone[d]; FUN.xp(-5, cb); if (d === today) { Object.entries(ST.planChk && ST.planChk[today] || {}).filter(([, r]) => r.q).forEach(([ik]) => setItem(ik, false, cb, true)); unfreeze(); } }
       upd();
     });
   };
@@ -327,7 +366,7 @@ function planJump(s) {
 function planTodayHTML() {
   if (!ST.plan) return `<button type="button" class="cfahome plhome" id="toplan"><span class="cfahi">${navIcon('plan')}</span><span><b>讀書進度表</b><span>填期中考日期和每天能讀幾小時，幫你把各科排進每一天</span></span><span class="cfago">→</span></button>`;
   const pd = ST.planDone && ST.planDone[planToday()];
-  if (pd && pd.snap) return `<button type="button" class="cfahome plhome" id="toplan"><span class="cfahi">${navIcon('plan')}</span><span><b>今天的進度完成了 ✓</b><span>休息一下，或玩小遊戲複習錯題本</span></span><span class="cfago">→</span></button>`;
+  if (pd && ST.planFrz && ST.planFrz[planToday()]) return `<button type="button" class="cfahome plhome" id="toplan"><span class="cfahi">${navIcon('plan')}</span><span><b>今天的進度完成了 ✓</b><span>休息一下，或玩小遊戲複習錯題本</span></span><span class="cfago">→</span></button>`;
   const R = buildPlan(), D = R.days.find(x => x.d === planToday()), ks = D ? Object.keys(D.blocks) : [];
   return `<button type="button" class="cfahome plhome" id="toplan"><span class="cfahi">${navIcon('plan')}</span><span><b>今天要讀${ks.length ? ` · ${planH(D.total)}` : ''}</b><span>${ks.length ? ks.map(k => { const b = D.blocks[k]; const n = (b.items || []).filter(t => t.kind === 'c').length; return `${PLAN_NAME[k]} ${planH(b.learn + b.rev)}${n ? `（${n} 張卡）` : b.rev ? '（考前總複習）' : ''}`; }).join('、') : '今天沒有排進度，休息一下或複習錯題本'}</span></span><span class="cfago">→</span></button>`;
 }
