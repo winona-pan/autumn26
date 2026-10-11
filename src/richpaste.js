@@ -23,6 +23,8 @@ const RICH = (() => {
 
   // ---- 清理 HTML：只留白名單標籤與少數安全屬性 ----
   function clean(html) {
+    // 只選取表格的一部分複製時（Gemini 常見），HTML 只有 <thead>/<tr>/<td> 沒有 <table>，瀏覽器會把表格結構丟掉 → 先補上 <table>
+    if (/<(thead|tbody|tr)[\s>]/i.test(html) && !/<table[\s>]/i.test(html)) html = html.replace(/<(thead|tbody|tr)[\s>]/i, m => '<table>' + m) + '</table>';
     const doc = new DOMParser().parseFromString(html, 'text/html');
     // KaTeX（Gemini 的數學式）：保留裡面的 MathML，丟掉重複的排版用 HTML
     // Gemini：公式元素帶著原始 LaTeX（data-math）→ 重新排成 MathML；沒有排版工具時保留 $…$ 原文
@@ -87,6 +89,10 @@ const RICH = (() => {
       }
     };
     walk(doc.body, out);
+    // 文字裡殘留的 Markdown 粗體 **…**（Gemini 表格儲存格常見）→ 真的粗體
+    const tw = document.createTreeWalker(out, NodeFilter.SHOW_TEXT), tn = [];
+    while (tw.nextNode()) if (/\*\*[^*]+\*\*/.test(tw.currentNode.data) && !tw.currentNode.parentElement.closest('code, pre')) tn.push(tw.currentNode);
+    tn.forEach(t => { const sp = document.createElement('span'); sp.innerHTML = escT(t.data).replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>'); t.replaceWith(...sp.childNodes); });
     // 去掉頭尾空段落
     const empty = e => e && e.nodeType === 1 && /^(P|DIV|BR)$/.test(e.tagName) && !e.textContent.trim() && !e.querySelector('math, hr, img');
     out.querySelectorAll('p, div').forEach(e => { if (empty(e)) e.remove(); });
@@ -190,12 +196,15 @@ const RICH = (() => {
     if (html) {
       const c = clean(html), plain = (new DOMParser().parseFromString(c, 'text/html').body.textContent || '');
       const structured = /<(ul|ol|table|h[4-6]|b|strong|i|em|pre|code|blockquote|math)[\s>]/i.test(c);
-      // HTML 裡其實只是 Markdown 原文（例如從編輯器複製）→ 改用 Markdown 轉換
-      if (txt && looksMd(txt) && (!structured || /\*\*[^*]+\*\*|(^|\n)#{1,6}\s/.test(plain))) return clean(mdMath(txt));
+      // HTML 裡其實只是 Markdown 原文（例如從編輯器複製）→ 改用 Markdown 轉換；HTML 已經有表格、純文字卻不是 Markdown 表格時，保留 HTML 的表格
+      const keepTable = /<table[\s>]/i.test(c) && !/\n\s*\|?\s*:?-{2,}/.test(txt || '');
+      if (txt && !keepTable && looksMd(txt) && (!structured || /\*\*[^*]+\*\*|(^|\n)#{1,6}\s/.test(plain))) return clean(mdMath(txt));
       // HTML 裡還留著 $…$ 原文（沒有排版好的公式）→ 也用 Markdown 路線把公式排出來
       if (txt && hasMath(plain) && !/<math[\s>]/i.test(c) && window.katex) return clean(mdMath(txt));
       if (c.trim()) return c;
     }
+    // 只有純文字、每行用 Tab 分欄（從試算表或表格複製）→ 轉成表格
+    if (txt) { const rows = txt.replace(/\r/g, '').split('\n').filter(l => l.trim()); if (rows.length >= 2 && rows.every(l => l.includes('\t'))) { const R = rows.map(l => l.split('\t')), n = Math.max(...R.map(r => r.length)); return clean('<table><thead><tr>' + R[0].map(c => `<th>${inline(c)}</th>`).join('') + '</tr></thead><tbody>' + R.slice(1).map(r => '<tr>' + Array.from({ length: n }, (_, j) => `<td>${inline(r[j] || '')}</td>`).join('') + '</tr>').join('') + '</tbody></table>'); } }
     if (txt) return (looksMd(txt) || hasMath(txt)) ? clean(mdMath(txt)) : txt.split(/\n{2,}/).map(p => '<p>' + escT(p).replace(/\n/g, '<br>') + '</p>').join('');
     return '';
   }
@@ -220,5 +229,5 @@ const RICH = (() => {
   async function insertTex(ed, t, display, range) { if (!(await loadKatex())) return false; const h = tex(t, display); if (!h) return false; ed.focus(); if (range) { const sel = getSelection(); sel.removeAllRanges(); sel.addRange(range); } insertHTML(clean(h) + '&nbsp;'); ed.dispatchEvent(new Event('input', { bubbles: true })); return true; }
   // 舊筆記（純文字）轉成 HTML
   const fromText = t => t.split(/\n{2,}/).map(p => '<p>' + escT(p).replace(/\n/g, '<br>') + '</p>').join('');
-  return { clean, md, mdMath, attach, insertFiles, insertTex, loadKatex, fromText, TC, BG, colorCls };
+  return { clean, md, mdMath, convert, attach, insertFiles, insertTex, loadKatex, fromText, TC, BG, colorCls };
 })();
