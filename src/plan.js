@@ -10,6 +10,12 @@ const PLAN_HAB = { fr: ['法文', '單字複習＋聽力或跟讀'], ielts: ['�
 const IELTS_DAY = { 1: '聽力：一回真題＋對答案', 2: '閱讀：一篇限時＋檢討', 3: '寫作：Task 1 或 Task 2 一篇', 4: '口說：Part 1–3 錄音自評', 5: '單字＋本週錯題', 6: '模擬或補進度', 0: '模擬或補進度' };
 // 不動產財管（清大磨課師，看影片＋複習）：[單元, 期中/期末, 相關的 CFA 筆記卡]
 const RE_UNITS = [['房地產相關法規', 'mid'], ['固定利率抵押貸款Ⅰ', 'mid'], ['固定利率抵押貸款Ⅱ', 'mid'], ['浮動利率抵押貸款', 'mid'], ['不動產抵押貸款證券Ⅰ', 'mid'], ['不動產抵押貸款證券Ⅱ', 'mid'], ['不動產抵押貸款證券Ⅲ及其衍生品Ⅰ', 'fin'], ['不動產抵押貸款衍生品Ⅱ', 'fin'], ['不動產逆向抵押貸款與房市危機解決方案', 'fin']];
+// GMAT（Focus）：先 RC，再 CR → Quant → Data Insights，一次讀一個單元。[科目, 單元, 估計小時]（依「總共幾小時」等比例縮放）
+const GMAT_UNITS = [['RC', '讀法、段落結構、主旨題', 12], ['RC', '細節、推論、作者態度、結構題', 12], ['RC', '整篇限時練習＋錯題檢討', 10],
+  ['CR', '論證結構、Assumption', 10], ['CR', 'Strengthen／Weaken', 10], ['CR', 'Inference、Evaluate、Paradox、Boldface', 10],
+  ['Quant', '數的性質（整除、質數、奇偶、餘數）', 10], ['Quant', '分數、百分比、比例', 8], ['Quant', '代數：方程式、不等式、絕對值', 10], ['Quant', '函數、數列、指數與根號', 8], ['Quant', '應用題：速率、工作、混合、利息', 10], ['Quant', '統計、排列組合、機率', 10],
+  ['DI', 'Data Sufficiency', 12], ['DI', 'Table Analysis＋Graphics Interpretation', 8], ['DI', 'Multi-Source Reasoning', 8], ['DI', 'Two-Part Analysis', 8]];
+const gmatMocks = P => Math.max(1, Math.round(Math.min(+P.gmatH * 0.2, 24) / 4));
 const PLAN_MIN = { basic: 12, deriv: 18, invest: 15, law: 15, mgmt: 15 }; // 每張知識卡估計分鐘
 const PLAN_FAM = [['熟', 0.6], ['普通', 1], ['不熟', 1.5]];
 const planPd = s => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
@@ -19,7 +25,7 @@ const planMD = s => { const d = planPd(s); return `${d.getMonth() + 1}/${d.getDa
 const planH = m => { const h = Math.round(m / 60 * 10) / 10; return h + ' 小時'; };
 
 function planSettings() {
-  const D = { start: '', dates: { mgmt: '2026-11-04', deriv: '2026-11-16', invest: '2026-11-03', law: '2026-10-28', re: '2026-11-12', reF: '2026-12-17', mgmtF: '2026-12-23', derivF: '2026-12-21', investF: '2026-12-22', lawF: '2026-12-23' }, on: { basic: true, deriv: true, invest: true, law: true, mgmt: true, re: true }, fam: {}, wk: [4, 2, 2, 2, 2, 2, 4], off: [], review: 120, mode: 'seq', reH: 3.5, reDone: {}, gmatH: 200, gmatDone: 0, gmatDays: [0, 1, 2, 3, 4, 5, 6], finR: 1, reports: [{ n: '史記報告', d: '2026-11-26', h: 0 }, { n: 'ESG報告', d: '2026-12-04', h: 0 }, { n: '衍金報告', d: '2026-12-07', h: 0 }, { n: '投資學期末報告', d: '2026-12-15', h: 0 }, { n: '管理學報告', d: '', h: 0 }], habits: { fr: { on: true, min: 30, days: [0, 1, 2, 3, 4, 5, 6] }, ielts: { on: true, min: 45, days: [1, 2, 3, 4, 5] } } };
+  const D = { start: '', dates: { mgmt: '2026-11-04', deriv: '2026-11-16', invest: '2026-11-03', law: '2026-10-28', re: '2026-11-12', reF: '2026-12-17', mgmtF: '2026-12-23', derivF: '2026-12-21', investF: '2026-12-22', lawF: '2026-12-23' }, on: { basic: true, deriv: true, invest: true, law: true, mgmt: true, re: true }, fam: {}, wk: [4, 2, 2, 2, 2, 2, 4], off: [], review: 120, mode: 'seq', reH: 3.5, reDone: {}, gmatH: 200, gmatU: {}, gmatDays: [0, 1, 2, 3, 4, 5, 6], finR: 1, reports: [{ n: '史記報告', d: '2026-11-26', h: 0 }, { n: 'ESG報告', d: '2026-12-04', h: 0 }, { n: '衍金報告', d: '2026-12-07', h: 0 }, { n: '投資學期末報告', d: '2026-12-15', h: 0 }, { n: '管理學報告', d: '', h: 0 }], habits: { fr: { on: true, min: 30, days: [0, 1, 2, 3, 4, 5, 6] }, ielts: { on: true, min: 45, days: [1, 2, 3, 4, 5] } } };
   D.dates.gmat = '2026-12-30'; D.on.gmat = true;
   // 直接補在 ST.plan 上（不換新物件），畫面上拿到的設定才會一直是同一份、改了都存得到
   const S = ST.plan = ST.plan || {};
@@ -42,12 +48,11 @@ function planTasks(k, f) {
     return [['找資料與分工', .3], ['撰寫內容', .5], ['做簡報、修改、演練', .2]].map(([t, p]) => ({ k, sec: r.n, t, min: Math.round(n * p), kind: 'v' })).filter(t => t.min > 0);
   }
   if (k === 'gmat') {
-    // GMAT：Quant／Verbal／Data Insights 每輪約 10 小時輪流 → 最後約 20% 做全真模考＋檢討
-    const P = ST.plan, tot = Math.max(0, (+P.gmatH - +P.gmatDone) * 60); if (!tot) return [];
-    const T = [], rest = tot, mock = Math.min(Math.round(rest * 0.2), 6 * 240), study = rest - mock, rounds = Math.max(1, Math.round(study / 600));
-    for (let r = 1; r <= rounds; r++) [['Quant：觀念＋題組練習', .35], ['Verbal（CR、RC）：練習＋錯題檢討', .35], ['Data Insights（DS、圖表、雙欄位、多來源推理）', .3]].forEach(p => T.push({ k, sec: `第 ${r} 輪`, t: p[0], min: Math.round(study * p[1] / rounds), kind: 'v' }));
-    const nm = Math.max(1, Math.round(mock / 240)); for (let i = 1; i <= nm; i++) T.push({ k, sec: '模考衝刺', t: `全真模考 ${i}＋逐題檢討`, min: Math.round(mock / nm), kind: 'v' });
-    return T;
+    // GMAT：照單元順序一個一個讀（RC 先），最後做全真模考。沒按「讀完了」的單元會留著，平均排到之後的日子
+    const P = ST.plan, nm = gmatMocks(P), study = Math.max(0, +P.gmatH * 60 - nm * 240), sum = GMAT_UNITS.reduce((a, u) => a + u[2], 0);
+    const T = GMAT_UNITS.map((u, i) => ({ k, gu: String(i), ui: i, sec: u[0], t: `${u[1]}：觀念＋題型練習＋錯題本`, min: Math.round(study * u[2] / sum), kind: 'g' }));
+    for (let i = 1; i <= nm; i++) T.push({ k, gu: 'm' + i, ui: 99, sec: '模考', t: `全真模考 ${i}＋逐題檢討`, min: 240, kind: 'g' });
+    return T.filter(t => !P.gmatU[t.gu] && t.min > 0);
   }
   if (k === 're' || k === 'reF') {
     const P = ST.plan;
@@ -160,7 +165,8 @@ function planBlockHTML(k, b, exam, d) {
   if (PLAN_HAB[k]) return `<div class="pblk ${k}"><div class="pbh"><b>${PLAN_HAB[k][0]}</b><span>${b.learn} 分鐘</span></div><p>${k === 'ielts' ? IELTS_DAY[planPd(d).getDay()] : PLAN_HAB[k][1]}</p></div>`;
   const groups = []; (b.items || []).forEach(t => { const g = groups.find(x => x.sec === t.sec); g ? g.items.push(t) : groups.push({ sec: t.sec, items: [t] }); });
   return `<div class="pblk ${planHue(k)}"><div class="pbh"><b>${PLAN_NAME[k]}${/F$/.test(k) ? '（期末範圍）' : /^rp/.test(k) ? '（報告）' : ''}</b><span>${planH(b.learn + b.rev)}</span></div>
-    ${groups.map(g => `<p><span class="psec">${g.sec}</span>${g.items.map(t => t.kind === 'v' ? t.t : t.kind === 'rec' ? `${t.t} <button type="button" class="linkish refcfa" data-pj="re|${t.id}|c|">看複習卡</button>` : `<button type="button" class="linkish" data-pj="${t.k}|${t.id || ''}|${t.kind}|${t.tab || ''}">${t.t}</button>`).join('、')}</p>`).join('')}
+    ${groups.map(g => `<p><span class="psec">${g.sec}</span>${g.items.map(t => t.kind === 'g' ? `${t.t} <button type="button" class="linkish" data-gu="${t.gu}">讀完了 ✓</button>` : t.kind === 'v' ? t.t : t.kind === 'rec' ? `${t.t} <button type="button" class="linkish refcfa" data-pj="re|${t.id}|c|">看複習卡</button>` : `<button type="button" class="linkish" data-pj="${t.k}|${t.id || ''}|${t.kind}|${t.tab || ''}">${t.t}</button>`).join('、')}</p>`).join('')}
+    ${k === 'gmat' && b.learn && (b.items || []).every(t => t.ui > 2) && !(b.items || []).some(t => t.ui === 99) ? '<p><span class="psec">RC 保溫</span>每天順手 1 篇 RC（約 15 分鐘），讀完的單元才不會退步</p>' : ''}
     ${b.rev ? `<p><span class="psec">考前總複習</span>${DATA[planBase(k)] ? `<button type="button" class="linkish" data-pj="${planBase(k)}||x|mcq">打怪模式＋錯題本</button>，再快速翻過所有卡片的「白話」${planBase(k) === 'deriv' ? '，整理 A4 小抄' : ''}` : k === 'gmat' ? '最後一份模考、看錯題本、確認考試流程和作息' : '重看各單元筆記和影片重點，整理考試範圍的公式與名詞'}${exam ? `（${planMD(exam)} 考試）` : ''}</p>` : ''}</div>`;
 }
 
@@ -179,9 +185,10 @@ function renderPlan(root) {
     <p class="sm-p">填「需要幾小時」之後才會排進去，排在繳交日前三週內。小組報告只要填你自己要花的時間。</p></section>
   <section class="setbox"><h3>3. GMAT 與每日語言練習</h3><div class="plsubs">
     <div class="plrow gmat"><label class="pln"><input type="checkbox" data-on="gmat"${P.on.gmat ? ' checked' : ''}> <b>GMAT</b></label><label class="pld">考試 <input type="date" data-date="gmat" value="${P.dates.gmat || ''}"></label>
-      <label>總共 <input type="number" class="plnum" id="plgh" min="10" max="600" step="10" value="${P.gmatH}" inputmode="numeric"> 小時</label><label>已讀 <input type="number" class="plnum" id="plgd" min="0" max="600" step="1" value="${P.gmatDone}" inputmode="numeric"> 小時</label><span class="sm-p">還要 <b data-need="gmat"></b></span><span class="hdays">${[1, 2, 3, 4, 5, 6, 0].map(i => `<label><input type="checkbox" data-gday="${i}"${P.gmatDays.includes(i) ? ' checked' : ''}>${'日一二三四五六'[i]}</label>`).join('')}</span></div>
+      <label>總共 <input type="number" class="plnum" id="plgh" min="10" max="600" step="10" value="${P.gmatH}" inputmode="numeric"> 小時</label><span class="sm-p">還要 <b data-need="gmat"></b></span><span class="hdays">${[1, 2, 3, 4, 5, 6, 0].map(i => `<label><input type="checkbox" data-gday="${i}"${P.gmatDays.includes(i) ? ' checked' : ''}>${'日一二三四五六'[i]}</label>`).join('')}</span>
+      <details class="reunits"><summary>單元進度（照順序一次讀一個；讀完打勾，就不會再排）</summary>${GMAT_UNITS.map((u, i) => [String(i), `${i + 1}. ${u[0]}｜${u[1]}`]).concat(Array.from({ length: gmatMocks(P) }, (_, i) => ['m' + (i + 1), `全真模考 ${i + 1}`])).map(([g, n]) => `<label><input type="checkbox" data-gud="${g}"${P.gmatU[g] ? ' checked' : ''}> ${n}</label>`).join('')}</details></div>
     ${Object.keys(PLAN_HAB).map(h => { const c = P.habits[h]; return `<div class="plrow ${h}"><label class="pln"><input type="checkbox" data-hon="${h}"${c.on ? ' checked' : ''}> <b>${PLAN_HAB[h][0]}</b></label><label>每次 <select data-hmin="${h}">${[15, 30, 45, 60, 90].map(m => `<option value="${m}"${m === +c.min ? ' selected' : ''}>${m} 分鐘</option>`).join('')}</select></label><span class="hdays">${[1, 2, 3, 4, 5, 6, 0].map(i => `<label><input type="checkbox" data-hday="${h}|${i}"${c.days.includes(i) ? ' checked' : ''}>${'日一二三四五六'[i]}</label>`).join('')}</span></div>`; }).join('')}
-    </div><p class="sm-p">GMAT 只排在你勾的星期幾，在學校進度排好之後，用那幾天剩下的時間平均分配，所以期中考後每天會變多。「已讀」填你目前讀了幾小時，進度表會扣掉。語言練習每天最先保留。</p></section>
+    </div><p class="sm-p">GMAT 從 RC 開始，照單元順序一次讀一個，只排在你勾的星期幾，期中考後每天會變多。<b>今天沒讀完也沒關係</b>：單元沒按「讀完了」就會留著，每次打開都把剩下的平均分到考前每一天，不會全部堆到明天。語言練習每天最先保留。</p></section>
   <section class="setbox"><h3>4. 每天能讀幾小時</h3>
     <div class="wkrow">${[1, 2, 3, 4, 5, 6, 0].map(i => `<label><span>週${'日一二三四五六'[i]}</span><input type="number" min="0" max="16" step="0.5" data-wk="${i}" value="${P.wk[i]}" inputmode="decimal"></label>`).join('')}</div>
     <div class="row wrap"><label>從哪天開始 <input type="date" id="plstart" value="${P.start || planToday()}"></label>
@@ -219,6 +226,7 @@ function renderPlan(root) {
     });
     $('#pldays', root).innerHTML = html || '<p class="sm-p">目前沒有要排的內容。</p>';
     $$('[data-pj]', root).forEach(b => b.onclick = () => planJump(b.dataset.pj));
+    $$('[data-gu]', root).forEach(b => b.onclick = () => { P.gmatU[b.dataset.gu] = 1; FUN.xp(10, b); FUN.beep('ok'); const cb = $(`[data-gud="${b.dataset.gu}"]`, root); if (cb) cb.checked = true; upd(); });
     $$('[data-pdone]', root).forEach(cb => cb.onchange = () => { ST.planDone = ST.planDone || {}; const d = cb.dataset.pdone; if (cb.checked && !ST.planDone[d]) { ST.planDone[d] = 1; FUN.xp(5, cb); FUN.beep('ok'); } else if (!cb.checked && ST.planDone[d]) { delete ST.planDone[d]; FUN.xp(-5, cb); } save(); cb.closest('.pday').classList.toggle('done', cb.checked); });
   };
   const stamp = () => { const d = new Date(); P.savedAt = `${d.getMonth() + 1}/${d.getDate()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`; save(); const el = $('#plsaved', root); if (el) el.textContent = `已儲存 ✓ ${P.savedAt}（存在這台裝置，換裝置請用設定頁的備份碼）`; };
@@ -237,7 +245,7 @@ function renderPlan(root) {
   $('#plstart', root).onchange = e => { P.start = e.target.value; upd(); };
   $('#plgh', root).oninput = e => { P.gmatH = Math.max(0, +e.target.value || 0); upd(); };
   $$('[data-gday]', root).forEach(cb => cb.onchange = () => { const i = +cb.dataset.gday; P.gmatDays = cb.checked ? P.gmatDays.concat(i) : P.gmatDays.filter(x => x !== i); upd(); });
-  $('#plgd', root).oninput = e => { P.gmatDone = Math.max(0, +e.target.value || 0); upd(); };
+  $$('[data-gud]', root).forEach(cb => cb.onchange = () => { cb.checked ? P.gmatU[cb.dataset.gud] = 1 : delete P.gmatU[cb.dataset.gud]; upd(); });
   $$('[data-hon]', root).forEach(cb => cb.onchange = () => { P.habits[cb.dataset.hon].on = cb.checked; upd(); });
   $$('[data-hmin]', root).forEach(s => s.onchange = () => { P.habits[s.dataset.hmin].min = +s.value; upd(); });
   $$('[data-hday]', root).forEach(cb => cb.onchange = () => { const [h, i] = cb.dataset.hday.split('|'), c = P.habits[h]; c.days = cb.checked ? c.days.concat(+i) : c.days.filter(x => x !== +i); upd(); });
