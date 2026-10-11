@@ -188,7 +188,7 @@ function renderPlan(root) {
       <label>總共 <input type="number" class="plnum" id="plgh" min="10" max="600" step="10" value="${P.gmatH}" inputmode="numeric"> 小時</label><span class="sm-p">還要 <b data-need="gmat"></b></span><span class="hdays">${[1, 2, 3, 4, 5, 6, 0].map(i => `<label><input type="checkbox" data-gday="${i}"${P.gmatDays.includes(i) ? ' checked' : ''}>${'日一二三四五六'[i]}</label>`).join('')}</span>
       <details class="reunits"><summary>單元進度（照順序一次讀一個；讀完打勾，就不會再排）</summary>${GMAT_UNITS.map((u, i) => [String(i), `${i + 1}. ${u[0]}｜${u[1]}`]).concat(Array.from({ length: gmatMocks(P) }, (_, i) => ['m' + (i + 1), `全真模考 ${i + 1}`])).map(([g, n]) => `<label><input type="checkbox" data-gud="${g}"${P.gmatU[g] ? ' checked' : ''}> ${n}</label>`).join('')}</details></div>
     ${Object.keys(PLAN_HAB).map(h => { const c = P.habits[h]; return `<div class="plrow ${h}"><label class="pln"><input type="checkbox" data-hon="${h}"${c.on ? ' checked' : ''}> <b>${PLAN_HAB[h][0]}</b></label><label>每次 <select data-hmin="${h}">${[15, 30, 45, 60, 90].map(m => `<option value="${m}"${m === +c.min ? ' selected' : ''}>${m} 分鐘</option>`).join('')}</select></label><span class="hdays">${[1, 2, 3, 4, 5, 6, 0].map(i => `<label><input type="checkbox" data-hday="${h}|${i}"${c.days.includes(i) ? ' checked' : ''}>${'日一二三四五六'[i]}</label>`).join('')}</span></div>`; }).join('')}
-    </div><p class="sm-p">GMAT 從 RC 開始，照單元順序一次讀一個，只排在你勾的星期幾，期中考後每天會變多。<b>今天沒讀完也沒關係</b>：單元沒按「讀完了」就會留著，每次打開都把剩下的平均分到考前每一天，不會全部堆到明天。語言練習每天最先保留。</p></section>
+    </div><p class="sm-p">GMAT 從 RC 開始，照單元順序一次讀一個，只排在你勾的星期幾，期中考後每天會變多。<b>今天沒讀完也沒關係</b>：單元沒按「讀完了」就會留著（按錯了可以在今天的格子或單元清單取消，XP 會退回），每次打開都把剩下的平均分到考前每一天，不會全部堆到明天。語言練習每天最先保留。</p></section>
   <section class="setbox"><h3>4. 每天能讀幾小時</h3>
     <div class="wkrow">${[1, 2, 3, 4, 5, 6, 0].map(i => `<label><span>週${'日一二三四五六'[i]}</span><input type="number" min="0" max="16" step="0.5" data-wk="${i}" value="${P.wk[i]}" inputmode="decimal"></label>`).join('')}</div>
     <div class="row wrap"><label>從哪天開始 <input type="date" id="plstart" value="${P.start || planToday()}"></label>
@@ -200,6 +200,7 @@ function renderPlan(root) {
   <section class="msbox" id="plsum"></section>
   <section class="msbox"><h3>每日進度</h3><div id="pldays"></div></section>`;
 
+  const gmatDoneToday = () => { const g = Object.keys(P.gmatU).filter(g => P.gmatU[g] === planToday()); return g.length ? `<div class="pblk gmat"><div class="pbh"><b>GMAT 今天讀完 ✓</b></div><p>${g.map(x => `${x[0] === 'm' ? `全真模考 ${x.slice(1)}` : `${GMAT_UNITS[+x][0]}｜${GMAT_UNITS[+x][1]}`} <button type="button" class="linkish" data-gun="${x}">取消（退回 10 XP）</button>`).join('、')}</p></div>` : ''; };
   const draw = () => {
     const R = buildPlan(), today = planToday();
     PLAN_K.concat('gmat').forEach(k => { const ss = R.subs.filter(x => planBase(x.k) === k), c = $(`[data-need="${k}"]`, root); if (c) c.textContent = ss.length ? planH(ss.reduce((a, s) => a + s.need + s.rev, 0)) : '—'; });
@@ -220,17 +221,24 @@ function renderPlan(root) {
       const wkKey = planPs(mon); if (wkKey !== wk) { wk = wkKey; const sun = new Date(mon); sun.setDate(mon.getDate() + 6); html += `<h4 class="pweek">${mon.getMonth() + 1}/${mon.getDate()} – ${sun.getMonth() + 1}/${sun.getDate()} 這週</h4>`; }
       const ks = Object.keys(D.blocks), done = ST.planDone && ST.planDone[D.d];
       html += `<div class="pday${D.d === today ? ' today' : ''}${done ? ' done' : ''}" id="pd-${D.d}"><div class="pdh"><b>${planMD(D.d)}${D.d === today ? ' · 今天' : ''}</b><span class="sm-p">${P.off.includes(D.d) ? '不讀書' : ks.length ? planH(D.total) : '休息'}</span>${ks.length ? `<label class="chk"><input type="checkbox" data-pdone="${D.d}"${done ? ' checked' : ''}> 完成</label>` : ''}</div>
-        ${ks.map(k => planBlockHTML(k, D.blocks[k], R.subs.find(s => s.k === k && D.blocks[k].rev) ? R.subs.find(s => s.k === k).exam : '', D.d)).join('')}</div>`;
+        ${ks.map(k => planBlockHTML(k, D.blocks[k], R.subs.find(s => s.k === k && D.blocks[k].rev) ? R.subs.find(s => s.k === k).exam : '', D.d)).join('')}${D.d === today ? gmatDoneToday() : ''}</div>`;
       const nd = new Date(d); nd.setDate(d.getDate() + 1); const ns = planPs(nd);
       if (exams[ns]) html += `<div class="pexam"><b>${planMD(ns)}</b> ${exams[ns].map(n => `<span class="pill bad">${n}</span>`).join(' ')}</div>`;
     });
     $('#pldays', root).innerHTML = html || '<p class="sm-p">目前沒有要排的內容。</p>';
     $$('[data-pj]', root).forEach(b => b.onclick = () => planJump(b.dataset.pj));
-    $$('[data-gu]', root).forEach(b => b.onclick = () => { P.gmatU[b.dataset.gu] = 1; FUN.xp(10, b); FUN.beep('ok'); const cb = $(`[data-gud="${b.dataset.gu}"]`, root); if (cb) cb.checked = true; upd(); });
+    $$('[data-gu]', root).forEach(b => b.onclick = () => gmatMark(b.dataset.gu, true, b));
+    $$('[data-gun]', root).forEach(b => b.onclick = () => gmatMark(b.dataset.gun, false, b));
     $$('[data-pdone]', root).forEach(cb => cb.onchange = () => { ST.planDone = ST.planDone || {}; const d = cb.dataset.pdone; if (cb.checked && !ST.planDone[d]) { ST.planDone[d] = 1; FUN.xp(5, cb); FUN.beep('ok'); } else if (!cb.checked && ST.planDone[d]) { delete ST.planDone[d]; FUN.xp(-5, cb); } save(); cb.closest('.pday').classList.toggle('done', cb.checked); });
   };
   const stamp = () => { const d = new Date(); P.savedAt = `${d.getMonth() + 1}/${d.getDate()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`; save(); const el = $('#plsaved', root); if (el) el.textContent = `已儲存 ✓ ${P.savedAt}（存在這台裝置，換裝置請用設定頁的備份碼）`; };
   const upd = () => { stamp(); draw(); };
+  // GMAT 單元讀完／取消：+10 XP，取消就退回（可能降級）；記下哪天讀完，當天可以在進度表上取消
+  const gmatMark = (g, on, el) => {
+    if (!!P.gmatU[g] === on) return;
+    if (on) { P.gmatU[g] = planToday(); FUN.xp(10, el); FUN.beep('ok'); } else { delete P.gmatU[g]; FUN.xp(-10, el); }
+    const cb = $(`[data-gud="${g}"]`, root); if (cb) cb.checked = on; upd();
+  };
   $('#plsave', root).onclick = () => { stamp(); FUN.toast('進度表設定已儲存', 'happy'); };
   $('#plfin', root).onchange = e => { P.finR = +e.target.value; upd(); };
   $$('[data-rpn]', root).forEach(i => i.onchange = () => { P.reports[+i.dataset.rpn].n = i.value.trim() || '報告'; upd(); });
@@ -245,7 +253,7 @@ function renderPlan(root) {
   $('#plstart', root).onchange = e => { P.start = e.target.value; upd(); };
   $('#plgh', root).oninput = e => { P.gmatH = Math.max(0, +e.target.value || 0); upd(); };
   $$('[data-gday]', root).forEach(cb => cb.onchange = () => { const i = +cb.dataset.gday; P.gmatDays = cb.checked ? P.gmatDays.concat(i) : P.gmatDays.filter(x => x !== i); upd(); });
-  $$('[data-gud]', root).forEach(cb => cb.onchange = () => { cb.checked ? P.gmatU[cb.dataset.gud] = 1 : delete P.gmatU[cb.dataset.gud]; upd(); });
+  $$('[data-gud]', root).forEach(cb => cb.onchange = () => gmatMark(cb.dataset.gud, cb.checked, cb));
   $$('[data-hon]', root).forEach(cb => cb.onchange = () => { P.habits[cb.dataset.hon].on = cb.checked; upd(); });
   $$('[data-hmin]', root).forEach(s => s.onchange = () => { P.habits[s.dataset.hmin].min = +s.value; upd(); });
   $$('[data-hday]', root).forEach(cb => cb.onchange = () => { const [h, i] = cb.dataset.hday.split('|'), c = P.habits[h]; c.days = cb.checked ? c.days.concat(+i) : c.days.filter(x => x !== +i); upd(); });
