@@ -3,7 +3,9 @@
 // 每個列點用「卡片 id + 列點文字的雜湊」當鑰匙；內容改版找不到原位置時，用存下來的原文片段重新定位。
 const NOTES = (() => {
   const COLORS = [['y', '黃'], ['g', '綠'], ['p', '粉'], ['b', '藍']];
-  const BLK = 'li, p, td, th, dd, h4, .ez';
+  const BLK = 'li, p, td, th, dd, dt, h4, .ez';
+  // 完整重點以外也能畫重點、寫筆記：卡片標題、白話、生活比喻、Exam English、名詞表
+  const EXTRA = 'header h4, .duo p, .exam p, dl.terms dt, dl.terms dd';
   const HL = () => (ST.hl = ST.hl || {});
   const NT = () => (ST.nt = ST.nt || {});
   const BM = () => (ST.bm = ST.bm || {});
@@ -20,7 +22,7 @@ const NOTES = (() => {
   const posIn = (block, node, off) => { const r = document.createRange(); r.setStart(block, 0); r.setEnd(node, off); const f = r.cloneContents(); f.querySelectorAll('.ntbox').forEach(x => x.remove()); return f.textContent.length; };
 
   // ---- 卡片裡的列點與鑰匙 ----
-  const blocksOf = card => { const b = card.querySelector('.body'); return b ? [...b.querySelectorAll(BLK)].filter(x => !x.closest('.ntbox')) : []; };
+  const blocksOf = card => { const b = card.querySelector('.body'); return (b ? [...b.querySelectorAll(BLK)] : []).concat([...card.querySelectorAll(EXTRA)]).filter(x => !x.closest('.ntbox')); };
   const keysOf = card => { const seen = {}; const m = new Map(); blocksOf(card).forEach(b => { const h = hash(norm(textOf(b))); seen[h] = (seen[h] || 0) + 1; m.set(b, h + (seen[h] > 1 ? '.' + seen[h] : '')); }); return m; };
   const cardId = card => card.id.replace(/^c-/, '');
   const blockByKey = (card, k) => { for (const [b, kk] of keysOf(card)) if (kk === k) return b; return null; };
@@ -286,8 +288,8 @@ const NOTES = (() => {
   function onSelect(root) {
     const sel = getSelection(); if (!sel.rangeCount || sel.isCollapsed) { if (cur && cur.sel) hide(); return; }
     const range = sel.getRangeAt(0); const anc = range.commonAncestorContainer; const el = anc.nodeType === 1 ? anc : anc.parentElement;
-    const card = el && el.closest('.card'), body = card && card.querySelector('.body');
-    if (!card || !root.contains(card) || !body || !range.intersectsNode(body)) { hide(); return; }
+    const card = el && el.closest('.card');
+    if (!card || !root.contains(card) || !blocksOf(card).some(b => range.intersectsNode(b))) { hide(); return; }
     if (el.closest('.ntbox, textarea, [contenteditable]')) return;
     const ps = pieces(card, range); if (!ps.length) { hide(); return; }
     cur = { sel: 1, card, range: range.cloneRange(), ps }; ensureBar(); bar.querySelector('[data-a="clear"]').hidden = !card.querySelector('mark.hl') || !ps.some(([b]) => b.querySelector('mark.hl'));
@@ -334,7 +336,7 @@ const NOTES = (() => {
         else noteBox(block, card, k, false, true);
         return; }
       if (card.classList.contains('nmode') && getSelection().isCollapsed && !e.target.closest('a, button, input, textarea, summary, label, .ntbox')) {
-        const b = e.target.closest(BLK); if (b && card.querySelector('.body').contains(b)) { openNote(card, b); return; }
+        const b = e.target.closest(BLK); if (b && blocksOf(card).includes(b)) { openNote(card, b); return; }
       }
       const mk = e.target.closest('mark.hl');
       if (mk && getSelection().isCollapsed) { cur = { card, mark: mk.dataset.h }; ensureBar(); bar.querySelector('[data-a="clear"]').hidden = false; place(mk.getBoundingClientRect()); return; }
@@ -371,7 +373,7 @@ const NOTES = (() => {
       $$('[data-f]', root).forEach(b => b.classList.toggle('on', b.dataset.f === view.f));
       $$('[data-fc]', root).forEach(b => b.classList.toggle('on', b.dataset.fc === view.c));
     };
-    root.innerHTML = `<div class="ntpage"><p class="sm-p">在「知識點」的完整重點裡<b>選取文字</b>就能畫重點；按卡片右上角的<b>＋筆記</b>，再點任何一個列點就能寫筆記。全部都整理在這裡。</p>
+    root.innerHTML = `<div class="ntpage"><p class="sm-p">在「知識點」的卡片上<b>選取文字</b>就能畫重點（標題、白話、生活比喻、完整重點、名詞表都可以）；按卡片右上角的<b>＋筆記</b>，再點任何一段就能在它下面寫筆記。全部都整理在這裡。</p>
       <div class="ntbar"><input type="search" id="ntq" placeholder="搜尋重點或筆記" aria-label="搜尋重點或筆記">
       <div class="uchips"><button type="button" class="uchip" data-f="all">全部</button><button type="button" class="uchip" data-f="hl">只看重點</button><button type="button" class="uchip" data-f="note">只看筆記</button></div>
       <div class="uchips">${COLORS.map(c => `<button type="button" class="uchip hlchip" data-fc="${c[0]}"><span class="hlc hl-${c[0]}"></span>${c[1]}</button>`).join('')}</div>
