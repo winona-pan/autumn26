@@ -94,10 +94,11 @@ const NOTES = (() => {
   }
   function unquote(ed) {
     const el = anchorEl(ed); const bq = el && el.closest('blockquote'); if (!bq || !ed.contains(bq)) return false;
-    let child = el; while (child.parentElement !== bq) child = child.parentElement;
-    if (child === bq) { // 游標直接在引用裡的文字上
-      const sel = getSelection(); child = sel.anchorNode; while (child.parentNode !== bq) child = child.parentNode;
-    }
+    let child = el;
+    if (child === bq) { // 游標直接在引用裡的文字上（沒有包段落）
+      const sel = getSelection(); child = sel.anchorNode; if (child === bq) child = bq.childNodes[Math.min(sel.anchorOffset, bq.childNodes.length - 1)]; while (child && child.parentNode !== bq) child = child.parentNode;
+      if (!child) return false;
+    } else while (child.parentElement !== bq) child = child.parentElement;
     const t = liftOut(bq, child); caretAt(t, true); return true;
   }
   function exitBlock(ed) {
@@ -107,25 +108,39 @@ const NOTES = (() => {
     const p = newP(); top.after(p); caretAt(p);
   }
 
+  // 手機點工具列按鈕時游標會離開編輯框 → 隨時記住最後的游標位置，按按鈕前先放回去
+  let selBound = false;
+  function bindSel() {
+    if (selBound) return; selBound = true;
+    document.addEventListener('selectionchange', () => { const s = getSelection(); if (!s.rangeCount) return; const n = s.anchorNode, el = n && (n.nodeType === 1 ? n : n.parentElement), ed = el && el.closest('.nted'); if (ed) ed._r = s.getRangeAt(0).cloneRange(); });
+  }
+  const restoreSel = ed => { ed.focus(); const r = ed._r; if (r && ed.contains(r.startContainer)) { const s = getSelection(); s.removeAllRanges(); s.addRange(r); } };
+  // 游標所在的區塊格式（大標、小標、程式碼、引用）
+  const curBlk = ed => { const el = anchorEl(ed); if (!el) return ''; const h = el.closest('h4, h5, h6, pre'); if (h && ed.contains(h)) return h.tagName.toLowerCase(); const bq = el.closest('blockquote'); return bq && ed.contains(bq) ? 'blockquote' : ''; };
+  // 游標是否在這個區塊的最前面
+  const atStart = (blk) => { const s = getSelection(); if (!s.rangeCount || !s.isCollapsed) return false; const r = document.createRange(); r.setStart(blk, 0); r.setEnd(s.anchorNode, s.anchorOffset); return !r.toString().replace(/\u200b/g, '').length && !r.cloneContents().querySelector('img, math'); };
+
   function wireTools(box, ed) {
+    bindSel();
     const css = on => { try { document.execCommand('styleWithCSS', false, on); } catch (e) { } };
-    const cmd = (c, v) => { ed.focus(); css(c === 'foreColor'); document.execCommand(c, false, v); css(false); tidyColors(ed); state(); };
+    const cmd = (c, v) => { restoreSel(ed); css(c === 'foreColor'); document.execCommand(c, false, v); css(false); tidyColors(ed); state(); };
     box.querySelectorAll('.nttools button').forEach(bt => bt.addEventListener('mousedown', e => e.preventDefault()));
     box.querySelectorAll('[data-fmt]').forEach(bt => bt.onclick = () => cmd(bt.dataset.fmt, null));
     // 字級：用 fontSize 指令（產生 <font size>），再換成 class；「中」= 拿掉字級
-    box.querySelectorAll('[data-fs]').forEach(bt => bt.onclick = () => { ed.focus(); if (bt.dataset.fs === '3') { stripColor(ed, /^fs-/); return; } css(false); document.execCommand('fontSize', false, bt.dataset.fs); tidyColors(ed); state(); });
+    box.querySelectorAll('[data-fs]').forEach(bt => bt.onclick = () => { restoreSel(ed); if (bt.dataset.fs === '3') { stripColor(ed, /^fs-/); return; } css(false); document.execCommand('fontSize', false, bt.dataset.fs); tidyColors(ed); state(); });
     box.querySelectorAll('[data-blk]').forEach(bt => bt.onclick = () => {
-      const b = bt.dataset.blk; ed.focus();
-      if (b === 'blockquote' && unquote(ed)) { state(); return; }        // 已經在引用裡 → 再按一次就取消引用
-      if (b !== 'blockquote' && unquote(ed) && b === 'p') { state(); return; } // 按「內文」也會跳出引用
-      cmd('formatBlock', '<' + b + '>'); ensureTail(ed);
+      // 像備忘錄：再按一次同一個格式就取消（變回內文）
+      const b = bt.dataset.blk; restoreSel(ed); const now = curBlk(ed);
+      if (b === 'blockquote') { if (now === 'blockquote' || (now && anchorEl(ed).closest('blockquote'))) unquote(ed); else cmd('formatBlock', '<blockquote>'); ensureTail(ed); state(); return; }
+      if (b === 'p') { if (/^(h\d|pre)$/.test(now)) cmd('formatBlock', '<p>'); unquote(ed); state(); return; }
+      cmd('formatBlock', now === b ? '<p>' : '<' + b + '>'); ensureTail(ed); state();
     });
-    box.querySelector('[data-exit]').onclick = () => { ed.focus(); exitBlock(ed); state(); };
-    box.querySelectorAll('[data-tc]').forEach(bt => bt.onclick = () => { const c = bt.dataset.tc; if (c) cmd('foreColor', RICH.TC[c]); else { ed.focus(); stripColor(ed, /^tc-/); } });
-    box.querySelectorAll('[data-bg]').forEach(bt => bt.onclick = () => { const c = bt.dataset.bg; if (c) { ed.focus(); css(true); if (!document.execCommand('hiliteColor', false, RICH.BG[c])) document.execCommand('backColor', false, RICH.BG[c]); css(false); tidyColors(ed); } else { ed.focus(); stripColor(ed, /^bg-/); } });
+    box.querySelector('[data-exit]').onclick = () => { restoreSel(ed); exitBlock(ed); state(); };
+    box.querySelectorAll('[data-tc]').forEach(bt => bt.onclick = () => { const c = bt.dataset.tc; if (c) cmd('foreColor', RICH.TC[c]); else { restoreSel(ed); stripColor(ed, /^tc-/); } });
+    box.querySelectorAll('[data-bg]').forEach(bt => bt.onclick = () => { const c = bt.dataset.bg; if (c) { restoreSel(ed); css(true); if (!document.execCommand('hiliteColor', false, RICH.BG[c])) document.execCommand('backColor', false, RICH.BG[c]); css(false); tidyColors(ed); } else { restoreSel(ed); stripColor(ed, /^bg-/); } });
     // 游標所在的格式亮起來
     const state = () => { ['bold', 'italic', 'underline', 'strikeThrough', 'insertUnorderedList', 'insertOrderedList'].forEach(c => { const b = box.querySelector(`[data-fmt="${c}"]`); if (b) { let on = false; try { on = document.queryCommandState(c); } catch (e) { } b.classList.toggle('on', on); } });
-      let blk = ''; try { blk = (document.queryCommandValue('formatBlock') || '').toLowerCase(); } catch (e) { } box.querySelectorAll('[data-blk]').forEach(b => b.classList.toggle('on', blk === b.dataset.blk)); };
+      const el = anchorEl(ed), blk = curBlk(ed), inQ = el && el.closest('blockquote') && ed.contains(el.closest('blockquote')); box.querySelectorAll('[data-blk]').forEach(b => b.classList.toggle('on', b.dataset.blk === 'blockquote' ? !!inQ : blk === b.dataset.blk)); };
     // 圖片與公式
     let saved = null; const keepSel = () => { const sel = getSelection(); saved = sel.rangeCount && ed.contains(sel.anchorNode) ? sel.getRangeAt(0).cloneRange() : null; };
     const file = box.querySelector('.ntfile');
@@ -159,6 +174,20 @@ const NOTES = (() => {
         const sel = getSelection(), r = sel.getRangeAt(0), tail = document.createRange(); tail.setStart(r.endContainer, r.endOffset); tail.setEnd(pre, pre.childNodes.length);
         const before = document.createRange(); before.setStart(pre, 0); before.setEnd(r.startContainer, r.startOffset);
         if (!tail.toString().length && /\n$/.test(before.toString())) { e.preventDefault(); const last = pre.querySelector('code') || pre; last.innerHTML = last.innerHTML.replace(/(\n|<br>)+$/, ''); const p = newP(); pre.after(p); caretAt(p); return; }
+      }
+    });
+    // 手機注音／拼音鍵盤的 keydown 拿不到 Enter、刪除鍵 → 改用 beforeinput 判斷
+    ed.addEventListener('beforeinput', e => {
+      const el = anchorEl(ed); if (!el) return;
+      if (e.inputType === 'insertParagraph') {
+        const bq = el.closest('blockquote');
+        if (bq && ed.contains(bq)) { let child = el; while (child && child.parentElement !== bq) child = child.parentElement; if (child && child !== bq && isEmptyBlock(child)) { e.preventDefault(); caretAt(liftOut(bq, child), true); state(); } else if ((!child || child === bq) && isEmptyBlock(bq)) { e.preventDefault(); const sel = getSelection(); let n = sel.anchorNode; while (n && n.parentNode !== bq) n = n.parentNode; if (n) caretAt(liftOut(bq, n), true); state(); } return; }
+        const h = el.closest('h4, h5, h6'); if (h && ed.contains(h) && isEmptyBlock(h)) { e.preventDefault(); cmd('formatBlock', '<p>'); return; } // 空的標題行按 Enter → 變回內文
+      }
+      if (e.inputType === 'deleteContentBackward') {
+        // 在大標、小標、程式碼、引用的最前面按刪除 → 先變回一般內文（跟備忘錄一樣）
+        const h = el.closest('h4, h5, h6, pre'); if (h && ed.contains(h) && atStart(h)) { e.preventDefault(); cmd('formatBlock', '<p>'); return; }
+        const bq = el.closest('blockquote'); if (bq && ed.contains(bq)) { let child = el; while (child && child.parentElement !== bq) child = child.parentElement; const top = child && child !== bq ? child : bq; if (atStart(top)) { e.preventDefault(); unquote(ed); state(); } }
       }
     });
     ed.addEventListener('input', () => ensureTail(ed));
