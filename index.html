@@ -371,11 +371,12 @@ body.notips .tipbox{display:none} body.calm *{animation:none!important;transitio
  :root{--re:#a0612b} @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--re:#e3a66b}} :root[data-theme="dark"]{--re:#e3a66b}
 .pblk.re,.plrow.re{--acc:var(--re)} .plrow input#plreh{width:64px;border:2px solid var(--line);border-radius:8px;padding:2px 6px;background:var(--bg);color:var(--ink);font:inherit} .reunits{width:100%} .reunits summary{font-size:14px} .reunits label{display:flex!important;gap:6px;align-items:center;font-size:14px;margin:3px 0} .refcfa{font-size:12px;color:var(--cfa)!important} .reunits .pill{white-space:nowrap;flex:none}
  :root{--gmat:#0b6e99;--fr:#b83280;--ielts:#5d7f17} @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--gmat:#5cc3ee;--fr:#f07ac0;--ielts:#a8d45a}} :root[data-theme="dark"]{--gmat:#5cc3ee;--fr:#f07ac0;--ielts:#a8d45a}
-.pblk.gmat,.plrow.gmat{--acc:var(--gmat)} .pblk.fr,.plrow.fr{--acc:var(--fr)} .pblk.ielts,.plrow.ielts{--acc:var(--ielts)} .linkish.pdn{opacity:.55;text-decoration:line-through} .pit{display:flex;gap:6px;align-items:flex-start;margin:3px 0}.pit.ok>span{opacity:.55;text-decoration:line-through}.ick{flex:none;width:17px;height:17px;margin-top:3px;accent-color:var(--acc,var(--ink))} .pblk.invHw,.plrow.invHw{--acc:var(--invest)} .pblk.mgmtHw,.plrow.mgmtHw{--acc:var(--mgmt)} .plnum{width:70px;border:2px solid var(--line);border-radius:8px;padding:2px 6px;background:var(--bg);color:var(--ink);font:inherit}
-.hdays{display:flex;flex-wrap:wrap;gap:4px} .hdays label{display:inline-flex;align-items:center;gap:2px;font-size:13px}
+.pblk.gmat,.plrow.gmat{--acc:var(--gmat)} .pblk.fr,.plrow.fr{--acc:var(--fr)} .pblk.ielts,.plrow.ielts{--acc:var(--ielts)} .plsum td small{display:block;font-size:12px;color:var(--mute)} .plsum td:nth-child(3),.plsum td:nth-child(4){white-space:nowrap} .plsum .pill{white-space:nowrap} .linkish.pdn{opacity:.55;text-decoration:line-through} .pit{display:flex;gap:6px;align-items:flex-start;margin:3px 0}.pit.ok>span{opacity:.55;text-decoration:line-through}.pit{cursor:pointer;padding:3px 0}.ick{flex:none;width:22px;height:22px;margin-top:1px;accent-color:var(--acc,var(--ink))} .pblk.invHw,.plrow.invHw{--acc:var(--invest)} .pblk.mgmtHw,.plrow.mgmtHw{--acc:var(--mgmt)} .plnum{width:70px;border:2px solid var(--line);border-radius:8px;padding:2px 6px;background:var(--bg);color:var(--ink);font:inherit}
+.hdays{display:flex;flex-wrap:wrap;gap:2px 6px} .hdays label{display:inline-flex;align-items:center;gap:3px;font-size:14px;padding:4px 0}.hdays input{width:18px;height:18px;margin:0}
  :root{--rp:#7a5c3e} @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--rp:#d6b48e}} :root[data-theme="dark"]{--rp:#d6b48e}
 .pblk.rp,.plrow.rp{--acc:var(--rp)} .rpname{border:2px solid var(--line);border-radius:8px;padding:2px 8px;background:var(--bg);color:var(--ink);font:inherit;font-weight:700;width:150px} .plrow.rp input[type=date]{border:2px solid var(--line);border-radius:8px;padding:2px 6px;background:var(--bg);color:var(--ink);font:inherit}
 .savebar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:16px 0;max-width:860px;position:sticky;top:64px;z-index:5;background:var(--bg);padding:6px 0}
+@media (max-width:760px){.savebar{position:static}}
 .bmbtn{font:inherit;font-size:12.5px;font-weight:700;color:var(--ink);background:var(--panel);border:2px solid var(--line);border-radius:999px;padding:2px 10px;cursor:pointer}
 .bmbtn.on{background:var(--bad);border-color:var(--bad);color:#fff}
 .card .body .bmk{position:relative;box-shadow:inset 4px 0 0 var(--bad);background:color-mix(in srgb,var(--bad) 7%,transparent);border-radius:4px}
@@ -5667,13 +5668,14 @@ function buildPlan() {
 function planBlockHTML(k, b, exam, d, chk) {
   // chk：今天才有，每項前面加勾勾（卡片用「我懂了」、不動產單元用設定裡的勾，所以不加）
   const ck = ik => chk ? `<input type="checkbox" class="ick" data-ick="${ik}"${chk[ik] ? ' checked' : ''} aria-label="這項完成">` : '';
-  const line = (ik, html) => chk ? `<span class="pit${chk[ik] ? ' ok' : ''}">${ck(ik)}<span>${html}</span></span>` : html;
+  const line = (ik, html) => chk ? `<label class="pit${chk[ik] ? ' ok' : ''}">${ck(ik)}<span>${html}</span></label>` : html;
   if (PLAN_HAB[k]) return `<div class="pblk ${k}"><div class="pbh"><b>${PLAN_HAB[k][0]}</b><span>${b.learn} 分鐘</span></div><p>${line(k + '§hab', k === 'ielts' ? IELTS_DAY[planPd(d).getDay()] : PLAN_HAB[k][1])}</p></div>`;
   const groups = []; (b.items || []).forEach(t => { const g = groups.find(x => x.sec === t.sec); g ? g.items.push(t) : groups.push({ sec: t.sec, items: [t] }); });
-  const item = t => t.kind === 'g' ? `${t.t}${t.note || ''}${(x => x ? `<br><b class="gseg">▶ ${x}</b>` : '')(gmatSeg(t, b.rng && b.rng[t.gu]))} <button type="button" class="linkish" data-gu="${t.gu}">整個單元讀完了 ✓</button>`
-    : t.kind === 'v' ? t.t + (t.note || '') : t.kind === 'rec' ? `${t.t} <button type="button" class="linkish refcfa" data-pj="re|${t.id}|c|">看複習卡</button>`
-    : `<button type="button" class="linkish${t.kind === 'c' && ST.done[t.id] ? ' pdn' : ''}" data-pj="${t.k}|${t.id || ''}|${t.kind}|${t.tab || ''}">${t.kind === 'c' && ST.done[t.id] ? '✓ ' : ''}${t.t}</button>${t.note || ''}`;
-  const list = items => { let h = '', prev = false; items.forEach(t => { const c = chk && planCheckable(t); if (!c && prev) h += '、'; h += c ? line(k + '§' + t.key, item(t)) : item(t); prev = !c; }); return h; };
+  const item = (t, sep = '') => t.kind === 'g' ? `${t.t}${t.note || ''}${(x => x ? `<br><b class="gseg">▶ ${x}</b>` : '')(gmatSeg(t, b.rng && b.rng[t.gu]))} <button type="button" class="linkish" data-gu="${t.gu}">整個單元讀完了 ✓</button>`
+    : t.kind === 'v' ? t.t + (t.note || '') + sep : t.kind === 'rec' ? `${t.t} <button type="button" class="linkish refcfa" data-pj="re|${t.id}|c|">看複習卡</button>${sep}`
+    : `<button type="button" class="linkish${t.kind === 'c' && ST.done[t.id] ? ' pdn' : ''}" data-pj="${t.k}|${t.id || ''}|${t.kind}|${t.tab || ''}">${t.kind === 'c' && ST.done[t.id] ? '✓ ' : ''}${t.t}${t.note ? '' : sep}</button>${t.note ? t.note + sep : ''}`;
+  // 頓號跟前一項黏在一起，不會跑到下一行開頭
+  const list = items => items.map((t, i) => { const c = chk && planCheckable(t), nx = items[i + 1], sep = !c && nx && !(chk && planCheckable(nx)); return c ? line(k + '§' + t.key, item(t)) : item(t, sep ? '、' : ''); }).join('');
   const rev = DATA[planBase(k)] ? `<button type="button" class="linkish" data-pj="${planBase(k)}||x|mcq">打怪模式＋錯題本</button>，再快速翻過所有卡片的「白話」${planBase(k) === 'deriv' ? '，整理 A4 小抄' : ''}` : k === 'gmat' ? '最後一份模考、看錯題本、確認考試流程和作息' : '重看各單元筆記和影片重點，整理考試範圍的公式與名詞';
   return `<div class="pblk ${planHue(k)}"><div class="pbh"><b>${PLAN_NAME[k]}${/F$/.test(k) ? '（期末範圍）' : /^rp/.test(k) ? '（報告）' : ''}</b><span>${planH(b.learn + b.rev)}</span></div>
     ${groups.map(g => `<p><span class="psec">${g.sec}</span>${list(g.items)}</p>`).join('')}
@@ -5682,7 +5684,7 @@ function planBlockHTML(k, b, exam, d, chk) {
 
 function renderPlan(root) {
   const P = planSettings();
-  root.innerHTML = `<div class="pagehead"><h2>讀書進度表</h2><p class="intro">依考試先後，把各科還沒掌握的卡片、習題、影片課和 GMAT 排進每一天，加上每天的法文和雅思練習，考前一天留給總複習。卡片勾「我懂了」之後會自動從進度表拿掉，每次打開都會依剩下的內容重新排。</p></div>
+  root.innerHTML = `<div class="pagehead"><h2>讀書進度表</h2><p class="intro">依考試先後，把各科還沒掌握的卡片、習題、影片課和 GMAT 排進每一天（每科一天只讀一個單元），加上語言練習和每週作業，考前留給總複習。今天的進度一天開始就固定：讀完一項就打勾（卡片勾「我懂了」），不會再補新的進來；沒讀完的明天重新排。</p></div>
   <div class="setgrid">
   <section class="setbox"><h3>1. 期中考日期與熟悉度</h3>
     <div class="plsubs">${PLAN_K.map(k => k === 're' ? planReRow(P) : `<div class="plrow ${DATA[k].hue}"><label class="pln"><input type="checkbox" data-on="${k}"${P.on[k] ? ' checked' : ''}> <b>${PLAN_NAME[k]}</b></label>
@@ -5695,10 +5697,10 @@ function renderPlan(root) {
     <p class="sm-p">填「需要幾小時」之後才會排進去，排在繳交日前三週內。小組報告只要填你自己要花的時間。</p></section>
   <section class="setbox"><h3>3. GMAT、語言練習與每週作業</h3><div class="plsubs">
     <div class="plrow gmat"><label class="pln"><input type="checkbox" data-on="gmat"${P.on.gmat ? ' checked' : ''}> <b>GMAT</b></label><label class="pld">考試 <input type="date" data-date="gmat" value="${P.dates.gmat || ''}"></label>
-      <label>每堂課 ≈ 影片長度的 <select id="plgx">${[1.3, 1.5, 1.8, 2, 2.5].map(x => `<option value="${x}"${x === +P.gmatX ? ' selected' : ''}>${x} 倍</option>`).join('')}</select>（看影片＋做題）</label><span class="sm-p">還要 <b data-need="gmat"></b></span><span class="hdays">${[1, 2, 3, 4, 5, 6, 0].map(i => `<label><input type="checkbox" data-gday="${i}"${P.gmatDays.includes(i) ? ' checked' : ''}>${'日一二三四五六'[i]}</label>`).join('')}</span>
+      <label>每堂課 ≈ 影片 × <select id="plgx">${[1.3, 1.5, 1.8, 2, 2.5].map(x => `<option value="${x}"${x === +P.gmatX ? ' selected' : ''}>${x} 倍</option>`).join('')}</select></label><span class="sm-p">還要 <b data-need="gmat"></b></span><span class="hdays">${[1, 2, 3, 4, 5, 6, 0].map(i => `<label><input type="checkbox" data-gday="${i}"${P.gmatDays.includes(i) ? ' checked' : ''}>${'日一二三四五六'[i]}</label>`).join('')}</span>
       <details class="reunits"><summary>單元進度（照順序一次讀一個；讀完打勾，就不會再排）</summary>${GMAT_UNITS.map((u, i) => [u[0], `${i + 1}. ${u[1]}｜${u[2]}`]).map(([g, n]) => `<label><input type="checkbox" data-gud="${g}"${P.gmatU[g] ? ' checked' : ''}> ${n}</label>`).join('')}</details></div>
     ${Object.keys(PLAN_HAB).map(h => { const c = P.habits[h]; return `<div class="plrow ${h}"><label class="pln"><input type="checkbox" data-hon="${h}"${c.on ? ' checked' : ''}> <b>${PLAN_HAB[h][0]}</b></label><label>每次 <select data-hmin="${h}">${[15, 30, 45, 60, 90].map(m => `<option value="${m}"${m === +c.min ? ' selected' : ''}>${m} 分鐘</option>`).join('')}</select></label><span class="hdays">${[1, 2, 3, 4, 5, 6, 0].map(i => `<label><input type="checkbox" data-hday="${h}|${i}"${c.days.includes(i) ? ' checked' : ''}>${'日一二三四五六'[i]}</label>`).join('')}</span>${c.until !== undefined ? `<label>排到 <input type="date" data-huntil="${h}" value="${c.until || ''}"></label>` : ''}</div>`; }).join('')}
-    </div><p class="sm-p">GMAT 照補習班進階區的上課順序（RC1 → CR1 → 數學1 → …），課程上完再輪流做數學練習計畫和 GWD，最後 PP 模考。每天只讀一個單元（一科），一個單元可能分兩三天，讀完當天不會接著開下一個。只排在你勾的星期幾，期中考後每天會變多。<b>今天沒讀完也沒關係</b>：今天每一項讀完就打勾（或直接勾「完成」），會記下讀過的份量；沒勾的整份留著重排；單元沒按「讀完了」也會留著（按錯了可以在今天的格子或單元清單取消，XP 會退回），每次打開都把剩下的平均分到考前每一天，不會全部堆到明天。語言練習和每週作業（週日投資學報告、週五管理學作業，排到寒假前 12/23）每天最先保留。</p></section>
+    </div><p class="sm-p">GMAT 照補習班的上課順序（RC1 → CR1 → 數學1 → …），上完再輪流做數學練習和 GWD，最後 PP 模考；每堂課的時間 = 影片長度 × 倍數（看影片＋做題）。一天只讀一個單元，一個單元可能分兩三天，只排在勾的星期幾。單元打開可以看順序、讀完打勾。語言練習和每週作業（週日投資學報告、週五管理學作業，排到 12/23）每天最先保留。</p></section>
   <section class="setbox"><h3>4. 每天能讀幾小時</h3>
     <div class="wkrow">${[1, 2, 3, 4, 5, 6, 0].map(i => `<label><span>週${'日一二三四五六'[i]}</span><input type="number" min="0" max="16" step="0.5" data-wk="${i}" value="${P.wk[i]}" inputmode="decimal"></label>`).join('')}</div>
     <div class="row wrap"><label>從哪天開始 <input type="date" id="plstart" value="${P.start || planToday()}"></label>
@@ -5722,7 +5724,7 @@ function renderPlan(root) {
     $('#plsum', root).innerHTML = `<h3>總覽：照考試先後</h3>
       ${missing.length ? `<p class="cfaalert"><b>${missing.join('、')}</b>還沒填期中考日期，先不會排進去。知道日期後填上就好。</p>` : ''}
       ${past.length ? `<p class="sm-p">${past.join('、')}的考試日期已經過了，所以沒有排。</p>` : ''}
-      ${R.subs.length ? `<div class="tblwrap"><table class="tbl"><thead><tr><th>順序</th><th>科目</th><th>考試</th><th>需要</th><th>排進去的</th><th>狀態</th></tr></thead><tbody>${R.subs.map((s, i) => { const short = s.left + (s.revShort || 0); return `<tr><td>${i + 1}</td><td><b>${PLAN_NAME[s.k]}${s.report ? '（報告）' : s.final ? '（期末）' : ''}</b></td><td>${s.pre ? `先讀完（${planMD(s.exam)} 前）` : planMD(s.exam)}</td><td>${planH(s.need + s.rev)}</td><td>${planH(s.got + s.rev - (s.revShort || 0))}</td><td>${short > 0 ? `<span class="pill bad">還差 ${planH(short)}</span>` : '<span class="pill good">排得完</span>'}</td></tr>`; }).join('')}</tbody></table></div>
+      ${R.subs.length ? `<div class="tblwrap"><table class="tbl plsum"><thead><tr><th>科目</th><th>考試</th><th>需要</th><th>狀態</th></tr></thead><tbody>${R.subs.map(s => { const short = s.left + (s.revShort || 0), md = planPd(s.exam); return `<tr><td><b>${PLAN_NAME[s.k]}</b>${s.report ? '<small>報告</small>' : s.final ? '<small>期末</small>' : ''}</td><td>${md.getMonth() + 1}/${md.getDate()}${s.pre ? '<small>前讀完</small>' : ''}</td><td>${planH(s.need + s.rev)}</td><td>${short > 0 ? `<span class="pill bad">還差 ${planH(short)}</span>` : '<span class="pill good">排得完</span>'}</td></tr>`; }).join('')}</tbody></table></div>
       ${R.habits.length ? `<p class="sm-p">固定練習與每週作業：${R.habits.map(h => `${PLAN_HAB[h.k][0]} ${planH(h.got)}${h.got < h.want ? `（還差 ${planH(h.want - h.got)}）` : ''}`).join('、')}</p>` : ''}<p class="sm-p">到 ${planMD(R.days[R.days.length - 1] ? R.days[R.days.length - 1].d : R.start)} 為止，可讀時間共 ${planH(have)}（平均每天 ${planH(have / nd)}），全部排完需要 ${planH(need)}（<b>平均每天 ${planH(need / nd)}</b>）。${R.subs.some(s => s.left + (s.revShort || 0) > 0) || R.habits.some(h => h.got < h.want) ? '<b class="warnt">時間不夠：可以增加每天的時數、把比較熟的科目改成「熟」，或先讀進度表排到的部分。</b>' : `時間足夠，每天只排需要的量${have > need * 1.2 ? '，多出來的時間可以玩小遊戲或複習錯題本' : ''}。`}</p>` : '<p>先在上面填期中考日期，就會產生進度表。</p>'}`;
     const exams = {}; R.subs.filter(s => !s.pre).forEach(s => (exams[s.exam] = exams[s.exam] || []).push(PLAN_NAME[s.k] + (s.report ? ' 繳交' : s.final ? '期末考' : s.steady ? ' 考試' : '期中考')));
     let html = '', wk = '';
@@ -5771,8 +5773,8 @@ function renderPlan(root) {
       redraw();
     });
   };
-  const stamp = () => { const d = new Date(); P.savedAt = `${d.getMonth() + 1}/${d.getDate()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`; save(); const el = $('#plsaved', root); if (el) el.textContent = `已儲存 ✓ ${P.savedAt}（存在這台裝置，換裝置請用設定頁的備份碼）`; };
-  const redraw = () => { stamp(); draw(); };
+  const stamp = () => { const d = new Date(); P.savedAt = `${d.getMonth() + 1}/${d.getDate()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`; save(); const el = $('#plsaved', root); if (el) el.textContent = `已儲存 ✓ ${P.savedAt}`; };
+  const redraw = () => { save(); draw(); };
   // 改設定（日期、時數、科目）：今天還沒讀任何東西才重排今天；已經開始讀就只改明天以後
   const upd = () => {
     const t = planToday(), fz = ST.planFrz && ST.planFrz[t];
