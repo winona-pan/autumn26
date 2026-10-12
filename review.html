@@ -5479,7 +5479,7 @@ const gmatSeg = (t, r) => {
   let c = 0; const on = u[3].filter(v => { const s0 = c, s1 = c += gmatMin(v[1]); return s1 > a + 0.5 && s0 < b - 0.5; });
   return `今天看：${on.map(v => `${v[0]}（${v[1]}）`).join('、')}`;
 };
-const PLAN_MIN = { basic: 12, deriv: 18, invest: 15, law: 15, mgmt: 15 }; // 每張知識卡估計分鐘
+const PLAN_MIN = { re: 15, basic: 12, deriv: 18, invest: 15, law: 15, mgmt: 15 }; // 每張知識卡估計分鐘
 const PLAN_FAM = [['熟', 0.6], ['普通', 1], ['不熟', 1.5]];
 const planPd = s => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
 const planPs = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
@@ -5488,7 +5488,7 @@ const planMD = s => { const d = planPd(s); return `${d.getMonth() + 1}/${d.getDa
 const planH = m => { const h = Math.round(m / 60 * 10) / 10; return h + ' 小時'; };
 
 function planSettings() {
-  const D = { start: '', dates: { mgmt: '2026-11-04', deriv: '2026-11-16', invest: '2026-11-03', law: '2026-10-28', re: '2026-11-12', reF: '2026-12-17', mgmtF: '2026-12-23', derivF: '2026-12-21', investF: '2026-12-22', lawF: '2026-12-23' }, on: { basic: true, deriv: true, invest: true, law: true, mgmt: true, re: true }, fam: {}, wk: [4, 2, 2, 2, 2, 2, 4], off: [], review: 120, mode: 'seq', reH: 3.5, reDone: {}, gmatX: 1.8, gmatU: {}, gmatProg: {}, taskProg: {}, gmatDays: [0, 1, 2, 3, 4, 5, 6], finR: 1, reports: [{ n: '史記報告', d: '2026-11-26', h: 0 }, { n: 'ESG報告', d: '2026-12-04', h: 0 }, { n: '衍金報告', d: '2026-12-07', h: 0 }, { n: '投資學期末報告', d: '2026-12-15', h: 0 }, { n: '管理學報告', d: '', h: 0 }], habits: { fr: { on: true, min: 30, days: [0, 1, 2, 3, 4, 5, 6] }, ielts: { on: true, min: 45, days: [1, 2, 3, 4, 5] }, invHw: { on: true, min: 60, days: [0], until: '2026-12-23' }, mgmtHw: { on: true, min: 30, days: [5], until: '2026-12-23' } } };
+  const D = { start: '', dates: { mgmt: '2026-11-04', deriv: '2026-11-16', invest: '2026-11-03', law: '2026-10-28', re: '2026-11-12', reF: '2026-12-17', mgmtF: '2026-12-23', derivF: '2026-12-21', investF: '2026-12-22', lawF: '2026-12-23' }, on: { basic: true, deriv: true, invest: true, law: true, mgmt: true, re: true }, fam: {}, wk: [4, 2, 2, 2, 2, 2, 4], off: [], review: 120, mode: 'seq', reV: 2, reDone: {}, gmatX: 1.8, gmatU: {}, gmatProg: {}, taskProg: {}, gmatDays: [0, 1, 2, 3, 4, 5, 6], finR: 1, reports: [{ n: '史記報告', d: '2026-11-26', h: 0 }, { n: 'ESG報告', d: '2026-12-04', h: 0 }, { n: '衍金報告', d: '2026-12-07', h: 0 }, { n: '投資學期末報告', d: '2026-12-15', h: 0 }, { n: '管理學報告', d: '', h: 0 }], habits: { fr: { on: true, min: 30, days: [0, 1, 2, 3, 4, 5, 6] }, ielts: { on: true, min: 45, days: [1, 2, 3, 4, 5] }, invHw: { on: true, min: 60, days: [0], until: '2026-12-23' }, mgmtHw: { on: true, min: 30, days: [5], until: '2026-12-23' } } };
   D.dates.gmat = '2026-12-30'; D.on.gmat = true;
   // 直接補在 ST.plan 上（不換新物件），畫面上拿到的設定才會一直是同一份、改了都存得到
   const S = ST.plan = ST.plan || {};
@@ -5536,7 +5536,15 @@ function planTasksAll(k, f) {
   }
   if (k === 're' || k === 'reF') {
     const P = ST.plan;
-    return RE_UNITS.map((u, i) => [u, i]).filter(([u, i]) => (u[1] === 'mid') === (k === 're') && !P.reDone[i]).map(([u, i]) => ({ k, id: DATA.re.sections[i].cards[0].id, sec: `單元 ${i + 1}`, t: `${u[0]}：看影片＋複習`, min: Math.round(+P.reH * 60 * f), kind: 'rec' }));
+    // 跟其他科一樣用卡片排：每個單元先看影片（影片看完在設定打勾就不再排），再讀這個單元還沒勾「我懂了」的卡片
+    const T = [];
+    RE_UNITS.forEach((u, i) => {
+      if ((u[1] === 'mid') !== (k === 're')) return;
+      const x = DATA.re.sections[i];
+      if (!P.reDone[i]) T.push({ k, sec: x.t, t: `看單元 ${i + 1} 影片（約 ${+P.reV || 2} 小時）`, min: Math.round((+P.reV || 2) * 60), kind: 'v' });
+      x.cards.forEach(c => { if (!ST.done[c.id]) T.push({ k, id: c.id, sec: x.t, t: c.t, min: PLAN_MIN.re * f, kind: 'c' }); });
+    });
+    return T;
   }
   const T = [], s = DATA[k], m = PLAN_MIN[k] * f;
   s.sections.forEach(x => x.cards.forEach(c => { if (!ST.done[c.id]) T.push({ k, id: c.id, sec: x.t, t: c.t, min: m, kind: 'c' }); }));
@@ -5664,7 +5672,7 @@ function planBlockHTML(k, b, exam, d, chk) {
   const groups = []; (b.items || []).forEach(t => { const g = groups.find(x => x.sec === t.sec); g ? g.items.push(t) : groups.push({ sec: t.sec, items: [t] }); });
   const item = (t, sep = '') => t.kind === 'g' ? `${t.t}${t.note || ''}${(x => x ? `<br><b class="gseg">▶ ${x}</b>` : '')(gmatSeg(t, b.rng && b.rng[t.gu]))} <button type="button" class="linkish" data-gu="${t.gu}">整個單元讀完了 ✓</button>`
     : t.kind === 'v' ? t.t + (t.note || '') + sep : t.kind === 'rec' ? `${t.t} <button type="button" class="linkish refcfa" data-pj="re|${t.id}|c|">看複習卡</button>${sep}`
-    : `<button type="button" class="linkish${t.kind === 'c' && ST.done[t.id] ? ' pdn' : ''}" data-pj="${t.k}|${t.id || ''}|${t.kind}|${t.tab || ''}">${t.kind === 'c' && ST.done[t.id] ? '✓ ' : ''}${t.t}${t.note ? '' : sep}</button>${t.note ? t.note + sep : ''}`;
+    : `<button type="button" class="linkish${t.kind === 'c' && ST.done[t.id] ? ' pdn' : ''}" data-pj="${planBase(t.k)}|${t.id || ''}|${t.kind}|${t.tab || ''}">${t.kind === 'c' && ST.done[t.id] ? '✓ ' : ''}${t.t}${t.note ? '' : sep}</button>${t.note ? t.note + sep : ''}`;
   // 頓號跟前一項黏在一起，不會跑到下一行開頭
   const list = items => items.map((t, i) => { const c = chk && planCheckable(t), nx = items[i + 1], sep = !c && nx && !(chk && planCheckable(nx)); return c ? line(k + '§' + t.key, item(t)) : item(t, sep ? '、' : ''); }).join('');
   const rev = DATA[planBase(k)] ? `<button type="button" class="linkish" data-pj="${planBase(k)}||x|mcq">打怪模式＋錯題本</button>，再快速翻過所有卡片的「白話」${planBase(k) === 'deriv' ? '，整理 A4 小抄' : ''}` : k === 'gmat' ? '最後一份模考、看錯題本、確認考試流程和作息' : '重看各單元筆記和影片重點，整理考試範圍的公式與名詞';
@@ -5798,7 +5806,7 @@ function renderPlan(root) {
   $$('[data-hmin]', root).forEach(s => s.onchange = () => { P.habits[s.dataset.hmin].min = +s.value; upd(); });
   $$('[data-huntil]', root).forEach(i => i.onchange = () => { P.habits[i.dataset.huntil].until = i.value; upd(); });
   $$('[data-hday]', root).forEach(cb => cb.onchange = () => { const [h, i] = cb.dataset.hday.split('|'), c = P.habits[h]; c.days = cb.checked ? c.days.concat(+i) : c.days.filter(x => x !== +i); upd(); });
-  $('#plreh', root).oninput = e => { P.reH = Math.max(0.5, Math.min(10, +e.target.value || 3.5)); upd(); };
+  $('#plreh', root).oninput = e => { P.reV = Math.max(0.5, Math.min(6, +e.target.value || 2)); upd(); };
   $$('[data-redone]', root).forEach(cb => cb.onchange = () => { cb.checked ? P.reDone[cb.dataset.redone] = 1 : delete P.reDone[cb.dataset.redone]; upd(); });
   $('#plrev', root).onchange = e => { P.review = +e.target.value; upd(); };
   $('#plmode', root).onchange = e => { P.mode = e.target.value; upd(); };
@@ -5826,9 +5834,9 @@ function planTodayHTML() {
 function planReRow(P) {
   return `<div class="plrow re"><label class="pln"><input type="checkbox" data-on="re"${P.on.re ? ' checked' : ''}> <b>不動產財管</b></label>
     <label class="pld">期中考 <input type="date" data-date="re" value="${P.dates.re || ''}"></label><label class="pld">期末考 <input type="date" data-date="reF" value="${P.dates.reF || ''}"></label>
-    <label>每單元 <input type="number" id="plreh" min="0.5" max="10" step="0.5" value="${P.reH}" inputmode="decimal"> 小時</label>
+    <label>每單元影片 <input type="number" id="plreh" min="0.5" max="6" step="0.5" value="${+P.reV || 2}" inputmode="decimal"> 小時</label>
     <label>熟悉度 <select data-fam="re">${PLAN_FAM.map(f => `<option${(P.fam.re || '普通') === f[0] ? ' selected' : ''}>${f[0]}</option>`).join('')}</select></label><span class="sm-p">需要 <b data-need="re"></b></span>
-    <details class="reunits"><summary>單元進度（看完的打勾，就不會再排）</summary>${RE_UNITS.map((u, i) => `<label><input type="checkbox" data-redone="${i}"${P.reDone[i] ? ' checked' : ''}> ${i + 1}. ${u[0]} <span class="pill">${u[1] === 'mid' ? '期中' : '期末'}</span></label>`).join('')}</details></div>`;
+    <details class="reunits"><summary>影片進度（影片看完打勾就不再排；卡片照「我懂了」排）</summary>${RE_UNITS.map((u, i) => `<label><input type="checkbox" data-redone="${i}"${P.reDone[i] ? ' checked' : ''}> ${i + 1}. ${u[0]} <span class="pill">${u[1] === 'mid' ? '期中' : '期末'}</span></label>`).join('')}</details></div>`;
 }
 // ===== 單元：每一科的遊戲、打怪、練習題都能選單元；每個單元累積自己的等級 =====
 // 選擇存在 ST.mu[科目]（遊戲、打怪、練習題共用）；單元點數存在 ST.ux[科目][單元]。
