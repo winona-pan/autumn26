@@ -100,7 +100,7 @@ DATA.deriv.mcqEn.push(
 
 // 先備知識連結：card id → 基礎卡 ids
 const PRE = {
-  d1:['bstock','bspot'], d2:['barb'], d3:['bspot','blong'], d4:['blong','bspot'], d5:['bspot'], d7:['barb','bspot'], d8:['blev'], d9:['blong'], d12:['bspot','blong'], d14:['bspot'], d16:['bsd','bcorr'], d17:['bsd'], d18:['bbeta','bdiv','bindex'], d19:['bbeta','bdiv'], d20:['blev'],
+  d1:['bstock','bspot'], d2:['barb'], d3:['bspot','blong'], d4:['blong','bspot'], d5:['bspot'], d7:['barb','bspot'], d8:['blev'], d9:['blong'], d12:['bspot','blong'], d14:['bspot'], d16:['bsd','bcorr'], d17:['bsd'], d18:['bbeta','bdiv','bindex'], d19:['bbeta','bdiv'], d20:['blev'], d21:['bint','bpv'], d22:['barb','blong','bpv'], d23:['bbond','bpv'], d24:['bindex','bdiv'], d25:['bpv'], d26:['barb','bint'], d27:['bspot'], d28:['bint'],
   i1a:['bdec','bstock','bbond'], i1b:['bret'], i1c:['bret'], i1d:['bis','bstock'], i1e:['bsd','bbeta','bdiv','bsharpe'], i1f:['bindex','bsharpe'], i2c:['bstock'], i2d:['blev'], i2e:['bstock'], i2g:['bbond'], i3d:['bbond','blev'], i3e:['blong']
 };
 Object.keys(PRE).forEach(id => ['deriv', 'invest'].forEach(k => subjCardsPre(DATA[k]).forEach(c => { if (c.id === id) c.pre = PRE[id]; })));

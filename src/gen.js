@@ -23,7 +23,19 @@ DATA.deriv.mcq = [
   {u:'ch1', q:'美式選擇權與歐式選擇權的差別：', o:['美式只能到期執行','美式可在到期前任何時候執行','歐式可隨時執行','兩者相同'], a:1, e:''},
   {u:'ch2', q:'若到期時 F > S，套利者應：', o:['買現貨、short futures、交割','long futures、賣現貨','什麼都不做','買 put'], a:0, e:'賺 F − S。'},
   {u:'ch2', q:'每日結算價（台灣）是：', o:['收盤價','收盤前 1 分鐘成交量加權平均價','開盤價','當日最高最低平均'], a:1, e:'最後結算價則是收盤前 30 分鐘標的指數簡單平均。'},
-  {u:'ch2', q:'成交量可能大於未平倉量的原因是：', o:['當沖','保證金不足','價格限制','交割'], a:0, e:'當天開又平，不增加 OI。'}
+  {u:'ch2', q:'成交量可能大於未平倉量的原因是：', o:['當沖','保證金不足','價格限制','交割'], a:0, e:'當天開又平，不增加 OI。'},
+  {u:'ch5', q:'不付息股票 S₀ = 40、r = 5%、3 個月，理論遠期價格是：', o:['40.00','40.50','42.00','41.00'], a:1, e:'40e^(0.05×0.25) = 40.50。'},
+  {u:'ch5', q:'承上，若遠期報價 43，套利者應：', o:['放空股票、買遠期','借錢買股票、賣遠期','買 call','不做'], a:1, e:'遠期太貴 → 買現貨、賣遠期，賺 43 − 40.50 = 2.50。'},
+  {u:'ch5', q:'承上，若遠期報價 39，套利者應：', o:['借錢買股票、賣遠期','放空股票存無風險、買遠期','買股票、買遠期','不做'], a:1, e:'遠期太便宜 → 賣現貨、買遠期，賺 40.50 − 39 = 1.50。'},
+  {u:'ch5', q:'標的在合約期間會付固定金額股利（現值 I），遠期價格公式是：', o:['(S₀ + I)e^(rT)','(S₀ − I)e^(rT)','S₀e^((r−I)T)','S₀e^(rT) − I'], a:1, e:'持有現貨的人拿得到股利 → 遠期要便宜 I（現值）。'},
+  {u:'ch5', q:'簽約當下，遠期合約的價值 f 是：', o:['F₀','K','0','S₀ − K'], a:2, e:'交割價 K 就設成 F₀，所以 f₀ = 0。'},
+  {u:'ch5', q:'遠期多頭在時間 t 的價值是：', o:['(K − Fₜ)e^(−r(T−t))','(Fₜ − K)e^(−r(T−t))','Fₜ − K','Sₜ − K'], a:1, e:'也等於 Sₜ − Ke^(−r(T−t))。'},
+  {u:'ch5', q:'外幣的遠期價格 F₀ = S₀e^((r−r_f)T)。外國利率高於本國時：', o:['F₀ > S₀','F₀ < S₀','F₀ = S₀','無法判斷'], a:1, e:'r − r_f < 0 → 遠期低於現貨（外幣貼水）。'},
+  {u:'ch5', q:'股價指數的持有成本 c 是：', o:['r','r − q','r + u','r − r_f'], a:1, e:'利息成本扣掉股利率。'},
+  {u:'ch5', q:'便利殖利率（convenience yield）主要出現在：', o:['不付息股票','股價指數','消費型商品（小麥、原油）','外幣'], a:2, e:'持有實體商品拿來用的好處；黃金這種投資型資產幾乎沒有。'},
+  {u:'ch5', q:'消費型商品為什麼只能保證 F₀ ≤ (S₀ + U)e^(rT)？', o:['倉儲免費','持有者要拿來用，不會為了套利賣掉存貨','期貨不在交易所交易','利率是 0'], a:1, e:'F₀ 太低的套利要賣現貨，但使用者不願意賣 → 不等式可長期存在。'},
+  {u:'ch5', q:'$100、年利率 10%，連續複利一年後約為：', o:['110.00','110.25','110.52','111.00'], a:2, e:'100e^0.1 = 110.52 ≈ 每日複利。'},
+  {u:'ch5', q:'儲存成本在遠期價格公式裡的角色是：', o:['像收益，要扣掉','像負的收益，要加上去','不影響','只影響期貨不影響遠期'], a:1, e:'F₀ = (S₀ + U)e^(rT) 或 S₀e^((r+u)T)。'}
 ];
 
 const R = (a, b, step = 1) => { const n = Math.round((b - a) / step); return +(a + step * Math.floor(Math.random() * (n + 1))).toFixed(6); };
@@ -113,5 +125,35 @@ DATA.deriv.gens = [
       return { qe: `The forward price of the Swiss franc is quoted as ${fwd.toFixed(4)} (CHF per USD) and the futures price is ${fut} (USD per CHF). Convert the forward quote to USD per CHF (four decimals). Which market is better for selling francs?`, q: `瑞郎遠期報價 ${fwd.toFixed(4)}（CHF/USD），期貨報價 ${fut}（USD/CHF）。把遠期換成期貨的報價方式是多少 USD/CHF？（四位小數）想賣瑞郎選哪個市場？`,
         ans: conv, tol: 0.00015, unit: 'USD/CHF',
         sol: [`1 / ${fwd.toFixed(4)} = <b>${conv.toFixed(4)}</b>`, `${conv.toFixed(4)} ${sellFwd ? '&gt;' : '&lt;'} ${fut} → 瑞郎在${sellFwd ? '遠期' : '期貨'}市場較值錢 → 想賣選<b>${sellFwd ? '遠期' : '期貨'}</b>`] };
+  } },
+  { id: 'g5f', t: '遠期價格（無收益／固定收益／收益率）', base: '5.3／5.4／5.30', make() {
+      const kind = pick(['none', 'inc', 'yld']); const S = R(20, 120, 1); const r = R(0.02, 0.1, 0.005); const m = pick([3, 4, 6, 9, 12]); const T = m / 12;
+      if (kind === 'none') { const F = S * Math.exp(r * T);
+        return { qe: `A ${m}-month forward contract is entered into on a non-dividend-paying stock when the stock price is $${S} and the risk-free rate is ${f2(r * 100, 1)}% per annum with continuous compounding. What is the forward price?`, q: `不付息股票現價 $${S}，無風險利率 ${f2(r * 100, 1)}%（連續複利），${m} 個月期遠期價格？`,
+          ans: F, tol: 0.006, unit: '$', sol: [`T = ${m}/12 = ${f2(T, 4)}`, `F<sub>0</sub> = ${S}e<sup>${r}×${f2(T, 4)}</sup> = <b>${f2(F)}</b>`] }; }
+      if (kind === 'inc') { const d = pick([0.5, 1, 1.5, 2]); const t1 = pick([1, 2]) , t2 = t1 + pick([2, 3]); const ts = [t1, t2].filter(t => t < m); const I = ts.reduce((a, t) => a + d * Math.exp(-r * t / 12), 0); const F = (S - I) * Math.exp(r * T);
+        return { qe: `A stock priced at $${S} will pay a dividend of $${d} ${ts.length ? 'in ' + ts.join(' and ') + ' months' : '(none during the contract)'}. The risk-free rate is ${f2(r * 100, 1)}% (continuous compounding). What is the ${m}-month forward price?`, q: `股價 $${S}，${ts.length ? '將在 ' + ts.join('、') + ' 個月後各配息 $' + d : '合約期間不配息'}。無風險利率 ${f2(r * 100, 1)}%（連續複利）。${m} 個月期遠期價格？`,
+          ans: F, tol: 0.006, unit: '$', sol: [ts.length ? `I = ${ts.map(t => `${d}e<sup>−${r}×${t}/12</sup>`).join(' + ')} = ${f2(I, 4)}` : 'I = 0', `F<sub>0</sub> = (${S} − ${f2(I, 4)})e<sup>${r}×${m}/12</sup> = <b>${f2(F)}</b>`] }; }
+      const S2 = R(300, 3000, 10), q = R(0.01, 0.04, 0.005); const F = S2 * Math.exp((r - q) * T);
+      return { qe: `A stock index is ${S2}. The risk-free rate is ${f2(r * 100, 1)}% and the dividend yield is ${f2(q * 100, 1)}% per annum (continuous compounding). What is the ${m}-month futures price?`, q: `股價指數 ${S2}，無風險利率 ${f2(r * 100, 1)}%、股利率 ${f2(q * 100, 1)}%（連續複利）。${m} 個月期期貨價格？`,
+        ans: F, tol: 0.006, unit: '點', sol: [`F<sub>0</sub> = S<sub>0</sub>e<sup>(r−q)T</sup>`, `= ${S2}e<sup>(${r}−${q})×${m}/12</sup> = <b>${f2(F)}</b>`] };
+  } },
+  { id: 'g5a', t: '套利利潤（遠期報價偏離）', base: '5.10 套利', make() {
+      const S = R(20, 100, 1); const r = R(0.02, 0.1, 0.005); const m = pick([3, 6, 9, 12]); const T = m / 12; const Fth = S * Math.exp(r * T);
+      const Fq = +(Fth + pick([-1, 1]) * R(0.5, 4, 0.5)).toFixed(2); const hi = Fq > Fth; const prof = Math.abs(Fq - Fth);
+      return { qe: `A non-dividend-paying stock is $${S}; the ${m}-month risk-free rate is ${f2(r * 100, 1)}% (continuous compounding). The ${m}-month forward price is $${Fq}. What riskless profit per share can be locked in at maturity?`, q: `不付息股票 $${S}，${m} 個月無風險利率 ${f2(r * 100, 1)}%（連續複利），${m} 個月遠期報價 $${Fq}。每股可在到期時鎖住多少無風險利潤？（並想想要怎麼做）`,
+        ans: prof, tol: 0.006, unit: '$', sol: [`理論 F<sub>0</sub> = ${S}e<sup>${r}×${m}/12</sup> = ${f2(Fth, 4)}`, hi ? `報價 ${Fq} &gt; 理論 → 遠期太貴：借 ${S} 買股票、賣遠期` : `報價 ${Fq} &lt; 理論 → 遠期太便宜：放空股票存無風險、買遠期`, `利潤 = |${Fq} − ${f2(Fth, 4)}| = <b>${f2(prof)}</b>`] };
+  } },
+  { id: 'g5v', t: '遠期合約的價值（之後某天）', base: '5.9／5.30', make() {
+      const S0 = R(20, 100, 1); const r = R(0.03, 0.1, 0.01); const T = pick([0.5, 1]); const t = T === 1 ? pick([0.25, 0.5, 0.75]) : 0.25; const K = S0 * Math.exp(r * T);
+      const St = +(S0 * R(0.85, 1.15, 0.01)).toFixed(0); const side = pick(['long', 'short']); const v0 = St - K * Math.exp(-r * (T - t)); const v = side === 'long' ? v0 : -v0;
+      const mo = x => Math.round(x * 12);
+      return { qe: `A ${mo(T)}-month ${side} forward on a non-dividend-paying stock was entered into when the stock price was $${S0} and r = ${f2(r * 100)}% (continuous compounding). ${mo(t)} months later the stock price is $${St} and r is unchanged. What is the value of the ${side} position?`, q: `當初股價 $${S0}、r = ${f2(r * 100)}%（連續複利）時簽訂 ${mo(T)} 個月期不付息股票遠期${side === 'long' ? '多頭' : '空頭'}。${mo(t)} 個月後股價 $${St}，利率不變。這個${side === 'long' ? '多頭' : '空頭'}部位現在值多少？`,
+        ans: v, tol: 0.006, unit: '$', sol: [`K = F<sub>0</sub> = ${S0}e<sup>${r}×${T}</sup> = ${f2(K, 4)}`, `剩 T − t = ${f2(T - t)} 年`, `long 價值 = S<sub>t</sub> − Ke<sup>−r(T−t)</sup> = ${St} − ${f2(K, 4)}e<sup>−${r}×${f2(T - t)}</sup> = ${f2(v0, 4)}`, side === 'short' ? `空頭 = 多頭的相反數 = <b>${f2(v)}</b>` : `<b>${f2(v)}</b>`] };
+  } },
+  { id: 'g5x', t: '外匯遠期與利率平價', base: '5.12', make() {
+      const S = R(0.6, 1.4, 0.01); const r = R(0.005, 0.06, 0.005); let rf = R(0.005, 0.06, 0.005); if (rf === r) rf = +(rf + 0.01).toFixed(3); const m = pick([2, 3, 6, 12, 24]); const T = m / 12; const F = S * Math.exp((r - rf) * T);
+      return { qe: `The spot exchange rate is $${S.toFixed(2)} per unit of foreign currency. The domestic risk-free rate is ${f2(r * 100, 1)}% and the foreign risk-free rate is ${f2(rf * 100, 1)}% (continuous compounding). What is the ${m}-month forward rate (four decimals)?`, q: `外幣現貨 $${S.toFixed(2)}／1 外幣，本國利率 ${f2(r * 100, 1)}%、外國利率 ${f2(rf * 100, 1)}%（連續複利）。${m} 個月期遠期匯率？（四位小數）`,
+        ans: F, tol: 0.00015, unit: '$/外幣', sol: [`F<sub>0</sub> = S<sub>0</sub>e<sup>(r−r<sub>f</sub>)T</sup> = ${S.toFixed(2)}e<sup>(${r}−${rf})×${m}/12</sup> = <b>${F.toFixed(4)}</b>`, r < rf ? '外國利率較高 → 遠期低於現貨' : '本國利率較高 → 遠期高於現貨'] };
   } }
 ];
