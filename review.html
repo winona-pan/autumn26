@@ -5844,7 +5844,7 @@ function buildPlan() {
   // 今天打過勾就固定今天的內容（不會因為扣掉進度又塞新的進來）
   // 今天第一次排出來就存起來，之後打勾、勾「我懂了」都不會再補新的進來
   const tD = days.find(D => D.d === today);
-  if (tD && !(ST.planFrz && ST.planFrz[today]) && Object.keys(tD.blocks).length) { ST.planFrz = ST.planFrz || {}; ST.planFrz[today] = { blocks: JSON.parse(JSON.stringify(tD.blocks)), total: tD.total }; save(); return buildPlan(); }
+  if (tD && !(ST.planFrz && ST.planFrz[today]) && Object.keys(tD.blocks).length) { ST.planFrz = ST.planFrz || {}; ST.planFrz[today] = { blocks: JSON.parse(JSON.stringify(tD.blocks)), total: tD.total, at: Date.now() }; save(); return buildPlan(); }
   days.forEach(D => { const fz = ST.planFrz && ST.planFrz[D.d]; if (fz) { D.blocks = fz.blocks; D.total = fz.total; D.frozen = true; } });
   return { P, start, subs, days, habits };
 }
@@ -5928,7 +5928,7 @@ function renderPlan(root) {
     $$('[data-gun]', root).forEach(b => b.onclick = () => gmatMark(b.dataset.gun, false, b));
     // 今天每一項打勾：記下這項今天排的份量（報告、期末範圍、GMAT…），取消就扣回；全部勾完自動算今天完成
     const todayD = R.days.find(x => x.d === today);
-    const freeze = () => { ST.planFrz = ST.planFrz || {}; if (!ST.planFrz[today] && todayD) ST.planFrz[today] = { blocks: JSON.parse(JSON.stringify(todayD.blocks)), total: todayD.total }; };
+    const freeze = () => { ST.planFrz = ST.planFrz || {}; if (!ST.planFrz[today] && todayD) ST.planFrz[today] = { blocks: JSON.parse(JSON.stringify(todayD.blocks)), total: todayD.total, at: Date.now() }; };
     const allIk = () => { const B = (ST.planFrz && ST.planFrz[today] || todayD || {}).blocks || {}; return Object.entries(B).flatMap(([k, b]) => PLAN_HAB[k] ? [k + '§hab'] : (b.items || []).filter(planCheckable).map(t => k + '§' + t.key).concat(b.rev ? [k + '§rev'] : [])); };
     const progAdd = (key, m) => { const map = GMAT_UNITS.some(u => u[0] === key) ? P.gmatProg : (P.taskProg = P.taskProg || {}); map[key] = Math.max(0, (+map[key] || 0) + m); if (map[key] < 0.5) delete map[key]; };
     const setItem = (ik, on, el, quiet) => {
@@ -5965,6 +5965,8 @@ function renderPlan(root) {
     const started = (ST.planChk && ST.planChk[t]) || (ST.planDone && ST.planDone[t]) || (fz && Object.values(fz.blocks).some(b => (b.items || []).some(x => x.kind === 'c' && ST.done[x.id])));
     if (fz && !started) delete ST.planFrz[t];
     redraw();
+    // 重排過的今天要蓋過其他裝置更早固定的版本（同步時比 re）
+    if (fz && !started && ST.planFrz && ST.planFrz[t]) { ST.planFrz[t].re = Date.now(); save(); }
   };
   // GMAT 單元讀完／取消：+10 XP，取消就退回（可能降級）；記下哪天讀完，當天可以在進度表上取消
   const gmatMark = (g, on, el) => {
@@ -6842,6 +6844,11 @@ const SYNC = (() => {
       if (k === 'ux') { // 單元點數：每個單元取兩台中較高的
         const o = {}; for (const src of [a.ux || {}, b.ux || {}]) for (const [sk, us] of Object.entries(src)) { o[sk] = o[sk] || {}; for (const [u, n] of Object.entries(us)) o[sk][u] = Math.max(o[sk][u] || 0, n); }
         out.ux = o; continue;
+      }
+      if (k === 'planFrz') { // 每天的進度表：逐日合併，同一天保留最早固定的（改設定重排過的 re 較新者優先），不會因為另一台較新就整個被蓋掉
+        const o = {}, rank = x => [x.re || 0, -(x.at || Infinity)];
+        for (const src of [od.planFrz || {}, nw.planFrz || {}]) for (const [d, x] of Object.entries(src)) { if (!x) continue; const y = o[d]; if (!y) { o[d] = x; continue; } const [r1, a1] = rank(x), [r2, a2] = rank(y); if (r1 > r2 || (r1 === r2 && a1 >= a2)) o[d] = x; }
+        out.planFrz = o; continue;
       }
       if (k === 'bm') {
         const o = {}; for (const src of [a.bm || {}, b.bm || {}]) for (const [cid, d] of Object.entries(src)) { if (ts(d) <= D('bm|' + cid, 'bm')) continue; if (!o[cid] || ts(d) > ts(o[cid])) o[cid] = d; }

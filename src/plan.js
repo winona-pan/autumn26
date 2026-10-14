@@ -223,7 +223,7 @@ function buildPlan() {
   // 今天打過勾就固定今天的內容（不會因為扣掉進度又塞新的進來）
   // 今天第一次排出來就存起來，之後打勾、勾「我懂了」都不會再補新的進來
   const tD = days.find(D => D.d === today);
-  if (tD && !(ST.planFrz && ST.planFrz[today]) && Object.keys(tD.blocks).length) { ST.planFrz = ST.planFrz || {}; ST.planFrz[today] = { blocks: JSON.parse(JSON.stringify(tD.blocks)), total: tD.total }; save(); return buildPlan(); }
+  if (tD && !(ST.planFrz && ST.planFrz[today]) && Object.keys(tD.blocks).length) { ST.planFrz = ST.planFrz || {}; ST.planFrz[today] = { blocks: JSON.parse(JSON.stringify(tD.blocks)), total: tD.total, at: Date.now() }; save(); return buildPlan(); }
   days.forEach(D => { const fz = ST.planFrz && ST.planFrz[D.d]; if (fz) { D.blocks = fz.blocks; D.total = fz.total; D.frozen = true; } });
   return { P, start, subs, days, habits };
 }
@@ -307,7 +307,7 @@ function renderPlan(root) {
     $$('[data-gun]', root).forEach(b => b.onclick = () => gmatMark(b.dataset.gun, false, b));
     // 今天每一項打勾：記下這項今天排的份量（報告、期末範圍、GMAT…），取消就扣回；全部勾完自動算今天完成
     const todayD = R.days.find(x => x.d === today);
-    const freeze = () => { ST.planFrz = ST.planFrz || {}; if (!ST.planFrz[today] && todayD) ST.planFrz[today] = { blocks: JSON.parse(JSON.stringify(todayD.blocks)), total: todayD.total }; };
+    const freeze = () => { ST.planFrz = ST.planFrz || {}; if (!ST.planFrz[today] && todayD) ST.planFrz[today] = { blocks: JSON.parse(JSON.stringify(todayD.blocks)), total: todayD.total, at: Date.now() }; };
     const allIk = () => { const B = (ST.planFrz && ST.planFrz[today] || todayD || {}).blocks || {}; return Object.entries(B).flatMap(([k, b]) => PLAN_HAB[k] ? [k + '§hab'] : (b.items || []).filter(planCheckable).map(t => k + '§' + t.key).concat(b.rev ? [k + '§rev'] : [])); };
     const progAdd = (key, m) => { const map = GMAT_UNITS.some(u => u[0] === key) ? P.gmatProg : (P.taskProg = P.taskProg || {}); map[key] = Math.max(0, (+map[key] || 0) + m); if (map[key] < 0.5) delete map[key]; };
     const setItem = (ik, on, el, quiet) => {
@@ -344,6 +344,8 @@ function renderPlan(root) {
     const started = (ST.planChk && ST.planChk[t]) || (ST.planDone && ST.planDone[t]) || (fz && Object.values(fz.blocks).some(b => (b.items || []).some(x => x.kind === 'c' && ST.done[x.id])));
     if (fz && !started) delete ST.planFrz[t];
     redraw();
+    // 重排過的今天要蓋過其他裝置更早固定的版本（同步時比 re）
+    if (fz && !started && ST.planFrz && ST.planFrz[t]) { ST.planFrz[t].re = Date.now(); save(); }
   };
   // GMAT 單元讀完／取消：+10 XP，取消就退回（可能降級）；記下哪天讀完，當天可以在進度表上取消
   const gmatMark = (g, on, el) => {
