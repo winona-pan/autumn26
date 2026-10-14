@@ -44,6 +44,11 @@ const SYNC = (() => {
         const o = {}; for (const src of [a.ux || {}, b.ux || {}]) for (const [sk, us] of Object.entries(src)) { o[sk] = o[sk] || {}; for (const [u, n] of Object.entries(us)) o[sk][u] = Math.max(o[sk][u] || 0, n); }
         out.ux = o; continue;
       }
+      if (k === 'planFrz') { // 每天的進度表：逐日合併，同一天保留最早固定的（改設定重排過的 re 較新者優先），不會因為另一台較新就整個被蓋掉
+        const o = {}, rank = x => [x.re || 0, -(x.at || Infinity)];
+        for (const src of [od.planFrz || {}, nw.planFrz || {}]) for (const [d, x] of Object.entries(src)) { if (!x) continue; const y = o[d]; if (!y) { o[d] = x; continue; } const [r1, a1] = rank(x), [r2, a2] = rank(y); if (r1 > r2 || (r1 === r2 && a1 >= a2)) o[d] = x; }
+        out.planFrz = o; continue;
+      }
       if (k === 'bm') {
         const o = {}; for (const src of [a.bm || {}, b.bm || {}]) for (const [cid, d] of Object.entries(src)) { if (ts(d) <= D('bm|' + cid, 'bm')) continue; if (!o[cid] || ts(d) > ts(o[cid])) o[cid] = d; }
         out.bm = o; continue;

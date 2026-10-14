@@ -471,7 +471,7 @@ body.notips .tipbox{display:none} body.calm *{animation:none!important;transitio
 <main id="main"></main>
 <script>
 const DATA = {};
-// ===== 衍生性金融市場 (Hull, Ch1–3) =====
+// ===== 衍生性金融市場 (Hull, Ch1–3, Ch5) =====
 DATA.deriv = {
   name: '衍金', full: '衍生性金融市場', hue: 'deriv',
   intro: '課本：Hull《Options, Futures & Other Derivatives》11版。小考：從老師勾選習題中出一題或類題（可開書）。期中考 2026/11/16，可帶 A4 手抄小抄＋計算機。考試用英文作答 → 右上角切換「EN」或「雙語」練英文題目，每張卡也有 Exam English 句子。',
@@ -575,9 +575,53 @@ DATA.deriv = {
       life: '租房子只能一年一簽，你想住五年 → 每年續約。但若某年租金暴漲又要立刻付清，你可能撐不到房子增值那天。',
       fig: 'roll',
       body: '<p class="ez lead">期貨大多只有幾個月到期，想避險好幾年怎麼辦？只能一直<b>展期</b>：快到期時平掉舊的、再開新的（roll）。問題是：期貨每天結算，避險期間可能先虧很多、要一直補保證金，現貨的獲利卻要很久以後才拿到。</p><p>Business Snapshot 3.2（Metallgesellschaft）：預售資產、先收價金，未來要交貨 → 未來資產漲價會虧，所以用 long futures hedge。但避險期間比期貨長，很可能還等不到現貨賺錢，期貨就跌很多、收到 margin call 卻沒有資金撐到 T。</p><span class="ez">德國金屬公司的教訓：它答應客戶未來好幾年以固定價格賣油，用期貨多頭避險。結果油價大跌，期貨每天虧錢、要一直補保證金；雖然長期來看賣油合約會賺回來，但公司撐不到那時候就被迫平倉，損失十幾億美元。重點：避險在「最後結果」上沒問題，問題出在中間的現金流。</span>' }
+  ]},
+  { id: 'ch5', t: 'Ch5 遠期與期貨價格的決定', cards: [
+    { id: 'd21', t: '連續複利：e^rT 是什麼？', en: 'Continuous compounding',
+      plain: '一年複利越多次，錢長得越多，但有上限。複利次數無限多 = 連續複利：今天 A 元，T 年後變 A·e<sup>rT</sup>；反過來 T 年後的 A 元，今天值 A·e<sup>−rT</sup>。',
+      life: '存錢筒每天幫你把利息再放回去生利息，跟「每秒都放回去」差不到 1 毛錢。e<sup>rT</sup> 就是那個「每秒都放回去」的版本，數學上最好算。',
+      body: '<p class="ez lead">Ch5 所有公式都用<b>連續複利</b>。只要記兩個動作：往未來「長大」就乘 <b>e<sup>rT</sup></b>，往現在「折回來」就乘 <b>e<sup>−rT</sup></b>。</p><p>m = 每年複利次數，$100、年利率 10%，一年後 V = A(1 + r/m)<sup>m</sup>：</p><table class="tbl"><tr><th>複利頻率</th><th>一年後</th></tr><tr><td>每年 m=1</td><td>110.00</td></tr><tr><td>每半年 m=2</td><td>110.25</td></tr><tr><td>每季 m=4</td><td>110.38</td></tr><tr><td>每月 m=12</td><td>110.47</td></tr><tr><td>每週 m=52</td><td>110.51</td></tr><tr><td>每日 m=365</td><td>110.52 ≈ 100e<sup>0.1×1</sup></td></tr></table><span class="ez">次數越多越大，但越加越少，最後停在 100e<sup>0.1</sup> = 110.52。所以「連續複利 ≈ 每日複利」。</span><ul><li>FV = PV·e<sup>rT</sup>；PV = FV·e<sup>−rT</sup>（e ≈ 2.71828）</li><li>T 用<b>年</b>：3 個月 = 0.25、9 個月 = 0.75、2 個月 = 2/12。<span class="ez">最常見的計算錯誤就是 T 忘了換成年。</span></li><li>Ch5 假設：r 是 T 年期的無風險零息利率，<b>借錢利率 = 存錢利率</b>。</li></ul>',
+      terms: [['連續複利 continuous compounding','複利次數無限多；FV = PV·e<sup>rT</sup>'],['零息利率 zero rate','期初投入、到期一次領回本利和的利率']] },
+    { id: 'd22', t: '遠期價格 F₀ = S₀e^rT（無收益資產）', en: 'Forward price: F₀ = S₀e^(rT)',
+      plain: '「今天買下來放到 T」和「今天簽遠期、T 再買」結果一樣，所以成本也要一樣：遠期價格 = 現貨價格放到 T 的本利和。不相等就有套利（無本生意）。',
+      life: '你可以今天花 40 元買下公仔放家裡，也可以跟店家約好 3 個月後拿。店家合理的預購價 ≈ 40 元加上這 3 個月的利息（40.50），喊 43 太貴、喊 39 太便宜，都會被聰明人套利。',
+      fig: 'cashcarry',
+      body: '<p class="ez lead">遠期價格不是「猜未來會漲多少」，而是用<b>套利</b>算出來的：今天借錢買現貨抱到 T，跟簽遠期 T 再買，兩條路要花一樣多，所以 <b>F<sub>0</sub> = S<sub>0</sub>e<sup>rT</sup></b>。</p><p class="formula">F<sub>0</sub> = S<sub>0</sub>e<sup>rT</sup></p><p>符號：S<sub>0</sub> 今天現貨價；F<sub>0</sub> 今天的遠期／期貨價格；T 到交割日的時間（年）；r T 年期無風險利率（連續複利）。講義例：S<sub>0</sub>=40、T=0.25、r=5% → F<sub>0</sub> = 40e<sup>0.05×0.25</sup> = <b>40.50</b>。</p><p><b>例 1：F<sub>0</sub> = 43 &gt; 40.50（遠期太貴）→ 買現貨、賣遠期</b></p><table class="tbl"><tr><th>T=0</th><th>T=3 個月</th></tr><tr><td>(1) 以 5% 借 $40，買現貨</td><td>(1) 還 40e<sup>0.05×0.25</sup> = 40.50</td></tr><tr><td>(2) 簽遠期：3 個月後以 43 賣出</td><td>(2) 交割賣掉股票，收 43</td></tr><tr><td>現金流 = 0</td><td>利潤 = 43 − 40.50 = <b>$2.50</b>（確定、無風險）</td></tr></table><p><b>例 2：F<sub>0</sub> = 39 &lt; 40.50（遠期太便宜）→ 放空現貨、買遠期</b></p><table class="tbl"><tr><th>T=0</th><th>T=3 個月</th></tr><tr><td>(1) 借股票來賣得 $40，存無風險 5%</td><td>(1) 領回 40.50</td></tr><tr><td>(2) 簽遠期：3 個月後以 39 買回</td><td>(2) 付 39 買回股票，還給出借人</td></tr><tr><td>現金流 = 0</td><td>利潤 = 40.50 − 39 = <b>$1.50</b></td></tr></table><span class="ez">口訣：<b>買低賣高</b>。遠期貴 → 賣遠期、買現貨（cash-and-carry）；遠期便宜 → 買遠期、賣現貨（reverse cash-and-carry）。兩個例子 T=0 的現金流都是 0，所以叫「無本生意」。</span><p>這個關係適用於<b>投資資產</b>（為了投資而持有的：股票、債券、黃金、白銀），因為有很多人手上有、願意賣出或放空來套利。</p>',
+      terms: [['投資資產 investment asset','很多人為了投資而持有的資產（股票、債券、金、銀）'],['放空 short selling','借別人的資產來賣，之後買回來還'],['持有套利 cash-and-carry','借錢買現貨、同時賣遠期']] },
+    { id: 'd23', t: '已知現金收益 I：F₀ = (S₀ − I)e^rT', en: 'Known income: F₀ = (S₀ − I)e^(rT)',
+      plain: '標的在合約期間會配息（股利、債券利息），持有現貨的人拿得到、簽遠期的人拿不到。所以先把這筆收益的<b>現值 I</b> 從現貨價扣掉，再放到 T。',
+      life: '租屋處的房東要賣房子，買家約好 9 個月後交屋，但這段期間的房租仍是房東收。所以預購價要先扣掉「房租的現值」。',
+      body: '<p class="ez lead">標的會付錢給持有人（股利、債息）時，抱著現貨的人多賺了這筆錢，所以遠期價格要<b>變便宜</b>：先扣收益的現值 I。</p><p class="formula">F<sub>0</sub> = (S<sub>0</sub> − I)e<sup>rT</sup>　（I = 合約期間收益的現值）</p><p>講義例（附息債券）：S<sub>0</sub> = 900，9 個月遠期，4 個月後收到債息 $40；4 個月利率 3%、9 個月利率 4%。</p><ul><li>I = 40e<sup>−0.03×4/12</sup> = <b>39.60</b><span class="ez">用「收到那天」的期限和利率折現：4 個月後的 40 元 → 用 4 個月的 3%。</span></li><li>F<sub>0</sub> = (900 − 39.60)e<sup>0.04×9/12</sup> = 860.40 × e<sup>0.03</sup> = <b>886.60</b></li></ul><p><b>遠期報 910（太貴）→ 借錢買債券、賣遠期</b>：借 900（39.60 借 4 個月、860.40 借 9 個月）買債券；4 個月後收債息 40 剛好還 39.60e<sup>0.01</sup> = 40；9 個月後交割收 910，還 860.40e<sup>0.03</sup> = 886.60 → 利潤 <b>$23.40</b>。</p><p><b>遠期報 870（太便宜）→ 借債券來賣、買遠期</b>：賣債券得 900，39.60 存 4 個月、860.40 存 9 個月；4 個月後把 40 元債息付給出借人；9 個月後領 886.60、付 870 買回債券還人 → 利潤 <b>$16.60</b>。</p><span class="ez">放空的人要補償出借人「本來會收到的債息」，所以放空方也要準備那 39.60。兩個方向都一樣是把錢拆成兩段：一段對準收益日、一段對準到期日。</span>',
+      terms: [['收益現值 I','present value of income during the life of the contract'],['附息債券 coupon bond','定期付利息的債券']] },
+    { id: 'd24', t: '已知收益率 q 與股價指數套利', en: 'Known yield: F₀ = S₀e^((r−q)T)',
+      plain: '收益不是固定金額、而是「資產價值的百分之幾」（連續複利的收益率 q）時，就從利率扣掉：F<sub>0</sub> = S<sub>0</sub>e<sup>(r−q)T</sup>。股價指數就是這種：q = 指數成分股的平均股利率。',
+      life: '固定金額 I 像「每月固定零用錢 500」；收益率 q 像「零用錢 = 存款的 2%」。前者用減的，後者放進指數裡減。',
+      body: '<p class="ez lead">收益用<b>百分比</b>表示時（股利率），公式把 q 從利率裡扣掉：持有現貨的人一邊付利息成本 r、一邊收股利 q，淨成本是 r − q。</p><p class="formula">F<sub>0</sub> = S<sub>0</sub>e<sup>(r−q)T</sup></p><ul><li>q：合約期間平均收益率，以<b>連續複利</b>表示。</li><li>固定金額股利 → 用 F<sub>0</sub> = (S<sub>0</sub> − I)e<sup>rT</sup>；股利率 → 用 q。<span class="ez">看題目給的是「$1 股利」還是「3% 股利率」來選公式。</span></li></ul><p><b>股價指數</b>可以看成一個付股利率 q 的投資資產（q = 指數涵蓋股票的年化平均股利率），所以 F<sub>0</sub> = S<sub>0</sub>e<sup>(r−q)T</sup>。</p><p><b>指數套利 Index arbitrage</b>：F<sub>0</sub> ≠ S<sub>0</sub>e<sup>(r−q)T</sup> 都有套利機會。</p><ul><li>F<sub>0</sub> &gt; S<sub>0</sub>e<sup>(r−q)T</sup> → <b>買指數成分股、賣期貨</b></li><li>F<sub>0</sub> &lt; S<sub>0</sub>e<sup>(r−q)T</sup> → <b>買期貨、賣（放空）成分股</b></li></ul><span class="ez">例：指數 400、r = 10%、q = 4%、4 個月 → 理論價 400e<sup>0.06×4/12</sup> = 408.08。如果期貨只報 405（太便宜）→ 買期貨、放空股票。實務上一次要買賣幾百支股票，所以常用程式交易（program trading）。</span>',
+      terms: [['股利率 dividend yield q','股利 ÷ 股價，這裡用連續複利表示'],['指數套利 index arbitrage','期貨與指數現貨價格偏離時同時買賣兩邊']] },
+    { id: 'd25', t: '遠期合約的價值 f', en: 'Value of a forward contract',
+      plain: '剛簽約時合約價值 f = 0（交割價 K 就設成當時的 F<sub>0</sub>）。之後市場變動，多頭價值 f = (F<sub>t</sub> − K)e<sup>−r(T−t)</sup>，空頭剛好相反。',
+      life: '你預購手機約定 3 萬（K）。一個月後同款的預購價變 3 萬 2（F<sub>t</sub>）→ 你手上的預購單值「2,000 元折現回今天」，可以轉賣賺這筆。',
+      body: '<p class="ez lead">要分清楚兩個東西：<b>遠期價格 F</b>（今天簽約該約定的價格）和<b>遠期合約的價值 f</b>（你手上這張合約現在值多少錢）。</p><ul><li><b>簽約當下 f = 0</b>：f<sub>0</sub> = (F<sub>0</sub> − K)e<sup>−rT</sup> = 0 → <b>K = F<sub>0</sub></b>。<span class="ez">剛簽時沒人吃虧，所以雙方都不用付錢。</span></li><li>之後（0 ≤ t ≤ T）可能變正或變負：</li></ul><p class="formula">Long：f = (F<sub>t</sub> − K)e<sup>−r(T−t)</sup> = S<sub>t</sub> − Ke<sup>−r(T−t)</sup><br>Short：f = (K − F<sub>t</sub>)e<sup>−r(T−t)</sup> = Ke<sup>−r(T−t)</sup> − S<sub>t</sub></p><p>推導（講義）：f = Ê(S<sub>T</sub> − K)e<sup>−rT</sup> = Ê(S<sub>T</sub>)e<sup>−rT</sup> − Ke<sup>−rT</sup> = (F<sub>0</sub> − K)e<sup>−rT</sup> = S<sub>0</sub> − Ke<sup>−rT</sup>（因為 F<sub>0</sub> = S<sub>0</sub>e<sup>rT</sup>）。</p><span class="ez">白話：到期時多頭賺 F − K（現在的遠期價減當初約定價），但這筆錢要到 T 才拿得到，所以要折現回今天。第二種寫法 S<sub>t</sub> − Ke<sup>−r(T−t)</sup>：現在東西值 S<sub>t</sub>，你將來要付的 K 折現回來，相減就是你賺的。</span><p>例（5.9）：S=40、r=10%、1 年 → K = 40e<sup>0.1</sup> = 44.21。半年後 S=45 → F<sub>t</sub> = 45e<sup>0.05</sup> = 47.31；long 價值 = 45 − 44.21e<sup>−0.05</sup> = <b>2.95</b>。</p><p>有收益時把 S<sub>t</sub> 換成 S<sub>t</sub> − I（或 S<sub>t</sub>e<sup>−q(T−t)</sup>），一樣用 (F<sub>t</sub> − K)e<sup>−r(T−t)</sup> 最不容易錯。</p>',
+      terms: [['遠期價格 forward price F','今天簽約應約定的交割價'],['合約價值 value f','已經簽好的合約今天值多少'],['交割價 delivery price K','合約上寫死的價格']] },
+    { id: 'd26', t: '外匯遠期：F₀ = S₀e^(r−rf)T', en: 'Currency forwards & interest rate parity',
+      plain: '外幣就像一個「會付利息的資產」，利息就是外國無風險利率 r<sub>f</sub>。所以套用收益率 q 的公式，q 換成 r<sub>f</sub>。這就是利率平價。',
+      life: '你手上有澳幣，可以存澳洲銀行領 3%，或換成台幣存 1%。兩條路最後換回同一種錢要一樣多，遠期匯率就被「利率差」決定了。',
+      fig: 'irp',
+      body: '<p class="ez lead">S<sub>0</sub> 和 F<sub>0</sub> 都是「<b>1 單位外幣值幾元本國幣</b>」（$?/1 外幣）。持有外幣可以賺外國利率 r<sub>f</sub>，就像股票付股利率 q。</p><p class="formula">F<sub>0</sub> = S<sub>0</sub>e<sup>(r − r<sub>f</sub>)T</sup></p><ul><li>r：本國無風險利率；r<sub>f</sub>：外國無風險利率。</li><li>r &gt; r<sub>f</sub> → F<sub>0</sub> &gt; S<sub>0</sub>（外幣遠期升水）；r &lt; r<sub>f</sub> → F<sub>0</sub> &lt; S<sub>0</sub>（貼水）。<span class="ez">外國利率比較高，外幣遠期價格就要低一點，把多賺的利息「扣回來」，不然大家都去存外國。</span></li><li>兩條路：外幣 N 先換本國幣再投資本國，或先投資外國再用遠期換回本國幣，結果要相同。</li></ul><p>講義例（澳幣 AUD）：S<sub>0</sub> = 0.98、r = 1%、r<sub>f</sub> = 3%、T = 2 → 理論 F<sub>0</sub> = 0.98e<sup>(1%−3%)×2</sup> = <b>0.9416</b>。</p><p><b>F<sub>0</sub> = 0.93 &lt; 0.9416（遠期外幣太便宜）→ 賣外幣現貨、買遠期</b>：以 3% 借 N 澳幣、換成 0.98N 本國幣存 1%，兩年後拿到 0.98N·e<sup>0.02</sup>；要還 N·e<sup>0.06</sup> 澳幣，用遠期每單位 0.93 買 → 付 N·e<sup>0.06</sup>×0.93。利潤 = <b>0.01229N</b>。</p><p><b>F<sub>0</sub> = 0.96 &gt; 0.9416（遠期外幣太貴）→ 買外幣現貨、賣遠期</b>：以 1% 借 N 本國幣、換成 N/0.98 澳幣存 3%，兩年後用遠期以 0.96 賣出換回 (N/0.98)e<sup>0.06</sup>×0.96；還 N·e<sup>0.02</sup>。利潤 ≈ <b>0.01997N</b>。</p><span class="ez">「沒外幣可賣」怎麼辦？就借外幣（無本生意）。判斷方向一樣是買低賣高：先算理論 F，再看報價比它高還低。</span>',
+      terms: [['外國無風險利率 r<sub>f</sub>','foreign risk-free interest rate'],['利率平價 interest rate parity','遠期匯率由兩國利率差決定的關係']] },
+    { id: 'd27', t: '商品：儲存成本與便利殖利率', en: 'Commodities: storage cost & convenience yield',
+      plain: '商品放著要付倉儲費（像負的收益），所以遠期價格要加上去：F<sub>0</sub> = (S<sub>0</sub>+U)e<sup>rT</sup> 或 S<sub>0</sub>e<sup>(r+u)T</sup>。消費型商品（小麥、原油）只能保證 F<sub>0</sub> ≤，差距叫便利殖利率 y。',
+      life: '麵包店倉庫裡的麵粉不會為了賺一點價差就賣掉，因為賣了明天就不能做麵包。「手上有貨」本身就有價值，那就是便利殖利率。',
+      body: '<p class="ez lead">大宗商品分兩種：<b>投資型</b>（黃金、白銀：很多人純粹為了投資而持有）和<b>消費型</b>（小麥、黃豆、玉米、原油：持有是為了拿來用）。</p><p><b>儲存成本</b>可看成「負的收益」，所以是加上去：</p><p class="formula">F<sub>0</sub> = (S<sub>0</sub> + U)e<sup>rT</sup>　或　F<sub>0</sub> = S<sub>0</sub>e<sup>(r+u)T</sup></p><p>U = 合約期間儲存成本的現值；u = 儲存成本占價格的比例（連續複利）。投資型商品這兩式是<b>等式</b>。</p><p><b>消費型商品</b>：</p><ul><li>若 F<sub>0</sub> &gt; (S<sub>0</sub>+U)e<sup>rT</sup> → 借錢買現貨、賣期貨，任何人都能套利 → 不會持續。</li><li>若 F<sub>0</sub> &lt; (S<sub>0</sub>+U)e<sup>rT</sup> → 套利要「賣掉手上的商品、省倉儲費、存無風險、將來以 F<sub>0</sub> 買回」。但持有者是要拿來用的，<b>不會為了套利賣掉</b>（不是本業），所以這種狀態可以一直存在。</li><li>結論：消費型商品只能說 <b>F<sub>0</sub> ≤ (S<sub>0</sub>+U)e<sup>rT</sup></b>。</li></ul><p><b>便利殖利率 y（convenience yield）</b>：為了實際使用，手上有實體商品比持有期貨更有價值。把不等式右邊多扣一點變成等式：</p><p class="formula">F<sub>0</sub> = (S<sub>0</sub>+U)e<sup>(r−y)T</sup>　或　F<sub>0</sub> = S<sub>0</sub>e<sup>(r+u−y)T</sup></p><span class="ez">y 越大＝大家越擔心未來缺貨、越想現在就握有實體貨，期貨價格就相對越低。存貨很少時 y 通常很高。</span><p>所以：黃金的期貨價可以用現貨價和利率、儲存成本算出來；銅、原油這類消費型商品卻不行（多了一個看不到的 y）。</p>',
+      terms: [['投資資產 investment asset','黃金、白銀等為投資而持有'],['消費資產 consumption asset','小麥、原油等為使用而持有'],['儲存成本 storage cost U / u','倉儲、保險等持有成本'],['便利殖利率 convenience yield y','持有實體商品的好處']] },
+    { id: 'd28', t: '持有成本 Cost of carry：F₀ = S₀e^cT', en: 'Cost of carry',
+      plain: '所有公式其實只有一個：F<sub>0</sub> = S<sub>0</sub>e<sup>cT</sup>。c = 持有成本 = 利息 + 儲存成本 − 收益。換資產只是換 c。',
+      life: '養一隻寵物到明年的「總成本」= 錢被卡住的利息 + 飼料（儲存成本）− 牠幫你賺的（收益）。c 就是這個一年下來的淨成本率。',
+      body: '<p class="ez lead">把 Ch5 全部公式收成一個：<b>F<sub>0</sub> = S<sub>0</sub>e<sup>cT</sup></b>，c = 持有現貨到 T 的淨成本率 = 利息 + 儲存成本 − 收益。<b>小抄只要寫這張表。</b></p><table class="tbl"><tr><th>標的</th><th>c</th><th>公式</th></tr><tr><td>不付息股票</td><td>r</td><td>S<sub>0</sub>e<sup>rT</sup></td></tr><tr><td>付固定股利／債息</td><td>—</td><td>(S<sub>0</sub>−I)e<sup>rT</sup></td></tr><tr><td>股價指數</td><td>r − q</td><td>S<sub>0</sub>e<sup>(r−q)T</sup></td></tr><tr><td>外幣</td><td>r − r<sub>f</sub></td><td>S<sub>0</sub>e<sup>(r−r<sub>f</sub>)T</sup></td></tr><tr><td>商品</td><td>r + u</td><td>S<sub>0</sub>e<sup>(r+u)T</sup></td></tr></table><ul><li>投資資產：F<sub>0</sub> = S<sub>0</sub>e<sup>cT</sup></li><li>消費資產：F<sub>0</sub> ≤ S<sub>0</sub>e<sup>cT</sup>；定義便利殖利率 y 讓 <b>F<sub>0</sub> = S<sub>0</sub>e<sup>(c−y)T</sup></b></li></ul><span class="ez">記法：「要付的」加進 c（利息 r、倉儲 u），「收得到的」從 c 扣掉（股利 q、外國利息 r<sub>f</sub>、便利殖利率 y）。</span>',
+      terms: [['持有成本 cost of carry c','storage cost + interest cost − income earned']] }
   ]}
   ],
-  // 課本習題（11版：2.1、2.7、2.13、2.19、2.23；3.7、3.13、3.14、3.15、3.23；舊版 3.4、3.10、3.11）
+  // 課本習題（11版：2.1、2.7、2.13、2.19、2.23；3.7、3.13、3.14、3.15、3.23；5.7、5.9、5.12、5.22；舊版 3.4、3.10、3.11、5.30）
   problems: [
     { id:'p2_1', src:'課本 2.1（11版勾選）', lvl:'課本', q:'你建立一口 7 月白銀期貨空頭部位，價格 $17.20/盎司，合約規模 5,000 盎司。原始保證金 $4,000、維持保證金 $3,000。期貨價格變動多少會收到保證金追繳？若不補繳會怎樣？',
       steps:['可虧損空間 = 4,000 − 3,000 = $1,000','空頭在價格上漲時虧：1,000 / 5,000 = $0.20','17.20 + 0.20 = <b>$17.40</b> 時追繳','不補繳 → 經紀商將你的部位強制平倉'], ans:'價格漲到 $17.40/oz（漲 $0.20）時追繳；不補則被平倉。' },
@@ -614,7 +658,21 @@ DATA.deriv = {
     { id:'p3_25', src:'課本 3.25（類題）', lvl:'類題', q:'公司 $100M 組合 β=1.2，指數期貨 2,000、乘數 $250。(a) 要把 β 降到 0.5？(b) 要把 β 升到 1.5？',
       steps:['V<sub>F</sub> = 2,000 × 250 = 500,000','(a) (1.2−0.5) × 100M / 500,000 = 140 → short 140','(b) (1.5−1.2) × 100M / 500,000 = 60 → long 60'], ans:'(a) short 140 口 (b) long 60 口' },
     { id:'p3_21', src:'課本 3.21（類題，基差）', lvl:'類題', q:'交易者用 60 口白銀期貨（每口 5,000 oz）避險，平倉時現貨比期貨高 $0.20/oz（基差 = +0.20，原本預期為 0）。若是避險「買進」白銀，損益影響？若是避險「賣出」呢？',
-      steps:['實際價格 = F₁ + b₂','買方：付的價格多 0.20 → 損失 60×5,000×0.20','賣方：收的價格多 0.20 → 獲利'], ans:'買方避險損失 $60,000；賣方避險獲利 $60,000。' }
+      steps:['實際價格 = F₁ + b₂','買方：付的價格多 0.20 → 損失 60×5,000×0.20','賣方：收的價格多 0.20 → 獲利'], ans:'買方避險損失 $60,000；賣方避險獲利 $60,000。' },
+    { id:'p5_7', src:'課本 5.7（11版勾選）', lvl:'課本', q:'解釋為什麼外幣可以視為一個「提供已知收益率」的資產。',
+      steps:['持有外幣 → 可以存在外國賺外國無風險利率 r<sub>f</sub>','這筆利息以外幣計，換成本國幣後的價值跟外幣本身的價值成正比','→ 就像一個收益率固定為 r<sub>f</sub> 的資產（股價指數的 q）','所以 F<sub>0</sub> = S<sub>0</sub>e<sup>(r−r<sub>f</sub>)T</sup>'], ans:'外幣持有人能賺外國無風險利率 r<sub>f</sub>，收益與外幣價值成比例 → 等同收益率 r<sub>f</sub> 的資產。' },
+    { id:'p5_9', src:'課本 5.9（11版勾選）', lvl:'課本', q:'股價 $40 時簽訂不付息股票的 1 年期遠期多頭，無風險利率 10%（連續複利）。(a) 遠期價格與合約初始價值？(b) 6 個月後股價 $45、利率仍 10%，此時遠期價格與這張多頭合約的價值？',
+      steps:['(a) F<sub>0</sub> = 40e<sup>0.1×1</sup> = <b>44.21</b>；初始價值 = 0（K 就設為 F<sub>0</sub>）','(b) 剩 0.5 年：F<sub>t</sub> = 45e<sup>0.1×0.5</sup> = <b>47.31</b>','long 價值 f = S<sub>t</sub> − Ke<sup>−r(T−t)</sup> = 45 − 44.21e<sup>−0.05</sup> = <b>2.95</b>','驗算：(47.31 − 44.21)e<sup>−0.05</sup> = 2.95'], ans:'(a) 44.21，價值 0 (b) 遠期價格 47.31，多頭價值 $2.95。' },
+    { id:'p5_12', src:'課本 5.12（類題，舊版 5.14 數字）', lvl:'類題', q:'瑞士與美國的 2 個月期利率分別為 2% 與 5%（連續複利）。瑞郎現貨 $0.8000，2 個月後交割的期貨價格 $0.8100。有什麼套利機會？',
+      steps:['理論 F<sub>0</sub> = 0.8e<sup>(0.05−0.02)×2/12</sup> = <b>0.8040</b>','0.8100 &gt; 0.8040 → 期貨太貴 → 買低賣高','借美元 → 換成瑞郎（買現貨）存 2% → 賣瑞郎期貨','2 個月後用期貨以 0.81 賣瑞郎換回美元、還美元借款'], ans:'期貨被高估：借美元買瑞郎現貨存瑞士、同時 short 瑞郎期貨，每瑞郎約賺 0.81 − 0.804 = $0.006（以到期值計）。' },
+    { id:'p5_30', src:'舊版 5.30（講義另附）', lvl:'課本', q:'股票預計在 2 個月與 5 個月後各配息 $1，股價 $50，所有期限無風險利率 8%（連續複利）。投資人剛建立 6 個月遠期空頭。(a) 遠期價格與合約初始價值？(b) 3 個月後股價 $48、利率仍 8%，遠期價格與空頭部位價值？',
+      steps:['(a) I = e<sup>−0.08×2/12</sup> + e<sup>−0.08×5/12</sup> = 0.9868 + 0.9672 = 1.9540','F<sub>0</sub> = (50 − 1.954)e<sup>0.08×0.5</sup> = <b>50.01</b>，初始價值 0','(b) 只剩 5 個月那筆股利（距今 2 個月）：I = e<sup>−0.08×2/12</sup> = 0.9868','F<sub>t</sub> = (48 − 0.9868)e<sup>0.08×3/12</sup> = <b>47.96</b>','空頭價值 = (K − F<sub>t</sub>)e<sup>−r(T−t)</sup> = (50.01 − 47.96)e<sup>−0.02</sup> = <b>2.01</b>'], ans:'(a) 50.01，價值 0 (b) 遠期價格 47.96，空頭價值 $2.01。' },
+    { id:'p5_3', src:'課本 5.3（類題）', lvl:'類題', q:'股價 $30 時簽訂不付息股票的 6 個月期遠期，無風險利率 12%（連續複利）。遠期價格？',
+      steps:['F<sub>0</sub> = 30e<sup>0.12×0.5</sup> = <b>31.86</b>'], ans:'$31.86' },
+    { id:'p5_4', src:'課本 5.4（類題）', lvl:'類題', q:'股價指數 350，無風險利率 8%、股利率 4%（皆連續複利）。4 個月期期貨價格？',
+      steps:['F<sub>0</sub> = S<sub>0</sub>e<sup>(r−q)T</sup>','= 350e<sup>(0.08−0.04)×4/12</sup> = <b>354.70</b>'], ans:'354.70' },
+    { id:'p5_10', src:'課本 5.10（類題，指數套利）', lvl:'類題', q:'無風險利率 10%、指數股利率 4%（連續複利），指數 400，4 個月期期貨報 405。有什麼套利？',
+      steps:['理論 F<sub>0</sub> = 400e<sup>(0.10−0.04)×4/12</sup> = <b>408.08</b>','405 &lt; 408.08 → 期貨太便宜','買期貨、放空指數成分股（所得存無風險）'], ans:'期貨被低估：long 期貨 + short 成分股，鎖住約 3.08 點的無風險利潤。' }
   ]
 };
 // ===== 投資學（張焯然；漫步華爾街為主） =====
@@ -1416,7 +1474,19 @@ DATA.deriv.mcq = [
   {u:'ch1', q:'美式選擇權與歐式選擇權的差別：', o:['美式只能到期執行','美式可在到期前任何時候執行','歐式可隨時執行','兩者相同'], a:1, e:''},
   {u:'ch2', q:'若到期時 F > S，套利者應：', o:['買現貨、short futures、交割','long futures、賣現貨','什麼都不做','買 put'], a:0, e:'賺 F − S。'},
   {u:'ch2', q:'每日結算價（台灣）是：', o:['收盤價','收盤前 1 分鐘成交量加權平均價','開盤價','當日最高最低平均'], a:1, e:'最後結算價則是收盤前 30 分鐘標的指數簡單平均。'},
-  {u:'ch2', q:'成交量可能大於未平倉量的原因是：', o:['當沖','保證金不足','價格限制','交割'], a:0, e:'當天開又平，不增加 OI。'}
+  {u:'ch2', q:'成交量可能大於未平倉量的原因是：', o:['當沖','保證金不足','價格限制','交割'], a:0, e:'當天開又平，不增加 OI。'},
+  {u:'ch5', q:'不付息股票 S₀ = 40、r = 5%、3 個月，理論遠期價格是：', o:['40.00','40.50','42.00','41.00'], a:1, e:'40e^(0.05×0.25) = 40.50。'},
+  {u:'ch5', q:'承上，若遠期報價 43，套利者應：', o:['放空股票、買遠期','借錢買股票、賣遠期','買 call','不做'], a:1, e:'遠期太貴 → 買現貨、賣遠期，賺 43 − 40.50 = 2.50。'},
+  {u:'ch5', q:'承上，若遠期報價 39，套利者應：', o:['借錢買股票、賣遠期','放空股票存無風險、買遠期','買股票、買遠期','不做'], a:1, e:'遠期太便宜 → 賣現貨、買遠期，賺 40.50 − 39 = 1.50。'},
+  {u:'ch5', q:'標的在合約期間會付固定金額股利（現值 I），遠期價格公式是：', o:['(S₀ + I)e^(rT)','(S₀ − I)e^(rT)','S₀e^((r−I)T)','S₀e^(rT) − I'], a:1, e:'持有現貨的人拿得到股利 → 遠期要便宜 I（現值）。'},
+  {u:'ch5', q:'簽約當下，遠期合約的價值 f 是：', o:['F₀','K','0','S₀ − K'], a:2, e:'交割價 K 就設成 F₀，所以 f₀ = 0。'},
+  {u:'ch5', q:'遠期多頭在時間 t 的價值是：', o:['(K − Fₜ)e^(−r(T−t))','(Fₜ − K)e^(−r(T−t))','Fₜ − K','Sₜ − K'], a:1, e:'也等於 Sₜ − Ke^(−r(T−t))。'},
+  {u:'ch5', q:'外幣的遠期價格 F₀ = S₀e^((r−r_f)T)。外國利率高於本國時：', o:['F₀ > S₀','F₀ < S₀','F₀ = S₀','無法判斷'], a:1, e:'r − r_f < 0 → 遠期低於現貨（外幣貼水）。'},
+  {u:'ch5', q:'股價指數的持有成本 c 是：', o:['r','r − q','r + u','r − r_f'], a:1, e:'利息成本扣掉股利率。'},
+  {u:'ch5', q:'便利殖利率（convenience yield）主要出現在：', o:['不付息股票','股價指數','消費型商品（小麥、原油）','外幣'], a:2, e:'持有實體商品拿來用的好處；黃金這種投資型資產幾乎沒有。'},
+  {u:'ch5', q:'消費型商品為什麼只能保證 F₀ ≤ (S₀ + U)e^(rT)？', o:['倉儲免費','持有者要拿來用，不會為了套利賣掉存貨','期貨不在交易所交易','利率是 0'], a:1, e:'F₀ 太低的套利要賣現貨，但使用者不願意賣 → 不等式可長期存在。'},
+  {u:'ch5', q:'$100、年利率 10%，連續複利一年後約為：', o:['110.00','110.25','110.52','111.00'], a:2, e:'100e^0.1 = 110.52 ≈ 每日複利。'},
+  {u:'ch5', q:'儲存成本在遠期價格公式裡的角色是：', o:['像收益，要扣掉','像負的收益，要加上去','不影響','只影響期貨不影響遠期'], a:1, e:'F₀ = (S₀ + U)e^(rT) 或 S₀e^((r+u)T)。'}
 ];
 
 const R = (a, b, step = 1) => { const n = Math.round((b - a) / step); return +(a + step * Math.floor(Math.random() * (n + 1))).toFixed(6); };
@@ -1506,6 +1576,36 @@ DATA.deriv.gens = [
       return { qe: `The forward price of the Swiss franc is quoted as ${fwd.toFixed(4)} (CHF per USD) and the futures price is ${fut} (USD per CHF). Convert the forward quote to USD per CHF (four decimals). Which market is better for selling francs?`, q: `瑞郎遠期報價 ${fwd.toFixed(4)}（CHF/USD），期貨報價 ${fut}（USD/CHF）。把遠期換成期貨的報價方式是多少 USD/CHF？（四位小數）想賣瑞郎選哪個市場？`,
         ans: conv, tol: 0.00015, unit: 'USD/CHF',
         sol: [`1 / ${fwd.toFixed(4)} = <b>${conv.toFixed(4)}</b>`, `${conv.toFixed(4)} ${sellFwd ? '&gt;' : '&lt;'} ${fut} → 瑞郎在${sellFwd ? '遠期' : '期貨'}市場較值錢 → 想賣選<b>${sellFwd ? '遠期' : '期貨'}</b>`] };
+  } },
+  { id: 'g5f', t: '遠期價格（無收益／固定收益／收益率）', base: '5.3／5.4／5.30', make() {
+      const kind = pick(['none', 'inc', 'yld']); const S = R(20, 120, 1); const r = R(0.02, 0.1, 0.005); const m = pick([3, 4, 6, 9, 12]); const T = m / 12;
+      if (kind === 'none') { const F = S * Math.exp(r * T);
+        return { qe: `A ${m}-month forward contract is entered into on a non-dividend-paying stock when the stock price is $${S} and the risk-free rate is ${f2(r * 100, 1)}% per annum with continuous compounding. What is the forward price?`, q: `不付息股票現價 $${S}，無風險利率 ${f2(r * 100, 1)}%（連續複利），${m} 個月期遠期價格？`,
+          ans: F, tol: 0.006, unit: '$', sol: [`T = ${m}/12 = ${f2(T, 4)}`, `F<sub>0</sub> = ${S}e<sup>${r}×${f2(T, 4)}</sup> = <b>${f2(F)}</b>`] }; }
+      if (kind === 'inc') { const d = pick([0.5, 1, 1.5, 2]); const t1 = pick([1, 2]) , t2 = t1 + pick([2, 3]); const ts = [t1, t2].filter(t => t < m); const I = ts.reduce((a, t) => a + d * Math.exp(-r * t / 12), 0); const F = (S - I) * Math.exp(r * T);
+        return { qe: `A stock priced at $${S} will pay a dividend of $${d} ${ts.length ? 'in ' + ts.join(' and ') + ' months' : '(none during the contract)'}. The risk-free rate is ${f2(r * 100, 1)}% (continuous compounding). What is the ${m}-month forward price?`, q: `股價 $${S}，${ts.length ? '將在 ' + ts.join('、') + ' 個月後各配息 $' + d : '合約期間不配息'}。無風險利率 ${f2(r * 100, 1)}%（連續複利）。${m} 個月期遠期價格？`,
+          ans: F, tol: 0.006, unit: '$', sol: [ts.length ? `I = ${ts.map(t => `${d}e<sup>−${r}×${t}/12</sup>`).join(' + ')} = ${f2(I, 4)}` : 'I = 0', `F<sub>0</sub> = (${S} − ${f2(I, 4)})e<sup>${r}×${m}/12</sup> = <b>${f2(F)}</b>`] }; }
+      const S2 = R(300, 3000, 10), q = R(0.01, 0.04, 0.005); const F = S2 * Math.exp((r - q) * T);
+      return { qe: `A stock index is ${S2}. The risk-free rate is ${f2(r * 100, 1)}% and the dividend yield is ${f2(q * 100, 1)}% per annum (continuous compounding). What is the ${m}-month futures price?`, q: `股價指數 ${S2}，無風險利率 ${f2(r * 100, 1)}%、股利率 ${f2(q * 100, 1)}%（連續複利）。${m} 個月期期貨價格？`,
+        ans: F, tol: 0.006, unit: '點', sol: [`F<sub>0</sub> = S<sub>0</sub>e<sup>(r−q)T</sup>`, `= ${S2}e<sup>(${r}−${q})×${m}/12</sup> = <b>${f2(F)}</b>`] };
+  } },
+  { id: 'g5a', t: '套利利潤（遠期報價偏離）', base: '5.10 套利', make() {
+      const S = R(20, 100, 1); const r = R(0.02, 0.1, 0.005); const m = pick([3, 6, 9, 12]); const T = m / 12; const Fth = S * Math.exp(r * T);
+      const Fq = +(Fth + pick([-1, 1]) * R(0.5, 4, 0.5)).toFixed(2); const hi = Fq > Fth; const prof = Math.abs(Fq - Fth);
+      return { qe: `A non-dividend-paying stock is $${S}; the ${m}-month risk-free rate is ${f2(r * 100, 1)}% (continuous compounding). The ${m}-month forward price is $${Fq}. What riskless profit per share can be locked in at maturity?`, q: `不付息股票 $${S}，${m} 個月無風險利率 ${f2(r * 100, 1)}%（連續複利），${m} 個月遠期報價 $${Fq}。每股可在到期時鎖住多少無風險利潤？（並想想要怎麼做）`,
+        ans: prof, tol: 0.006, unit: '$', sol: [`理論 F<sub>0</sub> = ${S}e<sup>${r}×${m}/12</sup> = ${f2(Fth, 4)}`, hi ? `報價 ${Fq} &gt; 理論 → 遠期太貴：借 ${S} 買股票、賣遠期` : `報價 ${Fq} &lt; 理論 → 遠期太便宜：放空股票存無風險、買遠期`, `利潤 = |${Fq} − ${f2(Fth, 4)}| = <b>${f2(prof)}</b>`] };
+  } },
+  { id: 'g5v', t: '遠期合約的價值（之後某天）', base: '5.9／5.30', make() {
+      const S0 = R(20, 100, 1); const r = R(0.03, 0.1, 0.01); const T = pick([0.5, 1]); const t = T === 1 ? pick([0.25, 0.5, 0.75]) : 0.25; const K = S0 * Math.exp(r * T);
+      const St = +(S0 * R(0.85, 1.15, 0.01)).toFixed(0); const side = pick(['long', 'short']); const v0 = St - K * Math.exp(-r * (T - t)); const v = side === 'long' ? v0 : -v0;
+      const mo = x => Math.round(x * 12);
+      return { qe: `A ${mo(T)}-month ${side} forward on a non-dividend-paying stock was entered into when the stock price was $${S0} and r = ${f2(r * 100)}% (continuous compounding). ${mo(t)} months later the stock price is $${St} and r is unchanged. What is the value of the ${side} position?`, q: `當初股價 $${S0}、r = ${f2(r * 100)}%（連續複利）時簽訂 ${mo(T)} 個月期不付息股票遠期${side === 'long' ? '多頭' : '空頭'}。${mo(t)} 個月後股價 $${St}，利率不變。這個${side === 'long' ? '多頭' : '空頭'}部位現在值多少？`,
+        ans: v, tol: 0.006, unit: '$', sol: [`K = F<sub>0</sub> = ${S0}e<sup>${r}×${T}</sup> = ${f2(K, 4)}`, `剩 T − t = ${f2(T - t)} 年`, `long 價值 = S<sub>t</sub> − Ke<sup>−r(T−t)</sup> = ${St} − ${f2(K, 4)}e<sup>−${r}×${f2(T - t)}</sup> = ${f2(v0, 4)}`, side === 'short' ? `空頭 = 多頭的相反數 = <b>${f2(v)}</b>` : `<b>${f2(v)}</b>`] };
+  } },
+  { id: 'g5x', t: '外匯遠期與利率平價', base: '5.12', make() {
+      const S = R(0.6, 1.4, 0.01); const r = R(0.005, 0.06, 0.005); let rf = R(0.005, 0.06, 0.005); if (rf === r) rf = +(rf + 0.01).toFixed(3); const m = pick([2, 3, 6, 12, 24]); const T = m / 12; const F = S * Math.exp((r - rf) * T);
+      return { qe: `The spot exchange rate is $${S.toFixed(2)} per unit of foreign currency. The domestic risk-free rate is ${f2(r * 100, 1)}% and the foreign risk-free rate is ${f2(rf * 100, 1)}% (continuous compounding). What is the ${m}-month forward rate (four decimals)?`, q: `外幣現貨 $${S.toFixed(2)}／1 外幣，本國利率 ${f2(r * 100, 1)}%、外國利率 ${f2(rf * 100, 1)}%（連續複利）。${m} 個月期遠期匯率？（四位小數）`,
+        ans: F, tol: 0.00015, unit: '$/外幣', sol: [`F<sub>0</sub> = S<sub>0</sub>e<sup>(r−r<sub>f</sub>)T</sup> = ${S.toFixed(2)}e<sup>(${r}−${rf})×${m}/12</sup> = <b>${F.toFixed(4)}</b>`, r < rf ? '外國利率較高 → 遠期低於現貨' : '本國利率較高 → 遠期高於現貨'] };
   } }
 ];
 // ===== Static diagrams (SVG strings, themed via CSS classes) =====
@@ -1525,6 +1625,8 @@ const FIGS = {
   converge: () => S(340, 160, L(30, 140, 320, 140) + L(30, 20, 30, 140) + P('M30,40 C120,55 220,95 300,90', 'ln a1') + P('M30,110 C120,100 220,92 300,90', 'ln a2') + `<circle cx="300" cy="90" r="4" class="dot"/>` + T(300, 78, '到期收斂', 'sm') + T(80, 38, '期貨價 F', 'sm a1') + T(80, 122, '現貨價 S', 'sm a2') + T(175, 155, '時間 → 交割', 'sm'), '收斂'),
   hedge: () => S(340, 160, B(10, 20, 90, 40, '現貨部位', 'c2') + B(10, 100, 90, 40, '期貨部位', 'c1') + B(240, 60, 90, 40, '鎖定價格', 'c3') + A(100, 40, 238, 75) + A(100, 120, 238, 88) + T(170, 40, '價格跌：現貨虧', 'sm') + T(170, 132, '價格跌：期貨賺', 'sm') + T(170, 86, '一賺一賠互消', 'hd'), '避險抵銷'),
   basis: () => S(340, 170, L(30, 150, 320, 150) + L(30, 20, 30, 150) + P('M40,45 C110,60 190,95 290,105', 'ln a2') + P('M40,75 C110,85 190,110 290,115', 'ln a1') + L(60, 50, 60, 77, 'br') + L(270, 103, 270, 114, 'br') + T(60, 40, 'b₁=S₁−F₁', 'sm') + T(270, 95, 'b₂=?', 'sm') + T(60, 165, 't₁ 開始避險', 'sm') + T(270, 165, 't₂ 平倉', 'sm') + T(320, 100, 'S', 'sm a2', 'end') + T(320, 128, 'F', 'sm a1', 'end'), '基差'),
+  cashcarry: () => S(340, 170, L(20, 85, 320, 85) + T(40, 75, 'T = 0', 'hd') + T(300, 75, 'T', 'hd') + B(10, 100, 145, 30, '借 S₀ 買現貨', 'c2') + B(185, 100, 145, 30, '還 S₀e^rT', 'c2') + B(10, 135, 145, 30, '賣遠期（約定 F₀）', 'c1') + B(185, 135, 145, 30, '交貨收 F₀', 'c1') + A(155, 115, 183, 115) + A(155, 150, 183, 150) + T(170, 20, '利潤 = F₀ − S₀e^rT（今天不用出錢）', 'hd') + T(170, 45, 'F₀ 太貴 → 這樣做；太便宜 → 全部反過來', 'sm'), '持有套利'),
+  irp: () => S(340, 180, B(10, 15, 100, 36, '1 外幣（今天）', 'c3') + B(230, 15, 100, 36, '本國幣（T）', 'c3') + B(10, 110, 100, 36, 'e^(r_f T) 外幣', 'c2') + B(120, 15, 100, 36, 'S₀ 本國幣', 'c1') + A(110, 33, 118, 33) + A(220, 33, 228, 33) + A(60, 51, 60, 108) + A(110, 128, 270, 53) + T(170, 72, '× e^rT', 'sm') + T(210, 112, '用 F₀ 換回', 'sm') + T(68, 85, '存外國', 'sm', 'start') + T(170, 172, '兩條路要一樣：S₀e^rT = F₀e^(r_f T)', 'hd'), '利率平價'),
   roll: () => S(340, 120, L(20, 90, 330, 90) + [0, 1, 2, 3].map(i => B(20 + i * 75, 30 + (i % 2) * 6, 70, 30, '合約 ' + (i + 1), 'c' + (i % 3 + 1))).join('') + T(175, 112, '避險期間 T ── 每份到期前平倉、換下一份', 'sm'), '展期'),
   finflow: () => S(340, 170, B(10, 65, 80, 40, '投資人\n存款人', 'c2') + B(250, 65, 80, 40, '企業', 'c3') + B(130, 15, 80, 36, '證券市場', 'c1') + B(130, 120, 80, 36, '金融機構', 'c1') + A(90, 75, 128, 38) + A(210, 38, 248, 75) + A(90, 95, 128, 135) + A(210, 135, 248, 98) + T(170, 66, '直接金融', 'sm') + T(170, 112, '間接金融', 'sm'), '金融流動'),
   emh: () => S(340, 180, `<circle cx="170" cy="95" r="80" class="bx c3"/><circle cx="170" cy="110" r="55" class="bx c2"/><circle cx="170" cy="125" r="30" class="bx c1"/>` + T(170, 30, '強式：所有資訊（含內線）', 'sm') + T(170, 70, '半強式：公開資訊', 'sm') + T(170, 122, '弱式', 'sm') + T(170, 136, '歷史價量', 'sm'), 'EMH'),
@@ -1859,7 +1961,62 @@ DATA.deriv.formulas = [
     calc:v=>{const n=(v.bs-v.b)*v.VA/v.VF;return `(${v.bs} − ${v.b}) × ${fx(v.VA)} ÷ ${fx(v.VF)} = <b>${fx(n,2)}</b> → <b>${n<0?'short':'long'} ${Math.abs(Math.round(n))} 口</b>`;},
     oops:['方向弄反：降 β 要賣（short）'],
     exam:'To reduce beta from 1.5 to 0.75, the company should short (1.5 − 0.75) × 5,000,000/250,000 = 15 contracts.',
-    cfa:'CFA Level III 常考 adjusting portfolio beta。' }
+    cfa:'CFA Level III 常考 adjusting portfolio beta。' },
+  { id:'F13', t:'遠期價格（不付息資產）', en:'Forward price of an investment asset with no income',
+    q:'今天簽約、T 年後交割，合理的約定價格是多少？',
+    tex:'<v s="F">F<sub>0</sub></v> = <v s="S">S<sub>0</sub></v> · <v s="e">e</v><sup><v s="r">r</v><v s="T">T</v></sup>',
+    syms:{ F:['遠期／期貨價格','forward (futures) price today','今天簽約應該約定的交割價'], S:['現貨價格','spot price today','今天東西的價格'], e:['自然常數 ≈ 2.71828','Euler’s number','連續複利用的底數'], r:['無風險利率（連續複利）','risk-free rate, continuous compounding','T 年期的零息利率'], T:['到交割的時間（年）','time to delivery in years','3 個月 = 0.25'] },
+    why:'兩條路結果一樣：(1) 今天借 S<sub>0</sub> 買下來抱到 T，要還 S<sub>0</sub>e<sup>rT</sup>；(2) 今天簽遠期，T 時付 F<sub>0</sub>。兩條路最後都是「T 時手上有一單位資產」，所以花費要相同，F<sub>0</sub> = S<sub>0</sub>e<sup>rT</sup>。報價比它高 → 借錢買現貨、賣遠期；比它低 → 放空現貨、買遠期。',
+    steps:['T 換成年（月數 ÷ 12）','算 rT','S<sub>0</sub> × e<sup>rT</sup>','跟報價比：報價高 → 賣遠期買現貨；報價低 → 買遠期賣現貨；利潤 = 差額'],
+    vars:[{k:'S',s:'S<sub>0</sub>',v:40,min:1,max:500,step:1},{k:'r',s:'r',v:0.05,min:0,max:0.2,step:0.005},{k:'T',s:'T',v:0.25,min:0.05,max:3,step:0.05},{k:'Fq',s:'遠期報價',v:43,min:1,max:600,step:0.5}],
+    calc:v=>{const F=v.S*Math.exp(v.r*v.T);const d=v.Fq-F;return `F<sub>0</sub> = ${v.S} × e<sup>${v.r}×${v.T}</sup> = <b>${fx(F)}</b><br>報價 ${v.Fq}：${Math.abs(d)<0.005?'剛好合理，沒有套利':d>0?`太貴 → 借錢買現貨、賣遠期，賺 <b>${fx(d)}</b>`:`太便宜 → 放空現貨、買遠期，賺 <b>${fx(-d)}</b>`}`;},
+    oops:['T 用月份沒換成年','用 (1 + r)<sup>T</sup> 而不是 e<sup>rT</sup>（題目說 continuous compounding 就用 e）','套利方向弄反：記「買低賣高」，貴的那邊賣'],
+    exam:'For a non-dividend-paying stock, F₀ = S₀e<sup>rT</sup> = 40e<sup>0.05×0.25</sup> = 40.50. Since the quoted forward price of 43 is higher, an arbitrageur should borrow $40, buy the stock and short the forward, locking in a profit of 43 − 40.50 = $2.50.',
+    cfa:'CFA Level I Derivatives：no-arbitrage forward pricing（F<sub>0</sub> = S<sub>0</sub>(1+r)<sup>T</sup>，CFA 用離散複利）。' },
+  { id:'F14', t:'遠期價格（已知收益 I／收益率 q）', en:'Forward price with known income or yield',
+    q:'標的會配息時，遠期價格要怎麼調整？',
+    tex:'<v s="F">F<sub>0</sub></v> = (<v s="S">S<sub>0</sub></v> − <v s="I">I</v>)e<sup><v s="r">r</v>T</sup>　　<v s="F">F<sub>0</sub></v> = <v s="S">S<sub>0</sub></v>e<sup>(<v s="r">r</v> − <v s="q">q</v>)T</sup>',
+    syms:{ F:['遠期價格','forward price','今天該約定的價格'], S:['現貨價格','spot price','今天的價格'], I:['收益現值','present value of income','合約期間股利／債息折回今天的總和'], r:['無風險利率','risk-free rate','連續複利'], q:['收益率','yield (continuous)','股利率；股價指數用它'] },
+    why:'抱著現貨的人會收到股利或債息，簽遠期的人收不到。所以遠期價格要<b>扣掉</b>這部分。給固定金額（$1 股利、$40 債息）→ 先折現成 I 從 S<sub>0</sub> 減掉；給百分比（股利率 3%）→ 從利率扣掉 q。',
+    steps:['每筆收益用「收到那天」的期限折現：d·e<sup>−r·t</sup>','加總 = I','(S<sub>0</sub> − I) × e<sup>rT</sup>','若給收益率：S<sub>0</sub> × e<sup>(r−q)T</sup>'],
+    vars:[{k:'S',s:'S<sub>0</sub>',v:900,min:1,max:3000,step:1},{k:'d',s:'收益金額',v:40,min:0,max:200,step:1},{k:'t1',s:'收益時點（年）',v:0.3333,min:0,max:2,step:0.0833},{k:'r1',s:'該期利率',v:0.03,min:0,max:0.2,step:0.005},{k:'r',s:'T 期利率 r',v:0.04,min:0,max:0.2,step:0.005},{k:'T',s:'T',v:0.75,min:0.05,max:3,step:0.05}],
+    calc:v=>{const I=v.d*Math.exp(-v.r1*v.t1);const F=(v.S-I)*Math.exp(v.r*v.T);return `I = ${v.d} × e<sup>−${v.r1}×${fx(v.t1)}</sup> = ${fx(I)}<br>F<sub>0</sub> = (${v.S} − ${fx(I)}) × e<sup>${v.r}×${v.T}</sup> = <b>${fx(F)}</b>`;},
+    oops:['I 忘了折現（直接減 $40）','收益日在到期日之後的股利不要算進去','折現用錯利率：4 個月後的錢用 4 個月期利率'],
+    exam:'The present value of the coupon is I = 40e<sup>−0.03×4/12</sup> = 39.60, so the forward price is F₀ = (900 − 39.60)e<sup>0.04×0.75</sup> = 886.60.',
+    cfa:'CFA：forward on dividend-paying stock、forward on coupon bond。' },
+  { id:'F15', t:'遠期合約的價值 f', en:'Value of a forward contract',
+    q:'我手上已經簽好的遠期合約，現在值多少錢？',
+    tex:'Long：<v s="f">f</v> = (<v s="Ft">F<sub>t</sub></v> − <v s="K">K</v>)e<sup>−<v s="r">r</v>(T−t)</sup> = <v s="St">S<sub>t</sub></v> − <v s="K">K</v>e<sup>−<v s="r">r</v>(T−t)</sup>　Short：相反數',
+    syms:{ f:['合約價值','value of the forward','現在把這張合約轉手，值多少'], Ft:['現在的遠期價格','current forward price','今天新簽同到期日的合約該約定的價格'], K:['交割價','delivery price','當初寫死的價格（= 當時的 F<sub>0</sub>）'], r:['無風險利率','risk-free rate','連續複利'], St:['現在現貨價格','current spot price','今天的股價'] },
+    why:'新簽的人要用 F<sub>t</sub> 買，你只要用 K 買，所以你到期時多賺 F<sub>t</sub> − K。這筆錢要到 T 才拿到，乘 e<sup>−r(T−t)</sup> 折回今天。簽約當下 F<sub>0</sub> = K，所以價值 = 0。',
+    steps:['先算 K（若題目沒給：K = 當初的 F<sub>0</sub>）','算剩下時間 T − t','Long：S<sub>t</sub> − Ke<sup>−r(T−t)</sup>（有收益時 S<sub>t</sub> 改成 S<sub>t</sub> − I）','Short：加負號'],
+    vars:[{k:'S0',s:'當初 S<sub>0</sub>',v:40,min:1,max:500,step:1},{k:'r',s:'r',v:0.1,min:0,max:0.2,step:0.005},{k:'T',s:'T',v:1,min:0.1,max:3,step:0.05},{k:'t',s:'t',v:0.5,min:0,max:3,step:0.05},{k:'St',s:'S<sub>t</sub>',v:45,min:1,max:600,step:1}],
+    calc:v=>{const K=v.S0*Math.exp(v.r*v.T);const tt=Math.max(v.T-v.t,0);const f=v.St-K*Math.exp(-v.r*tt);return `K = ${v.S0}e<sup>${v.r}×${v.T}</sup> = ${fx(K)}<br>Long f = ${v.St} − ${fx(K)}e<sup>−${v.r}×${fx(tt)}</sup> = <b>${fx(f)}</b>；Short = <b>${fx(-f)}</b>`;},
+    oops:['忘了折現：F<sub>t</sub> − K 是到期才拿到的','把「遠期價格」和「合約價值」搞混：剛簽時 F<sub>0</sub> ≠ 0 但 f = 0','T − t 寫成 T'],
+    exam:'The value of the long forward contract is f = S<sub>t</sub> − Ke<sup>−r(T−t)</sup> = 45 − 44.21e<sup>−0.1×0.5</sup> = $2.95.',
+    cfa:'CFA Level I：value of a forward contract during its life（必考）。' },
+  { id:'F16', t:'外匯遠期（利率平價）', en:'Forward exchange rate (interest rate parity)',
+    q:'兩國利率不同時，遠期匯率該是多少？',
+    tex:'<v s="F">F<sub>0</sub></v> = <v s="S">S<sub>0</sub></v>e<sup>(<v s="r">r</v> − <v s="rf">r<sub>f</sub></v>)<v s="T">T</v></sup>',
+    syms:{ F:['遠期匯率','forward exchange rate','每 1 外幣在 T 交割的本國幣價格'], S:['即期匯率','spot exchange rate','現在 1 外幣值幾元本國幣'], r:['本國利率','domestic risk-free rate','連續複利'], rf:['外國利率','foreign risk-free rate','持有外幣能賺的利率（像股利率 q）'], T:['期間（年）','time in years','2 個月 = 2/12'] },
+    why:'外幣就像會付利息 r<sub>f</sub> 的資產。拿本國幣去換外幣存起來，可以賺 r<sub>f</sub>；直接存本國賺 r。兩條路換回同一種錢要一樣多，所以遠期匯率要把利差調回來。外國利率高 → 遠期外幣便宜（F &lt; S）。',
+    steps:['確認報價是「本國幣 / 1 外幣」','算 (r − r<sub>f</sub>) × T','S<sub>0</sub> × e<sup>(r−r<sub>f</sub>)T</sup>','報價 &gt; 理論 → 借本國幣換外幣存外國、賣遠期；報價 &lt; 理論 → 借外幣換本國幣存本國、買遠期'],
+    vars:[{k:'S',s:'S<sub>0</sub>',v:0.98,min:0.01,max:200,step:0.01},{k:'r',s:'r',v:0.01,min:0,max:0.2,step:0.005},{k:'rf',s:'r<sub>f</sub>',v:0.03,min:0,max:0.2,step:0.005},{k:'T',s:'T',v:2,min:0.05,max:5,step:0.05},{k:'Fq',s:'遠期報價',v:0.93,min:0.01,max:200,step:0.01}],
+    calc:v=>{const F=v.S*Math.exp((v.r-v.rf)*v.T);const d=v.Fq-F;return `F<sub>0</sub> = ${v.S} × e<sup>(${v.r}−${v.rf})×${v.T}</sup> = <b>${fx(F)}</b><br>報價 ${v.Fq}：${Math.abs(d)<0.00005?'合理':d>0?'遠期外幣太貴 → 借本國幣、換外幣存外國、賣遠期':'遠期外幣太便宜 → 借外幣、換本國幣存本國、買遠期'}`;},
+    oops:['r 和 r<sub>f</sub> 順序弄反：本國在前','報價方式弄反（外幣/本國幣）要先換成本國幣/1 外幣'],
+    exam:'A foreign currency is like an asset paying a yield equal to the foreign risk-free rate, so F₀ = S₀e<sup>(r−r<sub>f</sub>)T</sup> = 0.98e<sup>(0.01−0.03)×2</sup> = 0.9416.',
+    cfa:'CFA Level I/II：covered interest rate parity（Economics、Derivatives 都考）。' },
+  { id:'F17', t:'持有成本與便利殖利率', en:'Cost of carry and convenience yield',
+    q:'一個公式涵蓋股票、指數、外幣、商品？',
+    tex:'<v s="F">F<sub>0</sub></v> = <v s="S">S<sub>0</sub></v>e<sup>(<v s="c">c</v> − <v s="y">y</v>)T</sup>　　<v s="c">c</v> = <v s="r">r</v> + <v s="u">u</v> − 收益',
+    syms:{ F:['期貨價格','futures price','今天的期貨價'], S:['現貨價格','spot price','今天的價格'], c:['持有成本','cost of carry','利息 + 儲存 − 收益'], y:['便利殖利率','convenience yield','手上有實體貨的好處（只有消費型商品）'], r:['無風險利率','risk-free rate','資金被卡住的成本'], u:['儲存成本率','storage cost (proportional)','倉儲、保險'] },
+    why:'持有現貨到 T 的淨成本率 c：要付的（利息 r、倉儲 u）加進來，收得到的（股利 q、外國利息 r<sub>f</sub>）扣掉。不付息股票 c = r；指數 c = r − q；外幣 c = r − r<sub>f</sub>；商品 c = r + u。消費型商品多扣一個 y，因為使用者不願意賣掉存貨。',
+    steps:['判斷資產類型 → 寫出 c','投資資產：F<sub>0</sub> = S<sub>0</sub>e<sup>cT</sup>','消費資產：F<sub>0</sub> ≤ S<sub>0</sub>e<sup>cT</sup>','已知 F<sub>0</sub> 反推 y：y = c − ln(F<sub>0</sub>/S<sub>0</sub>)/T'],
+    vars:[{k:'S',s:'S<sub>0</sub>',v:80,min:1,max:500,step:1},{k:'r',s:'r',v:0.05,min:0,max:0.2,step:0.005},{k:'u',s:'u',v:0.02,min:0,max:0.2,step:0.005},{k:'T',s:'T',v:1,min:0.1,max:3,step:0.05},{k:'F',s:'期貨報價',v:82,min:1,max:600,step:0.5}],
+    calc:v=>{const c=v.r+v.u;const Fmax=v.S*Math.exp(c*v.T);const y=c-Math.log(v.F/v.S)/v.T;return `c = ${v.r} + ${v.u} = ${fx(c)}；S<sub>0</sub>e<sup>cT</sup> = <b>${fx(Fmax)}</b><br>${v.F>Fmax+0.005?'報價高於上限 → 借錢買現貨、賣期貨，任何人都能套利':`隱含便利殖利率 y = ${fx(c)} − ln(${v.F}/${v.S})/${v.T} = <b>${fx(y)}</b>`}`;},
+    oops:['儲存成本是「加」不是「減」','以為消費型商品也一定是等式','便利殖利率只用在消費型商品'],
+    exam:'For a consumption asset F₀ ≤ S₀e<sup>cT</sup>, where c = r + u; the convenience yield y is defined so that F₀ = S₀e<sup>(c−y)T</sup>.',
+    cfa:'CFA：commodity forwards、convenience yield、contango vs backwardation。' }
 ];
 
 DATA.invest.formulas = [
@@ -3386,6 +3543,14 @@ const EX = {
   d18:'To hedge an equity portfolio, short N* = βVA/VF index futures contracts; to change beta from β to β*, trade (β* − β)VA/VF contracts.',
   d19:'Hedging equity returns allows a manager who believes the stocks will outperform the market to earn the risk-free rate plus the excess return over the market.',
   d20:'In a stack and roll strategy, short-dated futures are rolled forward; the main risk is liquidity, because large margin calls may occur before gains on the underlying are realized.',
+  d21:'With continuous compounding, an amount A grows to Ae^(rT) after T years, and an amount received at time T is worth Ae^(−rT) today.',
+  d22:'For an investment asset that provides no income, F₀ = S₀e^(rT); if F₀ > S₀e^(rT), arbitrageurs borrow money, buy the asset and short the forward; if F₀ < S₀e^(rT), they short the asset and buy the forward.',
+  d23:'When the asset provides a known income with present value I during the life of the contract, the forward price is F₀ = (S₀ − I)e^(rT).',
+  d24:'A stock index can be viewed as an asset paying a known dividend yield q, so F₀ = S₀e^((r−q)T); index arbitrage is profitable whenever the futures price deviates from this value.',
+  d25:'A forward contract is worth zero when it is first negotiated; later, the value of a long forward is f = (F − K)e^(−r(T−t)), and the value of a short forward is (K − F)e^(−r(T−t)).',
+  d26:'A foreign currency is analogous to a security providing a yield equal to the foreign risk-free rate, so F₀ = S₀e^((r−r_f)T); this is the interest rate parity relationship.',
+  d27:'For consumption commodities, F₀ ≤ (S₀ + U)e^(rT) because users are reluctant to sell their inventories; the convenience yield y is defined so that F₀ = (S₀ + U)e^((r−y)T).',
+  d28:'The cost of carry c equals the storage cost plus the interest cost less the income earned; for an investment asset F₀ = S₀e^(cT), and for a consumption asset F₀ = S₀e^((c−y)T).',
   m1a:'A manager is someone who coordinates and oversees the work of other people so that organizational goals can be accomplished.',
   m1b:'Efficiency means doing things right (getting the most output from the least input), while effectiveness means doing the right things (attaining organizational goals).',
   m1c:'The four functions of management are planning, organizing, leading, and controlling.',
@@ -3427,7 +3592,7 @@ const EX = {
 };
 
 const CFA = {
-  d1:'Derivatives (Level I)', d3:'Derivatives：forwards', d4:'Derivatives：options payoff', d5:'Derivatives：forwards vs futures', d7:'Derivatives：arbitrage & convergence', d8:'Derivatives：margin & mark-to-market', d12:'Derivatives：hedging', d14:'Derivatives：basis', d16:'Portfolio Mgmt：hedge ratio', d18:'Portfolio Mgmt：beta & systematic risk',
+  d1:'Derivatives (Level I)', d3:'Derivatives：forwards', d4:'Derivatives：options payoff', d5:'Derivatives：forwards vs futures', d7:'Derivatives：arbitrage & convergence', d8:'Derivatives：margin & mark-to-market', d12:'Derivatives：hedging', d14:'Derivatives：basis', d16:'Portfolio Mgmt：hedge ratio', d18:'Portfolio Mgmt：beta & systematic risk', d22:'Derivatives：pricing & valuation of forward commitments（必考）', d24:'Derivatives：equity index forwards', d25:'Derivatives：value of a forward during its life（必考）', d26:'Derivatives：currency forwards、covered interest rate parity', d27:'Derivatives：convenience yield、storage costs', d28:'Derivatives：cost of carry model',
   i1c:'Equity：market efficiency（必考）', i1d:'Equity：fundamental vs technical', i1e:'Portfolio Mgmt：CAPM、CML、SML（必考）', i1f:'Portfolio Mgmt：active vs passive、asset allocation', i2a:'Behavioral finance：bubbles', i2g:'Fixed Income：securitization、MBS', i4a:'技術分析（現行課綱比重低）',
   m2f:'Behavioral Finance：overconfidence、anchoring、framing、availability、confirmation、hindsight、sunk cost 偏誤（Level I/III）', m2d:'Quant：expected value', m10c:'Corporate Issuers：organizational forms（sole proprietorship、partnership、corporation）', m9d:'Equity：industry analysis（Porter five forces）', m9b:'Equity / Corporate Issuers：business model', m4c:'Economics：comparative advantage'
 };
@@ -3451,7 +3616,14 @@ const PEN = {
   p2_24:['A company enters into a short futures contract to sell 5,000 bushels of wheat for 750 cents per bushel. The initial margin is $3,000 and the maintenance margin is $2,000. What price change would lead to a margin call? Under what circumstances could $1,500 be withdrawn?','Margin call if the price rises to 770 cents; $1,500 can be withdrawn if it falls to 720 cents.'],
   p2_11:['At the end of one day a clearing house member is long 100 contracts, and the settlement price is $50,000 per contract. The original margin is $2,000 per contract. On the following day the member becomes responsible for clearing an additional 20 long contracts, entered into at $51,000 per contract. The settlement price at the end of this day is $50,200. How much does the member have to add to its margin account?','$40,000 − $20,000 + $16,000 = $36,000.'],
   p3_25:['A company has a $100 million portfolio with a beta of 1.2. The index futures price is 2,000 and the multiplier is $250. What trade reduces beta to 0.5? What trade increases beta to 1.5?','Short 140 contracts; long 60 contracts.'],
-  p3_21:['A trader uses 60 silver futures contracts (5,000 oz each) to hedge. When the hedge is closed out the spot price exceeds the futures price by $0.20 per ounce. What is the effect if the trader is hedging a purchase of silver? A sale?','Purchase: loses $60,000. Sale: gains $60,000.']
+  p3_21:['A trader uses 60 silver futures contracts (5,000 oz each) to hedge. When the hedge is closed out the spot price exceeds the futures price by $0.20 per ounce. What is the effect if the trader is hedging a purchase of silver? A sale?','Purchase: loses $60,000. Sale: gains $60,000.'],
+  p5_7:['Explain why a foreign currency can be treated as an asset providing a known yield.','The holder of a foreign currency can earn interest at the foreign risk-free rate r_f. The income, measured in the domestic currency, is proportional to the value of the currency, so the currency provides a known yield r_f.'],
+  p5_9:['A 1-year long forward contract on a non-dividend-paying stock is entered into when the stock price is $40 and the risk-free rate of interest is 10% per annum with continuous compounding. (a) What are the forward price and the initial value of the forward contract? (b) Six months later, the price of the stock is $45 and the risk-free interest rate is still 10%. What are the forward price and the value of the forward contract?','(a) F₀ = 40e^0.1 = 44.21; initial value 0. (b) F = 45e^0.05 = 47.31; value = 45 − 44.21e^−0.05 = 2.95.'],
+  p5_12:['The 2-month interest rates in Switzerland and the United States are 2% and 5% per annum with continuous compounding. The spot price of the Swiss franc is $0.8000. The futures price for a contract deliverable in 2 months is $0.8100. What arbitrage opportunities does this create?','Theoretical futures price = 0.8e^(0.03×2/12) = 0.8040. The futures price is too high: borrow dollars, buy francs and invest them in Switzerland, and short Swiss franc futures.'],
+  p5_30:['A stock is expected to pay a dividend of $1 per share in 2 months and in 5 months. The stock price is $50, and the risk-free rate of interest is 8% per annum with continuous compounding for all maturities. An investor has just taken a short position in a 6-month forward contract on the stock. (a) What are the forward price and the initial value of the forward contract? (b) Three months later, the price of the stock is $48 and the risk-free rate of interest is still 8% per annum. What are the forward price and the value of the short position in the forward contract?','(a) I = 1.954, F₀ = (50 − 1.954)e^0.04 = 50.01, initial value 0. (b) I = 0.9868, F = (48 − 0.9868)e^0.02 = 47.96; value of short = (50.01 − 47.96)e^−0.02 = 2.01.'],
+  p5_3:['Suppose you enter into a 6-month forward contract on a non-dividend-paying stock when the stock price is $30 and the risk-free interest rate is 12% per annum with continuous compounding. What is the forward price?','F₀ = 30e^(0.12×0.5) = 31.86.'],
+  p5_4:['A stock index currently stands at 350. The risk-free interest rate is 8% per annum and the dividend yield on the index is 4% per annum (both continuously compounded). What should the futures price for a 4-month contract be?','F₀ = 350e^(0.04×4/12) = 354.70.'],
+  p5_10:['The risk-free rate of interest is 10% per annum and the dividend yield on a stock index is 4% per annum (continuous compounding). The index is 400 and the 4-month futures price is 405. What arbitrage opportunities does this create?','Theoretical price = 400e^(0.06×4/12) = 408.08. Futures are underpriced: buy futures and short the stocks underlying the index.']
 };
 DATA.deriv.problems.forEach(p => { if (PEN[p.id]) { p.qEn = PEN[p.id][0]; p.ansEn = PEN[p.id][1]; } });
 
@@ -3478,7 +3650,16 @@ DATA.deriv.mcqEn = [
   {u:'ch2', q:'When there are alternatives about what, where and when to deliver, the choice is made by:', o:['The long position','The short position','The exchange','The clearing house'], a:1, e:'This tends to reduce the futures price.'},
   {u:'ch2', q:'Futures exchange rates are quoted as:', o:['Foreign currency per USD','USD per unit of foreign currency','Always in euros','In basis points'], a:1, e:'Spot/forward: only GBP, EUR, AUD, NZD use USD per unit.'},
   {u:'ch2', q:'An order that must be filled completely or cancelled is a(n):', o:['IOC order','FOK order','ROD order','Stop order'], a:1, e:'IOC allows partial fills.'},
-  {u:'ch3', q:'The main risk of a stack and roll hedge is:', o:['Basis is always zero','Liquidity problems from margin calls','Delivery failure','Counterparty risk on the exchange'], a:1, e:'Metallgesellschaft example.'}
+  {u:'ch3', q:'The main risk of a stack and roll hedge is:', o:['Basis is always zero','Liquidity problems from margin calls','Delivery failure','Counterparty risk on the exchange'], a:1, e:'Metallgesellschaft example.'},
+  {u:'ch5', q:'The forward price of a non-dividend-paying stock is:', o:['S₀e^(−rT)','S₀e^(rT)','S₀(1 + r)','S₀e^((r−q)T) with q = r'], a:1, e:'F₀ = S₀e^(rT); otherwise there is an arbitrage opportunity.'},
+  {u:'ch5', q:'S₀ = 40, r = 5%, T = 0.25 and the forward price is 43. An arbitrageur should:', o:['Short the stock and buy the forward','Borrow, buy the stock and short the forward','Do nothing','Buy both the stock and the forward'], a:1, e:'Theoretical F₀ = 40.50 < 43 → forward is too expensive → cash-and-carry, profit 2.50.'},
+  {u:'ch5', q:'When an investment asset provides a known income with present value I, the forward price is:', o:['(S₀ + I)e^(rT)','(S₀ − I)e^(rT)','S₀e^((r+I)T)','(S₀ − I)e^(−rT)'], a:1, e:'Income received by the holder of the asset reduces the forward price.'},
+  {u:'ch5', q:'The value of a forward contract at the time it is first entered into is:', o:['F₀','K','Zero','S₀ − K'], a:2, e:'K is set equal to F₀, so f = (F₀ − K)e^(−rT) = 0.'},
+  {u:'ch5', q:'The value of a long forward contract at time t is:', o:['(K − Fₜ)e^(−r(T−t))','(Fₜ − K)e^(−r(T−t))','Fₜ − K','(Fₜ − K)e^(r(T−t))'], a:1, e:'Long gains if the forward price rises above K; the payoff at T is discounted back.'},
+  {u:'ch5', q:'For a currency, the forward price is F₀ = S₀e^((r−r_f)T). If the foreign interest rate is higher than the domestic rate:', o:['F₀ > S₀','F₀ < S₀','F₀ = S₀','It cannot be determined'], a:1, e:'r − r_f < 0 → forward is below spot.'},
+  {u:'ch5', q:'The convenience yield is relevant mainly for:', o:['Non-dividend-paying stocks','Stock indices','Consumption commodities such as crude oil','Treasury bonds'], a:2, e:'Users of consumption assets benefit from holding the physical commodity.'},
+  {u:'ch5', q:'The cost of carry for a stock index is:', o:['r','r − q','r + u','r − r_f'], a:1, e:'Interest cost less the dividend yield.'},
+  {u:'ch5', q:'Why can F₀ < (S₀ + U)e^(rT) persist for a consumption asset?', o:['Because storage is free','Because holders keep the commodity for use and will not sell it to arbitrage','Because futures are not traded on exchanges','Because interest rates are zero'], a:1, e:'Arbitrage would require selling inventory, which users are reluctant to do.'}
 ];
 
 // English essay prompts for 管理學
@@ -3606,13 +3787,17 @@ const SOUND = (() => {
 })();
 // ===== 遊戲題庫：配對 match、分類 sort =====
 DATA.deriv.match = [
-  ['underlying asset','標的資產'],['long position','多頭、做多'],['short position','空頭、做空'],['delivery price','交割價'],['maturity','到期日'],['premium','權利金'],['strike price','執行價'],['call option','買權'],['put option','賣權'],['European option','只能到期執行'],['American option','到期前都能執行'],['initial margin','原始保證金'],['maintenance margin','維持保證金'],['margin call','保證金追繳'],['marking to market','每日結算'],['open interest','未平倉量'],['close out','平倉'],['basis','基差 S − F'],['basis risk','基差風險'],['cross hedge','交叉避險'],['hedge ratio','避險比率'],['tailing the hedge','考慮每日結算調整口數'],['stack and roll','集中式展期'],['arbitrage','套利'],['convergence','期貨價收斂到現貨價'],['contract size','契約規模'],['price limit','漲跌幅限制'],['position limit','部位限制'],['clearing house','結算所'],['physical settlement','實物交割']
+  ['underlying asset','標的資產'],['long position','多頭、做多'],['short position','空頭、做空'],['delivery price','交割價'],['maturity','到期日'],['premium','權利金'],['strike price','執行價'],['call option','買權'],['put option','賣權'],['European option','只能到期執行'],['American option','到期前都能執行'],['initial margin','原始保證金'],['maintenance margin','維持保證金'],['margin call','保證金追繳'],['marking to market','每日結算'],['open interest','未平倉量'],['close out','平倉'],['basis','基差 S − F'],['basis risk','基差風險'],['cross hedge','交叉避險'],['hedge ratio','避險比率'],['tailing the hedge','考慮每日結算調整口數'],['stack and roll','集中式展期'],['arbitrage','套利'],['convergence','期貨價收斂到現貨價'],['contract size','契約規模'],['price limit','漲跌幅限制'],['position limit','部位限制'],['clearing house','結算所'],['physical settlement','實物交割'],
+  ['continuous compounding','連續複利 e^rT'],['forward price','遠期價格 F₀'],['value of a forward contract','遠期合約價值 f'],['cash-and-carry arbitrage','借錢買現貨、賣遠期'],['short selling','借券來賣'],['known income','已知現金收益 I'],['dividend yield','股利率 q'],['index arbitrage','指數套利'],['interest rate parity','利率平價'],['foreign risk-free rate','外國無風險利率 r_f'],['storage cost','儲存成本 u'],['convenience yield','便利殖利率 y'],['cost of carry','持有成本 c'],['consumption asset','消費型資產'],['investment asset','投資型資產']
 ];
 DATA.deriv.sort = [
   { t:'Long hedge 還是 Short hedge？', b:['Long hedge（買期貨）','Short hedge（賣期貨）'], items:[['航空公司擔心油價上漲',0],['養牛戶三個月後要賣牛',1],['麵包店未來要買麵粉',0],['金礦公司預計 9 月產出黃金',1],['持有股票組合、怕大盤下跌',1],['美國公司三個月後要付歐元貨款',0],['農夫已種好玉米準備收成',1],['牛肉商 11 月要買活牛',0]] },
   { t:'期貨還是遠期的特徵？', b:['期貨 Futures','遠期 Forwards'], items:[['交易所交易',0],['雙方私下約定',1],['標準化合約',0],['客製化',1],['每日結算',0],['到期才結算',1],['幾乎沒有信用風險',0],['有信用風險',1],['通常到期前平倉',0],['通常只有一個交割日',1]] },
   { t:'OI 會怎麼變？', b:['增加','減少','不變'], items:[['買方開倉、賣方開倉',0],['買方平倉、賣方平倉',1],['買方開倉、賣方平倉',2],['買方平倉、賣方開倉',2],['兩個新人各自建立部位',0],['當沖：早上開、下午平（整天看）',2]] },
-  { t:'Call 還是 Put？', b:['買 Call','買 Put'], items:[['看好股價大漲',0],['怕手上股票下跌，想買保險',1],['大頭菜怕跌價，保證能賣 99 鈴錢',1],['想用少少的錢參與上漲',0],['預期股價暴跌想賺錢',1],['鬱金香狂熱時的投機工具',0]] }
+  { t:'Call 還是 Put？', b:['買 Call','買 Put'], items:[['看好股價大漲',0],['怕手上股票下跌，想買保險',1],['大頭菜怕跌價，保證能賣 99 鈴錢',1],['想用少少的錢參與上漲',0],['預期股價暴跌想賺錢',1],['鬱金香狂熱時的投機工具',0]] },
+  { u:'ch5', t:'遠期報價太貴還是太便宜？（理論 F₀ = 40.50）', b:['借錢買現貨、賣遠期','放空現貨、買遠期'], items:[['遠期報 43',0],['遠期報 39',1],['遠期報 41',0],['遠期報 40',1],['指數期貨高於 S₀e^(r−q)T',0],['指數期貨低於 S₀e^(r−q)T',1]] },
+  { u:'ch5', t:'持有成本 c：加還是減？', b:['加進 c（要付的）','從 c 扣掉（收得到的）'], items:[['無風險利率 r',0],['倉儲成本 u',0],['股利率 q',1],['外國利率 r_f',1],['便利殖利率 y',1],['保險費',0]] },
+  { u:'ch5', t:'投資型還是消費型資產？', b:['投資型（F₀ = S₀e^cT）','消費型（F₀ ≤ S₀e^cT）'], items:[['黃金',0],['白銀',0],['股票',0],['小麥',1],['原油',1],['黃豆',1],['玉米',1],['股價指數',0]] }
 ];
 DATA.invest.match = [
   ['weak form EMH','技術分析無效'],['semi-strong form EMH','基本分析也無效'],['strong form EMH','內線也無效'],['random walk','隨機漫步'],['greater fool theory','更傻的傻瓜理論'],['castle-in-the-air','空中樓閣理論'],['firm-foundation','堅實基礎理論'],['Semper Augustus','最貴的鬱金香'],['Bubble Act','禁止公司發行股票的法案'],['investment pools','股友社'],['Babson Break','1929/9/5 暴跌'],['Black Thursday','1929/10/24'],['subprime mortgage','次級房貸'],['MBS','房貸抵押證券'],['CDS','信用違約交換'],['originate and distribute','放貸後打包賣出'],['confidence index','巴倫信心指數'],['TED spread','LIBOR − 國庫券利率'],['short interest','融券餘額'],['breadth of market','市場廣度'],['golden cross','短均線上穿長均線'],['death cross','短均線下穿長均線'],['Bias','乖離率'],['RSI','相對強弱指標'],['OBV','能量潮'],['Fibonacci','黃金切割率'],['Elliott wave','五波上升三波下降'],['Dow theory','潮汐、波浪、漣漪'],['candlestick','K 線（本間宗久）'],['P/E ratio','本益比']
@@ -4022,7 +4207,7 @@ DATA.deriv.mcqEn.push(
 
 // 先備知識連結：card id → 基礎卡 ids
 const PRE = {
-  d1:['bstock','bspot'], d2:['barb'], d3:['bspot','blong'], d4:['blong','bspot'], d5:['bspot'], d7:['barb','bspot'], d8:['blev'], d9:['blong'], d12:['bspot','blong'], d14:['bspot'], d16:['bsd','bcorr'], d17:['bsd'], d18:['bbeta','bdiv','bindex'], d19:['bbeta','bdiv'], d20:['blev'],
+  d1:['bstock','bspot'], d2:['barb'], d3:['bspot','blong'], d4:['blong','bspot'], d5:['bspot'], d7:['barb','bspot'], d8:['blev'], d9:['blong'], d12:['bspot','blong'], d14:['bspot'], d16:['bsd','bcorr'], d17:['bsd'], d18:['bbeta','bdiv','bindex'], d19:['bbeta','bdiv'], d20:['blev'], d21:['bint','bpv'], d22:['barb','blong','bpv'], d23:['bbond','bpv'], d24:['bindex','bdiv'], d25:['bpv'], d26:['barb','bint'], d27:['bspot'], d28:['bint'],
   i1a:['bdec','bstock','bbond'], i1b:['bret'], i1c:['bret'], i1d:['bis','bstock'], i1e:['bsd','bbeta','bdiv','bsharpe'], i1f:['bindex','bsharpe'], i2c:['bstock'], i2d:['blev'], i2e:['bstock'], i2g:['bbond'], i3d:['bbond','blev'], i3e:['blong']
 };
 Object.keys(PRE).forEach(id => ['deriv', 'invest'].forEach(k => subjCardsPre(DATA[k]).forEach(c => { if (c.id === id) c.pre = PRE[id]; })));
@@ -5659,7 +5844,7 @@ function buildPlan() {
   // 今天打過勾就固定今天的內容（不會因為扣掉進度又塞新的進來）
   // 今天第一次排出來就存起來，之後打勾、勾「我懂了」都不會再補新的進來
   const tD = days.find(D => D.d === today);
-  if (tD && !(ST.planFrz && ST.planFrz[today]) && Object.keys(tD.blocks).length) { ST.planFrz = ST.planFrz || {}; ST.planFrz[today] = { blocks: JSON.parse(JSON.stringify(tD.blocks)), total: tD.total }; save(); return buildPlan(); }
+  if (tD && !(ST.planFrz && ST.planFrz[today]) && Object.keys(tD.blocks).length) { ST.planFrz = ST.planFrz || {}; ST.planFrz[today] = { blocks: JSON.parse(JSON.stringify(tD.blocks)), total: tD.total, at: Date.now() }; save(); return buildPlan(); }
   days.forEach(D => { const fz = ST.planFrz && ST.planFrz[D.d]; if (fz) { D.blocks = fz.blocks; D.total = fz.total; D.frozen = true; } });
   return { P, start, subs, days, habits };
 }
@@ -5743,7 +5928,7 @@ function renderPlan(root) {
     $$('[data-gun]', root).forEach(b => b.onclick = () => gmatMark(b.dataset.gun, false, b));
     // 今天每一項打勾：記下這項今天排的份量（報告、期末範圍、GMAT…），取消就扣回；全部勾完自動算今天完成
     const todayD = R.days.find(x => x.d === today);
-    const freeze = () => { ST.planFrz = ST.planFrz || {}; if (!ST.planFrz[today] && todayD) ST.planFrz[today] = { blocks: JSON.parse(JSON.stringify(todayD.blocks)), total: todayD.total }; };
+    const freeze = () => { ST.planFrz = ST.planFrz || {}; if (!ST.planFrz[today] && todayD) ST.planFrz[today] = { blocks: JSON.parse(JSON.stringify(todayD.blocks)), total: todayD.total, at: Date.now() }; };
     const allIk = () => { const B = (ST.planFrz && ST.planFrz[today] || todayD || {}).blocks || {}; return Object.entries(B).flatMap(([k, b]) => PLAN_HAB[k] ? [k + '§hab'] : (b.items || []).filter(planCheckable).map(t => k + '§' + t.key).concat(b.rev ? [k + '§rev'] : [])); };
     const progAdd = (key, m) => { const map = GMAT_UNITS.some(u => u[0] === key) ? P.gmatProg : (P.taskProg = P.taskProg || {}); map[key] = Math.max(0, (+map[key] || 0) + m); if (map[key] < 0.5) delete map[key]; };
     const setItem = (ik, on, el, quiet) => {
@@ -5780,6 +5965,8 @@ function renderPlan(root) {
     const started = (ST.planChk && ST.planChk[t]) || (ST.planDone && ST.planDone[t]) || (fz && Object.values(fz.blocks).some(b => (b.items || []).some(x => x.kind === 'c' && ST.done[x.id])));
     if (fz && !started) delete ST.planFrz[t];
     redraw();
+    // 重排過的今天要蓋過其他裝置更早固定的版本（同步時比 re）
+    if (fz && !started && ST.planFrz && ST.planFrz[t]) { ST.planFrz[t].re = Date.now(); save(); }
   };
   // GMAT 單元讀完／取消：+10 XP，取消就退回（可能降級）；記下哪天讀完，當天可以在進度表上取消
   const gmatMark = (g, on, el) => {
@@ -6657,6 +6844,11 @@ const SYNC = (() => {
       if (k === 'ux') { // 單元點數：每個單元取兩台中較高的
         const o = {}; for (const src of [a.ux || {}, b.ux || {}]) for (const [sk, us] of Object.entries(src)) { o[sk] = o[sk] || {}; for (const [u, n] of Object.entries(us)) o[sk][u] = Math.max(o[sk][u] || 0, n); }
         out.ux = o; continue;
+      }
+      if (k === 'planFrz') { // 每天的進度表：逐日合併，同一天保留最早固定的（改設定重排過的 re 較新者優先），不會因為另一台較新就整個被蓋掉
+        const o = {}, rank = x => [x.re || 0, -(x.at || Infinity)];
+        for (const src of [od.planFrz || {}, nw.planFrz || {}]) for (const [d, x] of Object.entries(src)) { if (!x) continue; const y = o[d]; if (!y) { o[d] = x; continue; } const [r1, a1] = rank(x), [r2, a2] = rank(y); if (r1 > r2 || (r1 === r2 && a1 >= a2)) o[d] = x; }
+        out.planFrz = o; continue;
       }
       if (k === 'bm') {
         const o = {}; for (const src of [a.bm || {}, b.bm || {}]) for (const [cid, d] of Object.entries(src)) { if (ts(d) <= D('bm|' + cid, 'bm')) continue; if (!o[cid] || ts(d) > ts(o[cid])) o[cid] = d; }
