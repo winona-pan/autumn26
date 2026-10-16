@@ -175,6 +175,8 @@ mark.hl{color:inherit;border-radius:3px;padding:0 1px;cursor:pointer;-webkit-box
 .ntrich ul{list-style:disc} .ntrich ul ul,.ntrich ol ul{list-style:circle} .ntrich ul ul ul,.ntrich ol ul ul,.ntrich ul ol ul{list-style:square} .ntrich ol{list-style:decimal}
 .ntrich li>p{margin:0} .ntrich li>p+p{margin-top:.3em} .ntrich li>ul,.ntrich li>ol{margin:.15em 0 .25em}
 .card.nmode .ntbox :is(li,p,td,dd,dt,h4){cursor:auto;background:none}
+.prob .psrc{display:flow-root} .prob.nmode :is(.qtext p,.steps li,.ans p){cursor:copy;border-radius:6px;transition:background .15s} .prob.nmode :is(.qtext p,.steps li,.ans p):hover{background:color-mix(in srgb,var(--deriv) 10%,transparent)} .prob.nmode .ntbox :is(li,p){cursor:auto;background:none}
+.prob.nmode .qtext::before{content:'點題目、解題步驟或答案的任何一段，就能在它下面寫筆記（先按「看完整解答」才看得到步驟）';display:block;font-size:12.5px;font-weight:700;color:var(--deriv);margin-bottom:8px} .prob .ntmode[aria-pressed="true"]{background:var(--deriv);border-color:var(--deriv)}
 .ntrich h4,.ntrich h5,.ntrich h6{margin:.6em 0 .25em;font-size:1.02em} .ntrich h4{font-size:1.08em}
 .ntrich table{border-collapse:collapse;margin:.5em 0;font-size:.95em;display:block;overflow-x:auto;max-width:100%} .ntrich th,.ntrich td{border:1px solid var(--hair);padding:4px 8px;text-align:left;vertical-align:top} .ntrich th{background:var(--soft)}
 .ntrich code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9em;background:var(--soft);padding:1px 4px;border-radius:4px}
@@ -367,9 +369,9 @@ body.notips .tipbox{display:none} body.calm *{animation:none!important;transitio
 @media (max-width:760px){.savebar{position:static}}
 .bmbtn{font:inherit;font-size:12.5px;font-weight:700;color:var(--ink);background:var(--panel);border:2px solid var(--line);border-radius:999px;padding:2px 10px;cursor:pointer}
 .bmbtn.on{background:var(--bad);border-color:var(--bad);color:#fff}
-.card .body .bmk{position:relative;box-shadow:inset 4px 0 0 var(--bad);background:color-mix(in srgb,var(--bad) 7%,transparent);border-radius:4px}
-.card .body .bmk::before{content:'讀到這裡';display:inline-block;margin:0 6px 2px 0;padding:0 7px;border-radius:999px;background:var(--bad);color:#fff;font-size:11.5px;font-weight:800;vertical-align:1px;line-height:1.7}
-.card.bmkcard>header::after{content:'讀到這裡';display:inline-block;margin-left:8px;padding:0 8px;border-radius:999px;background:var(--bad);color:#fff;font-size:11.5px;font-weight:800;line-height:1.8}
+.card .body .bmk,.prob .bmk{position:relative;box-shadow:inset 4px 0 0 var(--bad);background:color-mix(in srgb,var(--bad) 7%,transparent);border-radius:4px}
+.card .body .bmk::before,.prob .bmk::before{content:'讀到這裡';display:inline-block;margin:0 6px 2px 0;padding:0 7px;border-radius:999px;background:var(--bad);color:#fff;font-size:11.5px;font-weight:800;vertical-align:1px;line-height:1.7}
+.card.bmkcard>header::after,.prob.bmkcard>.psrc::after{content:'讀到這裡';display:inline-block;margin-left:8px;padding:0 8px;border-radius:999px;background:var(--bad);color:#fff;font-size:11.5px;font-weight:800;line-height:1.8}
 .bmpill{position:fixed;right:max(12px,env(safe-area-inset-right,0px));bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:65;display:flex;flex-direction:column;align-items:flex-end;gap:8px}
 .bmpill[hidden]{display:none}
 .bmopen{font:inherit;font-weight:800;font-size:13.5px;color:#fff;background:var(--bad);border:2px solid var(--line);border-radius:999px;padding:6px 14px;box-shadow:3px 3px 0 var(--line);cursor:pointer}

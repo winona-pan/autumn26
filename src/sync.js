@@ -91,6 +91,7 @@ const SYNC = (() => {
     if (before && vis(before) === vis(data)) return;
     const pane = document.getElementById('pane');
     if (CUR[1] === 'learn' && pane) NOTES.refresh(pane);
+    else if (CUR[1] === 'prob' && pane && pane.querySelector('.plist')) NOTES.refresh(pane.querySelector('.plist'));
     else if (CUR[1] === 'notes' && pane && !pane.querySelector('#ntq:focus')) { const y = scrollY; NOTES.page(CUR[0], pane); window.scrollTo(0, y); }
   }
 

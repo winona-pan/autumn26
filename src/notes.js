@@ -1,9 +1,10 @@
-// ===== 筆記與螢光筆：完整重點裡的每個列點都能寫筆記、選取文字畫重點 =====
+// ===== 筆記與螢光筆：完整重點裡的每個列點都能寫筆記、選取文字畫重點；衍金課本習題的題目、解題步驟、答案也可以 =====
 // 存在 ST.hl（重點）與 ST.nt（筆記），設定頁的備份碼會一起帶走。
 // 每個列點用「卡片 id + 列點文字的雜湊」當鑰匙；內容改版找不到原位置時，用存下來的原文片段重新定位。
 const NOTES = (() => {
   const COLORS = [['y', '黃'], ['g', '綠'], ['p', '粉'], ['b', '藍']];
   const BLK = 'li, p, td, th, dd, dt, h4, .ez';
+  const CARD = '.card, .prob'; // 知識卡＋習題
   // 完整重點以外也能畫重點、寫筆記：卡片標題、白話、生活比喻、Exam English、名詞表
   const EXTRA = 'header h4, .duo p, .exam p, dl.terms dt, dl.terms dd';
   const HL = () => (ST.hl = ST.hl || {});
@@ -22,7 +23,7 @@ const NOTES = (() => {
   const posIn = (block, node, off) => { const r = document.createRange(); r.setStart(block, 0); r.setEnd(node, off); const f = r.cloneContents(); f.querySelectorAll('.ntbox').forEach(x => x.remove()); return f.textContent.length; };
 
   // ---- 卡片裡的列點與鑰匙 ----
-  const blocksOf = card => { const b = card.querySelector('.body'); return (b ? [...b.querySelectorAll(BLK)] : []).concat([...card.querySelectorAll(EXTRA)]).filter(x => !x.closest('.ntbox')); };
+  const blocksOf = card => { const b = card.querySelector('.body') || (card.matches('.prob') ? card : null); return (b ? [...b.querySelectorAll(BLK)] : []).concat([...card.querySelectorAll(EXTRA)]).filter(x => !x.closest('.ntbox')); };
   const keysOf = card => { const seen = {}; const m = new Map(); blocksOf(card).forEach(b => { const h = hash(norm(textOf(b))); seen[h] = (seen[h] || 0) + 1; m.set(b, h + (seen[h] > 1 ? '.' + seen[h] : '')); }); return m; };
   const cardId = card => card.id.replace(/^c-/, '');
   const blockByKey = (card, k) => { for (const [b, kk] of keysOf(card)) if (kk === k) return b; return null; };
@@ -242,9 +243,12 @@ const NOTES = (() => {
 
   // ---- 書籤：「讀到這裡」可以插在某個列點或整張卡；每張卡最多一個 ----
   let SUBJ = '';
+  const onPage = () => { const pane = $('#pane'); return !!(pane && pane.querySelector('.learn, .plist')); };
+  // 習題被單元篩選藏起來時，先清掉篩選才找得到
+  function showProb(id) { const p = DATA.deriv.problems.find(x => 'prob-' + x.id === id); if (p && ST.mu && (ST.mu.deriv || []).length && !ST.mu.deriv.includes(p.u)) { ST.mu.deriv = []; save(); } }
   function setBm(card, block) {
     const id = cardId(card), keys = keysOf(card), k = block ? keys.get(block) || '' : '';
-    BM()[id] = { s: SUBJ, k, q: block ? norm(textOf(block)).slice(0, 80) : '', t: card.querySelector('header h4').textContent.trim(), at: Date.now() };
+    BM()[id] = { s: SUBJ, k, q: block ? norm(textOf(block)).slice(0, 80) : '', t: card.dataset.t || card.querySelector('header h4').textContent.trim(), tab: card.matches('.prob') ? 'prob' : 'learn', at: Date.now() };
     save(); showBm(card); bmPill(); FUN.beep('ok'); FUN.toast && FUN.toast('已插書籤：讀到這裡', 'happy');
   }
   function rmBm(id) { if (BM()[id]) { tomb('bm|' + id); delete BM()[id]; save(); } const card = $('#c-' + id); if (card) showBm(card); bmPill(); }
@@ -259,15 +263,16 @@ const NOTES = (() => {
   }
   function jumpBm(id) {
     const d = BM()[id]; if (!d) return;
-    const go2 = () => { const card = $('#c-' + id); if (!card) return; const det = card.querySelector('details'); if (det) det.open = true; const el = card.querySelector('.bmk') || card; window.scrollTo(0, Math.max(0, scrollY + el.getBoundingClientRect().top - innerHeight / 3)); el.classList.add('flash'); setTimeout(() => el.classList.remove('flash'), 1600); };
-    if (CUR[0] === d.s && CUR[1] === 'learn' && $('#c-' + id)) go2(); else { go(d.s, 'learn', { top: 1 }); setTimeout(go2, 120); }
+    const tab = d.tab || 'learn';
+    const go2 = () => { const card = $('#c-' + id); if (!card) return; const det = card.querySelector('details'); if (det) det.open = true; const rv = card.querySelector('.reveal'); if (rv) rv.click(); const el = card.querySelector('.bmk') || card; window.scrollTo(0, Math.max(0, scrollY + el.getBoundingClientRect().top - innerHeight / 3)); el.classList.add('flash'); setTimeout(() => el.classList.remove('flash'), 1600); };
+    if (CUR[0] === d.s && CUR[1] === tab && $('#c-' + id)) go2(); else { if (tab === 'prob') showProb(id); go(d.s, tab, { top: 1 }); setTimeout(go2, 120); }
   }
   const ago = t => { const m = Math.round((Date.now() - t) / 60000); return m < 1 ? '剛剛' : m < 60 ? m + ' 分鐘前' : m < 1440 ? Math.round(m / 60) + ' 小時前' : Math.round(m / 1440) + ' 天前'; };
   const bmsOf = s => Object.entries(BM()).filter(([id, d]) => d.s === s).sort((a, b) => b[1].at - a[1].at);
   // 知識點頁右下角的「書籤」按鈕與清單
   function bmPill() {
     let p = $('#bmpill'); const pane = $('#pane');
-    if (!pane || !pane.querySelector('.learn')) { if (p) p.hidden = true; return; }
+    if (!onPage()) { if (p) p.hidden = true; return; }
     const list = bmsOf(SUBJ);
     if (!p) { p = document.createElement('div'); p.id = 'bmpill'; p.className = 'bmpill'; document.body.appendChild(p);
       p.addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return;
@@ -287,7 +292,7 @@ const NOTES = (() => {
     card.dataset.search = base + ' ' + Object.values(NT()[id] || {}).map(d => d.t.toLowerCase()).join(' ');
   }
   function decorate(card) {
-    const hd = card.querySelector('header'); if (!hd || hd.querySelector('.ntmode')) return;
+    const hd = card.querySelector('header') || card.querySelector('.psrc'); if (!hd || hd.querySelector('.ntmode')) return;
     hd.insertAdjacentHTML('beforeend', '<span class="ntside"><span class="ntcnt"></span><button type="button" class="bmbtn" aria-pressed="false" title="在這張卡插書籤；想插在某一點，選取那段文字後按工具列的「書籤」">書籤</button><button type="button" class="ntmode" aria-pressed="false" title="打開後，點任何一個列點就能寫筆記">＋筆記</button></span>');
   }
 
@@ -302,7 +307,7 @@ const NOTES = (() => {
     bar.addEventListener('click', e => { const b = e.target.closest('button'); if (!b || !cur) return; b.dataset.c ? color(b.dataset.c) : b.dataset.a === 'note' ? noteFromBar() : b.dataset.a === 'bm' ? bmFromBar() : clear(); });
     document.body.appendChild(bar); return bar;
   }
-  const hide = () => { if (bar) bar.hidden = true; cur = null; const p = $('#bmpill'); if (p && !($('#pane') && $('#pane').querySelector('.learn'))) p.hidden = true; };
+  const hide = () => { if (bar) bar.hidden = true; cur = null; const p = $('#bmpill'); if (p && !onPage()) p.hidden = true; };
   function place(rect) {
     ensureBar(); bar.hidden = false;
     const w = bar.offsetWidth, x = Math.min(Math.max(8, rect.left + rect.width / 2 - w / 2 + scrollX), scrollX + document.documentElement.clientWidth - w - 8);
@@ -317,7 +322,7 @@ const NOTES = (() => {
   function onSelect(root) {
     const sel = getSelection(); if (!sel.rangeCount || sel.isCollapsed) { if (cur && cur.sel) hide(); return; }
     const range = sel.getRangeAt(0); const anc = range.commonAncestorContainer; const el = anc.nodeType === 1 ? anc : anc.parentElement;
-    const card = el && el.closest('.card');
+    const card = el && el.closest(CARD);
     if (!card || !root.contains(card) || !blocksOf(card).some(b => range.intersectsNode(b))) { hide(); return; }
     if (el.closest('.ntbox, textarea, [contenteditable]')) return;
     const ps = pieces(card, range); if (!ps.length) { hide(); return; }
@@ -345,16 +350,16 @@ const NOTES = (() => {
   let globalBound = false;
   function mount(key, root) {
     hide(); SUBJ = key;
-    $$('.card', root).forEach(card => { decorate(card); paint(card); showNotes(card); badge(card); showBm(card); });
+    $$(CARD, root).forEach(card => { decorate(card); paint(card); showNotes(card); badge(card); showBm(card); });
     bmPill();
     let t; const check = () => { clearTimeout(t); t = setTimeout(() => onSelect(root), 180); };
     root.addEventListener('mouseup', check); root.addEventListener('keyup', check); root.addEventListener('touchend', check);
     if (!globalBound) { globalBound = true;
       // 手機長按選取時不會觸發 mouseup，改聽 selectionchange
-      let t2; document.addEventListener('selectionchange', () => { clearTimeout(t2); t2 = setTimeout(() => { const pane = $('#pane'); if (!pane || !pane.querySelector('.learn')) return; if (getSelection().isCollapsed) { if (cur && cur.sel) hide(); } else onSelect(pane); }, 350); });
+      let t2; document.addEventListener('selectionchange', () => { clearTimeout(t2); t2 = setTimeout(() => { const pane = $('#pane'); if (!onPage()) return; if (getSelection().isCollapsed) { if (cur && cur.sel) hide(); } else onSelect(pane); }, 350); });
       window.addEventListener('resize', hide); }
     root.addEventListener('click', e => {
-      const card = e.target.closest('.card'); if (!card) return;
+      const card = e.target.closest(CARD); if (!card) return;
       const bb = e.target.closest('.bmbtn'); if (bb) { BM()[cardId(card)] ? rmBm(cardId(card)) : setBm(card, null); return; }
       const tg = e.target.closest('.ntmode'); if (tg) { const on = card.classList.toggle('nmode'); tg.setAttribute('aria-pressed', on); tg.textContent = on ? '完成筆記' : '＋筆記'; if (on) { const d = card.querySelector('details'); if (d) d.open = true; } return; }
       const nb = e.target.closest('[data-nt]');
@@ -376,7 +381,7 @@ const NOTES = (() => {
   // ---- 我的筆記頁 ----
   function page(k, root) {
     hide();
-    const cards = subjCards(DATA[k]);
+    const cards = subjCards(DATA[k]).concat(k === 'deriv' ? DATA.deriv.problems.map(p => ({ id: 'prob-' + p.id, t: '習題 ' + p.src, prob: 1 })) : []);
     const view = ST.ntview = ST.ntview || { f: 'all', c: '' };
     const draw = () => {
       const q = ($('#ntq', root) || {}).value ? $('#ntq', root).value.trim().toLowerCase() : '';
@@ -388,7 +393,7 @@ const NOTES = (() => {
         if (q) { const inT = c.t.toLowerCase().includes(q); if (!inT) { hs = hs.filter(h => h.x.toLowerCase().includes(q)); ns = ns.filter(d => (d.t + ' ' + d.q).toLowerCase().includes(q)); } }
         nh += hs.length; nn += ns.length;
         if (!hs.length && !ns.length) return '';
-        return `<article class="ntcard"><header><b>${c.t}</b><button type="button" class="ntbtn" data-jump="${c.id}">到卡片</button></header>
+        return `<article class="ntcard"><header><b>${c.t}</b><button type="button" class="ntbtn" data-jump="${c.id}"${c.prob ? ' data-prob="1"' : ''}>${c.prob ? '到習題' : '到卡片'}</button></header>
           ${hs.length ? `<ul class="nthl">${hs.map(h => `<li><mark class="hl hl-${h.c}">${escH(h.x)}</mark>${h.lost ? '<span class="ntlost">原文已更新</span>' : ''}</li>`).join('')}</ul>` : ''}
           ${ns.map(d => `<div class="ntitem"><p class="ntq">「${escH(d.q)}${d.q.length >= 80 ? '⋯' : ''}」${d.lost ? '<span class="ntlost">原文已更新</span>' : ''}</p><div class="ntt ntrich">${d.h || RICH.fromText(d.t)}</div></div>`).join('')}</article>`;
       }).join('');
@@ -398,11 +403,11 @@ const NOTES = (() => {
       $$('[data-bmj]', root).forEach(b => b.onclick = () => jumpBm(b.dataset.bmj));
       IMGS.hydrate(root);
       $('.ntsum', root).textContent = `重點 ${nh}・筆記 ${nn}・書籤 ${bms.length}`;
-      $$('[data-jump]', root).forEach(b => b.onclick = () => jumpCard(k, b.dataset.jump));
+      $$('[data-jump]', root).forEach(b => b.onclick = () => b.dataset.prob ? jumpProb(b.dataset.jump) : jumpCard(k, b.dataset.jump));
       $$('[data-f]', root).forEach(b => b.classList.toggle('on', b.dataset.f === view.f));
       $$('[data-fc]', root).forEach(b => b.classList.toggle('on', b.dataset.fc === view.c));
     };
-    root.innerHTML = `<div class="ntpage"><p class="sm-p">在「知識點」的卡片上<b>選取文字</b>就能畫重點（標題、白話、生活比喻、完整重點、名詞表都可以）；按卡片右上角的<b>＋筆記</b>，再點任何一段就能在它下面寫筆記。全部都整理在這裡。</p>
+    root.innerHTML = `<div class="ntpage"><p class="sm-p">在「知識點」的卡片${k === 'deriv' ? '和「課本習題」' : ''}上<b>選取文字</b>就能畫重點（標題、白話、生活比喻、完整重點、名詞表都可以）；按卡片右上角的<b>＋筆記</b>，再點任何一段就能在它下面寫筆記。全部都整理在這裡。</p>
       <div class="ntbar"><input type="search" id="ntq" placeholder="搜尋重點或筆記" aria-label="搜尋重點或筆記">
       <div class="uchips"><button type="button" class="uchip" data-f="all">全部</button><button type="button" class="uchip" data-f="hl">只看重點</button><button type="button" class="uchip" data-f="note">只看筆記</button></div>
       <div class="uchips">${COLORS.map(c => `<button type="button" class="uchip hlchip" data-fc="${c[0]}"><span class="hlc hl-${c[0]}"></span>${c[1]}</button>`).join('')}</div>
@@ -413,9 +418,15 @@ const NOTES = (() => {
     draw();
   }
 
+  // 到習題頁並打開完整解答（筆記可能寫在解題步驟上）
+  function jumpProb(id) {
+    showProb(id); go('deriv', 'prob', { top: 1 });
+    setTimeout(() => { const el = $('#c-' + id); if (!el) return; const rv = el.querySelector('.reveal'); if (rv) rv.click(); window.scrollTo(0, Math.max(0, scrollY + el.getBoundingClientRect().top - topGap())); el.classList.add('flash'); setTimeout(() => el.classList.remove('flash'), 1600); }, 120);
+  }
+
   // 同步拿到新資料時就地更新（不重畫頁面）：正在編輯的筆記框不動
   function refresh(root) {
-    $$('.card', root).forEach(card => {
+    $$(CARD, root).forEach(card => {
       card.querySelectorAll('.ntbox').forEach(b => { if (!b.querySelector('.nted')) b.remove(); });
       paint(card); showNotes(card); badge(card); showBm(card);
       const cb = card.querySelector('[data-done]'); if (cb) { const on = !!ST.done[cb.dataset.done]; cb.checked = on; card.classList.toggle('done', on); }
