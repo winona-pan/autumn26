@@ -126,7 +126,7 @@ DATA.deriv.gens = [
         ans: conv, tol: 0.00015, unit: 'USD/CHF',
         sol: [`1 / ${fwd.toFixed(4)} = <b>${conv.toFixed(4)}</b>`, `${conv.toFixed(4)} ${sellFwd ? '&gt;' : '&lt;'} ${fut} → 瑞郎在${sellFwd ? '遠期' : '期貨'}市場較值錢 → 想賣選<b>${sellFwd ? '遠期' : '期貨'}</b>`] };
   } },
-  { id: 'g5f', t: '遠期價格（無收益／固定收益／收益率）', base: '5.3／5.4／5.30', make() {
+  { id: 'g5f', t: '遠期價格（無收益／固定收益／收益率）', base: '5.2／5.3／5.30', make() {
       const kind = pick(['none', 'inc', 'yld']); const S = R(20, 120, 1); const r = R(0.02, 0.1, 0.005); const m = pick([3, 4, 6, 9, 12]); const T = m / 12;
       if (kind === 'none') { const F = S * Math.exp(r * T);
         return { qe: `A ${m}-month forward contract is entered into on a non-dividend-paying stock when the stock price is $${S} and the risk-free rate is ${f2(r * 100, 1)}% per annum with continuous compounding. What is the forward price?`, q: `不付息股票現價 $${S}，無風險利率 ${f2(r * 100, 1)}%（連續複利），${m} 個月期遠期價格？`,
@@ -144,14 +144,14 @@ DATA.deriv.gens = [
       return { qe: `A non-dividend-paying stock is $${S}; the ${m}-month risk-free rate is ${f2(r * 100, 1)}% (continuous compounding). The ${m}-month forward price is $${Fq}. What riskless profit per share can be locked in at maturity?`, q: `不付息股票 $${S}，${m} 個月無風險利率 ${f2(r * 100, 1)}%（連續複利），${m} 個月遠期報價 $${Fq}。每股可在到期時鎖住多少無風險利潤？（並想想要怎麼做）`,
         ans: prof, tol: 0.006, unit: '$', sol: [`理論 F<sub>0</sub> = ${S}e<sup>${r}×${m}/12</sup> = ${f2(Fth, 4)}`, hi ? `報價 ${Fq} &gt; 理論 → 遠期太貴：借 ${S} 買股票、賣遠期` : `報價 ${Fq} &lt; 理論 → 遠期太便宜：放空股票存無風險、買遠期`, `利潤 = |${Fq} − ${f2(Fth, 4)}| = <b>${f2(prof)}</b>`] };
   } },
-  { id: 'g5v', t: '遠期合約的價值（之後某天）', base: '5.9／5.30', make() {
+  { id: 'g5v', t: '遠期合約的價值（之後某天）', base: '5.7／5.30', make() {
       const S0 = R(20, 100, 1); const r = R(0.03, 0.1, 0.01); const T = pick([0.5, 1]); const t = T === 1 ? pick([0.25, 0.5, 0.75]) : 0.25; const K = S0 * Math.exp(r * T);
       const St = +(S0 * R(0.85, 1.15, 0.01)).toFixed(0); const side = pick(['long', 'short']); const v0 = St - K * Math.exp(-r * (T - t)); const v = side === 'long' ? v0 : -v0;
       const mo = x => Math.round(x * 12);
       return { qe: `A ${mo(T)}-month ${side} forward on a non-dividend-paying stock was entered into when the stock price was $${S0} and r = ${f2(r * 100)}% (continuous compounding). ${mo(t)} months later the stock price is $${St} and r is unchanged. What is the value of the ${side} position?`, q: `當初股價 $${S0}、r = ${f2(r * 100)}%（連續複利）時簽訂 ${mo(T)} 個月期不付息股票遠期${side === 'long' ? '多頭' : '空頭'}。${mo(t)} 個月後股價 $${St}，利率不變。這個${side === 'long' ? '多頭' : '空頭'}部位現在值多少？`,
         ans: v, tol: 0.006, unit: '$', sol: [`K = F<sub>0</sub> = ${S0}e<sup>${r}×${T}</sup> = ${f2(K, 4)}`, `剩 T − t = ${f2(T - t)} 年`, `long 價值 = S<sub>t</sub> − Ke<sup>−r(T−t)</sup> = ${St} − ${f2(K, 4)}e<sup>−${r}×${f2(T - t)}</sup> = ${f2(v0, 4)}`, side === 'short' ? `空頭 = 多頭的相反數 = <b>${f2(v)}</b>` : `<b>${f2(v)}</b>`] };
   } },
-  { id: 'g5x', t: '外匯遠期與利率平價', base: '5.12', make() {
+  { id: 'g5x', t: '外匯遠期與利率平價', base: '5.12／5.22', make() {
       const S = R(0.6, 1.4, 0.01); const r = R(0.005, 0.06, 0.005); let rf = R(0.005, 0.06, 0.005); if (rf === r) rf = +(rf + 0.01).toFixed(3); const m = pick([2, 3, 6, 12, 24]); const T = m / 12; const F = S * Math.exp((r - rf) * T);
       return { qe: `The spot exchange rate is $${S.toFixed(2)} per unit of foreign currency. The domestic risk-free rate is ${f2(r * 100, 1)}% and the foreign risk-free rate is ${f2(rf * 100, 1)}% (continuous compounding). What is the ${m}-month forward rate (four decimals)?`, q: `外幣現貨 $${S.toFixed(2)}／1 外幣，本國利率 ${f2(r * 100, 1)}%、外國利率 ${f2(rf * 100, 1)}%（連續複利）。${m} 個月期遠期匯率？（四位小數）`,
         ans: F, tol: 0.00015, unit: '$/外幣', sol: [`F<sub>0</sub> = S<sub>0</sub>e<sup>(r−r<sub>f</sub>)T</sup> = ${S.toFixed(2)}e<sup>(${r}−${rf})×${m}/12</sup> = <b>${F.toFixed(4)}</b>`, r < rf ? '外國利率較高 → 遠期低於現貨' : '本國利率較高 → 遠期高於現貨'] };
