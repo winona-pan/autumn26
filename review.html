@@ -361,7 +361,7 @@ body.notips .tipbox{display:none} body.calm *{animation:none!important;transitio
  :root{--re:#a0612b} @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--re:#e3a66b}} :root[data-theme="dark"]{--re:#e3a66b}
 .pblk.re,.plrow.re{--acc:var(--re)} .plrow input#plreh{width:64px;border:2px solid var(--line);border-radius:8px;padding:2px 6px;background:var(--bg);color:var(--ink);font:inherit} .reunits{width:100%} .reunits summary{font-size:14px} .reunits label{display:flex!important;gap:6px;align-items:center;font-size:14px;margin:3px 0} .refcfa{font-size:12px;color:var(--cfa)!important} .reunits .pill{white-space:nowrap;flex:none}
  :root{--gmat:#0b6e99;--fr:#b83280;--ielts:#5d7f17} @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--gmat:#5cc3ee;--fr:#f07ac0;--ielts:#a8d45a}} :root[data-theme="dark"]{--gmat:#5cc3ee;--fr:#f07ac0;--ielts:#a8d45a}
-.pblk.gmat,.plrow.gmat{--acc:var(--gmat)} .pblk.fr,.plrow.fr{--acc:var(--fr)} .pblk.ielts,.plrow.ielts{--acc:var(--ielts)} .plsum td small{display:block;font-size:12px;color:var(--mute)} .plsum td:nth-child(3),.plsum td:nth-child(4){white-space:nowrap} .plsum .pill{white-space:nowrap} .card header h4{min-width:0;max-width:100%} .card :is(header h4,.duo p,.exam p,dl.terms :is(dt,dd))>.ntbox{max-width:100%;box-sizing:border-box} .terms>:is(dt,dd){min-width:0} .terms>:is(dt,dd):has(>.ntbox){grid-column:1/-1} @media (pointer:coarse){input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=file]),select,textarea,.nted{font-size:16px}} .ntrich :is(td,th){min-width:3.5em} .linkish.pdn{opacity:.55;text-decoration:line-through} .pit{display:flex;gap:6px;align-items:flex-start;margin:3px 0}.pit.ok>span{opacity:.55;text-decoration:line-through}.pit{cursor:pointer;padding:3px 0}.ick{flex:none;width:22px;height:22px;margin-top:1px;accent-color:var(--acc,var(--ink))} .pblk.invHw,.plrow.invHw{--acc:var(--invest)} .pblk.mgmtHw,.plrow.mgmtHw{--acc:var(--mgmt)} .plnum{width:70px;border:2px solid var(--line);border-radius:8px;padding:2px 6px;background:var(--bg);color:var(--ink);font:inherit}
+.pblk.gmat,.plrow.gmat{--acc:var(--gmat)} .gnext .gnxbtn{padding:2px 12px;font-size:13px;margin:4px 0 2px} .pblk.fr,.plrow.fr{--acc:var(--fr)} .pblk.ielts,.plrow.ielts{--acc:var(--ielts)} .plsum td small{display:block;font-size:12px;color:var(--mute)} .plsum td:nth-child(3),.plsum td:nth-child(4){white-space:nowrap} .plsum .pill{white-space:nowrap} .card header h4{min-width:0;max-width:100%} .card :is(header h4,.duo p,.exam p,dl.terms :is(dt,dd))>.ntbox{max-width:100%;box-sizing:border-box} .terms>:is(dt,dd){min-width:0} .terms>:is(dt,dd):has(>.ntbox){grid-column:1/-1} @media (pointer:coarse){input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=file]),select,textarea,.nted{font-size:16px}} .ntrich :is(td,th){min-width:3.5em} .linkish.pdn{opacity:.55;text-decoration:line-through} .pit{display:flex;gap:6px;align-items:flex-start;margin:3px 0}.pit.ok>span{opacity:.55;text-decoration:line-through}.pit{cursor:pointer;padding:3px 0}.ick{flex:none;width:22px;height:22px;margin-top:1px;accent-color:var(--acc,var(--ink))} .pblk.invHw,.plrow.invHw{--acc:var(--invest)} .pblk.mgmtHw,.plrow.mgmtHw{--acc:var(--mgmt)} .plnum{width:70px;border:2px solid var(--line);border-radius:8px;padding:2px 6px;background:var(--bg);color:var(--ink);font:inherit}
 .hdays{display:flex;flex-wrap:wrap;gap:2px 6px} .hdays label{display:inline-flex;align-items:center;gap:3px;font-size:14px;padding:4px 0}.hdays input{width:18px;height:18px;margin:0}
  :root{--rp:#7a5c3e} @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--rp:#d6b48e}} :root[data-theme="dark"]{--rp:#d6b48e}
 .pblk.rp,.plrow.rp{--acc:var(--rp)} .rpname{border:2px solid var(--line);border-radius:8px;padding:2px 8px;background:var(--bg);color:var(--ink);font:inherit;font-weight:700;width:150px} .plrow.rp input[type=date]{border:2px solid var(--line);border-radius:8px;padding:2px 6px;background:var(--bg);color:var(--ink);font:inherit}
@@ -5916,11 +5916,11 @@ function planBlockHTML(k, b, exam, d, chk) {
   const line = (ik, html) => chk ? `<label class="pit${chk[ik] ? ' ok' : ''}">${ck(ik)}<span>${html}</span></label>` : html;
   if (PLAN_HAB[k]) return `<div class="pblk ${k}"><div class="pbh"><b>${PLAN_HAB[k][0]}</b><span>${b.learn} 分鐘</span></div><p>${line(k + '§hab', k === 'ielts' ? IELTS_DAY[planPd(d).getDay()] : PLAN_HAB[k][1])}</p></div>`;
   const groups = []; (b.items || []).forEach(t => { const g = groups.find(x => x.sec === t.sec); g ? g.items.push(t) : groups.push({ sec: t.sec, items: [t] }); });
-  const item = (t, sep = '') => t.kind === 'g' ? `${t.t}${t.note || ''}${(x => x ? `<br><b class="gseg">▶ ${x}</b>` : '')(gmatSeg(t, b.rng && b.rng[t.gu]))} <button type="button" class="linkish" data-gu="${t.gu}">整個單元讀完了 ✓</button>`
+  const item = (t, sep = '') => t.kind === 'g' && ST.plan.gmatU[t.gu] ? `<s>${t.t}</s> <b class="gseg">✓ 整個單元讀完了</b>` : t.kind === 'g' ? `${t.t}${t.note || ''}${(x => x ? `<br><b class="gseg">▶ ${x}</b>` : '')(gmatSeg(t, b.rng && b.rng[t.gu]))} <button type="button" class="linkish" data-gu="${t.gu}">整個單元讀完了 ✓</button>`
     : t.kind === 'v' ? t.t + (t.note || '') + sep : t.kind === 'rec' ? `${t.t} <button type="button" class="linkish refcfa" data-pj="re|${t.id}|c|">看複習卡</button>${sep}`
     : `<button type="button" class="linkish${t.kind === 'c' && ST.done[t.id] ? ' pdn' : ''}" data-pj="${planBase(t.k)}|${t.id || ''}|${t.kind}|${t.tab || ''}">${t.kind === 'c' && ST.done[t.id] ? '✓ ' : ''}${t.t}${t.note ? '' : sep}</button>${t.note ? t.note + sep : ''}`;
   // 頓號跟前一項黏在一起，不會跑到下一行開頭
-  const list = items => items.map((t, i) => { const c = chk && planCheckable(t), nx = items[i + 1], sep = !c && nx && !(chk && planCheckable(nx)); return c ? line(k + '§' + t.key, item(t)) : item(t, sep ? '、' : ''); }).join('');
+  const list = items => items.map((t, i) => { const c = chk && planCheckable(t), nx = items[i + 1], sep = !c && nx && !(chk && planCheckable(nx)); return c ? (t.gu && ST.plan.gmatU[t.gu] ? `<label class="pit ok"><input type="checkbox" class="ick" checked disabled aria-label="這項完成"><span>${item(t)}</span></label>` : line(k + '§' + t.key, item(t))) : item(t, sep ? '、' : ''); }).join('');
   const rev = DATA[planBase(k)] ? `<button type="button" class="linkish" data-pj="${planBase(k)}||x|mcq">打怪模式＋錯題本</button>，再快速翻過所有卡片的「白話」${planBase(k) === 'deriv' ? '，整理 A4 小抄' : ''}` : k === 'gmat' ? '最後一份模考、看錯題本、確認考試流程和作息' : '重看各單元筆記和影片重點，整理考試範圍的公式與名詞';
   return `<div class="pblk ${planHue(k)}"><div class="pbh"><b>${PLAN_NAME[k]}${/F$/.test(k) ? '（期末範圍）' : /^rp/.test(k) ? '（報告）' : ''}</b><span>${planH(b.learn + b.rev)}</span></div>
     ${groups.map(g => `<p><span class="psec">${g.sec}</span>${list(g.items)}</p>`).join('')}
@@ -5958,6 +5958,20 @@ function renderPlan(root) {
   <section class="msbox"><h3>每日進度</h3><div id="pldays"></div></section>`;
 
   const gmatDoneToday = () => { const g = Object.keys(P.gmatU).filter(g => P.gmatU[g] === planToday()); return g.length ? `<div class="pblk gmat"><div class="pbh"><b>GMAT 今天讀完 ✓</b></div><p>${g.map(x => `${(u => u ? `${u[1]}｜${u[2]}` : x)(GMAT_UNITS.find(u => u[0] === x))} <button type="button" class="linkish" data-gun="${x}">取消（退回 10 XP）</button>`).join('、')}</p></div>` : ''; };
+  // GMAT 下一步：今天排到的 GMAT 都讀完了（或今天沒排 GMAT），就給下一段；讀完按「這段讀完了」→ 記進度、重排之後的日子、再給下一段
+  const gmatFam = () => (PLAN_FAM.find(x => x[0] === (P.fam.gmat || '普通')) || [0, 1])[1];
+  const gmatNext = todayD => {
+    const today = planToday(), fz = ST.planFrz && ST.planFrz[today], gb = ((fz || todayD || {}).blocks || {}).gmat, chk = ST.planChk && ST.planChk[today] || {};
+    if (!P.on.gmat || (gb && (gb.items || []).some(t => !P.gmatU[t.gu] && !chk['gmat§' + t.key]))) return '';
+    const ahead = (P.gmatAhead || {})[today] || [];
+    const t = planTasks('gmat', gmatFam())[0];
+    const done = ahead.length ? `<p class="sm-p">今天提前讀了：${ahead.map((a, i) => `${(u => u ? `${u[1]}｜${u[2]}` : a.gu)(GMAT_UNITS.find(u => u[0] === a.gu))} ${planH(a.m)} <button type="button" class="linkish" data-gnxu="${i}">取消</button>`).join('、')}</p>` : '';
+    if (!t) return done ? `<div class="pblk gmat"><div class="pbh"><b>GMAT 提前讀</b></div>${done}</div>` : '';
+    let m = Math.min(t.min, Math.max(30, Math.round(gb ? gb.learn : 60))); const last = t.min - m < 30; if (last) m = t.min;
+    const seg = gmatSeg(t, [t.off, t.off + m]).replace(/^今天/, '');
+    return `<div class="pblk gmat gnext"><div class="pbh"><b>GMAT 下一步（${gb ? '今天的讀完了，' : ''}想多讀就讀這段）</b><span>${planH(m)}</span></div>
+      <p>${t.t}${t.note || ''}${seg ? `<br><b class="gseg">▶ ${seg}</b>` : ''}<br>${last ? '' : `<button type="button" class="btn ghost gnxbtn" data-gnx="${t.gu}" data-gm="${m}">這段讀完了 ✓</button> `}<button type="button" class="linkish" data-gu="${t.gu}">整個單元讀完了 ✓</button></p>${done}</div>`;
+  };
   const draw = () => {
     const R = buildPlan(), today = planToday();
     PLAN_K.concat('gmat').forEach(k => { const ss = R.subs.filter(x => planBase(x.k) === k), c = $(`[data-need="${k}"]`, root); if (c) c.textContent = ss.length ? planH(ss.reduce((a, s) => a + s.need + s.rev, 0)) : '—'; });
@@ -5979,7 +5993,7 @@ function renderPlan(root) {
       const ks = Object.keys(D.blocks), done = ST.planDone && ST.planDone[D.d], chk = D.d === today ? (ST.planChk && ST.planChk[today]) || {} : null;
       const inner = ks.map(k => planBlockHTML(k, D.blocks[k], R.subs.find(s => s.k === k && D.blocks[k].rev) ? R.subs.find(s => s.k === k).exam : '', D.d, chk)).join('');
       html += `<div class="pday${D.d === today ? ' today' : ''}${done ? ' done' : ''}" id="pd-${D.d}"><div class="pdh"><b>${planMD(D.d)}${D.d === today ? ' · 今天' : ''}</b><span class="sm-p">${P.off.includes(D.d) ? '不讀書' : D.frozen && done ? '今天的進度完成 ✓' : ks.length ? planH(D.total) : '休息'}</span>${ks.length ? `<label class="chk"><input type="checkbox" data-pdone="${D.d}"${done ? ' checked' : ''}> 完成</label>` : ''}</div>
-        ${inner}${D.d === today ? gmatDoneToday() : ''}</div>`;
+        ${inner}${D.d === today ? gmatDoneToday() + gmatNext(D) : ''}</div>`;
       const nd = new Date(d); nd.setDate(d.getDate() + 1); const ns = planPs(nd);
       if (exams[ns]) html += `<div class="pexam"><b>${planMD(ns)}</b> ${exams[ns].map(n => `<span class="pill bad">${n}</span>`).join(' ')}</div>`;
     });
@@ -5987,10 +6001,12 @@ function renderPlan(root) {
     $$('[data-pj]', root).forEach(b => b.onclick = () => planJump(b.dataset.pj));
     $$('[data-gu]', root).forEach(b => b.onclick = () => gmatMark(b.dataset.gu, true, b));
     $$('[data-gun]', root).forEach(b => b.onclick = () => gmatMark(b.dataset.gun, false, b));
+    $$('[data-gnx]', root).forEach(b => b.onclick = () => { const g = b.dataset.gnx, m = +b.dataset.gm; P.gmatAhead = { [today]: ((P.gmatAhead || {})[today] || []).concat({ gu: g, m }) }; P.gmatProg[g] = (+P.gmatProg[g] || 0) + m; FUN.xp(5, b); FUN.beep('ok'); redraw(); });
+    $$('[data-gnxu]', root).forEach(b => b.onclick = () => { const a = P.gmatAhead[today].splice(+b.dataset.gnxu, 1)[0]; if (a) { P.gmatProg[a.gu] = Math.max(0, (+P.gmatProg[a.gu] || 0) - a.m); if (P.gmatProg[a.gu] < 0.5) delete P.gmatProg[a.gu]; FUN.xp(-5, b); } redraw(); });
     // 今天每一項打勾：記下這項今天排的份量（報告、期末範圍、GMAT…），取消就扣回；全部勾完自動算今天完成
     const todayD = R.days.find(x => x.d === today);
     const freeze = () => { ST.planFrz = ST.planFrz || {}; if (!ST.planFrz[today] && todayD) ST.planFrz[today] = { blocks: JSON.parse(JSON.stringify(todayD.blocks)), total: todayD.total, at: Date.now() }; };
-    const allIk = () => { const B = (ST.planFrz && ST.planFrz[today] || todayD || {}).blocks || {}; return Object.entries(B).flatMap(([k, b]) => PLAN_HAB[k] ? [k + '§hab'] : (b.items || []).filter(planCheckable).map(t => k + '§' + t.key).concat(b.rev ? [k + '§rev'] : [])); };
+    const allIk = () => { const B = (ST.planFrz && ST.planFrz[today] || todayD || {}).blocks || {}; return Object.entries(B).flatMap(([k, b]) => PLAN_HAB[k] ? [k + '§hab'] : (b.items || []).filter(t => planCheckable(t) && !(t.gu && P.gmatU[t.gu])).map(t => k + '§' + t.key).concat(b.rev ? [k + '§rev'] : [])); };
     const progAdd = (key, m) => { const map = GMAT_UNITS.some(u => u[0] === key) ? P.gmatProg : (P.taskProg = P.taskProg || {}); map[key] = Math.max(0, (+map[key] || 0) + m); if (map[key] < 0.5) delete map[key]; };
     const setItem = (ik, on, el, quiet) => {
       ST.planChk = ST.planChk || {}; const c = ST.planChk[today] = ST.planChk[today] || {};
