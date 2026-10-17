@@ -339,7 +339,7 @@ function renderPlan(root) {
     $$('[data-gun]', root).forEach(b => b.onclick = () => gmatMark(b.dataset.gun, false, b));
     // GMAT 段：像學習卡的「我懂了」，哪一天都能勾；勾了馬上重排（今天已排的會打勾留著，之後的日子往前補）
     gmatList();
-    $$('#pldays [data-gs]', root).forEach(cb => cb.onchange = () => { const g = cb.dataset.gs; P.gmatS = P.gmatS || {}; if (cb.checked) { P.gmatS[g] = planToday(); FUN.xp(5, cb); FUN.beep('ok'); } else { delete P.gmatS[g]; FUN.xp(-5, cb); } redraw(); });
+    $$('#pldays [data-gs]', root).forEach(cb => cb.onchange = () => gmatTick(cb));
     // 今天每一項打勾：記下這項今天排的份量（報告、期末範圍、GMAT…），取消就扣回；全部勾完自動算今天完成
     const todayD = R.days.find(x => x.d === today);
     const freeze = () => { ST.planFrz = ST.planFrz || {}; if (!ST.planFrz[today] && todayD) ST.planFrz[today] = { blocks: JSON.parse(JSON.stringify(todayD.blocks)), total: todayD.total, at: Date.now() }; };
@@ -385,9 +385,13 @@ function renderPlan(root) {
   // GMAT 單元讀完／取消：+10 XP，取消就退回（可能降級）；記下哪天讀完，當天可以在進度表上取消
   const gmatMark = (g, on, el) => {
     if (!!P.gmatU[g] === on) return;
+    gmatWhen('gu|' + g, on);
     if (on) { P.gmatU[g] = planToday(); FUN.xp(10, el); FUN.beep('ok'); } else { delete P.gmatU[g]; FUN.xp(-10, el); }
     redraw();
   };
+  // 記下打勾／取消的時間，雲端同步時兩台的 GMAT 打勾才能逐項合併（取消的不會被另一台勾回來）
+  const gmatWhen = (id, on) => { const t = Date.now(); P.gmatT = P.gmatT || {}; P.gmatT[id] = t; ST.del = ST.del || {}; if (on) delete ST.del[id]; else ST.del[id] = t; };
+  const gmatTick = cb => { const g = cb.dataset.gs; P.gmatS = P.gmatS || {}; gmatWhen('gs|' + g, cb.checked); if (cb.checked) { P.gmatS[g] = planToday(); FUN.xp(5, cb); FUN.beep('ok'); } else { delete P.gmatS[g]; FUN.xp(-5, cb); } redraw(); };
   $('#plsave', root).onclick = () => { stamp(); FUN.toast('進度表設定已儲存', 'happy'); };
   $('#plfin', root).onchange = e => { P.finR = +e.target.value; upd(); };
   $$('[data-rpn]', root).forEach(i => i.onchange = () => { P.reports[+i.dataset.rpn].n = i.value.trim() || '報告'; upd(); });
@@ -405,7 +409,7 @@ function renderPlan(root) {
   // 清單用事件委派（清單每次重畫，勾勾不用重新綁）
   $('.gmlist', root).addEventListener('change', e => { const cb = e.target;
     if (cb.dataset.gud) gmatMark(cb.dataset.gud, cb.checked, cb);
-    else if (cb.dataset.gs) { const g = cb.dataset.gs; P.gmatS = P.gmatS || {}; if (cb.checked) { P.gmatS[g] = planToday(); FUN.xp(5, cb); FUN.beep('ok'); } else { delete P.gmatS[g]; FUN.xp(-5, cb); } redraw(); } });
+    else if (cb.dataset.gs) gmatTick(cb); });
   $$('[data-hon]', root).forEach(cb => cb.onchange = () => { P.habits[cb.dataset.hon].on = cb.checked; upd(); });
   $$('[data-hmin]', root).forEach(s => s.onchange = () => { P.habits[s.dataset.hmin].min = +s.value; upd(); });
   $$('[data-huntil]', root).forEach(i => i.onchange = () => { P.habits[i.dataset.huntil].until = i.value; upd(); });
