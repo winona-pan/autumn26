@@ -270,7 +270,7 @@ function renderPlan(root) {
   <section class="setbox"><h3>3. GMAT、語言練習與每週作業</h3><div class="plsubs">
     <div class="plrow gmat"><label class="pln"><input type="checkbox" data-on="gmat"${P.on.gmat ? ' checked' : ''}> <b>GMAT</b></label><label class="pld">考試 <input type="date" data-date="gmat" value="${P.dates.gmat || ''}"></label>
       <label>每堂課 ≈ 影片 × <select id="plgx">${[1.3, 1.5, 1.8, 2, 2.5].map(x => `<option value="${x}"${x === +P.gmatX ? ' selected' : ''}>${x} 倍</option>`).join('')}</select></label><span class="sm-p">還要 <b data-need="gmat"></b></span><span class="hdays">${[1, 2, 3, 4, 5, 6, 0].map(i => `<label><input type="checkbox" data-gday="${i}"${P.gmatDays.includes(i) ? ' checked' : ''}>${'日一二三四五六'[i]}</label>`).join('')}</span>
-      <details class="reunits"><summary>單元進度（照順序一次讀一個；讀完打勾，就不會再排）</summary>${GMAT_UNITS.map((u, i) => [u[0], `${i + 1}. ${u[1]}｜${u[2]}`]).map(([g, n]) => `<label><input type="checkbox" data-gud="${g}"${P.gmatU[g] ? ' checked' : ''}> ${n}</label>`).join('')}</details></div>
+      <details class="reunits gmwrap"><summary class="gmsum"></summary><p class="sm-p">打勾＝讀完：計畫會把它拿掉、換成下一段（跟學習卡的「我懂了」一樣）。單元前面的勾＝整個單元讀完。</p><div class="gmlist"></div></details></div>
     ${Object.keys(PLAN_HAB).map(h => { const c = P.habits[h]; return `<div class="plrow ${h}"><label class="pln"><input type="checkbox" data-hon="${h}"${c.on ? ' checked' : ''}> <b>${PLAN_HAB[h][0]}</b></label><label>每次 <select data-hmin="${h}">${[15, 30, 45, 60, 90].map(m => `<option value="${m}"${m === +c.min ? ' selected' : ''}>${m} 分鐘</option>`).join('')}</select></label><span class="hdays">${[1, 2, 3, 4, 5, 6, 0].map(i => `<label><input type="checkbox" data-hday="${h}|${i}"${c.days.includes(i) ? ' checked' : ''}>${'日一二三四五六'[i]}</label>`).join('')}</span>${c.until !== undefined ? `<label>排到 <input type="date" data-huntil="${h}" value="${c.until || ''}"></label>` : ''}</div>`; }).join('')}
     </div><p class="sm-p">GMAT 照補習班的上課順序（RC1 → CR1 → 數學1 → …），上完再輪流做數學練習和 GWD，最後 PP 模考；每堂課的時間 = 影片長度 × 倍數（看影片＋做題）。一天只讀一個單元，一個單元可能分兩三天，只排在勾的星期幾。單元打開可以看順序、讀完打勾。語言練習和每週作業（週日投資學報告、週五管理學作業，排到 12/23）每天最先保留。</p></section>
   <section class="setbox"><h3>4. 每天能讀幾小時</h3>
@@ -285,6 +285,16 @@ function renderPlan(root) {
   <section class="msbox"><h3>每日進度</h3><div id="pldays"></div></section>`;
 
   const gmatDoneToday = () => { const g = Object.keys(P.gmatU).filter(g => P.gmatU[g] === planToday()); return g.length ? `<div class="pblk gmat"><div class="pbh"><b>GMAT 今天讀完 ✓</b></div><p>${g.map(x => `${(u => u ? `${u[1]}｜${u[2]}` : x)(GMAT_UNITS.find(u => u[0] === x))} <button type="button" class="linkish" data-gun="${x}">取消（退回 10 XP）</button>`).join('、')}</p></div>` : ''; };
+  // GMAT 清單：每個單元、每一段都能打勾；同步或在進度表上勾了也會跟著更新
+  const gmatList = () => {
+    const box = $('.gmlist', root); if (!box) return;
+    const open = new Set($$('.gmu[open]', box).map(d => d.dataset.gmu)), all = gmatPieces(), S = P.gmatS || {};
+    const isDone = x => !!(P.gmatU[x.gu] || S[x.gs] || x.b <= (+P.gmatProg[x.gu] || 0) + 0.5);
+    box.innerHTML = GMAT_UNITS.map((u, i) => { const ps = all.filter(x => x.gu === u[0]), n = ps.filter(isDone).length;
+      return `<details class="gmu${P.gmatU[u[0]] || n === ps.length ? ' ok' : ''}" data-gmu="${u[0]}"${open.has(u[0]) ? ' open' : ''}><summary><input type="checkbox" data-gud="${u[0]}"${P.gmatU[u[0]] ? ' checked' : ''} aria-label="整個單元讀完了"> ${i + 1}. ${u[1]}｜${u[2]} <small>${n}/${ps.length} 段</small></summary>
+        ${ps.map(x => `<label class="${isDone(x) ? 'ok' : ''}"><input type="checkbox" data-gs="${x.gs}"${isDone(x) ? ' checked' : ''}${P.gmatU[u[0]] || (!S[x.gs] && isDone(x)) ? ' disabled' : ''}> <span>${x.t.replace(u[2], '').trim() || '全部'}${x.seg ? `：${x.seg.replace(/（[^）]*）$/, '')}` : ''}</span></label>`).join('')}</details>`; }).join('');
+    const nd = all.filter(isDone).length; $('.gmsum', root).textContent = `GMAT 清單（已讀完 ${nd}/${all.length} 段）`;
+  };
   // GMAT 下一步：今天排到的 GMAT 段都勾了（或今天沒排 GMAT），就把下一段放在今天，想多讀就讀；勾了一樣馬上重排
   const gmatFam = () => (PLAN_FAM.find(x => x[0] === (P.fam.gmat || '普通')) || [0, 1])[1];
   const gmatNext = todayD => {
@@ -328,7 +338,8 @@ function renderPlan(root) {
     $$('[data-gu]', root).forEach(b => b.onclick = () => gmatMark(b.dataset.gu, true, b));
     $$('[data-gun]', root).forEach(b => b.onclick = () => gmatMark(b.dataset.gun, false, b));
     // GMAT 段：像學習卡的「我懂了」，哪一天都能勾；勾了馬上重排（今天已排的會打勾留著，之後的日子往前補）
-    $$('[data-gs]', root).forEach(cb => cb.onchange = () => { const g = cb.dataset.gs; P.gmatS = P.gmatS || {}; if (cb.checked) { P.gmatS[g] = planToday(); FUN.xp(5, cb); FUN.beep('ok'); } else { delete P.gmatS[g]; FUN.xp(-5, cb); } redraw(); });
+    gmatList();
+    $$('#pldays [data-gs]', root).forEach(cb => cb.onchange = () => { const g = cb.dataset.gs; P.gmatS = P.gmatS || {}; if (cb.checked) { P.gmatS[g] = planToday(); FUN.xp(5, cb); FUN.beep('ok'); } else { delete P.gmatS[g]; FUN.xp(-5, cb); } redraw(); });
     // 今天每一項打勾：記下這項今天排的份量（報告、期末範圍、GMAT…），取消就扣回；全部勾完自動算今天完成
     const todayD = R.days.find(x => x.d === today);
     const freeze = () => { ST.planFrz = ST.planFrz || {}; if (!ST.planFrz[today] && todayD) ST.planFrz[today] = { blocks: JSON.parse(JSON.stringify(todayD.blocks)), total: todayD.total, at: Date.now() }; };
@@ -375,7 +386,7 @@ function renderPlan(root) {
   const gmatMark = (g, on, el) => {
     if (!!P.gmatU[g] === on) return;
     if (on) { P.gmatU[g] = planToday(); FUN.xp(10, el); FUN.beep('ok'); } else { delete P.gmatU[g]; FUN.xp(-10, el); }
-    const cb = $(`[data-gud="${g}"]`, root); if (cb) cb.checked = on; redraw();
+    redraw();
   };
   $('#plsave', root).onclick = () => { stamp(); FUN.toast('進度表設定已儲存', 'happy'); };
   $('#plfin', root).onchange = e => { P.finR = +e.target.value; upd(); };
@@ -391,7 +402,10 @@ function renderPlan(root) {
   $('#plstart', root).onchange = e => { P.start = e.target.value; upd(); };
   $('#plgx', root).onchange = e => { P.gmatX = +e.target.value; upd(); };
   $$('[data-gday]', root).forEach(cb => cb.onchange = () => { const i = +cb.dataset.gday; P.gmatDays = cb.checked ? P.gmatDays.concat(i) : P.gmatDays.filter(x => x !== i); upd(); });
-  $$('[data-gud]', root).forEach(cb => cb.onchange = () => gmatMark(cb.dataset.gud, cb.checked, cb));
+  // 清單用事件委派（清單每次重畫，勾勾不用重新綁）
+  $('.gmlist', root).addEventListener('change', e => { const cb = e.target;
+    if (cb.dataset.gud) gmatMark(cb.dataset.gud, cb.checked, cb);
+    else if (cb.dataset.gs) { const g = cb.dataset.gs; P.gmatS = P.gmatS || {}; if (cb.checked) { P.gmatS[g] = planToday(); FUN.xp(5, cb); FUN.beep('ok'); } else { delete P.gmatS[g]; FUN.xp(-5, cb); } redraw(); } });
   $$('[data-hon]', root).forEach(cb => cb.onchange = () => { P.habits[cb.dataset.hon].on = cb.checked; upd(); });
   $$('[data-hmin]', root).forEach(s => s.onchange = () => { P.habits[s.dataset.hmin].min = +s.value; upd(); });
   $$('[data-huntil]', root).forEach(i => i.onchange = () => { P.habits[i.dataset.huntil].until = i.value; upd(); });
