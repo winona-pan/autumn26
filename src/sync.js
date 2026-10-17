@@ -53,6 +53,15 @@ const SYNC = (() => {
         const o = {}; for (const src of [a.bm || {}, b.bm || {}]) for (const [cid, d] of Object.entries(src)) { if (ts(d) <= D('bm|' + cid, 'bm')) continue; if (!o[cid] || ts(d) > ts(o[cid])) o[cid] = d; }
         out.bm = o; continue;
       }
+      if (k === 'plan' && a.plan && b.plan) { // 讀書計畫：設定以較新的為準；GMAT 打勾（段、整個單元）兩台合併，取消有紀錄不會長回來
+        const o = Object.assign({}, nw.plan), T = {};
+        for (const src of [a.plan.gmatT || {}, b.plan.gmatT || {}]) for (const [id, t] of Object.entries(src)) T[id] = Math.max(T[id] || 0, t);
+        for (const [f, p] of [['gmatS', 'gs|'], ['gmatU', 'gu|']]) {
+          const m = {}; for (const src of [od.plan[f] || {}, nw.plan[f] || {}]) for (const [id, v] of Object.entries(src)) { if (!v || (del[p + id] && (T[p + id] || 0) <= del[p + id])) continue; m[id] = v; }
+          o[f] = m;
+        }
+        o.gmatT = T; out.plan = o; continue;
+      }
       out[k] = k in nw ? nw[k] : od[k];
     }
     out.del = del; return out;
@@ -83,12 +92,22 @@ const SYNC = (() => {
 
   // ---- 套用合併結果到這台 ----
   function apply(data, before) {
+    // 先記下更新前的樣子：下面會就地改物件，before 裡的也會跟著變
+    const vis = d => canon({ nt: d.nt, hl: d.hl, bm: d.bm, done: d.done });
+    const pv = d => canon({ plan: d.plan, frz: d.planFrz, chk: d.planChk, dn: d.planDone, done: d.done });
+    const vb = before && vis(before), pb = before && pv(before);
     for (const k of Object.keys(ST)) if (!LOCAL_ONLY.has(k) && !(k in data)) delete ST[k];
-    Object.assign(ST, data); store.set(ST);
+    // 物件就地更新（不換新物件）：開著的頁面（例如讀書計畫）拿著的是同一份，同步後打勾才存得到
+    const obj = x => x && typeof x === 'object' && !Array.isArray(x);
+    for (const k in data) { if (obj(ST[k]) && obj(data[k])) { for (const kk of Object.keys(ST[k])) delete ST[k][kk]; Object.assign(ST[k], data[k]); } else ST[k] = data[k]; }
+    store.set(ST);
     try { FUN.hud(); updateCounts(); } catch (e) { }
     // 只有筆記、重點、書籤、勾選有變，畫面才需要更新；而且就地更新，不重畫整頁、不跳通知、不動捲動位置
-    const vis = d => canon({ nt: d.nt, hl: d.hl, bm: d.bm, done: d.done });
-    if (before && vis(before) === vis(data)) return;
+    if (CUR[0] === 'plan' && before && pb !== pv(data) && !document.querySelector('#main :is(input:not([type=checkbox]),select,textarea):focus')) {
+      const main = document.getElementById('main'), y = scrollY, op = $$('#main details[open]').map(d => d.dataset.gmu || d.className);
+      renderPlan(main); $$('#main details').forEach(d => { if (op.includes(d.dataset.gmu || d.className)) d.open = true; }); window.scrollTo(0, y); return;
+    }
+    if (before && vb === vis(data)) return;
     const pane = document.getElementById('pane');
     if (CUR[1] === 'learn' && pane) NOTES.refresh(pane);
     else if (CUR[1] === 'prob' && pane && pane.querySelector('.plist')) NOTES.refresh(pane.querySelector('.plist'));

@@ -6033,7 +6033,7 @@ function renderPlan(root) {
     $$('[data-gun]', root).forEach(b => b.onclick = () => gmatMark(b.dataset.gun, false, b));
     // GMAT 段：像學習卡的「我懂了」，哪一天都能勾；勾了馬上重排（今天已排的會打勾留著，之後的日子往前補）
     gmatList();
-    $$('#pldays [data-gs]', root).forEach(cb => cb.onchange = () => { const g = cb.dataset.gs; P.gmatS = P.gmatS || {}; if (cb.checked) { P.gmatS[g] = planToday(); FUN.xp(5, cb); FUN.beep('ok'); } else { delete P.gmatS[g]; FUN.xp(-5, cb); } redraw(); });
+    $$('#pldays [data-gs]', root).forEach(cb => cb.onchange = () => gmatTick(cb));
     // 今天每一項打勾：記下這項今天排的份量（報告、期末範圍、GMAT…），取消就扣回；全部勾完自動算今天完成
     const todayD = R.days.find(x => x.d === today);
     const freeze = () => { ST.planFrz = ST.planFrz || {}; if (!ST.planFrz[today] && todayD) ST.planFrz[today] = { blocks: JSON.parse(JSON.stringify(todayD.blocks)), total: todayD.total, at: Date.now() }; };
@@ -6079,9 +6079,13 @@ function renderPlan(root) {
   // GMAT 單元讀完／取消：+10 XP，取消就退回（可能降級）；記下哪天讀完，當天可以在進度表上取消
   const gmatMark = (g, on, el) => {
     if (!!P.gmatU[g] === on) return;
+    gmatWhen('gu|' + g, on);
     if (on) { P.gmatU[g] = planToday(); FUN.xp(10, el); FUN.beep('ok'); } else { delete P.gmatU[g]; FUN.xp(-10, el); }
     redraw();
   };
+  // 記下打勾／取消的時間，雲端同步時兩台的 GMAT 打勾才能逐項合併（取消的不會被另一台勾回來）
+  const gmatWhen = (id, on) => { const t = Date.now(); P.gmatT = P.gmatT || {}; P.gmatT[id] = t; ST.del = ST.del || {}; if (on) delete ST.del[id]; else ST.del[id] = t; };
+  const gmatTick = cb => { const g = cb.dataset.gs; P.gmatS = P.gmatS || {}; gmatWhen('gs|' + g, cb.checked); if (cb.checked) { P.gmatS[g] = planToday(); FUN.xp(5, cb); FUN.beep('ok'); } else { delete P.gmatS[g]; FUN.xp(-5, cb); } redraw(); };
   $('#plsave', root).onclick = () => { stamp(); FUN.toast('進度表設定已儲存', 'happy'); };
   $('#plfin', root).onchange = e => { P.finR = +e.target.value; upd(); };
   $$('[data-rpn]', root).forEach(i => i.onchange = () => { P.reports[+i.dataset.rpn].n = i.value.trim() || '報告'; upd(); });
@@ -6099,7 +6103,7 @@ function renderPlan(root) {
   // 清單用事件委派（清單每次重畫，勾勾不用重新綁）
   $('.gmlist', root).addEventListener('change', e => { const cb = e.target;
     if (cb.dataset.gud) gmatMark(cb.dataset.gud, cb.checked, cb);
-    else if (cb.dataset.gs) { const g = cb.dataset.gs; P.gmatS = P.gmatS || {}; if (cb.checked) { P.gmatS[g] = planToday(); FUN.xp(5, cb); FUN.beep('ok'); } else { delete P.gmatS[g]; FUN.xp(-5, cb); } redraw(); } });
+    else if (cb.dataset.gs) gmatTick(cb); });
   $$('[data-hon]', root).forEach(cb => cb.onchange = () => { P.habits[cb.dataset.hon].on = cb.checked; upd(); });
   $$('[data-hmin]', root).forEach(s => s.onchange = () => { P.habits[s.dataset.hmin].min = +s.value; upd(); });
   $$('[data-huntil]', root).forEach(i => i.onchange = () => { P.habits[i.dataset.huntil].until = i.value; upd(); });
@@ -6976,6 +6980,15 @@ const SYNC = (() => {
         const o = {}; for (const src of [a.bm || {}, b.bm || {}]) for (const [cid, d] of Object.entries(src)) { if (ts(d) <= D('bm|' + cid, 'bm')) continue; if (!o[cid] || ts(d) > ts(o[cid])) o[cid] = d; }
         out.bm = o; continue;
       }
+      if (k === 'plan' && a.plan && b.plan) { // 讀書計畫：設定以較新的為準；GMAT 打勾（段、整個單元）兩台合併，取消有紀錄不會長回來
+        const o = Object.assign({}, nw.plan), T = {};
+        for (const src of [a.plan.gmatT || {}, b.plan.gmatT || {}]) for (const [id, t] of Object.entries(src)) T[id] = Math.max(T[id] || 0, t);
+        for (const [f, p] of [['gmatS', 'gs|'], ['gmatU', 'gu|']]) {
+          const m = {}; for (const src of [od.plan[f] || {}, nw.plan[f] || {}]) for (const [id, v] of Object.entries(src)) { if (!v || (del[p + id] && (T[p + id] || 0) <= del[p + id])) continue; m[id] = v; }
+          o[f] = m;
+        }
+        o.gmatT = T; out.plan = o; continue;
+      }
       out[k] = k in nw ? nw[k] : od[k];
     }
     out.del = del; return out;
@@ -7006,12 +7019,22 @@ const SYNC = (() => {
 
   // ---- 套用合併結果到這台 ----
   function apply(data, before) {
+    // 先記下更新前的樣子：下面會就地改物件，before 裡的也會跟著變
+    const vis = d => canon({ nt: d.nt, hl: d.hl, bm: d.bm, done: d.done });
+    const pv = d => canon({ plan: d.plan, frz: d.planFrz, chk: d.planChk, dn: d.planDone, done: d.done });
+    const vb = before && vis(before), pb = before && pv(before);
     for (const k of Object.keys(ST)) if (!LOCAL_ONLY.has(k) && !(k in data)) delete ST[k];
-    Object.assign(ST, data); store.set(ST);
+    // 物件就地更新（不換新物件）：開著的頁面（例如讀書計畫）拿著的是同一份，同步後打勾才存得到
+    const obj = x => x && typeof x === 'object' && !Array.isArray(x);
+    for (const k in data) { if (obj(ST[k]) && obj(data[k])) { for (const kk of Object.keys(ST[k])) delete ST[k][kk]; Object.assign(ST[k], data[k]); } else ST[k] = data[k]; }
+    store.set(ST);
     try { FUN.hud(); updateCounts(); } catch (e) { }
     // 只有筆記、重點、書籤、勾選有變，畫面才需要更新；而且就地更新，不重畫整頁、不跳通知、不動捲動位置
-    const vis = d => canon({ nt: d.nt, hl: d.hl, bm: d.bm, done: d.done });
-    if (before && vis(before) === vis(data)) return;
+    if (CUR[0] === 'plan' && before && pb !== pv(data) && !document.querySelector('#main :is(input:not([type=checkbox]),select,textarea):focus')) {
+      const main = document.getElementById('main'), y = scrollY, op = $$('#main details[open]').map(d => d.dataset.gmu || d.className);
+      renderPlan(main); $$('#main details').forEach(d => { if (op.includes(d.dataset.gmu || d.className)) d.open = true; }); window.scrollTo(0, y); return;
+    }
+    if (before && vb === vis(data)) return;
     const pane = document.getElementById('pane');
     if (CUR[1] === 'learn' && pane) NOTES.refresh(pane);
     else if (CUR[1] === 'prob' && pane && pane.querySelector('.plist')) NOTES.refresh(pane.querySelector('.plist'));
