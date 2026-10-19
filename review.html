@@ -4574,9 +4574,35 @@ const BADGES = [
   ['speed', '閃電手', '限時賽答對 12 題以上'], ['match', '配對王', '完成一次配對遊戲'], ['sortp', '分類達人', '分類遊戲全對'], ['calc5', '公式小玩家', '玩過 5 個公式計算器'], ['gen10', '計算機器', '變化題答對 10 題'], ['essay', '交卷了', '送出第一份申論批改'], ['s3', '三天不間斷', '連續 3 天打開複習'], ['s7', '一週全勤', '連續 7 天打開複習'], ['cfaq', 'CFA 小試身手', 'CFA 小測驗 10 題答對 8 題以上'], ['bosscfa', '打倒考場大魔王', 'CFA 打怪勝利'], ['allre', '不動產通關', '不動產財管知識點全部掌握'], ['bossre', '趕走法拍屋幽靈', '不動產財管打怪勝利']
 ];
 
+// XP 和單元點數的「分裝置帳本」：每台裝置只記自己加了多少、扣了多少（只增不減），
+// 同步時把各台的帳加起來，兩台都有讀，等級才會一起長，不會被較新的那台蓋掉。
+// ST.ctr = { reset: 重設時間, base: 開始記帳時的數值, by: { 裝置: { 'xp' 或 'ux|科目|單元': [加, 扣] } } }
+const CTR = {
+  dev() { try { let d = localStorage.getItem('rv26dev'); if (!d) { d = Date.now().toString(36) + Math.random().toString(36).slice(2, 7); localStorage.setItem('rv26dev', d); } return d; } catch (e) { return 'x'; } },
+  snap() { const b = { xp: ST.xp || 0 }; for (const [k, us] of Object.entries(ST.ux || {})) for (const [u, n] of Object.entries(us)) b['ux|' + k + '|' + u] = n; return b; },
+  rebase(reset) { ST.ctr = { reset: reset || 0, base: this.snap(), by: {} }; },
+  init() { if (!ST.ctr || !ST.ctr.base) this.rebase((ST.del || {})['*'] || 0); },
+  add(key, d) { if (!d) return; if (!ST.ctr) this.init(); const by = ST.ctr.by, me = by[this.dev()] = by[this.dev()] || {}, e = me[key] = me[key] || [0, 0]; if (d > 0) e[0] += d; else e[1] -= d; },
+  merge(A, B) {
+    if (!A || !A.base) return B; if (!B || !B.base) return A;
+    if ((A.reset || 0) !== (B.reset || 0)) return (A.reset || 0) > (B.reset || 0) ? A : B; // 重設或匯入備份過：以較新的為準
+    const base = Object.assign({}, A.base); for (const [k, v] of Object.entries(B.base)) base[k] = Math.max(base[k] || 0, v);
+    const by = {}; for (const src of [A.by || {}, B.by || {}]) for (const [d, ks] of Object.entries(src)) { const o = by[d] = by[d] || {}; for (const [k, [p, n]] of Object.entries(ks)) { const e = o[k] || [0, 0]; o[k] = [Math.max(e[0], p), Math.max(e[1], n)]; } }
+    return { reset: A.reset || 0, base, by };
+  },
+  // 由帳本算出 xp 和 ux（寫進 data）
+  apply(data, c) {
+    const tot = {}; for (const [k, v] of Object.entries(c.base)) tot[k] = v;
+    for (const ks of Object.values(c.by)) for (const [k, [p, n]] of Object.entries(ks)) tot[k] = (tot[k] || 0) + p - n;
+    data.xp = Math.max(0, tot.xp || 0); const ux = {};
+    for (const [k, v] of Object.entries(tot)) { if (!k.startsWith('ux|')) continue; const [, s, u] = k.split('|'); (ux[s] = ux[s] || {})[u] = Math.max(0, v); }
+    data.ux = ux;
+  }
+};
+
 const FUN = {
   init() {
-    ST.xp = ST.xp || 0; ST.badges = ST.badges || {}; ST.days = ST.days || []; ST.calc = ST.calc || {}; ST.genOk = ST.genOk || 0; ST.sound = ST.sound ?? false; ST.lang = ST.lang || 'both';
+    ST.xp = ST.xp || 0; CTR.init(); ST.badges = ST.badges || {}; ST.days = ST.days || []; ST.calc = ST.calc || {}; ST.genOk = ST.genOk || 0; ST.sound = ST.sound ?? false; ST.lang = ST.lang || 'both';
     const today = new Date().toISOString().slice(0, 10); if (!ST.days.includes(today)) { ST.days.push(today); ST.days = ST.days.slice(-60); }
     const st = this.streak(); if (st >= 3) this.badge('s3', true); if (st >= 7) this.badge('s7', true);
     save();
@@ -4584,7 +4610,7 @@ const FUN = {
   streak() { let n = 0; const d = new Date(); for (; ; ) { const k = d.toISOString().slice(0, 10); if (ST.days.includes(k)) { n++; d.setDate(d.getDate() - 1); } else break; } return n; },
   level() { return Math.floor(ST.xp / 100) + 1; },
   xp(n, el) {
-    const lv0 = this.level(); ST.xp = Math.max(0, ST.xp + n); save(); this.hud();
+    const lv0 = this.level(), x0 = ST.xp; ST.xp = Math.max(0, ST.xp + n); CTR.add('xp', ST.xp - x0); save(); this.hud();
     if (el) { const r = el.getBoundingClientRect(); const f = document.createElement('div'); f.className = 'xpfloat' + (n < 0 ? ' neg' : ''); f.textContent = (n > 0 ? '+' : '−') + Math.abs(n) + ' XP'; f.style.left = (r.left + r.width / 2) + 'px'; f.style.top = (r.top + window.scrollY) + 'px'; document.body.appendChild(f); setTimeout(() => f.remove(), 1100); }
     if (this.level() < lv0) this.toast(`取消勾選，XP 退回，目前 Lv.${this.level()}`, 'sad');
     if (this.level() > lv0) { this.toast(`升級！Lv.${this.level()}「${TITLES[Math.min(this.level() - 1, TITLES.length - 1)]}」`, 'wow'); this.confetti(80); this.beep('up'); }
@@ -4684,14 +4710,14 @@ function renderSettings(root) {
     catch (e) { t.select(); $('#bkmsg', root).textContent = '請手動複製下面框框裡的文字（已幫你選取）。'; }
   };
   armed($('#bkload', root), '匯入（會覆蓋目前紀錄）', () => {
-    try { const v = JSON.parse(decodeURIComponent(escape(atob($('#bktext', root).value.trim())))); if (typeof v !== 'object' || !v.done) throw 0; ST = Object.assign({ done: {}, wrong2: {}, tab: {}, best: {} }, v); FUN.init(); save(); applyPrefs(); FUN.hud(); FUN.toast('匯入成功！', 'wow'); renderSettings(root); }
+    try { const v = JSON.parse(decodeURIComponent(escape(atob($('#bktext', root).value.trim())))); if (typeof v !== 'object' || !v.done) throw 0; ST = Object.assign({ done: {}, wrong2: {}, tab: {}, best: {} }, v); CTR.rebase(Date.now()); FUN.init(); save(); applyPrefs(); FUN.hud(); FUN.toast('匯入成功！', 'wow'); renderSettings(root); }
     catch (e) { $('#bkmsg', root).textContent = '備份碼看起來不完整，請重新複製一次。'; }
   });
   SYNC.bindSettings(root);
   $('#pastedbg', root).onclick = async () => { const raw = sessionStorage.getItem('rv26lastpaste'); if (!raw) { $('#pastemsg', root).textContent = '這次開著網頁期間還沒有貼上過東西。'; return; }
     try { await navigator.clipboard.writeText(raw); $('#pastemsg', root).textContent = '已複製，可以貼給我了。'; } catch (e) { $('#pastemsg', root).textContent = '無法自動複製，請改用電腦版瀏覽器再試一次。'; } };
   armed($('#clrwrong', root), '清除錯題本', () => { ST.wrong2 = {}; save(); FUN.toast('錯題本清空了', 'happy'); renderSettings(root); });
-  armed($('#clrdone', root), '清除勾選', () => { const n = Object.keys(ST.done).length; ST.done = {}; (ST.del = ST.del || {})['done|*'] = Date.now(); ST.xp = Math.max(0, ST.xp - n * 10); save(); FUN.hud(); updateCounts(); FUN.toast(`清除 ${n} 個勾選，XP 已扣回`, 'sad'); renderSettings(root); });
+  armed($('#clrdone', root), '清除勾選', () => { const n = Object.keys(ST.done).length; ST.done = {}; (ST.del = ST.del || {})['done|*'] = Date.now(); const x0 = ST.xp; ST.xp = Math.max(0, ST.xp - n * 10); CTR.add('xp', ST.xp - x0); save(); FUN.hud(); updateCounts(); FUN.toast(`清除 ${n} 個勾選，XP 已扣回`, 'sad'); renderSettings(root); });
   armed($('#clrbest', root), '清除遊戲紀錄', () => { ST.best = {}; ST.stats = {}; ST.genOk = 0; save(); FUN.toast('遊戲紀錄清空了', 'happy'); renderSettings(root); });
   armed($('#clrall', root), '全部重設', () => { const keep = {}; PREF_KEYS.forEach(k => keep[k] = ST[k]); ST = Object.assign({ done: {}, wrong2: {}, subj: 'home', tab: {}, best: {} }, keep); ST.del = { '*': Date.now() }; FUN.init(); save(); FUN.hud(); updateCounts(); FUN.toast('全部重新開始！一起加油', 'wow'); renderSettings(root); });
 }
@@ -6171,7 +6197,7 @@ const UNITS = (() => {
   const pts = (k, u) => ((ST.ux || {})[k] || {})[u] || 0;
   function add(k, u, n) {
     if (!u || !n) return; ST.ux = ST.ux || {}; const o = ST.ux[k] = ST.ux[k] || {};
-    const before = lv(o[u] || 0); o[u] = Math.max(0, (o[u] || 0) + n); const after = lv(o[u]); save();
+    const before = lv(o[u] || 0), p0 = o[u] || 0; o[u] = Math.max(0, p0 + n); CTR.add('ux|' + k + '|' + u, o[u] - p0); const after = lv(o[u]); save();
     if (after > before) { const name = (list(k).find(x => x.id === u) || {}).t || ''; FUN.toast(`「${name}」升到 Lv.${after}！`, 'wow'); FUN.beep('up'); FUN.confetti(40); }
     $$(`.uchip[data-u="${u}"]`).forEach(b => paintChip(b, k, u));
   }
@@ -6915,7 +6941,7 @@ const NOTES = (() => {
 })();
 // ===== 雲端同步：用你 GitHub 帳號裡的一個「私人 Gist」當雲端存檔，手機和電腦自動合併 =====
 // token 只存在這台裝置（不會放進備份碼）；建議只開 gist 權限。
-// 合併規則：筆記、重點、書籤、「我懂了」逐筆比時間，刪除有紀錄不會長回來；其他（XP、錯題本、計畫⋯）以最近修改的裝置為準。
+// 合併規則：筆記、重點、書籤、「我懂了」逐筆比時間，刪除有紀錄不會長回來；XP、單元點數把兩台各自賺的加起來；其他（錯題本、計畫設定⋯）以最近修改的裝置為準。
 // 畫面設定（主題、字級、目前科目、閱讀位置⋯）每台裝置各自保留。
 const SYNC = (() => {
   const LK = 'rv26sync', FILE = 'rv26-sync.json', DESC = '26 秋季複習本同步（請勿手動修改）', API = 'https://api.github.com';
@@ -6955,7 +6981,8 @@ const SYNC = (() => {
         for (const cid in o) o[cid].sort((x, y) => x.at - y.at);
         out.hl = o; continue;
       }
-      if (k === 'ux') { // 單元點數：每個單元取兩台中較高的
+      if (k === 'ctr') { const c = CTR.merge(a.ctr, b.ctr); if (c) out.ctr = c; continue; }
+      if (k === 'ux') { // 單元點數：每個單元取兩台中較高的（兩台都有帳本時，下面改用帳本加總）
         const o = {}; for (const src of [a.ux || {}, b.ux || {}]) for (const [sk, us] of Object.entries(src)) { o[sk] = o[sk] || {}; for (const [u, n] of Object.entries(us)) o[sk][u] = Math.max(o[sk][u] || 0, n); }
         out.ux = o; continue;
       }
@@ -6979,6 +7006,7 @@ const SYNC = (() => {
       }
       out[k] = k in nw ? nw[k] : od[k];
     }
+    if (out.ctr && a.ctr && b.ctr) CTR.apply(out, out.ctr); // XP、單元點數＝各台帳本加總
     out.del = del; return out;
   }
 
@@ -7082,13 +7110,13 @@ const SYNC = (() => {
       cfg = { token: token.trim(), user: u.login, gist: gid || undefined, mt: 0, h: hash(canon(syncable(ST))) }; keep(); await run(); return { ok: !cfg.err };
     } catch (e) { const m = e.message; cfg = {}; keep(); throw new Error(m); }
   }
-  // prefer：'local' = 這台比較新（XP、錯題本、計畫以這台為準）；'remote' = 雲端比較新
+  // prefer：'local' = 這台比較新（錯題本、計畫設定以這台為準）；'remote' = 雲端比較新
   async function finish(prefer) {
     if (!pending) return; const p = pending; pending = null;
     cfg = { token: p.token, user: p.user, gist: p.gist, mt: prefer === 'local' ? Date.now() : 0, h: hash(canon(syncable(ST))) }; keep();
     await run();
   }
-  // 之後如果發現另一台蓋掉了這台的 XP／錯題本：以這台為準再同步一次（筆記、重點、書籤一樣是合併）
+  // 之後如果發現另一台蓋掉了這台的錯題本：以這台為準再同步一次（筆記、重點、書籤一樣是合併）
   // 換 token（重新產生、過期）：沿用原本的雲端存檔與修改時間，不用重新選哪台比較新
   async function changeToken(token) {
     const old = cfg.token; cfg.token = token.trim();
@@ -7113,7 +7141,7 @@ const SYNC = (() => {
       <details class="synctokbox"${/token/.test(cfg.err || '') ? ' open' : ''}><summary>更換 token（重新產生過、或顯示 token 無效時）</summary>
         <div class="row wrap"><input type="password" id="synctok2" autocomplete="off" spellcheck="false" placeholder="貼上新的 ghp_ 開頭 token" aria-label="新的 GitHub token"><button class="btn" id="syncnew" type="button">更換</button></div>
         <p class="sm-p">換 token 會繼續用原本的雲端存檔，進度不會重來。每台裝置都要換成新的這一組。</p></details>
-      <p class="sm-p">「以這台為準再同步」：XP、錯題本、讀書計畫改用這台的；筆記、重點、書籤、「我懂了」照樣兩邊合併，不會不見。</p>` : `
+      <p class="sm-p">「以這台為準再同步」：錯題本、讀書計畫設定改用這台的；筆記、重點、書籤、「我懂了」、XP 和等級照樣兩邊合併，不會不見。</p>` : `
       <p class="sm-p">用你 GitHub 帳號裡的一個<b>私人 Gist</b> 當雲端存檔。每台裝置都做一次下面的步驟，之後就會自動同步。</p>
       <ol class="syncsteps"><li>打開 <a href="${TOKEN_URL}" target="_blank" rel="noopener">GitHub 建立 token 的頁面</a>（會自動勾好 <b>gist</b>，其他都不用勾）。</li><li><b>Expiration</b> 選一年或 No expiration，按最下面的 <b>Generate token</b>。</li><li>複製 <code>ghp_</code> 開頭的那串，貼到下面按「連線」。另一台裝置貼<b>同一串</b>就好（建議先存在你的密碼管理工具裡）。</li></ol>
       <div class="row wrap"><input type="password" id="synctok" autocomplete="off" spellcheck="false" placeholder="貼上 ghp_ 開頭的 token" aria-label="GitHub token"><button class="btn" id="syncgo" type="button">連線</button></div>
@@ -7125,7 +7153,7 @@ const SYNC = (() => {
     const box = root.querySelector('#syncbox');
     box.innerHTML = `<h3>雲端同步（手機 ↔ 電腦）</h3><p class="sm-p"><b>雲端已經有另一台裝置的進度</b>（${ago(r.choose.at)}更新）。哪一台比較新？</p>
       <div class="tblwrap"><table class="tbl syncmp"><tr><th></th><th>這台</th><th>雲端（另一台）</th></tr>${row('xp', 'XP')}${row('done', '「我懂了」')}${row('wrong', '錯題本')}${row('nt', '筆記')}${row('hl', '重點')}${row('bm', '書籤')}</table></div>
-      <p class="sm-p">不管選哪個，<b>筆記、重點、書籤、「我懂了」都會兩邊合併</b>，不會不見。選擇只決定 XP、錯題本、讀書計畫、遊戲紀錄要用哪一台的。</p>
+      <p class="sm-p">不管選哪個，<b>筆記、重點、書籤、「我懂了」、XP 和等級都會兩邊合併</b>，不會不見。選擇只決定錯題本、讀書計畫、遊戲紀錄要用哪一台的。</p>
       <div class="row wrap"><button class="btn" id="syncpl" type="button">這台比較新</button><button class="btn ghost" id="syncpr" type="button">雲端（另一台）比較新</button></div><p class="sm-p" id="syncst"></p>`;
     const pick = async which => { box.querySelectorAll('button').forEach(b => b.disabled = true); status('同步中⋯'); await finish(which); if (!cfg.err) FUN.toast('同步完成！', 'wow'); renderSettings(root); };
     box.querySelector('#syncpl').onclick = () => pick('local'); box.querySelector('#syncpr').onclick = () => pick('remote');

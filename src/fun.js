@@ -18,9 +18,35 @@ const BADGES = [
   ['speed', '閃電手', '限時賽答對 12 題以上'], ['match', '配對王', '完成一次配對遊戲'], ['sortp', '分類達人', '分類遊戲全對'], ['calc5', '公式小玩家', '玩過 5 個公式計算器'], ['gen10', '計算機器', '變化題答對 10 題'], ['essay', '交卷了', '送出第一份申論批改'], ['s3', '三天不間斷', '連續 3 天打開複習'], ['s7', '一週全勤', '連續 7 天打開複習'], ['cfaq', 'CFA 小試身手', 'CFA 小測驗 10 題答對 8 題以上'], ['bosscfa', '打倒考場大魔王', 'CFA 打怪勝利'], ['allre', '不動產通關', '不動產財管知識點全部掌握'], ['bossre', '趕走法拍屋幽靈', '不動產財管打怪勝利']
 ];
 
+// XP 和單元點數的「分裝置帳本」：每台裝置只記自己加了多少、扣了多少（只增不減），
+// 同步時把各台的帳加起來，兩台都有讀，等級才會一起長，不會被較新的那台蓋掉。
+// ST.ctr = { reset: 重設時間, base: 開始記帳時的數值, by: { 裝置: { 'xp' 或 'ux|科目|單元': [加, 扣] } } }
+const CTR = {
+  dev() { try { let d = localStorage.getItem('rv26dev'); if (!d) { d = Date.now().toString(36) + Math.random().toString(36).slice(2, 7); localStorage.setItem('rv26dev', d); } return d; } catch (e) { return 'x'; } },
+  snap() { const b = { xp: ST.xp || 0 }; for (const [k, us] of Object.entries(ST.ux || {})) for (const [u, n] of Object.entries(us)) b['ux|' + k + '|' + u] = n; return b; },
+  rebase(reset) { ST.ctr = { reset: reset || 0, base: this.snap(), by: {} }; },
+  init() { if (!ST.ctr || !ST.ctr.base) this.rebase((ST.del || {})['*'] || 0); },
+  add(key, d) { if (!d) return; if (!ST.ctr) this.init(); const by = ST.ctr.by, me = by[this.dev()] = by[this.dev()] || {}, e = me[key] = me[key] || [0, 0]; if (d > 0) e[0] += d; else e[1] -= d; },
+  merge(A, B) {
+    if (!A || !A.base) return B; if (!B || !B.base) return A;
+    if ((A.reset || 0) !== (B.reset || 0)) return (A.reset || 0) > (B.reset || 0) ? A : B; // 重設或匯入備份過：以較新的為準
+    const base = Object.assign({}, A.base); for (const [k, v] of Object.entries(B.base)) base[k] = Math.max(base[k] || 0, v);
+    const by = {}; for (const src of [A.by || {}, B.by || {}]) for (const [d, ks] of Object.entries(src)) { const o = by[d] = by[d] || {}; for (const [k, [p, n]] of Object.entries(ks)) { const e = o[k] || [0, 0]; o[k] = [Math.max(e[0], p), Math.max(e[1], n)]; } }
+    return { reset: A.reset || 0, base, by };
+  },
+  // 由帳本算出 xp 和 ux（寫進 data）
+  apply(data, c) {
+    const tot = {}; for (const [k, v] of Object.entries(c.base)) tot[k] = v;
+    for (const ks of Object.values(c.by)) for (const [k, [p, n]] of Object.entries(ks)) tot[k] = (tot[k] || 0) + p - n;
+    data.xp = Math.max(0, tot.xp || 0); const ux = {};
+    for (const [k, v] of Object.entries(tot)) { if (!k.startsWith('ux|')) continue; const [, s, u] = k.split('|'); (ux[s] = ux[s] || {})[u] = Math.max(0, v); }
+    data.ux = ux;
+  }
+};
+
 const FUN = {
   init() {
-    ST.xp = ST.xp || 0; ST.badges = ST.badges || {}; ST.days = ST.days || []; ST.calc = ST.calc || {}; ST.genOk = ST.genOk || 0; ST.sound = ST.sound ?? false; ST.lang = ST.lang || 'both';
+    ST.xp = ST.xp || 0; CTR.init(); ST.badges = ST.badges || {}; ST.days = ST.days || []; ST.calc = ST.calc || {}; ST.genOk = ST.genOk || 0; ST.sound = ST.sound ?? false; ST.lang = ST.lang || 'both';
     const today = new Date().toISOString().slice(0, 10); if (!ST.days.includes(today)) { ST.days.push(today); ST.days = ST.days.slice(-60); }
     const st = this.streak(); if (st >= 3) this.badge('s3', true); if (st >= 7) this.badge('s7', true);
     save();
@@ -28,7 +54,7 @@ const FUN = {
   streak() { let n = 0; const d = new Date(); for (; ; ) { const k = d.toISOString().slice(0, 10); if (ST.days.includes(k)) { n++; d.setDate(d.getDate() - 1); } else break; } return n; },
   level() { return Math.floor(ST.xp / 100) + 1; },
   xp(n, el) {
-    const lv0 = this.level(); ST.xp = Math.max(0, ST.xp + n); save(); this.hud();
+    const lv0 = this.level(), x0 = ST.xp; ST.xp = Math.max(0, ST.xp + n); CTR.add('xp', ST.xp - x0); save(); this.hud();
     if (el) { const r = el.getBoundingClientRect(); const f = document.createElement('div'); f.className = 'xpfloat' + (n < 0 ? ' neg' : ''); f.textContent = (n > 0 ? '+' : '−') + Math.abs(n) + ' XP'; f.style.left = (r.left + r.width / 2) + 'px'; f.style.top = (r.top + window.scrollY) + 'px'; document.body.appendChild(f); setTimeout(() => f.remove(), 1100); }
     if (this.level() < lv0) this.toast(`取消勾選，XP 退回，目前 Lv.${this.level()}`, 'sad');
     if (this.level() > lv0) { this.toast(`升級！Lv.${this.level()}「${TITLES[Math.min(this.level() - 1, TITLES.length - 1)]}」`, 'wow'); this.confetti(80); this.beep('up'); }

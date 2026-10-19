@@ -1,6 +1,6 @@
 // ===== 雲端同步：用你 GitHub 帳號裡的一個「私人 Gist」當雲端存檔，手機和電腦自動合併 =====
 // token 只存在這台裝置（不會放進備份碼）；建議只開 gist 權限。
-// 合併規則：筆記、重點、書籤、「我懂了」逐筆比時間，刪除有紀錄不會長回來；其他（XP、錯題本、計畫⋯）以最近修改的裝置為準。
+// 合併規則：筆記、重點、書籤、「我懂了」逐筆比時間，刪除有紀錄不會長回來；XP、單元點數把兩台各自賺的加起來；其他（錯題本、計畫設定⋯）以最近修改的裝置為準。
 // 畫面設定（主題、字級、目前科目、閱讀位置⋯）每台裝置各自保留。
 const SYNC = (() => {
   const LK = 'rv26sync', FILE = 'rv26-sync.json', DESC = '26 秋季複習本同步（請勿手動修改）', API = 'https://api.github.com';
@@ -40,7 +40,8 @@ const SYNC = (() => {
         for (const cid in o) o[cid].sort((x, y) => x.at - y.at);
         out.hl = o; continue;
       }
-      if (k === 'ux') { // 單元點數：每個單元取兩台中較高的
+      if (k === 'ctr') { const c = CTR.merge(a.ctr, b.ctr); if (c) out.ctr = c; continue; }
+      if (k === 'ux') { // 單元點數：每個單元取兩台中較高的（兩台都有帳本時，下面改用帳本加總）
         const o = {}; for (const src of [a.ux || {}, b.ux || {}]) for (const [sk, us] of Object.entries(src)) { o[sk] = o[sk] || {}; for (const [u, n] of Object.entries(us)) o[sk][u] = Math.max(o[sk][u] || 0, n); }
         out.ux = o; continue;
       }
@@ -64,6 +65,7 @@ const SYNC = (() => {
       }
       out[k] = k in nw ? nw[k] : od[k];
     }
+    if (out.ctr && a.ctr && b.ctr) CTR.apply(out, out.ctr); // XP、單元點數＝各台帳本加總
     out.del = del; return out;
   }
 
@@ -167,13 +169,13 @@ const SYNC = (() => {
       cfg = { token: token.trim(), user: u.login, gist: gid || undefined, mt: 0, h: hash(canon(syncable(ST))) }; keep(); await run(); return { ok: !cfg.err };
     } catch (e) { const m = e.message; cfg = {}; keep(); throw new Error(m); }
   }
-  // prefer：'local' = 這台比較新（XP、錯題本、計畫以這台為準）；'remote' = 雲端比較新
+  // prefer：'local' = 這台比較新（錯題本、計畫設定以這台為準）；'remote' = 雲端比較新
   async function finish(prefer) {
     if (!pending) return; const p = pending; pending = null;
     cfg = { token: p.token, user: p.user, gist: p.gist, mt: prefer === 'local' ? Date.now() : 0, h: hash(canon(syncable(ST))) }; keep();
     await run();
   }
-  // 之後如果發現另一台蓋掉了這台的 XP／錯題本：以這台為準再同步一次（筆記、重點、書籤一樣是合併）
+  // 之後如果發現另一台蓋掉了這台的錯題本：以這台為準再同步一次（筆記、重點、書籤一樣是合併）
   // 換 token（重新產生、過期）：沿用原本的雲端存檔與修改時間，不用重新選哪台比較新
   async function changeToken(token) {
     const old = cfg.token; cfg.token = token.trim();
@@ -198,7 +200,7 @@ const SYNC = (() => {
       <details class="synctokbox"${/token/.test(cfg.err || '') ? ' open' : ''}><summary>更換 token（重新產生過、或顯示 token 無效時）</summary>
         <div class="row wrap"><input type="password" id="synctok2" autocomplete="off" spellcheck="false" placeholder="貼上新的 ghp_ 開頭 token" aria-label="新的 GitHub token"><button class="btn" id="syncnew" type="button">更換</button></div>
         <p class="sm-p">換 token 會繼續用原本的雲端存檔，進度不會重來。每台裝置都要換成新的這一組。</p></details>
-      <p class="sm-p">「以這台為準再同步」：XP、錯題本、讀書計畫改用這台的；筆記、重點、書籤、「我懂了」照樣兩邊合併，不會不見。</p>` : `
+      <p class="sm-p">「以這台為準再同步」：錯題本、讀書計畫設定改用這台的；筆記、重點、書籤、「我懂了」、XP 和等級照樣兩邊合併，不會不見。</p>` : `
       <p class="sm-p">用你 GitHub 帳號裡的一個<b>私人 Gist</b> 當雲端存檔。每台裝置都做一次下面的步驟，之後就會自動同步。</p>
       <ol class="syncsteps"><li>打開 <a href="${TOKEN_URL}" target="_blank" rel="noopener">GitHub 建立 token 的頁面</a>（會自動勾好 <b>gist</b>，其他都不用勾）。</li><li><b>Expiration</b> 選一年或 No expiration，按最下面的 <b>Generate token</b>。</li><li>複製 <code>ghp_</code> 開頭的那串，貼到下面按「連線」。另一台裝置貼<b>同一串</b>就好（建議先存在你的密碼管理工具裡）。</li></ol>
       <div class="row wrap"><input type="password" id="synctok" autocomplete="off" spellcheck="false" placeholder="貼上 ghp_ 開頭的 token" aria-label="GitHub token"><button class="btn" id="syncgo" type="button">連線</button></div>
@@ -210,7 +212,7 @@ const SYNC = (() => {
     const box = root.querySelector('#syncbox');
     box.innerHTML = `<h3>雲端同步（手機 ↔ 電腦）</h3><p class="sm-p"><b>雲端已經有另一台裝置的進度</b>（${ago(r.choose.at)}更新）。哪一台比較新？</p>
       <div class="tblwrap"><table class="tbl syncmp"><tr><th></th><th>這台</th><th>雲端（另一台）</th></tr>${row('xp', 'XP')}${row('done', '「我懂了」')}${row('wrong', '錯題本')}${row('nt', '筆記')}${row('hl', '重點')}${row('bm', '書籤')}</table></div>
-      <p class="sm-p">不管選哪個，<b>筆記、重點、書籤、「我懂了」都會兩邊合併</b>，不會不見。選擇只決定 XP、錯題本、讀書計畫、遊戲紀錄要用哪一台的。</p>
+      <p class="sm-p">不管選哪個，<b>筆記、重點、書籤、「我懂了」、XP 和等級都會兩邊合併</b>，不會不見。選擇只決定錯題本、讀書計畫、遊戲紀錄要用哪一台的。</p>
       <div class="row wrap"><button class="btn" id="syncpl" type="button">這台比較新</button><button class="btn ghost" id="syncpr" type="button">雲端（另一台）比較新</button></div><p class="sm-p" id="syncst"></p>`;
     const pick = async which => { box.querySelectorAll('button').forEach(b => b.disabled = true); status('同步中⋯'); await finish(which); if (!cfg.err) FUN.toast('同步完成！', 'wow'); renderSettings(root); };
     box.querySelector('#syncpl').onclick = () => pick('local'); box.querySelector('#syncpr').onclick = () => pick('remote');

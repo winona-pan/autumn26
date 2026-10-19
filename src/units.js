@@ -41,7 +41,7 @@ const UNITS = (() => {
   const pts = (k, u) => ((ST.ux || {})[k] || {})[u] || 0;
   function add(k, u, n) {
     if (!u || !n) return; ST.ux = ST.ux || {}; const o = ST.ux[k] = ST.ux[k] || {};
-    const before = lv(o[u] || 0); o[u] = Math.max(0, (o[u] || 0) + n); const after = lv(o[u]); save();
+    const before = lv(o[u] || 0), p0 = o[u] || 0; o[u] = Math.max(0, p0 + n); CTR.add('ux|' + k + '|' + u, o[u] - p0); const after = lv(o[u]); save();
     if (after > before) { const name = (list(k).find(x => x.id === u) || {}).t || ''; FUN.toast(`「${name}」升到 Lv.${after}！`, 'wow'); FUN.beep('up'); FUN.confetti(40); }
     $$(`.uchip[data-u="${u}"]`).forEach(b => paintChip(b, k, u));
   }
