@@ -63,14 +63,14 @@ function renderSettings(root) {
     catch (e) { t.select(); $('#bkmsg', root).textContent = '請手動複製下面框框裡的文字（已幫你選取）。'; }
   };
   armed($('#bkload', root), '匯入（會覆蓋目前紀錄）', () => {
-    try { const v = JSON.parse(decodeURIComponent(escape(atob($('#bktext', root).value.trim())))); if (typeof v !== 'object' || !v.done) throw 0; ST = Object.assign({ done: {}, wrong2: {}, tab: {}, best: {} }, v); FUN.init(); save(); applyPrefs(); FUN.hud(); FUN.toast('匯入成功！', 'wow'); renderSettings(root); }
+    try { const v = JSON.parse(decodeURIComponent(escape(atob($('#bktext', root).value.trim())))); if (typeof v !== 'object' || !v.done) throw 0; ST = Object.assign({ done: {}, wrong2: {}, tab: {}, best: {} }, v); CTR.rebase(Date.now()); FUN.init(); save(); applyPrefs(); FUN.hud(); FUN.toast('匯入成功！', 'wow'); renderSettings(root); }
     catch (e) { $('#bkmsg', root).textContent = '備份碼看起來不完整，請重新複製一次。'; }
   });
   SYNC.bindSettings(root);
   $('#pastedbg', root).onclick = async () => { const raw = sessionStorage.getItem('rv26lastpaste'); if (!raw) { $('#pastemsg', root).textContent = '這次開著網頁期間還沒有貼上過東西。'; return; }
     try { await navigator.clipboard.writeText(raw); $('#pastemsg', root).textContent = '已複製，可以貼給我了。'; } catch (e) { $('#pastemsg', root).textContent = '無法自動複製，請改用電腦版瀏覽器再試一次。'; } };
   armed($('#clrwrong', root), '清除錯題本', () => { ST.wrong2 = {}; save(); FUN.toast('錯題本清空了', 'happy'); renderSettings(root); });
-  armed($('#clrdone', root), '清除勾選', () => { const n = Object.keys(ST.done).length; ST.done = {}; (ST.del = ST.del || {})['done|*'] = Date.now(); ST.xp = Math.max(0, ST.xp - n * 10); save(); FUN.hud(); updateCounts(); FUN.toast(`清除 ${n} 個勾選，XP 已扣回`, 'sad'); renderSettings(root); });
+  armed($('#clrdone', root), '清除勾選', () => { const n = Object.keys(ST.done).length; ST.done = {}; (ST.del = ST.del || {})['done|*'] = Date.now(); const x0 = ST.xp; ST.xp = Math.max(0, ST.xp - n * 10); CTR.add('xp', ST.xp - x0); save(); FUN.hud(); updateCounts(); FUN.toast(`清除 ${n} 個勾選，XP 已扣回`, 'sad'); renderSettings(root); });
   armed($('#clrbest', root), '清除遊戲紀錄', () => { ST.best = {}; ST.stats = {}; ST.genOk = 0; save(); FUN.toast('遊戲紀錄清空了', 'happy'); renderSettings(root); });
   armed($('#clrall', root), '全部重設', () => { const keep = {}; PREF_KEYS.forEach(k => keep[k] = ST[k]); ST = Object.assign({ done: {}, wrong2: {}, subj: 'home', tab: {}, best: {} }, keep); ST.del = { '*': Date.now() }; FUN.init(); save(); FUN.hud(); updateCounts(); FUN.toast('全部重新開始！一起加油', 'wow'); renderSettings(root); });
 }
