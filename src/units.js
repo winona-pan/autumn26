@@ -31,7 +31,7 @@ const UNITS = (() => {
     (DATA.deriv.sort || []).forEach(g => { if (/期貨還是遠期/.test(g.t)) g.u = 'ch2'; });
     (DATA.deriv.problems || []).forEach(p => { const m = String(p.src).match(/(\d+)\.\d+/); if (m) p.u = 'ch' + m[1]; });
     (DATA.deriv.gens || []).forEach(g => { const m = String(g.base).match(/(?:^|\D)(\d)\.\d|Table (\d)|Ch\s*(\d)/i); if (m) g.u = 'ch' + (m[1] || m[2] || m[3]); });
-    (DATA.invest.flash || []).forEach((f, i) => { f.u = i <= 7 ? 'i1' : i <= 19 ? 'i2' : i <= 21 ? 'i3' : 'i4'; });
+    (DATA.invest.flash || []).forEach((f, i) => { if (!f.u) f.u = i <= 7 ? 'i1' : i <= 19 ? 'i2' : i <= 21 ? 'i3' : 'i4'; });
   }
   const unitOfCard = (k, id) => { const s = (DATA[k].sections || []).find(s => s.cards.some(c => c.id === id)); return s && s.id; };
 
