@@ -468,4 +468,48 @@ body.notips .tipbox{display:none} body.calm *{animation:none!important;transitio
 @media (pointer:coarse){.hlbar .hlc{width:32px;height:32px} .hlb{padding:6px 12px} .ntfb{height:34px;min-width:36px} .ntdot{width:30px;height:30px} .bmbtn,.ntmode{padding:5px 12px}}
 @media (max-width:560px){.arcgrid{grid-template-columns:1fr 1fr;gap:10px} .arct{padding:10px;border-radius:14px} .arct b{font-size:15.5px} .arct span:not(.arci){font-size:12px} .arci{width:38px;height:38px;border-radius:11px} .arci svg{width:23px;height:23px}}
 @media (max-width:640px){.ubar .uchips{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:6px;scroll-snap-type:x proximity} .ubar .uchip{flex:none;max-width:74vw;scroll-snap-align:start} .ubar .uchip .ut{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:68vw;display:block}}
+/* 民商法情境題、統整筆記 */
+.lclist{display:flex;flex-direction:column;gap:18px}
+.lcq,.lsum{background:var(--panel);border:2.5px solid var(--line);border-radius:18px;padding:18px 20px;box-shadow:var(--sh);min-width:0;display:flex;flex-direction:column;gap:10px}
+.lcq header{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center}
+.lcq header b{font-family:var(--f-zh);font-size:18px}
+.lcq header .num{min-width:26px;height:26px;border-radius:999px;background:var(--acc);color:#fff;display:inline-grid;place-items:center;font-weight:700;font-size:13px}
+.lch{font-weight:700;color:var(--acc)}
+.lcs{background:var(--soft);border-radius:12px;padding:10px 14px;line-height:1.75}
+.lcs p{margin:4px 0}
+.lcfacts{margin:6px 0;padding-left:4px;list-style:none;display:flex;flex-direction:column;gap:4px}
+ul.lcfacts{padding-left:18px;list-style:disc}
+.lcqq{font-weight:700;font-size:16px}
+.lco{display:flex;flex-direction:column;gap:8px}
+.lcopt{font:inherit;text-align:left;line-height:1.6;color:var(--ink);background:var(--panel);border:2px solid var(--line);border-radius:12px;padding:8px 12px;cursor:pointer}
+.lcopt:hover:not(:disabled){background:var(--why)}
+.lcopt:disabled{cursor:default}
+.lcopt.ok{background:color-mix(in srgb,var(--good) 22%,var(--panel));border-color:var(--good)}
+.lcopt.no{background:color-mix(in srgb,var(--bad) 22%,var(--panel));border-color:var(--bad)}
+.lcx{border-top:2px dashed var(--hair);padding-top:10px;display:flex;flex-direction:column;gap:8px}
+.lcans{font-weight:700;font-size:16px}
+.lcxl{list-style:none;padding:0;display:flex;flex-direction:column;gap:10px}
+.lcxl li{border-left:5px solid var(--bad);padding:4px 0 4px 12px;line-height:1.75}
+.lcxl li.ok{border-color:var(--good)}
+.lcxl li>b:first-child{display:block}
+.lctag{display:block;font-weight:700;color:var(--mute);font-size:14px}
+.lcmemo{background:var(--hit);border-radius:10px;padding:8px 12px}
+.lcmemo b{margin-right:8px}
+.lcfoot{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.lsumbody{display:flex;flex-direction:column;gap:18px;margin-top:14px}
+.lsum h3{font-family:var(--f-zh);font-size:21px}
+.lsum h4{font-family:var(--f-zh);font-size:17px;margin-top:6px}
+.lsum ul,.lsum ol{padding-left:20px;line-height:1.75}
+.lsum p{line-height:1.75}
+.lsum .tbl{min-width:0;width:100%}
+.lsum .tbl td,.lsum .tbl th{line-height:1.6}
+.lsum{overflow-x:auto}
+.smap,.trap,.mynote,.fix{border-radius:12px;padding:10px 14px;line-height:1.75}
+.smap>b:first-child,.trap>b:first-child,.mynote>b:first-child,.fix>b:first-child{display:block;margin-bottom:2px}
+.smap{background:color-mix(in srgb,var(--acc) 14%,var(--panel));border:2px solid var(--acc)}
+.trap{background:var(--soft)}
+.mynote{background:var(--hit)}
+.fix{background:color-mix(in srgb,var(--bad) 16%,var(--panel));border:2px dashed var(--bad)}
+.trap ul,.mynote ul{margin:0}
+@media (max-width:600px){.lcq,.lsum{padding:14px}.lcq header b{font-size:16px}}
 </style>

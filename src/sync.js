@@ -4,7 +4,7 @@
 // 畫面設定（主題、字級、目前科目、閱讀位置⋯）每台裝置各自保留。
 const SYNC = (() => {
   const LK = 'rv26sync', FILE = 'rv26-sync.json', DESC = '26 秋季複習本同步（請勿手動修改）', API = 'https://api.github.com';
-  const LOCAL_ONLY = new Set(['subj', 'tab', 'pos', 'ntview', 'zoom', 'theme', '_themeSet', 'mu', 'calm', 'notips', 'sound', 'lang']);
+  const LOCAL_ONLY = new Set(['subj', 'tab', 'pos', 'ntview', 'zoom', 'theme', '_themeSet', 'mu', 'calm', 'notips', 'sound', 'lang', 'lsum']);
   const TOKEN_URL = 'https://github.com/settings/tokens/new?scopes=gist&description=' + encodeURIComponent('26 秋季複習本同步');
   let cfg = (() => { try { return JSON.parse(localStorage.getItem(LK)) || {}; } catch (e) { return {}; } })();
   const keep = () => { try { localStorage.setItem(LK, JSON.stringify(cfg)); } catch (e) { } };
