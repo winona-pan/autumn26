@@ -25,6 +25,8 @@ const LAWART = [
 const TIPS = {
   learn: ['每張卡先看「白話」和「生活比喻」，懂了再打開完整重點。勾「我懂了」+10 XP！', '看不懂的英文專有名詞，用上面的搜尋框找找看。', '在完整重點裡<b>選取文字</b>就能畫螢光筆；按卡片右上角的「＋筆記」，點任何列點就能寫自己的補充。'],
   formula: ['點公式裡<b>有顏色的符號</b>，我會告訴你它是什麼意思！再拉拉看下面的計算機。', '公式不用死背：先懂「它在回答什麼問題」，再記長相。'],
+  case: ['先把題幹的事實一條一條套進要件，再看選項。每題四個選項都有解析，答錯的可以用「答錯的」篩出來重做。', '跨單元的題目最像申論題的思考：同一件事可以打哪幾張牌？'],
+  sum: ['每個單元先看最上面的「一句話地圖」，再看對照表。粉紅框是你自己筆記裡要修正的地方喔！'],
   prob: ['先自己算，卡住再按「下一步提示」。小考會從這裡出題或類題喔！'],
   gen: ['每題數字都不一樣，答對 +15 XP。可以用上面切換成英文題目，練英文考試。'],
   game: ['配對：先點左邊、再點右邊。分類：看到卡片就按它屬於哪一組。越快越好！'],
@@ -359,7 +361,7 @@ const PANES = {
   basic: [['learn', '基礎卡片'], ['formula', '公式教室'], ['play', '遊戲＆打怪'], ['notes', '我的筆記']],
   deriv: [['learn', '知識點'], ['formula', '公式教室'], ['prob', '課本習題'], ['gen', '變化題'], ['play', '遊戲＆打怪'], ['notes', '我的筆記']],
   invest: [['learn', '知識點'], ['formula', '公式教室'], ['flash', '講義問題'], ['play', '遊戲＆打怪'], ['notes', '我的筆記']],
-  law: [['learn', '知識點＋條文'], ['play', '遊戲＆打怪'], ['notes', '我的筆記']],
+  law: [['learn', '知識點＋條文'], ['case', '情境題'], ['sum', '統整筆記'], ['play', '遊戲＆打怪'], ['notes', '我的筆記']],
   mgmt: [['learn', '知識點'], ['formula', '公式教室'], ['essay', '申論批改'], ['play', '遊戲＆打怪'], ['notes', '我的筆記']],
   re: [['learn', '知識點'], ['play', '遊戲＆打怪'], ['notes', '我的筆記']],
   cfa: [['intro', '考試指南'], ['learn', 'Level I 完整筆記'], ['play', '遊戲＆打怪'], ['notes', '我的筆記']]
@@ -384,7 +386,7 @@ function go(k, tab, opt) {
   $$('.ptab', main).forEach(b => b.onclick = () => go(k, b.dataset.p));
   ST.tab[k] = tab; save();
   const pane = $('#pane');
-  ({ intro: () => renderCFA(pane), learn: () => renderLearn(k, pane), formula: () => renderFormulas(k, pane), mcq: () => renderMCQ(k, pane), prob: () => renderProblems(pane), gen: () => renderGens(pane), flash: () => renderFlash(pane), essay: () => renderEssay(pane), game: () => renderGames(k, pane), play: () => renderGames(k, pane), notes: () => NOTES.page(k, pane) })[tab]();
+  ({ intro: () => renderCFA(pane), learn: () => renderLearn(k, pane), formula: () => renderFormulas(k, pane), mcq: () => renderMCQ(k, pane), prob: () => renderProblems(pane), gen: () => renderGens(pane), flash: () => renderFlash(pane), essay: () => renderEssay(pane), case: () => LAWCASE.renderCases(pane), sum: () => LAWCASE.renderSums(pane), game: () => renderGames(k, pane), play: () => renderGames(k, pane), notes: () => NOTES.page(k, pane) })[tab]();
   updateCounts();
   opt && opt.top ? window.scrollTo(0, 0) : restorePos();
   NOTES.bmPill();
