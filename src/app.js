@@ -32,6 +32,7 @@ const TIPS = {
   game: ['配對：先點左邊、再點右邊。分類：看到卡片就按它屬於哪一組。越快越好！'],
   boss: ['打怪模式：答對就打怪物一下，答錯會掉一顆心。3 顆心用完就輸了，加油！'],
   flash: ['先大聲說出你的答案，再點卡片翻面。講義上的每個問題都在這裡。'],
+  study: ['先自己回答簡報問題，再一層一層點開「追問」，看你能被問到第幾層還答得出來。'],
   essay: ['寫完拍照上傳，我會用老師的眼光幫你改。考試是英文，記得用英文寫！']
 };
 const tip = k => pick(TIPS[k] || TIPS.learn);
@@ -242,6 +243,24 @@ function renderFlash(root) {
   draw(F); $('#fshuf', root).onclick = () => draw(shuffle(F)); $('#fall', root).onclick = () => { $$('.fcard', root).forEach(c => c.classList.add('on')); cnt(); };
 }
 
+// ---------- 投資學 學習筆記（DATA.invest.study；上次看的單元存在 ST.istudy，只存本機）----------
+function renderStudy(root) {
+  const S = DATA.invest.study || [], uname = s => s.u === 'x' ? s.t : ((UNITS.list('invest').find(x => x.id === s.u) || {}).t || s.u);
+  const cardT = id => { for (const s of DATA.invest.sections) { const c = s.cards.find(c => c.id === id); if (c) return c.t; } return id; };
+  let cur = ST.istudy === 'all' || S[+ST.istudy] ? ST.istudy : '0';
+  root.innerHTML = `<div class="tipbox"></div><div class="ubar"><span class="lbl">選單元</span><div class="uchips">${S.map((s, i) => `<button class="uchip" data-si="${i}" type="button">${uname(s)}</button>`).join('')}<button class="uchip" data-si="all" type="button">全部一次看</button></div></div><div class="lsumbody"></div>`;
+  FUN.say($('.tipbox', root), tip('study'));
+  const draw = () => {
+    $$('[data-si]', root).forEach(b => { const on = b.dataset.si === cur; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
+    const list = cur === 'all' ? S : [S[+cur]];
+    $('.lsumbody', root).innerHTML = list.map(s => `<section class="lsum istudy"><h3>${uname(s)}</h3>${s.h}
+      <div class="lcfoot">${(s.cards || []).map(id => `<button type="button" class="ntbtn ghost" data-jc="${id}">${cardT(id)}</button>`).join('')}</div></section>`).join('');
+    $$('[data-jc]', root).forEach(b => b.onclick = () => jumpCard('invest', b.dataset.jc));
+  };
+  $$('[data-si]', root).forEach(b => b.onclick = () => { cur = b.dataset.si; ST.istudy = cur; save(); FUN.beep('ok'); draw(); });
+  draw();
+}
+
 // ---------- 管理學 essay grading ----------
 function renderEssay(root) {
   const E = DATA.mgmt.essays;
@@ -360,7 +379,7 @@ window.addEventListener('pagehide', savePos);
 const PANES = {
   basic: [['learn', '基礎卡片'], ['formula', '公式教室'], ['play', '遊戲＆打怪'], ['notes', '我的筆記']],
   deriv: [['learn', '知識點'], ['formula', '公式教室'], ['prob', '課本習題'], ['gen', '變化題'], ['play', '遊戲＆打怪'], ['notes', '我的筆記']],
-  invest: [['learn', '知識點'], ['formula', '公式教室'], ['flash', '講義問題'], ['play', '遊戲＆打怪'], ['notes', '我的筆記']],
+  invest: [['learn', '知識點'], ['study', '學習筆記'], ['formula', '公式教室'], ['flash', '講義問題'], ['play', '遊戲＆打怪'], ['notes', '我的筆記']],
   law: [['learn', '知識點＋條文'], ['case', '情境題'], ['sum', '統整筆記'], ['play', '遊戲＆打怪'], ['notes', '我的筆記']],
   mgmt: [['learn', '知識點'], ['formula', '公式教室'], ['essay', '申論批改'], ['play', '遊戲＆打怪'], ['notes', '我的筆記']],
   re: [['learn', '知識點'], ['play', '遊戲＆打怪'], ['notes', '我的筆記']],
@@ -386,7 +405,7 @@ function go(k, tab, opt) {
   $$('.ptab', main).forEach(b => b.onclick = () => go(k, b.dataset.p));
   ST.tab[k] = tab; save();
   const pane = $('#pane');
-  ({ intro: () => renderCFA(pane), learn: () => renderLearn(k, pane), formula: () => renderFormulas(k, pane), mcq: () => renderMCQ(k, pane), prob: () => renderProblems(pane), gen: () => renderGens(pane), flash: () => renderFlash(pane), essay: () => renderEssay(pane), case: () => LAWCASE.renderCases(pane), sum: () => LAWCASE.renderSums(pane), game: () => renderGames(k, pane), play: () => renderGames(k, pane), notes: () => NOTES.page(k, pane) })[tab]();
+  ({ intro: () => renderCFA(pane), learn: () => renderLearn(k, pane), formula: () => renderFormulas(k, pane), mcq: () => renderMCQ(k, pane), prob: () => renderProblems(pane), gen: () => renderGens(pane), flash: () => renderFlash(pane), study: () => renderStudy(pane), essay: () => renderEssay(pane), case: () => LAWCASE.renderCases(pane), sum: () => LAWCASE.renderSums(pane), game: () => renderGames(k, pane), play: () => renderGames(k, pane), notes: () => NOTES.page(k, pane) })[tab]();
   updateCounts();
   opt && opt.top ? window.scrollTo(0, 0) : restorePos();
   NOTES.bmPill();
