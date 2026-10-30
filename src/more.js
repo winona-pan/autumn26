@@ -66,26 +66,26 @@ DATA.law.mcq.push(
   {u:'l1', q:'民法的五編是：', o:['總則、債、物權、親屬、繼承','總則、契約、侵權、物權、親屬','總則、債、商事、親屬、繼承','總則、物權、公司、親屬、繼承'], a:0, e:''}
 );
 DATA.mgmt.mcq.push(
-  {u:'m1', q:'Which function involves monitoring, comparing, and correcting work?', o:['Planning','Organizing','Leading','Controlling'], a:3, e:''},
-  {u:'m1', q:'Which function involves defining goals and developing plans?', o:['Planning','Organizing','Leading','Controlling'], a:0, e:''},
+  {u:'m1', q:'Which function involves monitoring, comparing, and correcting work?', o:['Planning','Organizing','Leading','Controlling'], a:3, e:'Controlling 控制＝監督、比較、修正；Planning 是定目標，Organizing 是安排工作，Leading 是透過人完成。'},
+  {u:'m1', q:'Which function involves defining goals and developing plans?', o:['Planning','Organizing','Leading','Controlling'], a:0, e:'Planning 規劃＝定目標、擬策略、發展計畫；監督修正是 Controlling。'},
   {u:'m1', q:'First-line managers mainly need which skill most?', o:['Conceptual','Technical','Political','Financial'], a:1, e:'Technical skills matter most at lower levels.'},
-  {u:'m1', q:'Which skill is equally important at all managerial levels?', o:['Technical','Human','Conceptual','None'], a:1, e:''},
+  {u:'m1', q:'Which skill is equally important at all managerial levels?', o:['Technical','Human','Conceptual','None'], a:1, e:'Katz：human skills 人際技能在三個層級都一樣重要；technical 越基層越重要，conceptual 越高階越重要。'},
   {u:'m2', q:'A laptop scores 8 on a criterion with weight 6. Its weighted score is:', o:['14','48','2','86'], a:1, e:'8 × 6 = 48.'},
   {u:'m2', q:'Outcomes 100 (p = 0.4) and 50 (p = 0.6). Expected value?', o:['75','70','60','150'], a:1, e:'40 + 30 = 70.'},
-  {u:'m2', q:'Rational decision making assumes the decision maker:', o:['Has limited information','Knows all alternatives and consequences','Relies on intuition','Satisfices'], a:1, e:''},
-  {u:'m2', q:'Which bias: continuing a failing project because of money already spent?', o:['Sunk costs error','Framing','Availability','Hindsight'], a:0, e:''},
-  {u:'m2', q:'Which bias: blaming bad luck for failure and taking credit for success?', o:['Self-serving bias','Anchoring','Representation','Randomness'], a:0, e:''},
-  {u:'m4', q:'Exporting means:', o:['Selling products abroad that are made at home','Buying foreign products to sell at home','Building a factory abroad','Licensing your brand'], a:0, e:''},
-  {u:'m4', q:'Which approach involves the highest investment and risk when going global?', o:['Exporting','Licensing','Franchising','Foreign subsidiary'], a:3, e:''},
-  {u:'m7', q:'The four areas of organizational change are strategy, structure, technology, and:', o:['People','Price','Profit','Place'], a:0, e:''},
-  {u:'m7', q:'The first step of Lewin’s change process is:', o:['Refreezing','Changing','Unfreezing','Evaluating'], a:2, e:''},
-  {u:'m9', q:'SWOT analysis combines:', o:['Internal strengths/weaknesses and external opportunities/threats','Only competitors','Only financial ratios','Only customer surveys'], a:0, e:''},
+  {u:'m2', q:'Rational decision making assumes the decision maker:', o:['Has limited information','Knows all alternatives and consequences','Relies on intuition','Satisfices'], a:1, e:'理性決策假設資訊完整、知道所有方案與後果、追求最大化；limited information 和 satisfice 是有限理性的特徵。'},
+  {u:'m2', q:'Which bias: continuing a failing project because of money already spent?', o:['Sunk costs error','Framing','Availability','Hindsight'], a:0, e:'Sunk costs error 沉沒成本：只看已投入的錢，而不是未來後果。Framing 是被呈現方式影響，availability 是被最近、最鮮明的記憶影響。'},
+  {u:'m2', q:'Which bias: blaming bad luck for failure and taking credit for success?', o:['Self-serving bias','Anchoring','Representation','Randomness'], a:0, e:'Self-serving bias 自利偏誤：成功歸功自己、失敗怪外在因素。'},
+  {u:'m4', q:'Exporting means:', o:['Selling products abroad that are made at home','Buying foreign products to sell at home','Building a factory abroad','Licensing your brand'], a:0, e:'Exporting 出口＝在母國生產、賣到國外；買國外產品回來賣是 importing 進口；在國外蓋廠是 foreign subsidiary。'},
+  {u:'m4', q:'Which approach involves the highest investment and risk when going global?', o:['Exporting','Licensing','Franchising','Foreign subsidiary'], a:3, e:'走向國際的投入由低到高：global sourcing → exporting/importing → licensing/franchising → strategic alliance/joint venture → foreign subsidiary（直接投資，投入與風險最高）。'},
+  {u:'m7', q:'The four areas of organizational change are strategy, structure, technology, and:', o:['People','Price','Profit','Place'], a:0, e:'四種變革領域：structure 結構、technology 技術、people 人員，加上 strategy 策略（不是行銷 4P）。'},
+  {u:'m7', q:'The first step of Lewin’s change process is:', o:['Refreezing','Changing','Unfreezing','Evaluating'], a:2, e:'Lewin 三步驟：unfreezing 解凍 → changing 變革 → refreezing 再凍結。'},
+  {u:'m9', q:'SWOT analysis combines:', o:['Internal strengths/weaknesses and external opportunities/threats','Only competitors','Only financial ratios','Only customer surveys'], a:0, e:'SWOT＝內部分析的 strengths/weaknesses ＋ 外部分析的 opportunities/threats。'},
   {u:'m9', q:'A firm that buys its supplier is pursuing:', o:['Horizontal integration','Vertical integration','Diversification','Retrenchment'], a:1, e:'Backward vertical integration.'},
-  {u:'m10', q:'A business with unlimited personal liability for the owner is a:', o:['Corporation','LLC','Sole proprietorship','S corporation'], a:2, e:''},
-  {u:'m11', q:'Grouping jobs by function such as marketing, finance, and production is:', o:['Functional departmentalization','Geographic departmentalization','Product departmentalization','Customer departmentalization'], a:0, e:''},
-  {u:'m11', q:'An organization with wide spans of control, decentralization, and low formalization is:', o:['Mechanistic','Organic','Bureaucratic','Functional'], a:1, e:''},
+  {u:'m10', q:'A business with unlimited personal liability for the owner is a:', o:['Corporation','LLC','Sole proprietorship','S corporation'], a:2, e:'獨資 sole proprietorship 的業主負無限責任；corporation、LLC、S corporation 都是有限責任。'},
+  {u:'m11', q:'Grouping jobs by function such as marketing, finance, and production is:', o:['Functional departmentalization','Geographic departmentalization','Product departmentalization','Customer departmentalization'], a:0, e:'依職能（行銷、財務、生產）分組＝functional departmentalization；依地區是 geographic，依產品是 product，依顧客是 customer。'},
+  {u:'m11', q:'An organization with wide spans of control, decentralization, and low formalization is:', o:['Mechanistic','Organic','Bureaucratic','Functional'], a:1, e:'寬控制幅度、分權、低正式化、跨部門團隊＝organic 有機式；mechanistic 是窄幅度、集權、高正式化。'},
   {u:'m11', q:'A matrix structure violates which principle?', o:['Span of control','Unity of command','Formalization','Specialization'], a:1, e:'Employees report to two managers.'},
-  {u:'m10', q:'An entrepreneur differs from a small business owner mainly because the entrepreneur:', o:['Avoids risk','Seeks opportunity, innovation, and growth','Never hires staff','Only wants a stable income'], a:1, e:''}
+  {u:'m10', q:'An entrepreneur differs from a small business owner mainly because the entrepreneur:', o:['Avoids risk','Seeks opportunity, innovation, and growth','Never hires staff','Only wants a stable income'], a:1, e:'創業者追求機會、創新與成長；小企業主多半追求穩定收入、規模維持不大。'}
 );
 DATA.deriv.mcqEn.push(
   {u:'ch1', q:'Long one futures contract at 100, settlement at maturity 108, contract size 50. The gain is:', o:['400','−400','8','5,400'], a:0, e:'(108 − 100) × 50 = 400.'},
