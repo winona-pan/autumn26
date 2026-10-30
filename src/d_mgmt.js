@@ -1,7 +1,7 @@
 // ===== 管理學（Robbins & Coulter） =====
 DATA.mgmt = {
   name: '管理學', full: '管理學', hue: 'mgmt',
-  intro: 'Robbins & Coulter《Management》14/15 版。期中考 11/4（第 9 週），範圍到 Ch11 組織設計。考試用英文作答，會有申論題 → 「申論批改」可拍照上傳手寫答案，讓 Claude 依評分要點批改。',
+  intro: 'Robbins & Coulter《Management》14/15 版。期中考 11/4（第 9 週），範圍 Ch1、2、4、7、9、10、11。只考選擇題 20 題 → 到「遊戲＆打怪」選單元練，每單元都有 20 題以上中上難度的情境題。',
   sections: [
   { id:'m1', t:'Ch1 管理者與職場', cards: [
     { id:'m1a', t:'誰是管理者？三個層級', en:'Who is a manager',

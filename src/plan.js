@@ -124,7 +124,7 @@ function planTasksAll(k, f) {
   if (s.formulas && s.formulas.length) T.push({ k, sec: '公式教室', t: `${s.formulas.length} 個公式：看懂符號、玩計算機`, min: Math.round(s.formulas.length * 8 * f), kind: 'x', tab: 'formula' });
   if (k === 'invest') T.push({ k, sec: '講義問題', t: `講義問題 ${DATA.invest.flash.length} 題，大聲說出答案`, min: Math.round(DATA.invest.flash.length * 3 * f), kind: 'x', tab: 'flash' });
   if (k === 'law') T.push({ k, sec: '條文速記表', t: '條文速記表：遮住內容背條號', min: Math.round(60 * f), kind: 'x', tab: 'learn' });
-  if (k === 'mgmt') T.push({ k, sec: '申論批改', t: '英文申論練習 4 題（拍照批改）', min: Math.round(120 * f), kind: 'x', tab: 'essay' });
+  if (k === 'mgmt') T.push({ k, sec: '選擇題', t: '模擬考：混合單元選擇題 20 題 × 3 回，錯的回去看卡片', min: Math.round(90 * f), kind: 'x', tab: 'play' });
   return T;
 }
 

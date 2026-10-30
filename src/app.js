@@ -362,7 +362,7 @@ const PANES = {
   deriv: [['learn', '知識點'], ['formula', '公式教室'], ['prob', '課本習題'], ['gen', '變化題'], ['play', '遊戲＆打怪'], ['notes', '我的筆記']],
   invest: [['learn', '知識點'], ['formula', '公式教室'], ['flash', '講義問題'], ['play', '遊戲＆打怪'], ['notes', '我的筆記']],
   law: [['learn', '知識點＋條文'], ['case', '情境題'], ['sum', '統整筆記'], ['play', '遊戲＆打怪'], ['notes', '我的筆記']],
-  mgmt: [['learn', '知識點'], ['formula', '公式教室'], ['essay', '申論批改'], ['play', '遊戲＆打怪'], ['notes', '我的筆記']],
+  mgmt: [['learn', '知識點'], ['formula', '公式教室'], ['play', '遊戲＆打怪'], ['notes', '我的筆記']],
   re: [['learn', '知識點'], ['play', '遊戲＆打怪'], ['notes', '我的筆記']],
   cfa: [['intro', '考試指南'], ['learn', 'Level I 完整筆記'], ['play', '遊戲＆打怪'], ['notes', '我的筆記']]
 };
