@@ -38,7 +38,7 @@ DATA.mgmt.mcq.push(
   {u:'m9', q:'A fashion retailer builds its brand through influencers and an active Instagram feed. This is differentiation through:', o:['Quality','Social media','Mass customization','Forward integration'], a:1, e:'用社群媒體連結顧客、宣傳組織＝social media。'}
 );
 
-// ---- 必做 50 題：Ch1 8、Ch2 12、Ch4 4、Ch7 8、Ch9 10、Ch10 3、Ch11 5，重點照使用者指定、只選簡報內容 ----
+// ---- 必做 50 題（全部章節合計）：暫定版，等 Ch11 題目加好後再定案。Ch1 8、Ch2 12、Ch4 4、Ch7 8、Ch9 10、Ch10 3、Ch11 5 ----
 const MGMT_MUST = [
   // Ch1：六大挑戰＋效率效能＋Mintzberg
   'A manager must get employees on board', 'The text notes that the automobile', 'An employee posts complaints', 'A drug company raises', 'Brexit, the renegotiation', 'Because customers today',
