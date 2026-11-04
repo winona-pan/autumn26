@@ -35,7 +35,7 @@
     { id:'m7h', t:'壓力從哪來？角色壓力與 Type A／B', en:'Causes of stress',
       plain:'壓力來源分兩大類：工作本身（任務、角色、人際、組織結構、主管）和個人生活（家庭、經濟、個性）。角色壓力有三種：衝突、過載、模糊。Type A 個性的人比較容易感到壓力。',
       life:'打工時店長叫你顧櫃台、副店長又叫你去補貨（角色衝突）；一個人要做三個人的事（角色過載）；沒人告訴你打烊要做哪些事（角色模糊）。',
-      body:'<ul><li><b>Task demands</b>：工作設計、工作條件、實體環境。</li><li><b>Role demands</b>：<b>Role conflicts</b>（期望互相衝突、難以同時滿足）、<b>Role overload</b>（時間內要做的事太多）、<b>Role ambiguity</b>（不清楚自己該做什麼）。</li><li><b>Interpersonal demands</b>：同事帶來的壓力、缺乏社會支持、人際關係差。</li><li><b>Organization structure</b>：過多規則、沒機會參與決策；<b>Organizational leadership</b>：主管的管理風格（緊盯、恐懼文化）。</li><li><b>Personal factors</b>：家庭、個人經濟、個性。</li><li><b>Type A</b>：長期急迫感、過度競爭、無法享受空閒 → 較易有壓力；<b>Type B</b>：放鬆、不急、能休息。</li><li>減壓方法見 m7e。</li></ul>',
+      body:'<ul><li><b>Task demands</b>：工作設計、工作條件、實體環境。</li><li><b>Role demands</b>：<b>Role conflicts</b>（期望互相衝突、難以同時滿足）、<b>Role overload</b>（時間內要做的事太多）、<b>Role ambiguity</b>（不清楚自己該做什麼）。</li><li><b>Interpersonal demands</b>：同事帶來的壓力、缺乏社會支持、人際關係差。</li><li><b>Organization structure</b>：過多規則、沒機會參與決策；<b>Organizational leadership</b>：主管的管理風格（緊盯、恐懼文化）。</li><li><b>Personal factors</b>：家庭、個人經濟、個性。</li><li><b>Type A</b>：長期急迫感、過度競爭、無法享受空閒 → 較易有壓力；<b>Type B</b>：放鬆、不急、能休息。課本：只有 Type A 的<b>敵意與憤怒</b>和壓力的負面影響有關；Type B 也一樣會受焦慮因素影響。</li><li>減壓方法見 m7e。</li></ul>',
       ex:'Stress can come from task demands, role demands such as role conflict, overload, and ambiguity, interpersonal demands, structure, leadership, and personal factors like a Type A personality.' }
   );
 
@@ -83,7 +83,7 @@
     { id:'m11f', t:'指揮鏈、職權與控制幅度的細節', en:'Chain of command & span of control',
       plain:'指揮鏈＝從最上面到最下面的職權線，回答「我要向誰報告」。職權跟著職位走，有直線職權和幕僚職權；控制幅度要多寬，看員工和主管的能力、工作多相似、多標準化等。',
       life:'打工的漢堡店：工讀生向值班經理報告、值班經理向店長報告（指揮鏈）；店長可以直接命令員工（直線職權），總部人資只能給建議（幕僚職權）。員工都很熟練、工作都一樣時，一個值班經理可以帶很多人（寬幅度）。',
-      body:'<ul><li><b>Authority 職權</b>：職位本身賦予下命令並期待被遵守的權利（跟人無關，跟職位有關）。<b>Line authority</b>：直接指揮部屬；<b>Staff authority</b>：支援、協助、建議直線職權者。</li><li><b>Responsibility</b>：執行被指派任務的義務；有職權就要有相對的責任。</li><li><b>Unity of command</b>：每人只向一位主管報告；matrix 結構會違反它。</li><li>現代看法：員工被授權、資訊科技讓人可以直接溝通 → 指揮鏈沒那麼重要，但仍要知道向誰負責。</li><li><b>影響控制幅度的因素</b>（越符合越能用寬幅度）：員工與主管的技能經驗高、工作相似、任務簡單、員工在同一地點、程序標準化、資訊系統好、組織文化強、主管偏好的風格。</li><li>趨勢：控制幅度變寬 → 層級變少、成本降低、決策加快，但員工要更有能力。</li></ul>',
+      body:'<ul><li><b>Authority 職權</b>：職位本身賦予下命令並期待被遵守的權利（跟人無關，跟職位有關）。<b>Line authority</b>：直接指揮部屬；<b>Staff authority</b>：支援、協助、建議直線職權者。</li><li><b>Responsibility</b>：執行被指派任務的義務；有職權就要有相對的責任。</li><li><b>Unity of command</b>：每人只向一位主管報告；matrix 結構會違反它。</li><li>現代看法：員工被授權、資訊科技讓人可以直接溝通 → 指揮鏈沒那麼重要，但仍要知道向誰負責。</li><li><b>今日看法</b>：控制幅度沒有神奇數字，取決於主管和員工的技能，以及工作特性；員工訓練有素、經驗豐富時可以較寬。</li><li>幅度越寬越省成本，但太寬會因主管沒時間帶人而降低效能。</li></ul>',
       ex:'The chain of command defines who reports to whom; authority comes with the position, and the appropriate span of control depends on factors such as employee skills, task similarity, and standardized procedures.' }
   );
   put('m11', 'm11d',
