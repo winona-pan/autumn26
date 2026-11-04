@@ -1,7 +1,7 @@
 // ===== 管理學（Robbins & Coulter） =====
 DATA.mgmt = {
   name: '管理學', full: '管理學', hue: 'mgmt',
-  intro: 'Robbins & Coulter《Management》14/15 版。期中考 11/4（第 9 週），範圍 Ch1、2、4、7、9、10、11。只考選擇題 20 題 → 到「遊戲＆打怪」選單元練，每單元都有 20 題以上中上難度的情境題。',
+  intro: 'Robbins & Coulter《Management》14/15 版。期中考 11/4（第 9 週），範圍 Ch1、2、4、7、9、10、11。只考選擇題 20 題 → 到「遊戲＆打怪」選單元練，題目先做「一定要完成」的 50 題，有時間再做其他題。',
   sections: [
   { id:'m1', t:'Ch1 管理者與職場', cards: [
     { id:'m1a', t:'誰是管理者？三個層級', en:'Who is a manager',
@@ -127,14 +127,14 @@ DATA.mgmt = {
   ]},
   { id:'m9', t:'Ch9 策略管理', cards: [
     { id:'m9a', t:'策略管理六步驟', en:'Strategic management process',
-      plain:'確認使命目標策略 → 外部分析（機會威脅）→ 內部分析（優勢劣勢）→ 擬定策略 → 執行 → 評估結果。前三步合起來就是 SWOT。',
+      plain:'確認使命目標策略 → 外部分析（機會威脅）→ 內部分析（優勢劣勢）→ 擬定策略 → 執行 → 評估結果。第 2、3 步合起來就是 SWOT。',
       life:'準備考研究所：先確認目標學校（使命）、看今年錄取率與題型（外部）、評估自己強弱科（內部）、排讀書計畫（擬定）、照表操課（執行）、模擬考檢討（評估）。',
       fig:'swot',
       body:'<ul><li><b>Strategic management</b>：管理者發展組織策略所做的事。<b>Strategies</b>：如何經營、競爭、吸引滿足顧客的計畫。<b>Business model</b>：公司如何賺錢。</li><li>重要性：正面影響績效、幫助面對變化與不確定、讓複雜多元的組織協同。</li><li>Mission：組織的目的。</li><li>Resources（資產）、Capabilities（能力）、<b>Core competencies</b>（主要創造價值的能力 = 競爭武器）。</li></ul>' },
     { id:'m9b', t:'三層策略與公司層級策略', en:'Corporate / Competitive / Functional',
       plain:'公司層級：要做哪些事業（成長、穩定、更新）。競爭層級：每個事業怎麼競爭。功能層級：各部門如何支援。',
       life:'統一集團：決定要不要經營超商、藥妝、物流（公司層級）；7-11 用便利性競爭（競爭層級）；行銷部辦集點活動（功能層級）。',
-      body:'<ul><li><b>Growth</b>：Concentration 集中（本業擴大）、Vertical integration 垂直整合（向上游供應商或下游通路）、Horizontal integration 水平整合（併購同業）、Diversification 多角化（相關或非相關）。</li><li><b>Stability</b>：維持現狀。</li><li><b>Renewal</b>：績效衰退時 — Retrenchment 緊縮（小問題）、Turnaround 轉型（嚴重問題）。</li></ul>' },
+      body:'<ul><li><b>Growth</b>：Concentration 集中（本業擴大）、Vertical integration 垂直整合（<b>Backward</b>：自己當供應商，控制投入；<b>Forward</b>：自己當通路，控制產出）、Horizontal integration 水平整合（和競爭者結合）、Diversification 多角化（<b>Related</b>：不同但相關的產業，有 strategic fit；<b>Unrelated</b>：不同且不相關的產業，沒有 strategic fit）。</li><li><b>Stability</b>：維持現狀。</li><li><b>Renewal</b>：績效衰退時 — Retrenchment 緊縮（小問題）、Turnaround 轉型（嚴重問題）。</li></ul>' },
     { id:'m9c', t:'BCG 矩陣', en:'BCG matrix',
       plain:'用「市場成長率」×「市場占有率」把事業單位分成明星、金牛、問號、狗。',
       life:'明星 = 當紅偶像（高成長高市佔，要繼續投資）；金牛 = 長青老店（低成長高市佔，提供現金）；問號 = 新人（高成長低市佔，要決定培養或放棄）；狗 = 過氣（低成長低市佔，考慮出售）。',
@@ -148,7 +148,7 @@ DATA.mgmt = {
     { id:'m9e', t:'Porter 三大競爭策略', en:'Generic strategies',
       plain:'成本領導（全產業最低成本）、差異化（獨特、顧客願意多付）、集中（專攻某個利基市場，再用成本或差異化）。兩頭不到岸 = stuck in the middle。',
       life:'全聯（成本領導）、星巴克（差異化）、專做左撇子文具的店（集中）。',
-      body:'<ul><li>差異化例子：Quality、Innovation（技術移轉、R&amp;D、流程改善、<b>First mover</b>）、Customer service、Mass customization、Social media。</li><li><b>First mover 優點</b>：品牌聲譽、技術領先、搶占資源、建立轉換成本、學習曲線；<b>缺點</b>：不確定市場方向、高開發成本、技術被模仿或被新技術取代、需教育市場。</li><li>Functional strategies：支援競爭策略的部門策略。</li></ul>' }
+      body:'<ul><li>差異化例子：Quality、Innovation（跨部門技術移轉、投資 R&amp;D、改善流程、<b>First mover</b>）、Customer service、Mass customization、Social media。</li><li><b>First mover</b>：第一個把產品創新帶到市場或使用新流程創新的組織。<b>優點</b>：創新與領導者聲譽、成本與學習效益、掌控稀有資源、及早建立顧客關係與忠誠；<b>缺點</b>：技術與市場方向不確定、被競爭者模仿、財務與策略風險、高開發成本。</li><li>Functional strategies：支援競爭策略的部門策略。</li></ul>' }
   ]},
   { id:'m10', t:'Ch10 創業', cards: [
     { id:'m10a', t:'創業 vs 小企業 vs 自僱', en:'Entrepreneurship',

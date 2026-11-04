@@ -4,7 +4,7 @@
 // 畫面設定（主題、字級、目前科目、閱讀位置⋯）每台裝置各自保留。
 const SYNC = (() => {
   const LK = 'rv26sync', FILE = 'rv26-sync.json', DESC = '26 秋季複習本同步（請勿手動修改）', API = 'https://api.github.com';
-  const LOCAL_ONLY = new Set(['subj', 'tab', 'pos', 'ntview', 'zoom', 'theme', '_themeSet', 'mu', 'calm', 'notips', 'sound', 'lang', 'lsum']);
+  const LOCAL_ONLY = new Set(['subj', 'tab', 'pos', 'ntview', 'zoom', 'theme', '_themeSet', 'mu', 'calm', 'notips', 'sound', 'lang', 'lsum', 'mt']);
   const TOKEN_URL = 'https://github.com/settings/tokens/new?scopes=gist&description=' + encodeURIComponent('26 秋季複習本同步');
   let cfg = (() => { try { return JSON.parse(localStorage.getItem(LK)) || {}; } catch (e) { return {}; } })();
   const keep = () => { try { localStorage.setItem(LK, JSON.stringify(cfg)); } catch (e) { } };
@@ -29,6 +29,7 @@ const SYNC = (() => {
         const o = {}; for (const src of [a[k] || {}, b[k] || {}]) for (const [id, v] of Object.entries(src)) { if (!v) continue; const t = ts(v); if (t <= D(k + '|' + id, k)) continue; if (!(id in o) || t > ts(o[id])) o[id] = v; }
         out[k] = o; continue;
       }
+      if (k === 'mustOK') { const o = {}; for (const src of [a.mustOK || {}, b.mustOK || {}]) for (const [sk, m] of Object.entries(src)) o[sk] = Object.assign(o[sk] || {}, m); out.mustOK = o; continue; }
       if (k === 'nt') {
         const o = {}; for (const src of [a.nt || {}, b.nt || {}]) for (const [cid, notes] of Object.entries(src)) for (const [nk, d] of Object.entries(notes)) {
           if (ts(d) <= D('nt|' + cid + '|' + nk, 'nt')) continue; o[cid] = o[cid] || {}; if (!o[cid][nk] || ts(d) > ts(o[cid][nk])) o[cid][nk] = d; }
