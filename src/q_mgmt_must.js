@@ -38,24 +38,24 @@ DATA.mgmt.mcq.push(
   {u:'m9', q:'A fashion retailer builds its brand through influencers and an active Instagram feed. This is differentiation through:', o:['Quality','Social media','Mass customization','Forward integration'], a:1, e:'用社群媒體連結顧客、宣傳組織＝social media。'}
 );
 
-// ---- 必做 50 題（全部章節合計）：暫定版，等 Ch11 題目加好後再定案。Ch1 8、Ch2 12、Ch4 4、Ch7 8、Ch9 10、Ch10 3、Ch11 5 ----
+// ---- 必做 50 題（全部章節合計，定案）：重點照使用者指定、只選簡報內容。Ch1 7、Ch2 12、Ch4 3、Ch7 8、Ch9 9、Ch10 5、Ch11 6 ----
 const MGMT_MUST = [
-  // Ch1：六大挑戰＋效率效能＋Mintzberg
+  // Ch1：六大挑戰＋效率效能
   'A manager must get employees on board', 'The text notes that the automobile', 'An employee posts complaints', 'A drug company raises', 'Brexit, the renegotiation', 'Because customers today',
-  'A sales team meets every target', 'After a meeting with top management',
+  'A sales team meets every target',
   // Ch2：12 種偏誤各一題
   'A project manager insists', 'A manager keeps postponing', 'In salary talks', 'A manager who dislikes an employee', 'After choosing a supplier', 'Board members approve',
   'In annual reviews', 'A manager predicts a new product', 'A manager notices the company', 'A firm spent $2 million', 'When a project succeeds', 'After a competitor',
-  // Ch4
-  'A firm fills its top jobs', 'A chipmaker gives', 'Two automakers share', 'Employees expect the company',
+  // Ch4：沒有指定重點，選基本題
+  'A firm fills its top jobs', 'A chipmaker gives', 'Employees expect the company',
   // Ch7：calm waters vs white-water、disruptive vs sustaining
   'A utility in a stable market', 'A software firm faces', 'Why is Lewin', 'After a new system is running', 'An airline adds faster', 'A start-up releases', 'Disruptive innovation exists when', 'Large, profitable firms are most vulnerable',
   // Ch9：process、growth、Porter、differentiation
-  'Which sequence of the strategic', 'SWOT analysis combines which steps', 'A tire maker buys', 'An organization becomes its own distributor', 'A concert promoter combines', 'A company combines with firms in different',
+  'Which sequence of the strategic', 'SWOT analysis combines which steps', 'A tire maker buys', 'A concert promoter combines', 'A company combines with firms in different',
   'Video conferencing reduces', 'A regional airline competes', 'A clothing firm lets each customer', 'A company applies an ingredient',
-  // Ch10
-  'A business wants limited liability', 'A wealthy retired executive', 'An analysis of the various aspects',
-  // Ch11
-  'A bank organizes', 'An HR director advises', 'Which situation favors MORE', 'According to Woodward, an oil refinery', 'Employees have no permanent department',
+  // Ch10：entrepreneurship 的重要性、legal forms
+  'New businesses keep established firms', 'Within the small business sector', 'A firm’s profit is taxed', 'An investor wants to put money', 'A business wants limited liability',
+  // Ch11：departmentalization、centralization、unit/mass/process production
+  'A furniture factory groups', 'A consumer goods firm', 'Lower-level managers are less capable', 'According to Exhibit 11.5, which factor', 'According to Woodward, an oil refinery', 'According to Woodward, which technology has HIGH vertical',
 ];
 MGMT_MUST.forEach(p => { const hit = DATA.mgmt.mcq.filter(m => m.q.startsWith(p)); if (hit.length !== 1) throw new Error('MGMT_MUST 對不到唯一一題：' + p + '（' + hit.length + '）'); hit[0].must = true; });
