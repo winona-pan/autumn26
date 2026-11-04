@@ -1,7 +1,7 @@
 // ===== 管理學（Robbins & Coulter） =====
 DATA.mgmt = {
   name: '管理學', full: '管理學', hue: 'mgmt',
-  intro: 'Robbins & Coulter《Management》14/15 版。期中考 11/4（第 9 週），範圍 Ch1、2、4、7、9、10、11。只考選擇題 20 題 → 到「遊戲＆打怪」選單元練，題目先做「一定要完成」的 50 題，有時間再做其他題。',
+  intro: 'Robbins & Coulter《Management》14/15 版。期中考 11/4（第 9 週），範圍 Ch1、2、4、7、9、10、11。只考選擇題 20 題 → 到「遊戲＆打怪」選單元練，題目先做「一定要完成」的 50 題，有時間再做其他題；答錯的可以到「錯題相似題」再練。',
   sections: [
   { id:'m1', t:'Ch1 管理者與職場', cards: [
     { id:'m1a', t:'誰是管理者？三個層級', en:'Who is a manager',

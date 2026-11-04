@@ -177,13 +177,14 @@ function renderMCQ(key, root, opts = {}) {
       timer = setInterval(() => { t--; const c = $('.clock', arena); if (c) c.textContent = t + 's'; if (t <= 0) end(); }, 1000);
       draw();
     } else {
-      let list = mode === 'wrong' ? bank.filter(b => wrong().has(b.id)) : shuffle(bank);
+      const scoped = sel.size ? all.filter(m => sel.has(m.u)) : all; // 相似題不受必做／有時間再做的分級限制
+      let list = mode === 'wrong' ? bank.filter(b => wrong().has(b.id)) : mode === 'similar' ? UNITS.similarAll(scoped, wrong()) : shuffle(bank);
       if (mode !== 'wrong' && UNITS.tier(key) === 'must') list.sort((x, y) => UNITS.mustDone(key, x) - UNITS.mustDone(key, y)); // 還沒完成的必做題排前面
-      if (!list.length) { arena.innerHTML = `<div class="win">${PIG('happy', 90)}<p>錯題本是空的，太棒了！</p></div>`; return; }
+      if (!list.length) { arena.innerHTML = `<div class="win">${PIG('happy', 90)}<p>${mode === 'similar' ? '這個範圍還沒有錯題，先做幾題再回來！' : '錯題本是空的，太棒了！'}</p></div>`; return; }
       let i = 0, score = 0;
       const draw = () => { if (i >= list.length) { arena.innerHTML = `<div class="win">${PIG('wow', 100)}<h3>${score} / ${list.length}</h3><button class="btn big" id="again" type="button">再來一輪</button></div>`; $('#again', root).onclick = () => start(mode); return; }
         const m = list[i]; arena.innerHTML = `<div class="qcard">${qhtml(m, `第 ${i + 1} / ${list.length} 題 · 答對 ${score} · combo ${combo}`)}<div class="exp" hidden></div><button class="btn next" type="button" hidden>下一題</button></div>`;
-        $$('.opt', arena).forEach(b => b.onclick = () => answer(m, b, ok => { if (ok) score++; const e = $('.exp', arena); e.hidden = false; e.innerHTML = `<b>${ok ? FUN_CHEER() : FUN_COMFORT()}</b> ${m.e || ''}`; const n = $('.next', arena); n.hidden = false; n.focus(); n.onclick = () => { i++; draw(); }; })); };
+        $$('.opt', arena).forEach(b => b.onclick = () => answer(m, b, ok => { if (ok) score++; const e = $('.exp', arena); e.hidden = false; e.innerHTML = `<b>${ok ? FUN_CHEER() : FUN_COMFORT()}</b> ${m.e || ''}`; const n = $('.next', arena); n.hidden = false; n.focus(); n.onclick = () => { i++; draw(); }; if (!ok) { const done = new Set(list.slice(0, i + 1).map(x => x.id)), sim = UNITS.similar(scoped, m, done)[0]; if (sim) { n.insertAdjacentHTML('beforebegin', '<button class="btn ghost simq" type="button">再練一題類似的</button> '); $('.simq', arena).onclick = () => { list = list.filter((x, j) => j <= i || x.id !== sim.id); list.splice(i + 1, 0, sim); i++; draw(); }; } } })); };
       draw();
     }
   };
