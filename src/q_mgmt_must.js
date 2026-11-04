@@ -28,20 +28,20 @@ DATA.mgmt.mcq.push(
   {u:'m9', q:'A brand sells only premium audio equipment to a small group of enthusiasts. Its strategy is:', o:['Cost focus','Differentiation focus','Cost leadership','Concentration'], a:1, e:'狹窄區隔＋差異化＝differentiation focus。Concentration 是公司層級的成長策略，不是競爭策略。'},
 
   // ---- Differentiation strategies ----
-  {u:'m9', q:'Which is NOT one of the differentiation strategies listed in the slides?', o:['Quality','Mass customization','Keeping overhead to a minimum','Social media'], a:2, e:'五項：quality、innovation、customer service、mass customization、social media。壓低管銷是 cost leadership。'},
+  {u:'m9', q:'Which is NOT a differentiation strategy?', o:['Quality','Mass customization','Keeping overhead to a minimum','Social media'], a:2, e:'差異化策略：quality、innovation、customer service、mass customization、social media。壓低管銷是 cost leadership。'},
   {u:'m9', q:'A clothing firm lets each customer tailor a suit online and sells it at close to mass-production prices. This is:', o:['Mass customization','Customer service','Quality','Cost leadership'], a:0, e:'以接近大量生產的價格提供客製化＝mass customization。'},
   {u:'m9', q:'An airline sets itself apart by training employees extensively to treat passengers exceptionally well. This is differentiation through:', o:['Mass customization','Innovation','Social media','Customer service'], a:3, e:'給顧客想要的、有效溝通、訓練員工＝customer service。'},
-  {u:'m9', q:'A company applies an ingredient developed in one division to a new product in another division. This is:', o:['Mass customization','An innovation strategy','A quality strategy','A functional strategy'], a:1, e:'投影片的 innovation strategies：transfer technology from one division to another、invest in R&D、improve the process，以及 first mover。'},
+  {u:'m9', q:'A company applies an ingredient developed in one division to a new product in another division. This is:', o:['Mass customization','An innovation strategy','A quality strategy','A functional strategy'], a:1, e:'transfer technology from one division to another、invest in R&D、improve the process，以及 first mover。'},
   {u:'m9', q:'A firm continually improves the reliability of its products so that buyers trust them more than rivals’. This is differentiation through:', o:['Customer service','Mass customization','Quality','Social media'], a:2, e:'持續提升品質與可靠度＝quality。'},
   {u:'m9', q:'An organization that is first to bring a product innovation to market or to use a new process innovation is a:', o:['First mover','Cost leader','Skunk works','Question mark'], a:0, e:'First mover 的定義。'},
-  {u:'m9', q:'Which is an ADVANTAGE of being a first mover according to Exhibit 9.4?', o:['Uncertainty about the market’s direction','Risk of imitation by competitors','High development costs','Control over scarce resources'], a:3, e:'優點：領先者聲譽、成本與學習效益、掌控稀有資源、及早建立顧客關係與忠誠。其他三項都是缺點。'},
+  {u:'m9', q:'Which is an ADVANTAGE of being a first mover?', o:['Uncertainty about the market’s direction','Risk of imitation by competitors','High development costs','Control over scarce resources'], a:3, e:'優點：領先者聲譽、成本與學習效益、掌控稀有資源、及早建立顧客關係與忠誠。其他三項都是缺點。'},
   {u:'m9', q:'A fashion retailer builds its brand through influencers and an active Instagram feed. This is differentiation through:', o:['Quality','Social media','Mass customization','Forward integration'], a:1, e:'用社群媒體連結顧客、宣傳組織＝social media。'}
 );
 
 // ---- 必做 50 題（全部章節合計，定案）：重點照使用者指定、只選簡報內容。Ch1 7、Ch2 12、Ch4 3、Ch7 8、Ch9 9、Ch10 5、Ch11 6 ----
 const MGMT_MUST = [
   // Ch1：六大挑戰＋效率效能
-  'A manager must get employees on board', 'The text notes that the automobile', 'An employee posts complaints', 'A drug company raises', 'Brexit, the renegotiation', 'Because customers today',
+  'A manager must get employees on board', 'The automobile destroyed', 'An employee posts complaints', 'A drug company raises', 'Brexit, the renegotiation', 'Because customers today',
   'A sales team meets every target',
   // Ch2：12 種偏誤各一題
   'A project manager insists', 'A manager keeps postponing', 'In salary talks', 'A manager who dislikes an employee', 'After choosing a supplier', 'Board members approve',
@@ -56,6 +56,6 @@ const MGMT_MUST = [
   // Ch10：entrepreneurship 的重要性、legal forms
   'New businesses keep established firms', 'Within the small business sector', 'A firm’s profit is taxed', 'An investor wants to put money', 'A business wants limited liability',
   // Ch11：departmentalization、centralization、unit/mass/process production
-  'A furniture factory groups', 'A consumer goods firm', 'Lower-level managers are less capable', 'According to Exhibit 11.5, which factor', 'According to Woodward, an oil refinery', 'According to Woodward, which technology has HIGH vertical',
+  'A furniture factory groups', 'A consumer goods firm', 'Lower-level managers are less capable', 'Which factor favors more centralization', 'According to Woodward, an oil refinery', 'According to Woodward, which technology has HIGH vertical',
 ];
 MGMT_MUST.forEach(p => { const hit = DATA.mgmt.mcq.filter(m => m.q.startsWith(p)); if (hit.length !== 1) throw new Error('MGMT_MUST 對不到唯一一題：' + p + '（' + hit.length + '）'); hit[0].must = true; });
