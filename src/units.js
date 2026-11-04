@@ -73,6 +73,25 @@ const UNITS = (() => {
   const mustDone = (k, m) => !!((ST.mustOK || {})[k] || {})[mustKey(m)];
   const markMust = (k, m) => { if (!m.must || mustDone(k, m)) return; ST.mustOK = ST.mustOK || {}; (ST.mustOK[k] = ST.mustOK[k] || {})[mustKey(m)] = 1; save(); };
 
-  return { list, sel, inSel, filter, init, add, pts, lv, picker, unitOfCard, scopeText, tagText, hasMust, tier, setTier, byTier, mustDone, markMust };
+  // ---- 相似題：從同單元找，正確答案相同最優先，再看選項重疊和題幹關鍵字；長題幹優先 ----
+  const qWords = m => new Set((m.q + ' ' + m.o[m.a]).toLowerCase().match(/[a-z]{6,}/g) || []);
+  const isLong = m => m.q.split(/\s+/).length >= 40;
+  function similar(arr, m, skip) {
+    const opts = new Set(m.o.map(o => o.toLowerCase())), ans = m.o[m.a].toLowerCase(), words = qWords(m);
+    return arr.filter(x => x.u === m.u && x.q !== m.q && !(skip && skip.has(x.id))).map(x => {
+      let n = x.o[x.a].toLowerCase() === ans ? 4 : 0;
+      x.o.forEach(o => { if (opts.has(o.toLowerCase())) n++; });
+      let w = 0; qWords(x).forEach(t => { if (words.has(t)) w++; });
+      return [x, n + Math.min(w, 3) + (isLong(x) ? 1 : 0)];
+    }).filter(p => p[1] >= 3).sort((a, b) => b[1] - a[1]).map(p => p[0]);
+  }
+  // 每題錯題各取最相似的幾題，輪流排，避免被同一題占滿
+  function similarAll(arr, wrongIds, each = 3, max = 20) {
+    const out = [], seen = new Set(wrongIds), lists = arr.filter(m => wrongIds.has(m.id)).map(m => similar(arr, m, wrongIds).slice(0, each));
+    for (let r = 0; r < each; r++) lists.forEach(l => { const x = l[r]; if (x && !seen.has(x.id) && out.length < max) { seen.add(x.id); out.push(x); } });
+    return out;
+  }
+
+  return { list, sel, inSel, filter, init, add, pts, lv, picker, unitOfCard, scopeText, tagText, hasMust, tier, setTier, byTier, mustDone, markMust, similar, similarAll };
 })();
 UNITS.init();

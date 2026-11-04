@@ -44,7 +44,8 @@ const ARCADE = (() => {
     qboss: '<path d="M5 9 a7 7 0 0 1 14 0 v6 l-2 -1.5 -2 1.5 -2 -1.5 -2 1.5 -2 -1.5 -2 1.5 Z"/><circle cx="9.5" cy="9.5" r="1.2"/><circle cx="14.5" cy="9.5" r="1.2"/>',
     qspeed: '<circle cx="12" cy="13" r="7"/><path d="M12 13 L15 10 M10 3 h4 M12 3 v3"/>',
     qprac: '<path d="M5 4 h10 l4 4 v12 H5 Z"/><path d="M8 11 h8 M8 15 h6"/>',
-    qwrong: '<path d="M6 4 h12 v16 l-6 -4 -6 4 Z"/><path d="M10 8 l4 4 M14 8 l-4 4"/>'
+    qwrong: '<path d="M6 4 h12 v16 l-6 -4 -6 4 Z"/><path d="M10 8 l4 4 M14 8 l-4 4"/>',
+    qsimilar: '<path d="M4 8 h11 v11 H4 Z"/><path d="M9 8 V4 h11 v11 h-5"/>'
   };
   const icon = k => `<svg viewBox="0 0 24 24" aria-hidden="true">${ICON[k]}</svg>`;
   function render(key, root) {
@@ -68,12 +69,14 @@ const ARCADE = (() => {
       tierBar();
       const Q = UNITS.byTier(key, UNITS.filter(key, allQ)), P = pairsFor(key), words = P.filter(p => isWord(p[0])), S = (DATA[key].sort || []).filter(g => UNITS.inSel(key, g.u)), M = (DATA[key].match || []).filter(p => UNITS.inSel(key, p.u));
       const wrongN = Q.filter(m => new Set(ST.wrong2[key] || []).has(m.id)).length;
+      const simN = UNITS.similarAll(UNITS.filter(key, allQ), new Set(ST.wrong2[key] || [])).length;
       $('.ucount', root).textContent = (UNITS.tier(key) === 'all' ? UNITS.scopeText(key, Q.length, allQ.length) : `${UNITS.sel(key).size ? `已選 ${UNITS.sel(key).size} 個單元，` : ''}這個分級共 ${Q.length} 題`) + `，名詞 ${P.length} 個`;
       const T = [
         ['q:boss', '打怪模式', '10 題 · 3 顆心，打倒怪物', 'tb', Q.length >= 4, ''],
         ['q:speed', '60 秒限時賽', '能答幾題就幾題', 'ts', Q.length >= 4, (() => { const b = ST.best['sp' + key]; return b ? `最佳 ${b} 題` : ''; })()],
         ['q:prac', '慢慢練習', '一題一題做，每題都有解釋', 'tp', Q.length >= 1, ''],
         ['q:wrong', '錯題本', `${wrongN} 題待複習`, 'tw', wrongN > 0, ''],
+        ['q:similar', '錯題相似題', '依你答錯的題目，挑類似的再練', 'tp', simN > 0, `${simN} 題`],
         ['mem', '翻牌記憶', '翻兩張，找出英文 ↔ 中文', 't1', P.length >= 6, (() => { const b = best('mem', null, true).v; return b != null ? `最少 ${b} 步` : ''; })()],
         ['mole', '打地鼠', '看中文，敲舉著對的英文的地鼠', 't2', P.length >= 4, (() => { const b = best('mole').v; return b ? `最高 ${b} 分` : ''; })()],
         ['snake', '貪吃蛇答題', '吃到正確答案的果子就變長', 't3', Q.length >= 1, (() => { const b = best('snake').v; return b ? `最多 ${b} 題` : ''; })()],

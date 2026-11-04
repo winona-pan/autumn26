@@ -1,7 +1,7 @@
 // ===== 管理學（Robbins & Coulter） =====
 DATA.mgmt = {
   name: '管理學', full: '管理學', hue: 'mgmt',
-  intro: 'Robbins & Coulter《Management》14/15 版。期中考 11/4（第 9 週），範圍 Ch1、2、4、7、9、10、11。只考選擇題 20 題 → 到「遊戲＆打怪」選單元練，題目先做「一定要完成」的 50 題，有時間再做其他題。',
+  intro: 'Robbins & Coulter《Management》14/15 版。期中考 11/4（第 9 週），範圍 Ch1、2、4、7、9、10、11。只考選擇題 20 題 → 到「遊戲＆打怪」選單元練，題目先做「一定要完成」的 50 題，有時間再做其他題；答錯的可以到「錯題相似題」再練。',
   sections: [
   { id:'m1', t:'Ch1 管理者與職場', cards: [
     { id:'m1a', t:'誰是管理者？三個層級', en:'Who is a manager',
@@ -225,8 +225,8 @@ DATA.mgmt = {
     {u:'m1', q:'Which is NOT one of the three common characteristics of organizations?', o:['Distinct purpose','Deliberate structure','People','Profit'], a:3, e:'目的、結構、人。'},
     {u:'m2', q:'What is step 3 of the decision-making process?', o:['Identify decision criteria','Allocate weights to the criteria','Develop alternatives','Analyze alternatives'], a:1, e:'問題 → 準則 → 權重 → 方案 → 分析 → 選擇 → 執行 → 評估。'},
     {u:'m2', q:'Accepting solutions that are "good enough" is called:', o:['Maximizing','Satisficing','Escalation','Framing'], a:1, e:'有限理性下的滿意解。'},
-    {u:'m2', q:'Increased commitment to a previous decision despite evidence it may have been wrong:', o:['Sunk cost','Escalation of commitment','Anchoring','Hindsight'], a:1, e:'14 版。'},
-    {u:'m2', q:'Programmed decisions are most often used for:', o:['Unstructured problems at upper levels','Structured problems at lower levels','New and unusual problems','Problems with ambiguous information'], a:1, e:'Exhibit 2.7。'},
+    {u:'m2', q:'Increased commitment to a previous decision despite evidence it may have been wrong:', o:['Sunk cost','Escalation of commitment','Anchoring','Hindsight'], a:1, e:'有證據顯示決定錯了，仍持續加碼＝escalation of commitment。'},
+    {u:'m2', q:'Programmed decisions are most often used for:', o:['Unstructured problems at upper levels','Structured problems at lower levels','New and unusual problems','Problems with ambiguous information'], a:1, e:'程式化決策處理結構化、重複的問題，多由基層負責；新的、資訊模糊的問題才靠判斷。'},
     {u:'m2', q:'“A guideline for making decisions” is a:', o:['Procedure','Rule','Policy','Program'], a:2, e:'Procedure = 步驟；Rule = 能/不能；Policy = 指導方針。'},
     {u:'m2', q:'Low tolerance for ambiguity + rational way of thinking =', o:['Directive','Analytic','Conceptual','Behavioral'], a:0, e:'Analytic = 高容忍＋理性；Conceptual = 高容忍＋直覺；Behavioral = 低容忍＋直覺。'},
     {u:'m2', q:'Fixating on initial information as a starting point is:', o:['Anchoring effect','Availability bias','Framing bias','Confirmation bias'], a:0, e:'錨定效應。'},
@@ -266,8 +266,8 @@ DATA.mgmt = {
     {u:'m10', q:'Exiting a venture to capitalize financially on the investment:', o:['Liquidation','Harvesting','Turnaround','Retrenchment'], a:1, e:'收割。'},
     {u:'m11', q:'Each person should report to only one manager:', o:['Span of control','Unity of command','Chain of command','Line authority'], a:1, e:'指揮統一。'},
     {u:'m11', q:'Positions created to support, assist, and advise those holding line authority:', o:['Line authority','Staff authority','Responsibility','Empowerment'], a:1, e:'幕僚職權。'},
-    {u:'m11', q:'A wider span of control usually means:', o:['More levels in the hierarchy','Fewer levels and fewer managers','Higher management costs','More centralization'], a:1, e:'Exhibit 11.4：幅度 8 比 4 少兩層、少約 800 位管理者。'},
-    {u:'m11', q:'Which situation favors centralization?', o:['A complex, uncertain environment','A geographically dispersed company','The organization is facing a crisis','Capable lower managers who want a say'], a:2, e:'Exhibit 11.5。'},
+    {u:'m11', q:'A wider span of control usually means:', o:['More levels in the hierarchy','Fewer levels and fewer managers','Higher management costs','More centralization'], a:1, e:'幅度 8 比 4 少兩層、少約 800 位管理者。'},
+    {u:'m11', q:'Which situation favors centralization?', o:['A complex, uncertain environment','A geographically dispersed company','The organization is facing a crisis','Capable lower managers who want a say'], a:2, e:'組織面臨危機時需要快速統一決策，偏向集權；其他三項都偏向分權。'},
     {u:'m11', q:'According to Woodward, the most effective structure for mass production is:', o:['Organic','Mechanistic','Matrix','Virtual'], a:1, e:'Unit 與 Process → Organic。'},
     {u:'m11', q:'Little departmentalization, wide spans of control, centralized authority, little formalization:', o:['Simple structure','Functional structure','Divisional structure','Matrix structure'], a:0, e:'簡單結構。'},
     {u:'m11', q:'A small core of full-time employees plus outside specialists hired as needed:', o:['Team structure','Virtual organization','Project structure','Divisional structure'], a:1, e:'又稱 network 或 modular。'},
