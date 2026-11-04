@@ -32,7 +32,7 @@ DATA.mgmt = {
     { id:'m1f', t:'今日管理者的挑戰與為何學管理', en:'Challenges / Why study',
       plain:'挑戰：科技、破壞式創新、社群媒體、倫理、政治不確定、顧客。學管理的理由：管理具普遍性、你不是管人就是被管、有回報也有挑戰。',
       life:'就算你以後當工程師，也會有主管、也可能帶專案小組。',
-      body:'<table class="tbl"><tr><th>今日管理者的挑戰</th><th>在說什麼</th><th>例子／管理意涵</th></tr><tr><td><b>Focus on technology</b></td><td>科技改變工作方式：遠距、AI、數位工具</td><td>管理者要帶領用新工具、不一定在同一地點工作的員工</td></tr><tr><td><b>Focus on disruptive innovation</b></td><td>創新徹底改變產業規則，原本的龍頭可能被淘汰</td><td>汽車摧毀馬車業；管理者要持續注意可能顛覆自己產業的新事物</td></tr><tr><td><b>Focus on social media</b></td><td>員工、顧客都在用社群媒體溝通</td><td>可用來和員工、顧客溝通；也要訂規範，避免傷害公司</td></tr><tr><td><b>Focus on ethics</b></td><td>不道德行為被揭露的例子越來越多</td><td>藥廠漲價 500%、員工報假收據；管理者要建立並以身作則遵守倫理標準</td></tr><tr><td><b>Focus on political uncertainty</b></td><td>政治變動讓規劃更難</td><td>Brexit、USMCA 重新談判、加州額外規範</td></tr><tr><td><b>Focus on the customer</b></td><td>顧客有很多選擇，服務品質決定顧客留不留下</td><td>管理者要建立以顧客為重的組織、訓練員工服務顧客</td></tr></table><ul><li><b>Universality of management</b>：所有類型、規模、層級、部門、地點的組織都需要管理。</li><li>The reality of work：you will either manage or be managed。</li><li><b>Rewards</b>（Exhibit 1.9）：創造好的工作環境、發揮創意、幫他人找到意義、教練與培育、與多元的人合作、獲得認可與地位、影響組織結果、薪資獎金股票選擇權。</li><li><b>Challenges</b>（同一張表的另一欄）：工作辛苦、有些職責偏行政庶務、要應付各種個性的人、常常資源有限、要在混亂不確定中激勵員工、要整合背景多元的團隊、<b>自己的成功取決於別人的績效</b>。</li><li><b>Employability Skills Matrix (ESM)</b>：Critical thinking、Communication、Collaboration、Knowledge application and analysis、Social responsibility。</li></ul>' }
+      body:'<table class="tbl"><tr><th>今日管理者的挑戰</th><th>在說什麼</th><th>例子／管理意涵</th></tr><tr><td><b>Focus on technology</b></td><td>新科技改變工作方式</td><td>要讓員工接受新科技；要處理協作科技帶來的社交互動問題</td></tr><tr><td><b>Focus on disruptive innovation</b></td><td>新產品、流程、服務徹底改變遊戲規則；是今日最關鍵的挑戰之一</td><td>汽車摧毀馬車業</td></tr><tr><td><b>Focus on social media</b></td><td>使用者建立線上社群、分享想法、資訊、訊息的電子溝通形式</td><td>已成為管理上重要、有價值的工具</td></tr><tr><td><b>Focus on ethics</b></td><td>新聞常見不道德的商業行為</td><td>藥廠漲價 500%、報假收據；組織的生存取決於和顧客、供應商、員工等利害關係人建立信任</td></tr><tr><td><b>Focus on political uncertainty</b></td><td>過去穩定的民主國家（美、加、英）近 10 年政治不確定性升高</td><td>Brexit、USMCA；加州等州對企業加上額外規範</td></tr><tr><td><b>Focus on the customer</b></td><td>沒有顧客，多數組織就不存在</td><td>管理顧客關係是所有管理者和員工的責任；一致、高品質的服務是必要的</td></tr></table><ul><li><b>Universality of management</b>：所有類型、規模、層級、部門、地點的組織都需要管理。</li><li>The reality of work：you will either manage or be managed。</li><li><b>Rewards</b>（Exhibit 1.9）：創造好的工作環境、發揮創意、幫他人找到意義、教練與培育、與多元的人合作、獲得認可與地位、影響組織結果、薪資獎金股票選擇權。</li><li><b>Employability Skills Matrix (ESM)</b>：Critical thinking、Communication、Collaboration、Knowledge application and analysis、Social responsibility。</li></ul>' }
   ]},
   { id:'m2', t:'Ch2 決策', cards: [
     { id:'m2a', t:'決策八步驟', en:'8-step decision-making process',
@@ -97,12 +97,12 @@ DATA.mgmt = {
     { id:'m7a', t:'變革的理由與力量', en:'Forces for change',
       plain:'組織變革＝人、結構、技術的任何改變。變革推手（change agent）負責管理過程。外部力量：顧客、法律、科技、經濟；內部力量：新策略、人力組成、新設備、員工態度。',
       life:'VUCA：Volatility、Uncertainty、Complexity、Ambiguity — 現在唯一不變的就是變。',
-      body:'<ul><li>External：consumer needs and wants、new governmental laws、technology、the economy</li><li>Internal：new organizational strategy、composition of the workforce、new equipment、employee attitudes</li></ul>' },
+      body:'<ul><li><b>VUCA</b>：volatility、uncertainty、complexity、ambiguity；change is the only constant。</li><li>External：consumer needs and wants、new governmental laws、technology、the economy</li><li>Internal：new organizational strategy、composition of the workforce、new equipment、employee attitudes</li></ul>' },
     { id:'m7b', t:'平靜水域 vs 激流泛舟；Lewin 三步驟', en:'Calm waters vs White-water',
       plain:'平靜水域：變革是偶發事件 → 解凍、改變、再凍結。激流泛舟：環境一直變，要持續適應。',
       life:'平靜水域像搬家（一次搬完再安頓）；激流泛舟像在急流中划船，每一秒都要調整。',
       fig:'lewin',
-      body:'<ul><li><b>Lewin</b>：Unfreezing the status quo（增加驅動力、減少抑制力）→ Changing → Refreezing。</li><li>White-water rapids：lack of stability and predictability requires continual adaptation。</li></ul>' },
+      body:'<table class="tbl"><tr><th></th><th>Calm waters</th><th>White-water rapids</th></tr><tr><td>環境</td><td>穩定，變革是偶發的中斷</td><td>缺乏穩定與可預測性</td></tr><tr><td>管理者怎麼做</td><td>Lewin 三步驟，做完回到穩定</td><td>continually adapt, manage change actively to survive</td></tr><tr><td>終點</td><td>Refreeze：變革永久化</td><td>沒有終點，沒有穩定狀態可回</td></tr></table><ul><li><b>Lewin</b>：Unfreezing the status quo（增加驅動力、減少抑制力）→ Changing to a new state → Refreezing to make the change permanent。</li></ul>' },
     { id:'m7c', t:'四種變革領域', en:'Strategy / Structure / Technology / People',
       plain:'策略（成功的方法）、結構（設計）、技術（流程設備、自動化、電腦化）、人（態度、行為；組織發展 OD）。',
       life:'餐廳轉型：改賣外送（策略）、合併廚房與外場（結構）、導入點餐 App（技術）、訓練員工服務態度（人）。',
@@ -123,7 +123,7 @@ DATA.mgmt = {
     { id:'m7g', t:'破壞式創新 vs 維持式創新', en:'Disruptive vs Sustaining',
       plain:'破壞式創新徹底改變產業遊戲規則；維持式創新只是小幅改良。大型、成熟、高獲利的企業最脆弱，因為最捨不得現有市場。',
       life:'Netflix 打敗百視達、Uber 衝擊計程車、Wikipedia 取代百科全書。',
-      body:'<ul><li>Exhibit 7.9：CD → iTunes、複寫紙 → Xerox、帆布鞋 → Nike、收音機 → Walkman → iPod、打字機 → IBM PC、週刊 → CNN、電視台 → 有線/Netflix、旅行社 → Expedia、股票經紀 → eTrade、旅行支票 → ATM/Visa、百科全書 → Wikipedia、分類廣告 → Craigslist、AM/FM → Sirius XM、報稅服務 → TurboTax、黃頁 → Google、紙地圖 → Garmin GPS、平裝書 → Kindle、律師 → LegalZoom、計程車 → Uber。</li><li>Implications：創業者、企業管理者（<b>Skunk works</b>：大組織中高度自主、不受官僚束縛的小團隊，專做激進創新）、生涯規劃。</li></ul>' }
+      body:'<table class="tbl"><tr><th></th><th>Disruptive</th><th>Sustaining</th></tr><tr><td>定義</td><td>innovations in products, services, or processes that radically change an industry’s rules of the game</td><td>small and incremental changes in established products rather than dramatic breakthroughs</td></tr><tr><td>判斷重點</td><td>有沒有改變遊戲規則（不是看誰做的）</td><td>既有產品變好一點</td></tr></table><ul><li>較小、資源較少的公司成功挑戰既有業者時，就是破壞式創新。</li><li><b>Who’s vulnerable</b>：large, established, highly profitable firms — have the most to lose, most vested in current markets and technologies。只用 sustaining innovation 回應<b>不夠</b>。</li><li>對懂得看出技術市場潛力的組織，它也是一項資產。</li><li>Exhibit 7.9：CD → iTunes、複寫紙 → Xerox、帆布鞋 → Nike、收音機 → Walkman → iPod、打字機 → IBM PC、週刊 → CNN、電視台 → 有線/Netflix、旅行社 → Expedia、股票經紀 → eTrade、旅行支票 → ATM/Visa、百科全書 → Wikipedia、分類廣告 → Craigslist、AM/FM → Sirius XM、報稅服務 → TurboTax、黃頁 → Google、紙地圖 → Garmin GPS、平裝書 → Kindle、律師 → LegalZoom、計程車 → Uber。</li><li>Implications：創業者、企業管理者（<b>Skunk works</b>：大組織中高度自主、不受官僚束縛的小團隊，專做激進創新）、生涯規劃。</li></ul>' }
   ]},
   { id:'m9', t:'Ch9 策略管理', cards: [
     { id:'m9a', t:'策略管理六步驟', en:'Strategic management process',
