@@ -134,7 +134,7 @@ function renderMCQ(key, root, opts = {}) {
   const units = DATA[key].sections.map(s => ({ id: s.id, t: unitName(s), n: all.filter(m => m.u === s.id).length })).filter(u => u.n);
   ST.mu = ST.mu || {}; const sel = new Set((ST.mu[key] || []).filter(id => units.some(u => u.id === id)));
   let bank = all;
-  const pool = () => { bank = sel.size ? all.filter(m => sel.has(m.u)) : all; };
+  const pool = () => { bank = UNITS.byTier(key, sel.size ? all.filter(m => sel.has(m.u)) : all); };
   if (!opts.embedded) root.innerHTML = `<div class="tipbox"></div><div class="modes">
     <button class="mode boss" data-m="boss" type="button"><b>打怪模式</b><span>10 題 · 3 顆心</span></button>
     <button class="mode speed" data-m="speed" type="button"><b>60 秒限時賽</b><span>能答幾題就幾題</span></button>
@@ -153,7 +153,7 @@ function renderMCQ(key, root, opts = {}) {
   const qhtml = (m, meta) => { const ord = shuffle(m.o.map((t, j) => [t, j])); return `<div class="qmeta">${meta}</div><p class="qtext">${m.q}</p><div class="opts">${ord.map((o, n) => `<button class="opt" data-j="${o[1]}" type="button"><span class="key">${'ABCD'[n]}</span>${o[0]}</button>`).join('')}</div>`; };
   const answer = (m, b, then) => {
     const ok = +b.dataset.j === m.a; $$('.opt', arena).forEach(x => { x.disabled = true; if (+x.dataset.j === m.a) x.classList.add('right'); }); if (!ok) b.classList.add('wrongc');
-    mark(m, ok); stat(key, 'a'); if (ok) { stat(key, 'c'); UNITS.add(key, m.u, 3); } if (ok) { combo++; FUN.beep('ok'); FUN.xp(5 + Math.min(combo, 10), b); if (combo === 5) FUN.badge('combo5'); if (combo === 10) FUN.badge('combo10'); if (combo % 3 === 0) FUN.confetti(25); } else { combo = 0; FUN.beep('no'); }
+    mark(m, ok); stat(key, 'a'); if (ok) { stat(key, 'c'); UNITS.add(key, m.u, 3); UNITS.markMust(key, m); } if (ok) { combo++; FUN.beep('ok'); FUN.xp(5 + Math.min(combo, 10), b); if (combo === 5) FUN.badge('combo5'); if (combo === 10) FUN.badge('combo10'); if (combo % 3 === 0) FUN.confetti(25); } else { combo = 0; FUN.beep('no'); }
     then(ok);
   };
   const start = mode => {
@@ -178,6 +178,7 @@ function renderMCQ(key, root, opts = {}) {
       draw();
     } else {
       let list = mode === 'wrong' ? bank.filter(b => wrong().has(b.id)) : shuffle(bank);
+      if (mode !== 'wrong' && UNITS.tier(key) === 'must') list.sort((x, y) => UNITS.mustDone(key, x) - UNITS.mustDone(key, y)); // 還沒完成的必做題排前面
       if (!list.length) { arena.innerHTML = `<div class="win">${PIG('happy', 90)}<p>錯題本是空的，太棒了！</p></div>`; return; }
       let i = 0, score = 0;
       const draw = () => { if (i >= list.length) { arena.innerHTML = `<div class="win">${PIG('wow', 100)}<h3>${score} / ${list.length}</h3><button class="btn big" id="again" type="button">再來一輪</button></div>`; $('#again', root).onclick = () => start(mode); return; }

@@ -64,6 +64,15 @@ const UNITS = (() => {
   }
   const scopeText = (k, n, total) => sel(k).size ? `已選 ${sel(k).size} 個單元，共 ${n} 題（全部 ${total} 題）` : `全部單元混合，共 ${total} 題`;
 
-  return { list, sel, inSel, filter, init, add, pts, lv, picker, unitOfCard, scopeText, tagText };
+  // ---- 題目分級（必做／有時間再做）：選擇存 ST.mt，只留在這台裝置；必做答對過的存 ST.mustOK，跨裝置取聯集 ----
+  const hasMust = k => (DATA[k].mcq || []).some(m => m.must);
+  const tier = k => hasMust(k) ? ((ST.mt || {})[k] || 'all') : 'all';
+  const setTier = (k, t) => { ST.mt = ST.mt || {}; ST.mt[k] = t; save(); };
+  const byTier = (k, arr) => { const t = tier(k); return t === 'all' ? arr : arr.filter(m => t === 'must' ? m.must : !m.must); };
+  const mustKey = m => m.q.slice(0, 80);
+  const mustDone = (k, m) => !!((ST.mustOK || {})[k] || {})[mustKey(m)];
+  const markMust = (k, m) => { if (!m.must || mustDone(k, m)) return; ST.mustOK = ST.mustOK || {}; (ST.mustOK[k] = ST.mustOK[k] || {})[mustKey(m)] = 1; save(); };
+
+  return { list, sel, inSel, filter, init, add, pts, lv, picker, unitOfCard, scopeText, tagText, hasMust, tier, setTier, byTier, mustDone, markMust };
 })();
 UNITS.init();

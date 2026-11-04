@@ -52,15 +52,23 @@ const ARCADE = (() => {
     const allQ = bankFor(key) || [];
     root.innerHTML = `<div class="arc"><div class="tipbox"></div>
       <div class="arcbar"><button type="button" class="arcsw" data-sw="sound" aria-pressed="${!!ST.sound}">音效：${ST.sound ? '開' : '關'}</button><button type="button" class="arcsw" data-sw="music" aria-pressed="${!!ST.music}">配樂：${ST.music ? '開' : '關'}</button></div>
-      <div class="arcunits"></div><p class="sm-p ucount"></p>
+      <div class="arctier"></div><div class="arcunits"></div><p class="sm-p ucount"></p>
       <div class="arcgrid"></div><div class="arena"></div></div>`;
     FUN.say($('.tipbox', root), pick(['先選單元，再挑打怪或小遊戲！答對的題目會幫那個單元升級。', '選好單元後，打怪、貪吃蛇、翻牌、打地鼠都只出這些單元的內容。', '每個單元都有自己的等級，看看哪一個最弱就先練那個！']));
     $$('[data-sw]', root).forEach(b => b.onclick = () => { const k = b.dataset.sw; ST[k] = !ST[k]; save(); FUN.hud(); if (k === 'music') ST.music ? music() : SOUND.stop(); else sfx('ok'); b.setAttribute('aria-pressed', !!ST[k]); b.textContent = (k === 'sound' ? '音效：' : '配樂：') + (ST[k] ? '開' : '關'); });
     const arena = $('.arena', root), grid = $('.arcgrid', root);
+    const tierBar = () => {
+      if (!UNITS.hasMust(key)) return;
+      const must = UNITS.filter(key, allQ).filter(m => m.must), later = UNITS.filter(key, allQ).filter(m => !m.must), ok = must.filter(m => UNITS.mustDone(key, m)).length, t = UNITS.tier(key);
+      const el = $('.arctier', root);
+      el.innerHTML = `<div class="ubar"><span class="lbl">題目分級（必做題答對過一次就算完成）</span><div class="uchips">${[['all', `全部 <i>${must.length + later.length}</i>`], ['must', `一定要完成 <i>${ok}/${must.length}</i>`], ['later', `有時間再做 <i>${later.length}</i>`]].map(x => `<button class="uchip${x[0] === t ? ' on' : ''}" data-t="${x[0]}" type="button" aria-pressed="${x[0] === t}">${x[1]}</button>`).join('')}</div></div>`;
+      $$('[data-t]', el).forEach(b => b.onclick = () => { UNITS.setTier(key, b.dataset.t); sfx('ok'); draw(); });
+    };
     const draw = () => {
-      const Q = UNITS.filter(key, allQ), P = pairsFor(key), words = P.filter(p => isWord(p[0])), S = (DATA[key].sort || []).filter(g => UNITS.inSel(key, g.u)), M = (DATA[key].match || []).filter(p => UNITS.inSel(key, p.u));
+      tierBar();
+      const Q = UNITS.byTier(key, UNITS.filter(key, allQ)), P = pairsFor(key), words = P.filter(p => isWord(p[0])), S = (DATA[key].sort || []).filter(g => UNITS.inSel(key, g.u)), M = (DATA[key].match || []).filter(p => UNITS.inSel(key, p.u));
       const wrongN = Q.filter(m => new Set(ST.wrong2[key] || []).has(m.id)).length;
-      $('.ucount', root).textContent = UNITS.scopeText(key, Q.length, allQ.length) + `，名詞 ${P.length} 個`;
+      $('.ucount', root).textContent = (UNITS.tier(key) === 'all' ? UNITS.scopeText(key, Q.length, allQ.length) : `${UNITS.sel(key).size ? `已選 ${UNITS.sel(key).size} 個單元，` : ''}這個分級共 ${Q.length} 題`) + `，名詞 ${P.length} 個`;
       const T = [
         ['q:boss', '打怪模式', '10 題 · 3 顆心，打倒怪物', 'tb', Q.length >= 4, ''],
         ['q:speed', '60 秒限時賽', '能答幾題就幾題', 'ts', Q.length >= 4, (() => { const b = ST.best['sp' + key]; return b ? `最佳 ${b} 題` : ''; })()],
@@ -77,11 +85,11 @@ const ARCADE = (() => {
       grid.innerHTML = T.map(g => `<button type="button" class="arct ${g[3]}" data-g="${g[0]}"${g[4] ? '' : ' disabled'}><span class="arci">${icon(ico(g[0]))}</span><b>${g[1]}</b><span>${g[2]}</span><small>${g[4] ? g[5] : '這個範圍的內容不夠，換個單元試試'}</small></button>`).join('');
       $$('[data-g]', grid).forEach(b => b.onclick = () => open(b.dataset.g));
     };
-    const hall = () => { stop(); SOUND.stop(); grid.hidden = false; $('.arcunits', root).hidden = false; $('.ucount', root).hidden = false; arena.innerHTML = ''; draw(); music(); };
+    const hall = () => { stop(); SOUND.stop(); grid.hidden = false; $('.arctier', root).hidden = false; $('.arcunits', root).hidden = false; $('.ucount', root).hidden = false; arena.innerHTML = ''; draw(); music(); };
     const open = g => {
-      stop(); grid.hidden = true; $('.arcunits', root).hidden = true; $('.ucount', root).hidden = true; sfx('start');
+      stop(); grid.hidden = true; $('.arctier', root).hidden = true; $('.arcunits', root).hidden = true; $('.ucount', root).hidden = true; sfx('start');
       const names = UNITS.sel(key).size ? UNITS.list(key).filter(u => UNITS.sel(key).has(u.id)).map(u => u.t).join('、') : '全部單元';
-      arena.innerHTML = `<div class="arctop"><button type="button" class="ntbtn ghost arcback">← 遊戲大廳</button><span class="sm-p arcscope">範圍：${esc2(names)}</span></div><div class="arcplay"></div>`;
+      arena.innerHTML = `<div class="arctop"><button type="button" class="ntbtn ghost arcback">← 遊戲大廳</button><span class="sm-p arcscope">範圍：${esc2(names)}${{ must: ' · 一定要完成', later: ' · 有時間再做' }[UNITS.tier(key)] || ''}</span></div><div class="arcplay"></div>`;
       $('.arcback', arena).onclick = hall;
       const box = $('.arcplay', arena), again = () => open(g);
       const P = pairsFor(key), words = P.filter(p => isWord(p[0]));
@@ -158,7 +166,7 @@ const ARCADE = (() => {
 
   // ---- 貪吃蛇答題 ----
   function snake(box, key, again, hall) {
-    const bank = shuffle(UNITS.filter(key, bankFor(key))); let qi = 0;
+    const bank = shuffle(UNITS.byTier(key, UNITS.filter(key, bankFor(key)))); let qi = 0;
     const W = 14, H = 14; let snakeA, dir, nextDir, foods, score = 0, lives = 3, running = false, alive = true, timer = 0, q;
     box.innerHTML = `<div class="molehud"><span>答對 <b data-sc>0</b></span><span class="hearts">${'<span class="h on">♥</span>'.repeat(3)}</span><span class="sm-p">方向鍵／滑動</span></div>
       <div class="snq"></div><div class="snwrap"><canvas class="sncv" width="420" height="420" aria-label="貪吃蛇"></canvas><div class="snmsg"></div></div>
