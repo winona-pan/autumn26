@@ -6112,6 +6112,125 @@ DATA.deriv.mcqEn.push(
   { u:'ch2', q:'Daily settlement of futures contracts is also known as:', o:['marking to market','tailing the hedge','basis trading','rolling over'], a:0, e:'每日依結算價計算損益並調整保證金帳戶。' },
   { u:'ch2', q:'A trading day in which a trader opens and closes the same position most likely increases:', o:['open interest only','trading volume but not open interest','neither volume nor open interest','open interest but not volume'], a:1, e:'當沖會增加成交量，但不留下未平倉部位。' }
 );
+// ===== 衍金 Ch7 交換（Swaps）：期中考範圍最後一章。放在 en.js、more.js 之後，mcqEn 才不會被覆蓋 =====
+DATA.deriv.sections.push({ id: 'ch7', t: 'Ch7 交換（Swaps）', cards: [
+  { id: 'd38', t: '交換是什麼：一連串的遠期合約', en: 'Nature of swaps',
+    plain: '交換（swap）＝兩方約定在未來特定日期、照規則交換現金流量的 OTC 合約，可以看成一連串的遠期合約。最常見兩種：利率交換（固定利息換浮動利息）和貨幣交換（一種貨幣的本利換另一種貨幣的本利）。',
+    life: '你和室友約好接下來兩年，每個月你固定給他 3,000 元，他給你「當月實際電費」。電費高的月份你賺、低的月份你虧，其實就是每個月各簽一張小小的遠期合約。',
+    body: '<ul><li><b>Plain vanilla interest rate swap</b>：Apple 付固定 3%、收浮動 SOFR；Citigroup 相反。每 3 個月交換一次，為期 2 年，<b>notional principal</b> 1 億美元。</li><li>名目本金只用來<b>算利息</b>，本身不交換。</li><li>每期固定利息：3% × 3/12 × 100M = <b>750,000</b>；若該期 SOFR 為 2.2%，浮動利息 = 2.2% × 3/12 × 100M = 550,000 → Apple 淨付 200,000。</li><li><b>SOFR</b>（secured overnight financing rate）：3 個月期利率＝把期間內每天的隔夜利率複利起來再年化，所以要到<b>期末</b>才知道這期適用的利率。</li><li>浮動利率高於 3% 時，付固定、收浮動的一方淨收。</li></ul>',
+    terms: [['swap 交換','約定未來交換現金流量的 OTC 合約'],['notional principal 名目本金','只用來計算利息，不交換'],['SOFR','有擔保隔夜融資利率，期末才知道整期利率']],
+    ex: 'A swap is an OTC agreement to exchange cash flows in the future according to specified rules; it can be regarded as a portfolio of forward contracts.' },
+  { id: 'd39', t: '用利率交換轉換負債與投資', en: 'Typical uses of an interest rate swap',
+    plain: '付利息的一方（負債）可以把固定變浮動、浮動變固定；收利息的一方（投資）也一樣。做法都是：原本的現金流 ＋ 交換的兩筆現金流，浮動的部分互相抵掉，剩下的就是新的利率。',
+    life: '房貸是浮動利率、怕央行升息？再簽一張「收浮動、付固定」的交換，收到的浮動剛好拿去付房貸的浮動，你實際上就變成固定利率房貸。',
+    body: '<table class="tbl"><tr><th>情況</th><th>原本</th><th>交換</th><th>淨結果</th></tr><tr><td>負債：浮動 → 固定</td><td>付 SOFR + 0.1%</td><td>付 3%、收 SOFR</td><td>付 <b>3.1%</b></td></tr><tr><td>負債：固定 → 浮動</td><td>付 3.2%</td><td>收 2.97%、付 SOFR</td><td>付 <b>SOFR + 0.23%</b></td></tr><tr><td>投資：固定 → 浮動</td><td>收 2.7%</td><td>付 3%、收 SOFR</td><td>收 <b>SOFR − 0.3%</b></td></tr><tr><td>投資：浮動 → 固定</td><td>收 SOFR − 0.2%</td><td>收 2.97%、付 SOFR</td><td>收 <b>2.77%</b></td></tr></table><ul><li>算法：三筆現金流加總（收為正、付為負），浮動利率會抵銷。</li><li>判斷方向：想要<b>付固定</b> → 交換裡付固定、收浮動；想要<b>付浮動</b> → 交換裡收固定、付浮動。</li></ul>',
+    ex: 'A swap can transform a floating-rate liability into a fixed-rate liability, or a fixed-rate investment into a floating-rate investment, and vice versa.' },
+  { id: 'd40', t: '金融中介與交換報價：swap rate', en: 'Financial intermediary & swap rate',
+    plain: '銀行常常同時和兩家公司各簽一張方向相反的交換，賺中間的價差；任何一方違約，銀行對另一方仍要履約，所以價差也是承擔違約風險的補償。兩邊剛好同時出現很少見，銀行就當造市者（market maker）直接報價。',
+    life: '像換匯所：買進價和賣出價差一點點，換匯所賺中間那段；swap rate 就是買價和賣價的平均。',
+    body: '<ul><li>Citi 付 Intel 固定 2.97%、收 Apple 固定 3.00% → 賺 <b>3 bps</b>，浮動部分一收一付抵銷。</li><li><b>Bid</b>：造市者願意<b>付</b>的固定利率（對方收固定、付浮動）。<b>Ask/offer</b>：造市者要<b>收</b>的固定利率（對方付固定、收浮動）。價差約 3～4 bps。</li><li><b>Swap rate</b> ＝ bid 與 ask 的平均，也就是讓交換一開始價值為 0 的固定利率。</li></ul><table class="tbl"><tr><th>期限</th><th>Bid</th><th>Ask</th><th>Swap rate</th></tr><tr><td>2 年</td><td>2.97</td><td>3.00</td><td>2.985</td></tr><tr><td>3 年</td><td>3.05</td><td>3.08</td><td>3.065</td></tr><tr><td>5 年</td><td>3.26</td><td>3.30</td><td>3.280</td></tr><tr><td>10 年</td><td>3.48</td><td>3.52</td><td>3.500</td></tr></table>',
+    ex: 'A market maker quotes a bid rate it will pay and an ask rate it will receive in exchange for floating; the swap rate is the average of the two.' },
+  { id: 'd41', t: '比較利益：為什麼要做利率交換', en: 'Comparative advantage (interest rate swap)',
+    plain: '信用較差的公司在固定和浮動市場都要付比較多，但兩個市場多付的幅度不同。各自去借「多付得最少」或「少付得最多」的那種，再用交換換成真正想要的，兩邊加起來可以省下「兩個利差的差距」。',
+    life: '你和學霸一起準備報告：學霸寫作和做投影片都比你快，但寫作快很多、投影片只快一點點。學霸寫、你做投影片，再互相交換成果，兩人總時間最省。',
+    body: '<table class="tbl"><tr><th></th><th>Fixed</th><th>Floating</th></tr><tr><td>AAACorp</td><td>4.0%</td><td>SOFR − 0.1%</td></tr><tr><td>BBBCorp</td><td>5.2%</td><td>SOFR + 0.6%</td></tr></table><ol><li>利差：固定差 1.2%、浮動差 0.7% → 總利益 1.2 − 0.7 = <b>0.5%</b>。</li><li>BBB 在浮動差得少 → 比較利益在<b>浮動</b>；AAA 在<b>固定</b>。但 AAA 想借浮動、BBB 想借固定 → 正好可以交換。</li><li>AAA 借固定 4%，BBB 借 SOFR + 0.6%，平分 0.5% → 各省 0.25%。</li><li>AAA 目標 SOFR − 0.35%；BBB 目標 4.95%。設交換固定利率 k：AAA 淨付 4% + SOFR − k = SOFR − 0.35% → <b>k = 4.35%</b>。</li><li>加入金融中介收 4 bps：AAA 收 4.33%、BBB 付 4.37% → AAA 淨付 SOFR − 0.33%，BBB 淨付 4.97%。</li></ol>',
+    ex: 'Two firms can each borrow where they have a comparative advantage and then swap; the total gain equals the difference between the two rate spreads.' },
+  { id: 'd42', t: '用 FRA 評價利率交換', en: 'Valuing an interest rate swap with FRAs',
+    plain: '簽約時（用 swap rate）交換價值是 0；之後利率變動，價值就不是 0。每一次交換都是一張 FRA：假設遠期利率會實現，算出每期浮動金額，和固定金額相減，再用無風險利率折現加總。',
+    life: '就像評估「接下來幾個月的電費互換約」：用預測的電費去算每個月誰付誰，再換算成今天的價值加起來。',
+    body: '<p class="formula">R<sub>F</sub> = (R<sub>2</sub>T<sub>2</sub> − R<sub>1</sub>T<sub>1</sub>) / (T<sub>2</sub> − T<sub>1</sub>)　　R<sub>m</sub> = m(e<sup>R<sub>c</sub>/m</sup> − 1)</p><p>例：1 億美元，付固定 3%、收浮動，每半年交換，剩 1.2 年（0.2、0.7、1.2 年交換）；0.2／0.7／1.2 年零息利率 2.8%／3.2%／3.4%（連續複利）；過去 0.3 年已實現 2.3%（連續複利）。</p><ol><li>第 1 期：2.3% × 0.3/0.5 + 2.8% × 0.2/0.5 = 2.5%（連續）→ 半年複利 2.516% → 浮動 1.258M。</li><li>第 2 期遠期：(3.2 × 0.7 − 2.8 × 0.2)/0.5 = 3.36% → 3.388% → 1.694M。</li><li>第 3 期遠期：(3.4 × 1.2 − 3.2 × 0.7)/0.5 = 3.68% → 3.714% → 1.857M。</li></ol><table class="tbl"><tr><th>時間</th><th>固定</th><th>浮動</th><th>淨額</th><th>折現因子</th><th>現值</th></tr><tr><td>0.2</td><td>−1.5</td><td>+1.258</td><td>−0.242</td><td>0.9944</td><td>−0.241</td></tr><tr><td>0.7</td><td>−1.5</td><td>+1.694</td><td>+0.194</td><td>0.9778</td><td>+0.190</td></tr><tr><td>1.2</td><td>−1.5</td><td>+1.857</td><td>+0.357</td><td>0.9600</td><td>+0.343</td></tr></table><p>付固定方的交換價值 ＝ <b>+0.292M</b>；付浮動方 ＝ −0.292M。</p>',
+    ex: 'An interest rate swap is worth zero at initiation; afterward it can be valued as a portfolio of FRAs by assuming forward rates are realized and discounting the net cash flows.' },
+  { id: 'd43', t: '貨幣交換：本金也要交換', en: 'Currency swaps',
+    plain: '貨幣交換＝交換兩種貨幣的本金和利息。和利率交換最大的不同：本金在期初和期末都要交換，金額依期初匯率設定成大約等值。',
+    life: '你去英國交換一年、英國同學來台灣：開學時互換一筆等值的生活費，之後每月各自付對方貨幣的「利息」，學期結束再把本金換回來。',
+    body: '<p>例：一方每年付美元 3%（本金 1,500 萬美元）、收英鎊 4%（本金 1,000 萬英鎊），為期 5 年。</p><table class="tbl"><tr><th>時間</th><th>美元</th><th>英鎊</th></tr><tr><td>期初</td><td>+15.00</td><td>−10.00</td></tr><tr><td>第 1～4 年</td><td>−0.45</td><td>+0.40</td></tr><tr><td>第 5 年</td><td>−15.45</td><td>+10.40</td></tr></table><ul><li>期初的本金交換方向和之後相反：期初收美元、付英鎊，之後付美元利息、收英鎊利息，到期付美元本金、收英鎊本金。</li><li>用途：把一種貨幣的<b>負債</b>轉成另一種貨幣的負債（例：英鎊債務 → 美元債務），或把<b>投資</b>轉成另一種貨幣（例：美元債權 → 英鎊債權）。</li></ul>',
+    ex: 'In a currency swap, principal is usually exchanged at the beginning and end of the swap, with amounts set to be roughly equivalent at the initial exchange rate.' },
+  { id: 'd44', t: '貨幣交換的比較利益', en: 'Comparative advantage (currency swap)',
+    plain: '和利率交換同樣的邏輯，只是兩個市場換成兩種貨幣。比較兩家公司在兩種貨幣的利差，各自去借差距對自己最有利的貨幣，再交換。',
+    life: '你在台灣換台幣、朋友在日本換日圓都比較划算，就各自換好再互相交換，比兩人都跑到同一邊換省。',
+    body: '<table class="tbl"><tr><th></th><th>USD</th><th>AUD</th></tr><tr><td>General Electric</td><td>5.0%</td><td>7.6%</td></tr><tr><td>Qantas</td><td>7.0%</td><td>8.0%</td></tr></table><ol><li>美元差 2.0%、澳幣差 0.4% → 總利益 2.0 − 0.4 = <b>1.6%</b>，平分各 0.8%。</li><li>GE 比較利益在美元（少付最多），但想借澳幣；Qantas 比較利益在澳幣（多付最少），但想借美元。</li><li>GE 借美元 5.0% → 交換後實際借澳幣 7.6% − 0.8% = <b>6.8%</b>。</li><li>Qantas 借澳幣 8.0% → 交換後實際借美元 7.0% − 0.8% = <b>6.2%</b>。</li><li>有銀行當中介時，銀行通常承擔匯率風險，並從總利益中拿走一部分。</li></ol>',
+    ex: 'In a currency swap based on comparative advantage, each company borrows in the currency where its relative cost is lowest and then swaps into the currency it actually needs.' },
+  { id: 'd45', t: '貨幣交換的評價：兩個債券或一串遠期', en: 'Valuing currency swaps',
+    plain: '貨幣交換可以看成「一個外幣債券的多頭＋一個本國債券的空頭」，也可以看成一串遠期外匯合約。兩種算法答案一樣。',
+    life: '你手上有一張日圓債券、同時欠一張美元債券；把日圓債券換成美元，扣掉欠的，就是你的淨值。',
+    body: '<p class="formula">收外幣、付本國幣：V = S<sub>0</sub>B<sub>F</sub> − B<sub>D</sub>　　付外幣、收本國幣：V = B<sub>D</sub> − S<sub>0</sub>B<sub>F</sub>　　F<sub>T</sub> = S<sub>0</sub>e<sup>(r − r<sub>f</sub>)T</sup></p><p>S<sub>0</sub>＝每 1 單位外幣值多少本國幣。</p><p>例：收日圓 3%（本金 12 億日圓）、付美元 4%（本金 1,000 萬美元），每年一次，剩 3 年；日圓利率 1.5%、美元利率 2.5%（連續複利）；即期 110 日圓／美元。</p><ul><li><b>債券法</b>：B<sub>D</sub> = 0.4e<sup>−0.025</sup> + 0.4e<sup>−0.05</sup> + 10.4e<sup>−0.075</sup> = 10.4191M 美元；B<sub>F</sub> = 36e<sup>−0.015</sup> + 36e<sup>−0.03</sup> + 1,236e<sup>−0.045</sup> = 1,252.01M 日圓 → V = 1,252.01/110 − 10.4191 = <b>+0.9629M 美元</b>。</li><li><b>遠期法</b>：1、2、3 年遠期匯率 = (1/110)e<sup>0.01t</sup> = 0.009182、0.009275、0.009368 美元／日圓；每期日圓現金流換成美元，扣掉美元支出，再用美元利率折現，合計同樣是 +0.9629M。</li><li>兩法相同的原因：把遠期匯率代入展開後，正好等於 S<sub>0</sub>B<sub>F</sub> − B<sub>D</sub>。</li></ul>',
+    ex: 'A currency swap can be valued as the difference between two bonds, V = S0·BF − BD for the party receiving foreign currency, or as a portfolio of forward foreign exchange contracts.' }
+]});
+
+DATA.deriv.mcq.push(
+  {u:'ch7', q:'利率交換中的名目本金（notional principal）：', o:['只用來計算利息，本身不交換','期初和期末都要交換','只在期末交換一次','由付浮動的一方先付清'], a:0, e:'利率交換只交換利息；名目本金用來算利息，不交換。貨幣交換才交換本金。'},
+  {u:'ch7', q:'貨幣交換和利率交換最主要的差別是：', o:['貨幣交換一定在交易所交易','貨幣交換的本金在期初和期末都要交換','貨幣交換只交換本金、不交換利息','貨幣交換不需要考慮利率'], a:1, e:'貨幣交換的本金通常在期初和期末交換，金額依期初匯率設成大約等值。'},
+  {u:'ch7', q:'名目本金 5,000 萬美元、每季交換一次，付固定 4%、收浮動。這一季浮動利率為 3.2%，付固定方這一季的淨現金流是：', o:['−$400,000','+$100,000','−$100,000','−$1,000,000'], a:2, e:'固定 4% × 1/4 × 50M = 500,000；浮動 3.2% × 1/4 × 50M = 400,000 → 淨付 100,000。−400,000 是忘了除以 4。'},
+  {u:'ch7', q:'用 SOFR 當浮動利率時，一期 3 個月的適用利率什麼時候才知道？', o:['期初就知道','簽約當天就固定','由雙方協商決定','期末，把期間每天的隔夜利率複利後才知道'], a:3, e:'3 個月期 SOFR 是把期間內每天的隔夜利率複利再年化，要到期末才能算出。'},
+  {u:'ch7', q:'公司借款付 SOFR + 0.5%，再簽交換：付固定 3.2%、收 SOFR。公司實際的借款成本是：', o:['固定 3.7%','固定 3.2%','SOFR + 3.7%','SOFR − 2.7%'], a:0, e:'−(SOFR + 0.5%) + SOFR − 3.2% = −3.7%，浮動抵銷，變成固定 3.7%。'},
+  {u:'ch7', q:'公司持有收固定 4% 的債券，再簽交換：付固定 3.5%、收 SOFR。公司實際收到的是：', o:['固定 0.5%','SOFR + 0.5%','SOFR − 0.5%','固定 7.5%'], a:1, e:'+4% − 3.5% + SOFR = SOFR + 0.5%，把固定收益轉成浮動收益。'},
+  {u:'ch7', q:'造市者的 5 年期交換報價為 bid 3.15%、ask 3.19%，swap rate 是：', o:['3.15%','3.19%','3.17%','0.04%'], a:2, e:'Swap rate ＝ bid 和 ask 的平均：(3.15 + 3.19)/2 = 3.17%。0.04% 是價差。'},
+  {u:'ch7', q:'承上，一家公司想把固定利率負債轉成浮動（交換裡收固定、付浮動），它能收到的固定利率是：', o:['3.19%','3.17%','3.21%','3.15%'], a:3, e:'造市者願意「付」的固定利率是 bid 3.15%。對方付固定時，造市者才收 ask 3.19%。'},
+  {u:'ch7', q:'A 可借固定 5.0% 或 SOFR + 0.2%；B 可借固定 6.5% 或 SOFR + 0.8%。用交換最多可以共同省下多少？', o:['0.9%','1.5%','0.6%','2.1%'], a:0, e:'固定差 1.5%、浮動差 0.6% → 總利益 1.5 − 0.6 = 0.9%。'},
+  {u:'ch7', q:'承上，B 應該去借哪一種，才發揮它的比較利益？', o:['固定利率，因為比較便宜','浮動利率，因為它在浮動多付得比較少','兩種各借一半','不需要借款'], a:1, e:'B 在固定多付 1.5%、浮動只多付 0.6%，比較利益在浮動。'},
+  {u:'ch7', q:'一筆用 swap rate 簽訂的利率交換，在簽約當下的價值是：', o:['名目本金的 1%','等於固定利息的現值','0','等於浮動利息的現值'], a:2, e:'Swap rate 就是讓交換一開始價值為 0 的固定利率；之後利率變動，價值才會偏離 0。'},
+  {u:'ch7', q:'用 FRA 評價利率交換時，未來每期的浮動現金流怎麼估計？', o:['都用目前的即期利率','都用簽約時的 swap rate','用過去的平均利率','假設遠期利率會實現'], a:3, e:'每次交換都是一張 FRA，假設遠期利率就是未來實現的利率，再和固定金額相減後折現。'},
+  {u:'ch7', q:'3.36%（連續複利）換成半年複利是多少？', o:['3.388%','3.360%','3.333%','3.416%'], a:0, e:'R<sub>2</sub> = 2(e<sup>0.0336/2</sup> − 1) = 3.388%。半年複利的數字一定比連續複利大一點。'},
+  {u:'ch7', q:'收外幣、付本國幣的一方，貨幣交換的價值是（S<sub>0</sub>＝每 1 單位外幣值多少本國幣）：', o:['B<sub>D</sub> − S<sub>0</sub>B<sub>F</sub>','S<sub>0</sub>B<sub>F</sub> − B<sub>D</sub>','B<sub>F</sub> − S<sub>0</sub>B<sub>D</sub>','S<sub>0</sub>(B<sub>F</sub> − B<sub>D</sub>)'], a:1, e:'收外幣＝持有外幣債券、欠本國債券：V = S<sub>0</sub>B<sub>F</sub> − B<sub>D</sub>。'},
+  {u:'ch7', q:'日圓債券價值 600M 日圓、美元債券價值 5.2M 美元，即期 120 日圓／美元。收日圓、付美元一方的交換價值是：', o:['+$0.2M','+$0.8M','−$0.2M','−$5.0M'], a:2, e:'600/120 = 5.0M 美元，5.0 − 5.2 = −0.2M。'},
+  {u:'ch7', q:'銀行同時和兩家公司各簽一張方向相反的交換，為什麼還要收價差？', o:['因為浮動利率無法抵銷','因為銀行要付兩次名目本金','因為法規規定一定要收費','任一方違約時，銀行對另一方仍要履約'], a:3, e:'兩張交換彼此獨立：一方違約，銀行和另一方的合約照樣有效，價差是承擔違約風險的補償。'}
+);
+
+DATA.deriv.mcqEn.push(
+  {u:'ch7', q:'An interest rate swap can best be regarded as:', o:['A portfolio of forward contracts','A single option on interest rates','A loan of the notional principal','A futures contract traded on an exchange'], a:0, e:'每次交換都像一張遠期合約，整個交換就是一串遠期合約。'},
+  {u:'ch7', q:'A company has a floating-rate loan and fears that rates will rise. Which swap position hedges this risk?', o:['Receive fixed and pay floating','Pay fixed and receive floating','Receive fixed and pay fixed','Pay floating and receive floating'], a:1, e:'收浮動去付原本的浮動借款，再付固定 → 實際變成固定利率負債。'},
+  {u:'ch7', q:'A fund holds floating-rate notes but wants a fixed income stream. It should enter a swap in which it:', o:['Pays fixed and receives floating','Pays fixed and pays floating','Receives fixed and pays floating','Receives floating and receives fixed'], a:2, e:'把浮動收入拿去付交換的浮動，再收固定 → 浮動投資轉成固定投資。'},
+  {u:'ch7', q:'A firm borrows at a fixed 3.4% and enters a swap receiving 3.1% fixed and paying SOFR. Its net borrowing cost is:', o:['3.4% fixed','SOFR − 0.3%','SOFR + 3.1%','SOFR + 0.3%'], a:3, e:'−3.4% + 3.1% − SOFR = −(SOFR + 0.3%)，固定負債轉成浮動。'},
+  {u:'ch7', q:'A swap market maker quotes 3.26% bid and 3.30% ask for five years. A company that wants to pay fixed and receive floating will pay:', o:['3.30%','3.26%','3.28%','3.34%'], a:0, e:'對方付固定時，造市者收 ask 3.30%；對方收固定時，造市者付 bid 3.26%。'},
+  {u:'ch7', q:'The swap rate for a given maturity is:', o:['The bid rate quoted by the market maker','The average of the bid and ask fixed rates','The current overnight SOFR','The difference between the bid and ask rates'], a:1, e:'Swap rate＝bid 和 ask 的平均，使交換一開始價值為 0。'},
+  {u:'ch7', q:'X can borrow fixed at 4.0% or floating at SOFR + 0.3%; Y can borrow fixed at 5.0% or floating at SOFR + 0.5%. Which firm has a comparative advantage in floating-rate borrowing?', o:['X, because its rates are lower','Neither firm','Y, because its floating spread over X is smaller','Both firms equally'], a:2, e:'Y 在固定多付 1.0%、浮動只多付 0.2%，比較利益在浮動。X 雖然兩邊都便宜，比較利益在固定。'},
+  {u:'ch7', q:'In the situation above, what is the total gain available to all parties from a swap?', o:['1.0%','0.2%','1.2%','0.8%'], a:3, e:'1.0% − 0.2% = 0.8%。'},
+  {u:'ch7', q:'Continuing the example, a bank takes 0.2% and the rest is split equally. How much does each company save per year?', o:['0.3%','0.4%','0.2%','0.6%'], a:0, e:'(0.8% − 0.2%) / 2 = 0.3%。'},
+  {u:'ch7', q:'In a currency swap, the principal amounts in the two currencies are usually:', o:['Never exchanged','Exchanged at the start and the end, set roughly equal at the initial exchange rate','Exchanged only at the end, at the exchange rate then prevailing','Exchanged every period with the interest'], a:1, e:'本金在期初和期末交換，金額依期初匯率設成大約等值。'},
+  {u:'ch7', q:'A US firm has issued sterling bonds but wants its debt effectively in dollars. Which currency swap should it enter?', o:['Receive dollars and pay sterling','Pay sterling and pay dollars','Receive sterling and pay dollars','Receive sterling and receive dollars'], a:2, e:'收英鎊去付原本的英鎊債務，再付美元 → 英鎊負債轉成美元負債。'},
+  {u:'ch7', q:'At initiation, the value of a currency swap negotiated at market rates is:', o:['Equal to the domestic principal','Equal to the foreign principal at spot','Positive for the party receiving the higher coupon','Approximately zero'], a:3, e:'依市場利率和匯率設定的交換，一開始對雙方價值都約為 0。'},
+  {u:'ch7', q:'The US interest rate is 2.5% and the Japanese rate is 1.5% (continuous). Compared with the spot rate, the forward price of the yen in dollars is:', o:['Higher than spot','Lower than spot','Equal to spot','Impossible to determine'], a:0, e:'F = S₀e^{(r − r_f)T}，r = 2.5% > r_f = 1.5%，所以遠期比即期高。'},
+  {u:'ch7', q:'A swap’s dollar bond is worth $10.42 million and its yen bond is worth ¥1,252 million, with spot at ¥110 per dollar. Its value to the party receiving yen and paying dollars is about:', o:['−$0.96 million','+$0.96 million','+$11.38 million','−$10.42 million'], a:1, e:'1,252/110 = 11.38M，11.38 − 10.42 ≈ +0.96M。'},
+  {u:'ch7', q:'When an interest rate swap is valued as a portfolio of FRAs, each floating payment is estimated by:', o:['Using the current overnight SOFR for every period','Using the fixed swap rate for every period','Assuming forward interest rates are realized','Averaging past floating rates'], a:2, e:'假設遠期利率會實現，算出每期浮動金額，再和固定金額相減後折現。'},
+  {u:'ch7', q:'A firm borrows short term at floating plus 0.75%, rolls the loan over, and swaps it into fixed. The main risk it bears is that:', o:['The swap rate changes after the swap is signed','The notional principal must be repaid early','The market maker defaults on the bid rate','Its credit spread over floating rises when the loan is rolled over'], a:3, e:'浮動借款靠短期展期；信用變差時加碼可能高於 0.75%，甚至借不到，實際成本就高於原本換到的固定利率。'},
+  {u:'ch7', q:'After a pay-fixed, receive-floating swap is signed, floating rates rise much more than expected. The swap’s value to the fixed payer becomes:', o:['Positive','Negative','Zero','Equal to the notional principal'], a:0, e:'收到的浮動變多、付的固定不變 → 對付固定方價值變正。'},
+  {u:'ch7', q:'Why does a financial institution that stands between two offsetting swaps still earn a spread?', o:['The floating payments do not offset','It must honor each swap even if the other party defaults','It pays the notional principal twice','The spread is required by exchange rules'], a:1, e:'兩張合約彼此獨立，一方違約，銀行和另一方的合約仍要履約，價差是承擔違約風險的補償。'}
+);
+
+DATA.deriv.problems.push(
+  { id:'p7_1', src:'課本 7.1（11版勾選）', lvl:'課本', q:'A、B 兩家公司都要借 5 年期、2,000 萬美元。A 可借固定 5.0% 或 SOFR + 0.1%；B 可借固定 6.4% 或 SOFR + 0.6%。A 想要浮動利率、B 想要固定利率。請設計一個交換，讓中介銀行每年賺 0.1%，而且對 A、B 一樣有吸引力。',
+    steps:['利差：固定差 1.4%、浮動差 0.5% → 總利益 1.4 − 0.5 = 0.9%','銀行拿 0.1% → 剩 0.8%，A、B 各省 <b>0.4%</b>','A 比較利益在固定 → 借固定 5.0%；B 借 SOFR + 0.6%','A 目標：SOFR + 0.1% − 0.4% = <b>SOFR − 0.3%</b>；B 目標：6.4% − 0.4% = <b>6.0%</b>','交換：A 收固定 5.3%、付 SOFR → −5.0 + 5.3 − SOFR = −(SOFR − 0.3%) ✓','B 付固定 5.4%、收 SOFR → −(SOFR + 0.6) + SOFR − 5.4 = −6.0% ✓','銀行：收 5.4%、付 5.3% → 賺 0.1% ✓'],
+    ans:'A 借固定 5%，和銀行交換收 5.3%、付 SOFR；B 借 SOFR + 0.6%，和銀行交換付 5.4%、收 SOFR。A 淨付 SOFR − 0.3%，B 淨付 6.0%，銀行賺 0.1%。（設計不唯一，重點是每方各省 0.4%。）',
+    qEn:'Companies A and B each need to borrow $20 million for five years. A is offered 5.0% fixed or SOFR + 0.1% floating; B is offered 6.4% fixed or SOFR + 0.6% floating. A wants floating-rate debt and B wants fixed-rate debt. Design a swap that nets a bank 0.1% per annum and is equally attractive to both companies.',
+    ansEn:'Total gain 1.4% − 0.5% = 0.9%; the bank takes 0.1%, so each company saves 0.4%. A borrows fixed at 5.0% and in the swap receives 5.3% and pays SOFR, for a net cost of SOFR − 0.3%. B borrows at SOFR + 0.6% and pays 5.4% while receiving SOFR, for a net cost of 6.0%.' },
+  { id:'p7_2', src:'課本 7.2（11版勾選）', lvl:'課本', q:'一筆 1 億美元的利率交換還剩 10 個月，每半年交換一次：一方付固定 4%（半年複利），另一方付六個月期浮動利率。這一期的浮動利率已經決定為 2.4%（半年複利）；假設下一期的遠期浮動利率為 3%（半年複利）；所有期限的無風險利率都是 2.7%（連續複利）。求這筆交換對付浮動方、付固定方的價值。',
+    steps:['剩下兩次交換：4 個月後、10 個月後','4 個月後：收固定 0.5 × 4% × 100 = 2.0M，付浮動 0.5 × 2.4% × 100 = 1.2M → 淨 +0.8M','折現：0.8e<sup>−0.027 × 4/12</sup> = 0.7928M','10 個月後：100 × 0.5 × (4% − 3%) = 0.5M → 0.5e<sup>−0.027 × 10/12</sup> = 0.4889M','合計 0.7928 + 0.4889 = <b>1.2817M</b>'],
+    ans:'付浮動方（收固定）：+$1.2817M；付固定方：−$1.2817M。',
+    qEn:'A $100 million interest rate swap has 10 months left, with exchanges every six months: one side pays 4% fixed (semiannual compounding) and the other pays a six-month floating rate. The floating rate for the current period has been set at 2.4% (semiannual). Assume the forward floating rate for the next period is 3% (semiannual) and that the risk-free rate for all maturities is 2.7% with continuous compounding. What is the value of the swap to the party paying floating and to the party paying fixed?',
+    ansEn:'In 4 months the floating payer receives $2.0M and pays $1.2M, worth 0.8e^(−0.027×4/12) = $0.7928M. In 10 months the net is 0.5 × (0.04 − 0.03) × 100 = $0.5M, worth $0.4889M. The swap is worth +$1.2817M to the floating payer and −$1.2817M to the fixed payer.' },
+  { id:'p7_3', src:'課本 7.3（11版勾選）', lvl:'課本', q:'X 公司想借固定利率美元，Y 公司想借固定利率日圓，以目前匯率計算兩筆借款金額相同。X 可借日圓 5.0%、美元 9.6%；Y 可借日圓 6.5%、美元 10.0%。設計一個貨幣交換，讓銀行每年賺 0.5%，對 X、Y 一樣有吸引力，而且匯率風險全部由銀行承擔。',
+    steps:['利差：日圓差 1.5%、美元差 0.4% → 總利益 1.1%','銀行拿 0.5% → 剩 0.6%，X、Y 各省 <b>0.3%</b>','X 比較利益在日圓 → 借日圓 5.0%；Y 借美元 10.0%','X 目標：美元 9.6% − 0.3% = <b>9.3%</b>；Y 目標：日圓 6.5% − 0.3% = <b>6.2%</b>','交換：X 收日圓 5.0%、付美元 9.3%；Y 收美元 10.0%、付日圓 6.2%','銀行：美元 收 9.3、付 10.0 → −0.7%；日圓 收 6.2、付 5.0 → +1.2% → 淨 +0.5%，承擔匯率風險'],
+    ans:'X 借日圓 5%、Y 借美元 10%；X 和銀行換成付美元 9.3%，Y 換成付日圓 6.2%，各省 0.3%，銀行賺 0.5% 並承擔匯率風險。',
+    qEn:'Company X wants to borrow dollars at a fixed rate and Company Y wants to borrow yen at a fixed rate; at the current exchange rate the amounts are equal. X can borrow yen at 5.0% and dollars at 9.6%; Y can borrow yen at 6.5% and dollars at 10.0%. Design a swap that nets a bank 0.5% per annum, is equally attractive to X and Y, and leaves all foreign exchange risk with the bank.',
+    ansEn:'Total gain 1.5% − 0.4% = 1.1%; the bank takes 0.5%, so each saves 0.3%. X borrows yen at 5.0% and swaps into dollars at 9.3%; Y borrows dollars at 10.0% and swaps into yen at 6.2%. The bank loses 0.7% in dollars and gains 1.2% in yen, netting 0.5% while bearing the exchange rate risk.' },
+  { id:'p7_19', src:'課本 7.19（11版勾選）', lvl:'課本', q:'交換造市者的報價：3 年期 bid 3.05%、ask 3.08%；5 年期 bid 3.26%、ask 3.30%。(a) A 公司能以 3.45% 借 3 年固定利率，可以換成多少浮動利率？(b) B 公司能以「浮動 + 0.75%」借 5 年，可以換成多少固定利率？(c) B 承擔什麼展期（rollover）風險？',
+    steps:['(a) A 要變浮動 → 交換裡收固定、付浮動 → 造市者付 bid 3.05%','A 淨付：3.45% − 3.05% + 浮動 = <b>浮動 + 0.40%</b>','(b) B 要變固定 → 交換裡付固定、收浮動 → 付 ask 3.30%','B 淨付：(浮動 + 0.75%) − 浮動 + 3.30% = <b>4.05%</b>','(c) B 的浮動借款通常靠一連串短期借款展期；若 B 信用變差，加碼可能高於 0.75%，甚至借不到，實際成本就會高於 4.05%'],
+    ans:'(a) 浮動 + 0.40%；(b) 固定 4.05%；(c) 展期時信用利差可能擴大或借不到款，成本高於 4.05%。',
+    qEn:'A swap market maker quotes 3.05% bid and 3.08% ask for three years, and 3.26% bid and 3.30% ask for five years. (a) Company A can borrow for three years at a fixed 3.45%. What floating rate can it swap this into? (b) Company B can borrow for five years at floating plus 0.75%. What fixed rate can it swap this into? (c) What rollover risk does Company B face?',
+    ansEn:'(a) A receives the bid of 3.05% and pays floating, so its cost becomes floating + 0.40%. (b) B pays the ask of 3.30% and receives floating, so its cost becomes 4.05% fixed. (c) B’s floating loan is rolled over; if its credit worsens, the spread above floating may rise above 0.75% or funding may be unavailable, so its true cost could exceed 4.05%.' },
+  { id:'p7_22', src:'課本 7.22（11版勾選）', lvl:'課本', q:'A 是英國公司，想借固定利率美元；B 是美國公司，想借固定利率英鎊。A 可借英鎊 11.0%、美元 7.0%；B 可借英鎊 10.6%、美元 6.2%。設計一個交換，讓中介銀行每年賺 0.10%，A、B 各省 0.15%。',
+    steps:['利差：英鎊差 0.4%、美元差 0.8% → 總利益 0.4%','分配：銀行 0.10% ＋ A 0.15% ＋ B 0.15% = 0.40% ✓','A 在英鎊只多付 0.4%（比較利益）→ 借英鎊 11.0%；B 借美元 6.2%','A 目標：美元 7.0% − 0.15% = <b>6.85%</b>；B 目標：英鎊 10.6% − 0.15% = <b>10.45%</b>','交換：A 收英鎊 11.0%、付美元 6.85%；B 收美元 6.2%、付英鎊 10.45%','銀行：英鎊 收 10.45、付 11.0 → −0.55%；美元 收 6.85、付 6.2 → +0.65% → 淨 +0.10%，承擔匯率風險'],
+    ans:'A 借英鎊 11%、B 借美元 6.2%；A 換成付美元 6.85%，B 換成付英鎊 10.45%，各省 0.15%，銀行賺 0.10% 並承擔匯率風險。',
+    qEn:'Company A, a British firm, wants to borrow US dollars at a fixed rate; Company B, a US firm, wants to borrow sterling at a fixed rate. A can borrow sterling at 11.0% and dollars at 7.0%; B can borrow sterling at 10.6% and dollars at 6.2%. Design a swap that nets an intermediary bank 0.10% per annum and gives each company a gain of 0.15% per annum.',
+    ansEn:'Total gain 0.8% − 0.4% = 0.4% = 0.10% + 0.15% + 0.15%. A borrows sterling at 11.0% and swaps into dollars at 6.85%; B borrows dollars at 6.2% and swaps into sterling at 10.45%. The bank loses 0.55% in sterling and gains 0.65% in dollars, netting 0.10% while bearing the exchange rate risk.' }
+);
+
+DATA.deriv.intro = DATA.deriv.intro.replace('期中考 2026/11/16', '期中考 2026/11/16（範圍 Ch1、2、3、5、4、7）');
+
+// 配對遊戲用的名詞
+[['interest rate swap', '利率交換：固定利息換浮動利息'], ['currency swap', '貨幣交換：兩種貨幣的本金與利息互換'], ['notional principal', '名目本金：只用來算利息，不交換'],
+ ['swap rate', '交換利率：bid 與 ask 的平均'], ['plain vanilla swap', '最基本的固定換浮動利率交換'], ['comparative advantage', '比較利益：各借相對划算的再交換'],
+ ['market maker', '造市者：同時報買價與賣價'], ['SOFR', '有擔保隔夜融資利率']].forEach(p => { p.u = 'ch7'; DATA.deriv.match.push(p); });
 // ===== 管理學 補充題：d_mgmt2.js 新卡片的題目與配對 =====
 DATA.mgmt.mcq.push(
   {u:'m4', q:'A culture where employees rarely challenge their boss and accept unequal power is high in:', o:['Individualism','Power distance','Long-term orientation','Nurturing'], a:1, e:'Power distance 權力距離：接受權力不平等分配的程度。'},
