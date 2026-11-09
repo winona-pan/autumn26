@@ -361,7 +361,7 @@ window.addEventListener('pagehide', savePos);
 // ---------- Routing ----------
 const PANES = {
   basic: [['learn', '基礎卡片'], ['formula', '公式教室'], ['play', '遊戲＆打怪'], ['notes', '我的筆記']],
-  deriv: [['learn', '知識點'], ['formula', '公式教室'], ['prob', '課本習題'], ['gen', '變化題'], ['play', '遊戲＆打怪'], ['notes', '我的筆記']],
+  deriv: [['learn', '知識點'], ['formula', '公式教室'], ['prob', '課本習題'], ['gen', '變化題'], ['cheat', '期中大抄'], ['play', '遊戲＆打怪'], ['notes', '我的筆記']],
   invest: [['learn', '知識點'], ['formula', '公式教室'], ['flash', '講義問題'], ['play', '遊戲＆打怪'], ['notes', '我的筆記']],
   law: [['learn', '知識點＋條文'], ['case', '情境題'], ['sum', '統整筆記'], ['play', '遊戲＆打怪'], ['notes', '我的筆記']],
   mgmt: [['learn', '知識點'], ['formula', '公式教室'], ['play', '遊戲＆打怪'], ['notes', '我的筆記']],
@@ -388,7 +388,7 @@ function go(k, tab, opt) {
   $$('.ptab', main).forEach(b => b.onclick = () => go(k, b.dataset.p));
   ST.tab[k] = tab; save();
   const pane = $('#pane');
-  ({ intro: () => renderCFA(pane), learn: () => renderLearn(k, pane), formula: () => renderFormulas(k, pane), mcq: () => renderMCQ(k, pane), prob: () => renderProblems(pane), gen: () => renderGens(pane), flash: () => renderFlash(pane), essay: () => renderEssay(pane), case: () => LAWCASE.renderCases(pane), sum: () => LAWCASE.renderSums(pane), game: () => renderGames(k, pane), play: () => renderGames(k, pane), notes: () => NOTES.page(k, pane) })[tab]();
+  ({ intro: () => renderCFA(pane), learn: () => renderLearn(k, pane), formula: () => renderFormulas(k, pane), mcq: () => renderMCQ(k, pane), prob: () => renderProblems(pane), gen: () => renderGens(pane), cheat: () => { pane.innerHTML = DATA[k].cheat || ''; }, flash: () => renderFlash(pane), essay: () => renderEssay(pane), case: () => LAWCASE.renderCases(pane), sum: () => LAWCASE.renderSums(pane), game: () => renderGames(k, pane), play: () => renderGames(k, pane), notes: () => NOTES.page(k, pane) })[tab]();
   updateCounts();
   opt && opt.top ? window.scrollTo(0, 0) : restorePos();
   NOTES.bmPill();
