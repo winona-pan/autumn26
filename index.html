@@ -100,6 +100,9 @@ figure{margin:0;overflow-x:auto} .fig{width:100%;max-width:560px;height:auto;dis
 .fig .seg.s1{fill:var(--acc)} .fig .seg.s2{fill:color-mix(in srgb,var(--acc) 45%,var(--panel))} .fig .seg.s3{fill:var(--soft);stroke:var(--line)} .fig text.a2{fill:var(--acc)}
 details summary{cursor:pointer;font-weight:700;color:var(--acc)} .body{max-width:74ch} .body ul,.body ol{padding-left:1.3em;margin:6px 0} .body li{margin:3px 0}
 .note{font-size:14px;color:var(--mute);border-left:4px solid var(--acc);padding-left:10px}
+.cheat h3{margin:22px 0 8px} .cheat h4{margin:0 0 6px;font-size:15px} .cheat ul{margin:0;padding-left:20px} .cheat li{margin:3px 0;line-height:1.55} .cheat .tbl{margin:6px 0}
+.cblk{background:var(--panel);border:2px solid var(--line);border-radius:12px;padding:10px 14px;margin:10px 0} .cmust .cblk{border-color:var(--acc)}
+kbd{font:inherit;font-size:12px;font-weight:700;border:1.5px solid var(--line);border-bottom-width:3px;border-radius:6px;padding:0 5px;background:var(--soft);white-space:nowrap}
 .formula{font-family:var(--f-display);font-size:17px;background:var(--why);padding:6px 14px;border-radius:10px;display:inline-block;border:2px solid var(--line)}
 .route{display:flex;flex-wrap:wrap;gap:6px 8px;margin:0;padding:0;list-style:none;counter-reset:rt}
 .route li{counter-increment:rt}
@@ -6112,6 +6115,399 @@ DATA.deriv.mcqEn.push(
   { u:'ch2', q:'Daily settlement of futures contracts is also known as:', o:['marking to market','tailing the hedge','basis trading','rolling over'], a:0, e:'每日依結算價計算損益並調整保證金帳戶。' },
   { u:'ch2', q:'A trading day in which a trader opens and closes the same position most likely increases:', o:['open interest only','trading volume but not open interest','neither volume nor open interest','open interest but not volume'], a:1, e:'當沖會增加成交量，但不留下未平倉部位。' }
 );
+// ===== 衍金 Ch7 交換（Swaps）：期中考範圍最後一章。放在 en.js、more.js 之後，mcqEn 才不會被覆蓋 =====
+DATA.deriv.sections.push({ id: 'ch7', t: 'Ch7 交換（Swaps）', cards: [
+  { id: 'd38', t: '交換是什麼：一連串的遠期合約', en: 'Nature of swaps',
+    plain: '交換（swap）＝兩方約定在未來特定日期、照規則交換現金流量的 OTC 合約，可以看成一連串的遠期合約。最常見兩種：利率交換（固定利息換浮動利息）和貨幣交換（一種貨幣的本利換另一種貨幣的本利）。',
+    life: '你和室友約好接下來兩年，每個月你固定給他 3,000 元，他給你「當月實際電費」。電費高的月份你賺、低的月份你虧，其實就是每個月各簽一張小小的遠期合約。',
+    body: '<ul><li><b>Plain vanilla interest rate swap</b>：Apple 付固定 3%、收浮動 SOFR；Citigroup 相反。每 3 個月交換一次，為期 2 年，<b>notional principal</b> 1 億美元。</li><li>名目本金只用來<b>算利息</b>，本身不交換。</li><li>每期固定利息：3% × 3/12 × 100M = <b>750,000</b>；若該期 SOFR 為 2.2%，浮動利息 = 2.2% × 3/12 × 100M = 550,000 → Apple 淨付 200,000。</li><li><b>SOFR</b>（secured overnight financing rate）：3 個月期利率＝把期間內每天的隔夜利率複利起來再年化，所以要到<b>期末</b>才知道這期適用的利率。</li><li>浮動利率高於 3% 時，付固定、收浮動的一方淨收。</li></ul>',
+    terms: [['swap 交換','約定未來交換現金流量的 OTC 合約'],['notional principal 名目本金','只用來計算利息，不交換'],['SOFR','有擔保隔夜融資利率，期末才知道整期利率']],
+    ex: 'A swap is an OTC agreement to exchange cash flows in the future according to specified rules; it can be regarded as a portfolio of forward contracts.' },
+  { id: 'd39', t: '用利率交換轉換負債與投資', en: 'Typical uses of an interest rate swap',
+    plain: '付利息的一方（負債）可以把固定變浮動、浮動變固定；收利息的一方（投資）也一樣。做法都是：原本的現金流 ＋ 交換的兩筆現金流，浮動的部分互相抵掉，剩下的就是新的利率。',
+    life: '房貸是浮動利率、怕央行升息？再簽一張「收浮動、付固定」的交換，收到的浮動剛好拿去付房貸的浮動，你實際上就變成固定利率房貸。',
+    body: '<table class="tbl"><tr><th>情況</th><th>原本</th><th>交換</th><th>淨結果</th></tr><tr><td>負債：浮動 → 固定</td><td>付 SOFR + 0.1%</td><td>付 3%、收 SOFR</td><td>付 <b>3.1%</b></td></tr><tr><td>負債：固定 → 浮動</td><td>付 3.2%</td><td>收 2.97%、付 SOFR</td><td>付 <b>SOFR + 0.23%</b></td></tr><tr><td>投資：固定 → 浮動</td><td>收 2.7%</td><td>付 3%、收 SOFR</td><td>收 <b>SOFR − 0.3%</b></td></tr><tr><td>投資：浮動 → 固定</td><td>收 SOFR − 0.2%</td><td>收 2.97%、付 SOFR</td><td>收 <b>2.77%</b></td></tr></table><ul><li>算法：三筆現金流加總（收為正、付為負），浮動利率會抵銷。</li><li>判斷方向：想要<b>付固定</b> → 交換裡付固定、收浮動；想要<b>付浮動</b> → 交換裡收固定、付浮動。</li></ul>',
+    ex: 'A swap can transform a floating-rate liability into a fixed-rate liability, or a fixed-rate investment into a floating-rate investment, and vice versa.' },
+  { id: 'd40', t: '金融中介與交換報價：swap rate', en: 'Financial intermediary & swap rate',
+    plain: '銀行常常同時和兩家公司各簽一張方向相反的交換，賺中間的價差；任何一方違約，銀行對另一方仍要履約，所以價差也是承擔違約風險的補償。兩邊剛好同時出現很少見，銀行就當造市者（market maker）直接報價。',
+    life: '像換匯所：買進價和賣出價差一點點，換匯所賺中間那段；swap rate 就是買價和賣價的平均。',
+    body: '<ul><li>Citi 付 Intel 固定 2.97%、收 Apple 固定 3.00% → 賺 <b>3 bps</b>，浮動部分一收一付抵銷。</li><li><b>Bid</b>：造市者願意<b>付</b>的固定利率（對方收固定、付浮動）。<b>Ask/offer</b>：造市者要<b>收</b>的固定利率（對方付固定、收浮動）。價差約 3～4 bps。</li><li><b>Swap rate</b> ＝ bid 與 ask 的平均，也就是讓交換一開始價值為 0 的固定利率。</li></ul><table class="tbl"><tr><th>期限</th><th>Bid</th><th>Ask</th><th>Swap rate</th></tr><tr><td>2 年</td><td>2.97</td><td>3.00</td><td>2.985</td></tr><tr><td>3 年</td><td>3.05</td><td>3.08</td><td>3.065</td></tr><tr><td>5 年</td><td>3.26</td><td>3.30</td><td>3.280</td></tr><tr><td>10 年</td><td>3.48</td><td>3.52</td><td>3.500</td></tr></table>',
+    ex: 'A market maker quotes a bid rate it will pay and an ask rate it will receive in exchange for floating; the swap rate is the average of the two.' },
+  { id: 'd41', t: '比較利益：為什麼要做利率交換', en: 'Comparative advantage (interest rate swap)',
+    plain: '信用較差的公司在固定和浮動市場都要付比較多，但兩個市場多付的幅度不同。各自去借「多付得最少」或「少付得最多」的那種，再用交換換成真正想要的，兩邊加起來可以省下「兩個利差的差距」。',
+    life: '你和學霸一起準備報告：學霸寫作和做投影片都比你快，但寫作快很多、投影片只快一點點。學霸寫、你做投影片，再互相交換成果，兩人總時間最省。',
+    body: '<table class="tbl"><tr><th></th><th>Fixed</th><th>Floating</th></tr><tr><td>AAACorp</td><td>4.0%</td><td>SOFR − 0.1%</td></tr><tr><td>BBBCorp</td><td>5.2%</td><td>SOFR + 0.6%</td></tr></table><ol><li>利差：固定差 1.2%、浮動差 0.7% → 總利益 1.2 − 0.7 = <b>0.5%</b>。</li><li>BBB 在浮動差得少 → 比較利益在<b>浮動</b>；AAA 在<b>固定</b>。但 AAA 想借浮動、BBB 想借固定 → 正好可以交換。</li><li>AAA 借固定 4%，BBB 借 SOFR + 0.6%，平分 0.5% → 各省 0.25%。</li><li>AAA 目標 SOFR − 0.35%；BBB 目標 4.95%。設交換固定利率 k：AAA 淨付 4% + SOFR − k = SOFR − 0.35% → <b>k = 4.35%</b>。</li><li>加入金融中介收 4 bps：AAA 收 4.33%、BBB 付 4.37% → AAA 淨付 SOFR − 0.33%，BBB 淨付 4.97%。</li></ol>',
+    ex: 'Two firms can each borrow where they have a comparative advantage and then swap; the total gain equals the difference between the two rate spreads.' },
+  { id: 'd42', t: '用 FRA 評價利率交換', en: 'Valuing an interest rate swap with FRAs',
+    plain: '簽約時（用 swap rate）交換價值是 0；之後利率變動，價值就不是 0。每一次交換都是一張 FRA：假設遠期利率會實現，算出每期浮動金額，和固定金額相減，再用無風險利率折現加總。',
+    life: '就像評估「接下來幾個月的電費互換約」：用預測的電費去算每個月誰付誰，再換算成今天的價值加起來。',
+    body: '<p class="formula">R<sub>F</sub> = (R<sub>2</sub>T<sub>2</sub> − R<sub>1</sub>T<sub>1</sub>) / (T<sub>2</sub> − T<sub>1</sub>)　　R<sub>m</sub> = m(e<sup>R<sub>c</sub>/m</sup> − 1)</p><p>例：1 億美元，付固定 3%、收浮動，每半年交換，剩 1.2 年（0.2、0.7、1.2 年交換）；0.2／0.7／1.2 年零息利率 2.8%／3.2%／3.4%（連續複利）；過去 0.3 年已實現 2.3%（連續複利）。</p><ol><li>第 1 期：2.3% × 0.3/0.5 + 2.8% × 0.2/0.5 = 2.5%（連續）→ 半年複利 2.516% → 浮動 1.258M。</li><li>第 2 期遠期：(3.2 × 0.7 − 2.8 × 0.2)/0.5 = 3.36% → 3.388% → 1.694M。</li><li>第 3 期遠期：(3.4 × 1.2 − 3.2 × 0.7)/0.5 = 3.68% → 3.714% → 1.857M。</li></ol><table class="tbl"><tr><th>時間</th><th>固定</th><th>浮動</th><th>淨額</th><th>折現因子</th><th>現值</th></tr><tr><td>0.2</td><td>−1.5</td><td>+1.258</td><td>−0.242</td><td>0.9944</td><td>−0.241</td></tr><tr><td>0.7</td><td>−1.5</td><td>+1.694</td><td>+0.194</td><td>0.9778</td><td>+0.190</td></tr><tr><td>1.2</td><td>−1.5</td><td>+1.857</td><td>+0.357</td><td>0.9600</td><td>+0.343</td></tr></table><p>付固定方的交換價值 ＝ <b>+0.292M</b>；付浮動方 ＝ −0.292M。</p>',
+    ex: 'An interest rate swap is worth zero at initiation; afterward it can be valued as a portfolio of FRAs by assuming forward rates are realized and discounting the net cash flows.' },
+  { id: 'd43', t: '貨幣交換：本金也要交換', en: 'Currency swaps',
+    plain: '貨幣交換＝交換兩種貨幣的本金和利息。和利率交換最大的不同：本金在期初和期末都要交換，金額依期初匯率設定成大約等值。',
+    life: '你去英國交換一年、英國同學來台灣：開學時互換一筆等值的生活費，之後每月各自付對方貨幣的「利息」，學期結束再把本金換回來。',
+    body: '<p>例：一方每年付美元 3%（本金 1,500 萬美元）、收英鎊 4%（本金 1,000 萬英鎊），為期 5 年。</p><table class="tbl"><tr><th>時間</th><th>美元</th><th>英鎊</th></tr><tr><td>期初</td><td>+15.00</td><td>−10.00</td></tr><tr><td>第 1～4 年</td><td>−0.45</td><td>+0.40</td></tr><tr><td>第 5 年</td><td>−15.45</td><td>+10.40</td></tr></table><ul><li>期初的本金交換方向和之後相反：期初收美元、付英鎊，之後付美元利息、收英鎊利息，到期付美元本金、收英鎊本金。</li><li>用途：把一種貨幣的<b>負債</b>轉成另一種貨幣的負債（例：英鎊債務 → 美元債務），或把<b>投資</b>轉成另一種貨幣（例：美元債權 → 英鎊債權）。</li></ul>',
+    ex: 'In a currency swap, principal is usually exchanged at the beginning and end of the swap, with amounts set to be roughly equivalent at the initial exchange rate.' },
+  { id: 'd44', t: '貨幣交換的比較利益', en: 'Comparative advantage (currency swap)',
+    plain: '和利率交換同樣的邏輯，只是兩個市場換成兩種貨幣。比較兩家公司在兩種貨幣的利差，各自去借差距對自己最有利的貨幣，再交換。',
+    life: '你在台灣換台幣、朋友在日本換日圓都比較划算，就各自換好再互相交換，比兩人都跑到同一邊換省。',
+    body: '<table class="tbl"><tr><th></th><th>USD</th><th>AUD</th></tr><tr><td>General Electric</td><td>5.0%</td><td>7.6%</td></tr><tr><td>Qantas</td><td>7.0%</td><td>8.0%</td></tr></table><ol><li>美元差 2.0%、澳幣差 0.4% → 總利益 2.0 − 0.4 = <b>1.6%</b>，平分各 0.8%。</li><li>GE 比較利益在美元（少付最多），但想借澳幣；Qantas 比較利益在澳幣（多付最少），但想借美元。</li><li>GE 借美元 5.0% → 交換後實際借澳幣 7.6% − 0.8% = <b>6.8%</b>。</li><li>Qantas 借澳幣 8.0% → 交換後實際借美元 7.0% − 0.8% = <b>6.2%</b>。</li><li>有銀行當中介時，銀行通常承擔匯率風險，並從總利益中拿走一部分。</li></ol>',
+    ex: 'In a currency swap based on comparative advantage, each company borrows in the currency where its relative cost is lowest and then swaps into the currency it actually needs.' },
+  { id: 'd45', t: '貨幣交換的評價：兩個債券或一串遠期', en: 'Valuing currency swaps',
+    plain: '貨幣交換可以看成「一個外幣債券的多頭＋一個本國債券的空頭」，也可以看成一串遠期外匯合約。兩種算法答案一樣。',
+    life: '你手上有一張日圓債券、同時欠一張美元債券；把日圓債券換成美元，扣掉欠的，就是你的淨值。',
+    body: '<p class="formula">收外幣、付本國幣：V = S<sub>0</sub>B<sub>F</sub> − B<sub>D</sub>　　付外幣、收本國幣：V = B<sub>D</sub> − S<sub>0</sub>B<sub>F</sub>　　F<sub>T</sub> = S<sub>0</sub>e<sup>(r − r<sub>f</sub>)T</sup></p><p>S<sub>0</sub>＝每 1 單位外幣值多少本國幣。</p><p>例：收日圓 3%（本金 12 億日圓）、付美元 4%（本金 1,000 萬美元），每年一次，剩 3 年；日圓利率 1.5%、美元利率 2.5%（連續複利）；即期 110 日圓／美元。</p><ul><li><b>債券法</b>：B<sub>D</sub> = 0.4e<sup>−0.025</sup> + 0.4e<sup>−0.05</sup> + 10.4e<sup>−0.075</sup> = 10.4191M 美元；B<sub>F</sub> = 36e<sup>−0.015</sup> + 36e<sup>−0.03</sup> + 1,236e<sup>−0.045</sup> = 1,252.01M 日圓 → V = 1,252.01/110 − 10.4191 = <b>+0.9629M 美元</b>。</li><li><b>遠期法</b>：1、2、3 年遠期匯率 = (1/110)e<sup>0.01t</sup> = 0.009182、0.009275、0.009368 美元／日圓；每期日圓現金流換成美元，扣掉美元支出，再用美元利率折現，合計同樣是 +0.9629M。</li><li>兩法相同的原因：把遠期匯率代入展開後，正好等於 S<sub>0</sub>B<sub>F</sub> − B<sub>D</sub>。</li></ul>',
+    ex: 'A currency swap can be valued as the difference between two bonds, V = S0·BF − BD for the party receiving foreign currency, or as a portfolio of forward foreign exchange contracts.' }
+]});
+
+DATA.deriv.mcq.push(
+  {u:'ch7', q:'利率交換中的名目本金（notional principal）：', o:['只用來計算利息，本身不交換','期初和期末都要交換','只在期末交換一次','由付浮動的一方先付清'], a:0, e:'利率交換只交換利息；名目本金用來算利息，不交換。貨幣交換才交換本金。'},
+  {u:'ch7', q:'貨幣交換和利率交換最主要的差別是：', o:['貨幣交換一定在交易所交易','貨幣交換的本金在期初和期末都要交換','貨幣交換只交換本金、不交換利息','貨幣交換不需要考慮利率'], a:1, e:'貨幣交換的本金通常在期初和期末交換，金額依期初匯率設成大約等值。'},
+  {u:'ch7', q:'名目本金 5,000 萬美元、每季交換一次，付固定 4%、收浮動。這一季浮動利率為 3.2%，付固定方這一季的淨現金流是：', o:['−$400,000','+$100,000','−$100,000','−$1,000,000'], a:2, e:'固定 4% × 1/4 × 50M = 500,000；浮動 3.2% × 1/4 × 50M = 400,000 → 淨付 100,000。−400,000 是忘了除以 4。'},
+  {u:'ch7', q:'用 SOFR 當浮動利率時，一期 3 個月的適用利率什麼時候才知道？', o:['期初就知道','簽約當天就固定','由雙方協商決定','期末，把期間每天的隔夜利率複利後才知道'], a:3, e:'3 個月期 SOFR 是把期間內每天的隔夜利率複利再年化，要到期末才能算出。'},
+  {u:'ch7', q:'公司借款付 SOFR + 0.5%，再簽交換：付固定 3.2%、收 SOFR。公司實際的借款成本是：', o:['固定 3.7%','固定 3.2%','SOFR + 3.7%','SOFR − 2.7%'], a:0, e:'−(SOFR + 0.5%) + SOFR − 3.2% = −3.7%，浮動抵銷，變成固定 3.7%。'},
+  {u:'ch7', q:'公司持有收固定 4% 的債券，再簽交換：付固定 3.5%、收 SOFR。公司實際收到的是：', o:['固定 0.5%','SOFR + 0.5%','SOFR − 0.5%','固定 7.5%'], a:1, e:'+4% − 3.5% + SOFR = SOFR + 0.5%，把固定收益轉成浮動收益。'},
+  {u:'ch7', q:'造市者的 5 年期交換報價為 bid 3.15%、ask 3.19%，swap rate 是：', o:['3.15%','3.19%','3.17%','0.04%'], a:2, e:'Swap rate ＝ bid 和 ask 的平均：(3.15 + 3.19)/2 = 3.17%。0.04% 是價差。'},
+  {u:'ch7', q:'承上，一家公司想把固定利率負債轉成浮動（交換裡收固定、付浮動），它能收到的固定利率是：', o:['3.19%','3.17%','3.21%','3.15%'], a:3, e:'造市者願意「付」的固定利率是 bid 3.15%。對方付固定時，造市者才收 ask 3.19%。'},
+  {u:'ch7', q:'A 可借固定 5.0% 或 SOFR + 0.2%；B 可借固定 6.5% 或 SOFR + 0.8%。用交換最多可以共同省下多少？', o:['0.9%','1.5%','0.6%','2.1%'], a:0, e:'固定差 1.5%、浮動差 0.6% → 總利益 1.5 − 0.6 = 0.9%。'},
+  {u:'ch7', q:'承上，B 應該去借哪一種，才發揮它的比較利益？', o:['固定利率，因為比較便宜','浮動利率，因為它在浮動多付得比較少','兩種各借一半','不需要借款'], a:1, e:'B 在固定多付 1.5%、浮動只多付 0.6%，比較利益在浮動。'},
+  {u:'ch7', q:'一筆用 swap rate 簽訂的利率交換，在簽約當下的價值是：', o:['名目本金的 1%','等於固定利息的現值','0','等於浮動利息的現值'], a:2, e:'Swap rate 就是讓交換一開始價值為 0 的固定利率；之後利率變動，價值才會偏離 0。'},
+  {u:'ch7', q:'用 FRA 評價利率交換時，未來每期的浮動現金流怎麼估計？', o:['都用目前的即期利率','都用簽約時的 swap rate','用過去的平均利率','假設遠期利率會實現'], a:3, e:'每次交換都是一張 FRA，假設遠期利率就是未來實現的利率，再和固定金額相減後折現。'},
+  {u:'ch7', q:'3.36%（連續複利）換成半年複利是多少？', o:['3.388%','3.360%','3.333%','3.416%'], a:0, e:'R<sub>2</sub> = 2(e<sup>0.0336/2</sup> − 1) = 3.388%。半年複利的數字一定比連續複利大一點。'},
+  {u:'ch7', q:'收外幣、付本國幣的一方，貨幣交換的價值是（S<sub>0</sub>＝每 1 單位外幣值多少本國幣）：', o:['B<sub>D</sub> − S<sub>0</sub>B<sub>F</sub>','S<sub>0</sub>B<sub>F</sub> − B<sub>D</sub>','B<sub>F</sub> − S<sub>0</sub>B<sub>D</sub>','S<sub>0</sub>(B<sub>F</sub> − B<sub>D</sub>)'], a:1, e:'收外幣＝持有外幣債券、欠本國債券：V = S<sub>0</sub>B<sub>F</sub> − B<sub>D</sub>。'},
+  {u:'ch7', q:'日圓債券價值 600M 日圓、美元債券價值 5.2M 美元，即期 120 日圓／美元。收日圓、付美元一方的交換價值是：', o:['+$0.2M','+$0.8M','−$0.2M','−$5.0M'], a:2, e:'600/120 = 5.0M 美元，5.0 − 5.2 = −0.2M。'},
+  {u:'ch7', q:'銀行同時和兩家公司各簽一張方向相反的交換，為什麼還要收價差？', o:['因為浮動利率無法抵銷','因為銀行要付兩次名目本金','因為法規規定一定要收費','任一方違約時，銀行對另一方仍要履約'], a:3, e:'兩張交換彼此獨立：一方違約，銀行和另一方的合約照樣有效，價差是承擔違約風險的補償。'}
+);
+
+DATA.deriv.mcqEn.push(
+  {u:'ch7', q:'An interest rate swap can best be regarded as:', o:['A portfolio of forward contracts','A single option on interest rates','A loan of the notional principal','A futures contract traded on an exchange'], a:0, e:'每次交換都像一張遠期合約，整個交換就是一串遠期合約。'},
+  {u:'ch7', q:'A company has a floating-rate loan and fears that rates will rise. Which swap position hedges this risk?', o:['Receive fixed and pay floating','Pay fixed and receive floating','Receive fixed and pay fixed','Pay floating and receive floating'], a:1, e:'收浮動去付原本的浮動借款，再付固定 → 實際變成固定利率負債。'},
+  {u:'ch7', q:'A fund holds floating-rate notes but wants a fixed income stream. It should enter a swap in which it:', o:['Pays fixed and receives floating','Pays fixed and pays floating','Receives fixed and pays floating','Receives floating and receives fixed'], a:2, e:'把浮動收入拿去付交換的浮動，再收固定 → 浮動投資轉成固定投資。'},
+  {u:'ch7', q:'A firm borrows at a fixed 3.4% and enters a swap receiving 3.1% fixed and paying SOFR. Its net borrowing cost is:', o:['3.4% fixed','SOFR − 0.3%','SOFR + 3.1%','SOFR + 0.3%'], a:3, e:'−3.4% + 3.1% − SOFR = −(SOFR + 0.3%)，固定負債轉成浮動。'},
+  {u:'ch7', q:'A swap market maker quotes 3.26% bid and 3.30% ask for five years. A company that wants to pay fixed and receive floating will pay:', o:['3.30%','3.26%','3.28%','3.34%'], a:0, e:'對方付固定時，造市者收 ask 3.30%；對方收固定時，造市者付 bid 3.26%。'},
+  {u:'ch7', q:'The swap rate for a given maturity is:', o:['The bid rate quoted by the market maker','The average of the bid and ask fixed rates','The current overnight SOFR','The difference between the bid and ask rates'], a:1, e:'Swap rate＝bid 和 ask 的平均，使交換一開始價值為 0。'},
+  {u:'ch7', q:'X can borrow fixed at 4.0% or floating at SOFR + 0.3%; Y can borrow fixed at 5.0% or floating at SOFR + 0.5%. Which firm has a comparative advantage in floating-rate borrowing?', o:['X, because its rates are lower','Neither firm','Y, because its floating spread over X is smaller','Both firms equally'], a:2, e:'Y 在固定多付 1.0%、浮動只多付 0.2%，比較利益在浮動。X 雖然兩邊都便宜，比較利益在固定。'},
+  {u:'ch7', q:'In the situation above, what is the total gain available to all parties from a swap?', o:['1.0%','0.2%','1.2%','0.8%'], a:3, e:'1.0% − 0.2% = 0.8%。'},
+  {u:'ch7', q:'Continuing the example, a bank takes 0.2% and the rest is split equally. How much does each company save per year?', o:['0.3%','0.4%','0.2%','0.6%'], a:0, e:'(0.8% − 0.2%) / 2 = 0.3%。'},
+  {u:'ch7', q:'In a currency swap, the principal amounts in the two currencies are usually:', o:['Never exchanged','Exchanged at the start and the end, set roughly equal at the initial exchange rate','Exchanged only at the end, at the exchange rate then prevailing','Exchanged every period with the interest'], a:1, e:'本金在期初和期末交換，金額依期初匯率設成大約等值。'},
+  {u:'ch7', q:'A US firm has issued sterling bonds but wants its debt effectively in dollars. Which currency swap should it enter?', o:['Receive dollars and pay sterling','Pay sterling and pay dollars','Receive sterling and pay dollars','Receive sterling and receive dollars'], a:2, e:'收英鎊去付原本的英鎊債務，再付美元 → 英鎊負債轉成美元負債。'},
+  {u:'ch7', q:'At initiation, the value of a currency swap negotiated at market rates is:', o:['Equal to the domestic principal','Equal to the foreign principal at spot','Positive for the party receiving the higher coupon','Approximately zero'], a:3, e:'依市場利率和匯率設定的交換，一開始對雙方價值都約為 0。'},
+  {u:'ch7', q:'The US interest rate is 2.5% and the Japanese rate is 1.5% (continuous). Compared with the spot rate, the forward price of the yen in dollars is:', o:['Higher than spot','Lower than spot','Equal to spot','Impossible to determine'], a:0, e:'F = S₀e^{(r − r_f)T}，r = 2.5% > r_f = 1.5%，所以遠期比即期高。'},
+  {u:'ch7', q:'A swap’s dollar bond is worth $10.42 million and its yen bond is worth ¥1,252 million, with spot at ¥110 per dollar. Its value to the party receiving yen and paying dollars is about:', o:['−$0.96 million','+$0.96 million','+$11.38 million','−$10.42 million'], a:1, e:'1,252/110 = 11.38M，11.38 − 10.42 ≈ +0.96M。'},
+  {u:'ch7', q:'When an interest rate swap is valued as a portfolio of FRAs, each floating payment is estimated by:', o:['Using the current overnight SOFR for every period','Using the fixed swap rate for every period','Assuming forward interest rates are realized','Averaging past floating rates'], a:2, e:'假設遠期利率會實現，算出每期浮動金額，再和固定金額相減後折現。'},
+  {u:'ch7', q:'A firm borrows short term at floating plus 0.75%, rolls the loan over, and swaps it into fixed. The main risk it bears is that:', o:['The swap rate changes after the swap is signed','The notional principal must be repaid early','The market maker defaults on the bid rate','Its credit spread over floating rises when the loan is rolled over'], a:3, e:'浮動借款靠短期展期；信用變差時加碼可能高於 0.75%，甚至借不到，實際成本就高於原本換到的固定利率。'},
+  {u:'ch7', q:'After a pay-fixed, receive-floating swap is signed, floating rates rise much more than expected. The swap’s value to the fixed payer becomes:', o:['Positive','Negative','Zero','Equal to the notional principal'], a:0, e:'收到的浮動變多、付的固定不變 → 對付固定方價值變正。'},
+  {u:'ch7', q:'Why does a financial institution that stands between two offsetting swaps still earn a spread?', o:['The floating payments do not offset','It must honor each swap even if the other party defaults','It pays the notional principal twice','The spread is required by exchange rules'], a:1, e:'兩張合約彼此獨立，一方違約，銀行和另一方的合約仍要履約，價差是承擔違約風險的補償。'}
+);
+
+DATA.deriv.problems.push(
+  { id:'p7_1', src:'課本 7.1（11版勾選）', lvl:'課本', q:'A、B 兩家公司都要借 5 年期、2,000 萬美元。A 可借固定 5.0% 或 SOFR + 0.1%；B 可借固定 6.4% 或 SOFR + 0.6%。A 想要浮動利率、B 想要固定利率。請設計一個交換，讓中介銀行每年賺 0.1%，而且對 A、B 一樣有吸引力。',
+    steps:['利差：固定差 1.4%、浮動差 0.5% → 總利益 1.4 − 0.5 = 0.9%','銀行拿 0.1% → 剩 0.8%，A、B 各省 <b>0.4%</b>','A 比較利益在固定 → 借固定 5.0%；B 借 SOFR + 0.6%','A 目標：SOFR + 0.1% − 0.4% = <b>SOFR − 0.3%</b>；B 目標：6.4% − 0.4% = <b>6.0%</b>','交換：A 收固定 5.3%、付 SOFR → −5.0 + 5.3 − SOFR = −(SOFR − 0.3%) ✓','B 付固定 5.4%、收 SOFR → −(SOFR + 0.6) + SOFR − 5.4 = −6.0% ✓','銀行：收 5.4%、付 5.3% → 賺 0.1% ✓'],
+    ans:'A 借固定 5%，和銀行交換收 5.3%、付 SOFR；B 借 SOFR + 0.6%，和銀行交換付 5.4%、收 SOFR。A 淨付 SOFR − 0.3%，B 淨付 6.0%，銀行賺 0.1%。（設計不唯一，重點是每方各省 0.4%。）',
+    qEn:'Companies A and B each need to borrow $20 million for five years. A is offered 5.0% fixed or SOFR + 0.1% floating; B is offered 6.4% fixed or SOFR + 0.6% floating. A wants floating-rate debt and B wants fixed-rate debt. Design a swap that nets a bank 0.1% per annum and is equally attractive to both companies.',
+    ansEn:'Total gain 1.4% − 0.5% = 0.9%; the bank takes 0.1%, so each company saves 0.4%. A borrows fixed at 5.0% and in the swap receives 5.3% and pays SOFR, for a net cost of SOFR − 0.3%. B borrows at SOFR + 0.6% and pays 5.4% while receiving SOFR, for a net cost of 6.0%.' },
+  { id:'p7_2', src:'課本 7.2（11版勾選）', lvl:'課本', q:'一筆 1 億美元的利率交換還剩 10 個月，每半年交換一次：一方付固定 4%（半年複利），另一方付六個月期浮動利率。這一期的浮動利率已經決定為 2.4%（半年複利）；假設下一期的遠期浮動利率為 3%（半年複利）；所有期限的無風險利率都是 2.7%（連續複利）。求這筆交換對付浮動方、付固定方的價值。',
+    steps:['剩下兩次交換：4 個月後、10 個月後','4 個月後：收固定 0.5 × 4% × 100 = 2.0M，付浮動 0.5 × 2.4% × 100 = 1.2M → 淨 +0.8M','折現：0.8e<sup>−0.027 × 4/12</sup> = 0.7928M','10 個月後：100 × 0.5 × (4% − 3%) = 0.5M → 0.5e<sup>−0.027 × 10/12</sup> = 0.4889M','合計 0.7928 + 0.4889 = <b>1.2817M</b>'],
+    ans:'付浮動方（收固定）：+$1.2817M；付固定方：−$1.2817M。',
+    qEn:'A $100 million interest rate swap has 10 months left, with exchanges every six months: one side pays 4% fixed (semiannual compounding) and the other pays a six-month floating rate. The floating rate for the current period has been set at 2.4% (semiannual). Assume the forward floating rate for the next period is 3% (semiannual) and that the risk-free rate for all maturities is 2.7% with continuous compounding. What is the value of the swap to the party paying floating and to the party paying fixed?',
+    ansEn:'In 4 months the floating payer receives $2.0M and pays $1.2M, worth 0.8e^(−0.027×4/12) = $0.7928M. In 10 months the net is 0.5 × (0.04 − 0.03) × 100 = $0.5M, worth $0.4889M. The swap is worth +$1.2817M to the floating payer and −$1.2817M to the fixed payer.' },
+  { id:'p7_3', src:'課本 7.3（11版勾選）', lvl:'課本', q:'X 公司想借固定利率美元，Y 公司想借固定利率日圓，以目前匯率計算兩筆借款金額相同。X 可借日圓 5.0%、美元 9.6%；Y 可借日圓 6.5%、美元 10.0%。設計一個貨幣交換，讓銀行每年賺 0.5%，對 X、Y 一樣有吸引力，而且匯率風險全部由銀行承擔。',
+    steps:['利差：日圓差 1.5%、美元差 0.4% → 總利益 1.1%','銀行拿 0.5% → 剩 0.6%，X、Y 各省 <b>0.3%</b>','X 比較利益在日圓 → 借日圓 5.0%；Y 借美元 10.0%','X 目標：美元 9.6% − 0.3% = <b>9.3%</b>；Y 目標：日圓 6.5% − 0.3% = <b>6.2%</b>','交換：X 收日圓 5.0%、付美元 9.3%；Y 收美元 10.0%、付日圓 6.2%','銀行：美元 收 9.3、付 10.0 → −0.7%；日圓 收 6.2、付 5.0 → +1.2% → 淨 +0.5%，承擔匯率風險'],
+    ans:'X 借日圓 5%、Y 借美元 10%；X 和銀行換成付美元 9.3%，Y 換成付日圓 6.2%，各省 0.3%，銀行賺 0.5% 並承擔匯率風險。',
+    qEn:'Company X wants to borrow dollars at a fixed rate and Company Y wants to borrow yen at a fixed rate; at the current exchange rate the amounts are equal. X can borrow yen at 5.0% and dollars at 9.6%; Y can borrow yen at 6.5% and dollars at 10.0%. Design a swap that nets a bank 0.5% per annum, is equally attractive to X and Y, and leaves all foreign exchange risk with the bank.',
+    ansEn:'Total gain 1.5% − 0.4% = 1.1%; the bank takes 0.5%, so each saves 0.3%. X borrows yen at 5.0% and swaps into dollars at 9.3%; Y borrows dollars at 10.0% and swaps into yen at 6.2%. The bank loses 0.7% in dollars and gains 1.2% in yen, netting 0.5% while bearing the exchange rate risk.' },
+  { id:'p7_19', src:'課本 7.19（11版勾選）', lvl:'課本', q:'交換造市者的報價：3 年期 bid 3.05%、ask 3.08%；5 年期 bid 3.26%、ask 3.30%。(a) A 公司能以 3.45% 借 3 年固定利率，可以換成多少浮動利率？(b) B 公司能以「浮動 + 0.75%」借 5 年，可以換成多少固定利率？(c) B 承擔什麼展期（rollover）風險？',
+    steps:['(a) A 要變浮動 → 交換裡收固定、付浮動 → 造市者付 bid 3.05%','A 淨付：3.45% − 3.05% + 浮動 = <b>浮動 + 0.40%</b>','(b) B 要變固定 → 交換裡付固定、收浮動 → 付 ask 3.30%','B 淨付：(浮動 + 0.75%) − 浮動 + 3.30% = <b>4.05%</b>','(c) B 的浮動借款通常靠一連串短期借款展期；若 B 信用變差，加碼可能高於 0.75%，甚至借不到，實際成本就會高於 4.05%'],
+    ans:'(a) 浮動 + 0.40%；(b) 固定 4.05%；(c) 展期時信用利差可能擴大或借不到款，成本高於 4.05%。',
+    qEn:'A swap market maker quotes 3.05% bid and 3.08% ask for three years, and 3.26% bid and 3.30% ask for five years. (a) Company A can borrow for three years at a fixed 3.45%. What floating rate can it swap this into? (b) Company B can borrow for five years at floating plus 0.75%. What fixed rate can it swap this into? (c) What rollover risk does Company B face?',
+    ansEn:'(a) A receives the bid of 3.05% and pays floating, so its cost becomes floating + 0.40%. (b) B pays the ask of 3.30% and receives floating, so its cost becomes 4.05% fixed. (c) B’s floating loan is rolled over; if its credit worsens, the spread above floating may rise above 0.75% or funding may be unavailable, so its true cost could exceed 4.05%.' },
+  { id:'p7_22', src:'課本 7.22（11版勾選）', lvl:'課本', q:'A 是英國公司，想借固定利率美元；B 是美國公司，想借固定利率英鎊。A 可借英鎊 11.0%、美元 7.0%；B 可借英鎊 10.6%、美元 6.2%。設計一個交換，讓中介銀行每年賺 0.10%，A、B 各省 0.15%。',
+    steps:['利差：英鎊差 0.4%、美元差 0.8% → 總利益 0.4%','分配：銀行 0.10% ＋ A 0.15% ＋ B 0.15% = 0.40% ✓','A 在英鎊只多付 0.4%（比較利益）→ 借英鎊 11.0%；B 借美元 6.2%','A 目標：美元 7.0% − 0.15% = <b>6.85%</b>；B 目標：英鎊 10.6% − 0.15% = <b>10.45%</b>','交換：A 收英鎊 11.0%、付美元 6.85%；B 收美元 6.2%、付英鎊 10.45%','銀行：英鎊 收 10.45、付 11.0 → −0.55%；美元 收 6.85、付 6.2 → +0.65% → 淨 +0.10%，承擔匯率風險'],
+    ans:'A 借英鎊 11%、B 借美元 6.2%；A 換成付美元 6.85%，B 換成付英鎊 10.45%，各省 0.15%，銀行賺 0.10% 並承擔匯率風險。',
+    qEn:'Company A, a British firm, wants to borrow US dollars at a fixed rate; Company B, a US firm, wants to borrow sterling at a fixed rate. A can borrow sterling at 11.0% and dollars at 7.0%; B can borrow sterling at 10.6% and dollars at 6.2%. Design a swap that nets an intermediary bank 0.10% per annum and gives each company a gain of 0.15% per annum.',
+    ansEn:'Total gain 0.8% − 0.4% = 0.4% = 0.10% + 0.15% + 0.15%. A borrows sterling at 11.0% and swaps into dollars at 6.85%; B borrows dollars at 6.2% and swaps into sterling at 10.45%. The bank loses 0.55% in sterling and gains 0.65% in dollars, netting 0.10% while bearing the exchange rate risk.' }
+);
+
+DATA.deriv.intro = DATA.deriv.intro.replace('期中考 2026/11/16', '期中考 2026/11/16（範圍 Ch1、2、3、5、4、7）');
+
+// 配對遊戲用的名詞
+[['interest rate swap', '利率交換：固定利息換浮動利息'], ['currency swap', '貨幣交換：兩種貨幣的本金與利息互換'], ['notional principal', '名目本金：只用來算利息，不交換'],
+ ['swap rate', '交換利率：bid 與 ask 的平均'], ['plain vanilla swap', '最基本的固定換浮動利率交換'], ['comparative advantage', '比較利益：各借相對划算的再交換'],
+ ['market maker', '造市者：同時報買價與賣價'], ['SOFR', '有擔保隔夜融資利率']].forEach(p => { p.u = 'ch7'; DATA.deriv.match.push(p); });
+// ===== 衍金 課本習題：完整詳解（每一步都寫公式 → 代入 → 結果）。蓋掉 d_deriv.js、d_deriv7.js 裡較簡略的 steps =====
+(() => {
+  const S = {
+    // ---------- Ch2 ----------
+    p2_1: ['<b>判斷方向</b>：short（空頭）怕價格<b>上漲</b>，漲了才會虧','<b>可以虧多少才追繳</b>：原始保證金 − 維持保證金 = 4,000 − 3,000 = $1,000','<b>空頭損益</b> = (F<sub>0</sub> − F<sub>t</sub>) × 合約規模 = (17.20 − F<sub>t</sub>) × 5,000','令損益 = −1,000：(17.20 − F<sub>t</sub>) × 5,000 = −1,000 → 17.20 − F<sub>t</sub> = −0.20','F<sub>t</sub> = 17.20 + 0.20 = <b>$17.40</b>（每盎司漲 $0.20 就追繳）','<b>不補繳</b>：經紀商會把你的部位強制平倉（close out）'],
+    p2_7: ['<b>判斷方向</b>：long（多頭）怕價格<b>下跌</b>','<b>總規模</b>：2 口 × 15,000 磅 = 30,000 磅','<b>總保證金</b>：原始 2 × 6,000 = $12,000；維持 2 × 4,500 = $9,000','<b>可虧額度</b>：12,000 − 9,000 = $3,000','每磅可跌：3,000 ÷ 30,000 = $0.10 = 10 美分 → 160 − 10 = <b>150 美分</b>以下追繳','<b>提領 $2,000</b>：帳戶要比原始保證金多出 2,000 → 需要賺 $2,000','每磅要漲：2,000 ÷ 30,000 = $0.0667 = 6.67 美分 → 160 + 6.67 = <b>166.67 美分</b>'],
+    p2_11: ['<b>結算所會員</b>只有原始保證金、沒有維持保證金 → 每天把帳戶補回「口數 × 原始保證金」','<b>新開 20 口要繳的原始保證金</b>：20 × 2,000 = $40,000','<b>舊 100 口的當日損益</b>（long，用結算價算）：(50,200 − 50,000) × 100 = <b>+$20,000</b>','<b>新 20 口的當日損益</b>（從成交價算到結算價）：(50,200 − 51,000) × 20 = <b>−$16,000</b>','<b>要補的金額</b> = 新保證金 − 舊部位獲利 + 新部位虧損 = 40,000 − 20,000 + 16,000 = <b>$36,000</b>'],
+    p2_13: ['<b>遠期 1.1000 的意思</b>：報價單位是 CHF/USD → 1 美元 = 1.1000 瑞郎','<b>期貨 0.9000 的意思</b>：報價單位是 USD/CHF → 1 瑞郎 = 0.9000 美元','<b>換成同一單位比較</b>：遠期 1 瑞郎 = 1 ÷ 1.1000 = <b>0.9091 美元</b>','<b>比較</b>：遠期 0.9091 &gt; 期貨 0.9000 → 賣 1 瑞郎在遠期市場拿到較多美元','<b>結論</b>：想賣瑞郎的人選遠期'],
+    p2_19: ['<b>判斷方向</b>：三個月後要<b>賣</b>牛 → 怕價格跌 → <b>short hedge</b>','<b>口數</b>：N = 曝險數量 ÷ 每口數量 = 120,000 ÷ 40,000 = <b>3 口</b>','<b>做法</b>：現在 short 3 口、到期月份在三個月後或之後最近的活牛期貨；賣牛時平倉','<b>牛價跌</b>：賣牛收得少，但 short 期貨賺錢補回','<b>牛價漲</b>：賣牛收得多，但 short 期貨虧錢抵掉','<b>優點</b>：鎖住售價、降低不確定性；<b>缺點</b>：價格上漲時的好處也被抵銷，還有基差風險'],
+    p2_23: ['<b>為什麼交割月前 OI 下降</b>：多數交易者不想實際交割，在進入交割月前就平倉 → 未平倉合約減少','<b>OI＝市場上還開著的多頭部位數</b>（等於空頭部位數）','<b>多頭部位的變化</b>：買方開新倉 +600；賣方平倉（他們原本是多頭）−1,200','ΔOI = 600 − 1,200 = <b>−600</b>','<b>用空頭驗算</b>：賣方開新倉 +800；買方平倉（原本是空頭）−1,400 → 800 − 1,400 = −600 ✓'],
+    p2_24: ['<b>判斷方向</b>：short 怕價格<b>上漲</b>','<b>可虧額度</b>：3,000 − 2,000 = $1,000','每蒲式耳可漲：1,000 ÷ 5,000 = $0.20 = 20 美分 → 750 + 20 = <b>770 美分</b>以上追繳','<b>提領 $1,500</b>：需要賺 $1,500 → 每蒲式耳要跌 1,500 ÷ 5,000 = $0.30 = 30 美分','750 − 30 = <b>720 美分</b>時可以提領 $1,500'],
+
+    // ---------- Ch3 ----------
+    p3_3: ['<b>公式</b>：h* = ρ × σ<sub>S</sub> ÷ σ<sub>F</sub>','<b>代入</b>：ρ = 0.8、σ<sub>S</sub> = 0.65、σ<sub>F</sub> = 0.81','h* = 0.8 × 0.65 ÷ 0.81 = 0.52 ÷ 0.81 = <b>0.642</b>','<b>意義</b>：每 1 單位曝險，用 0.642 單位的期貨避險，能讓避險後部位的變異數最小'],
+    p3_4: ['<b>公式</b>：N* = β × V<sub>A</sub> ÷ V<sub>F</sub>','<b>一口期貨的價值</b>：V<sub>F</sub> = 1,080 × $250 = $270,000','<b>完全避險</b>：N* = 1.2 × 20,000,000 ÷ 270,000 = 24,000,000 ÷ 270,000 = 88.89 → <b>short 89 口</b>','<b>把 β 降到 0.6</b>：N = (β − β*) × V<sub>A</sub> ÷ V<sub>F</sub> = (1.2 − 0.6) × 20,000,000 ÷ 270,000','= 12,000,000 ÷ 270,000 = 44.44 → <b>short 44 口</b>'],
+    p3_5: ['<b>原則 1</b>：選到期月份在避險結束<b>之後</b>的合約（避險結束時合約還要在交易）','<b>原則 2</b>：選符合原則 1 中<b>最近</b>的月份（基差風險較小）','<b>原則 3</b>：避開在交割月內平倉（價格可能異常）','(a) 6 月結束 → 之後最近的是 <b>7 月</b>','(b) 7 月結束 → 7 月本身是交割月，不要用 → <b>9 月</b>','(c) 1 月結束 → 之後最近的是隔年 <b>3 月</b>'],
+    p3_7: ['<b>基差</b>：b = S − F','<b>空頭避險者</b>＝持有現貨 + short 期貨','<b>t<sub>1</sub> 建倉、t<sub>2</sub> 平倉時的實際賣價</b>：S<sub>2</sub> + (F<sub>1</sub> − F<sub>2</sub>) = F<sub>1</sub> + (S<sub>2</sub> − F<sub>2</sub>) = <b>F<sub>1</sub> + b<sub>2</sub></b>','F<sub>1</sub> 在建倉時已知 → 唯一的不確定是 b<sub>2</sub>','<b>基差意外變強</b>（b<sub>2</sub> 變大）→ 實際賣價提高 → 部位改善','<b>基差意外變弱</b>（b<sub>2</sub> 變小）→ 實際賣價降低 → 部位惡化'],
+    p3_10: ['<b>公式</b>：h* = ρ × σ<sub>S</sub> ÷ σ<sub>F</sub>','<b>反例</b>：ρ = 0.5、σ<sub>S</sub> = 2σ<sub>F</sub> → h* = 0.5 × 2 = 1.0','但 ρ = 0.5 &lt; 1 → 現貨和期貨不是完全同步，避險後仍有剩餘風險','<b>完美避險的條件</b>是 ρ = 1，而不是 h* = 1','<b>結論</b>：這句話<b>錯</b>'],
+    p3_11: ['<b>避險後的實際買價</b>：S<sub>2</sub> − h(F<sub>2</sub> − F<sub>1</sub>)','<b>改寫</b>：= hF<sub>1</sub> + h(S<sub>2</sub> − F<sub>2</sub>) + (1 − h)S<sub>2</sub> = hF<sub>1</sub> + hb<sub>2</sub> + (1 − h)S<sub>2</sub>','沒有基差風險 → b<sub>2</sub> 事先確定 → 前兩項都確定','剩下唯一的不確定是 (1 − h)S<sub>2</sub> → 要讓變異數 = 0，必須 h = 1','<b>結論</b>：這句話<b>對</b>'],
+    p3_13: ['<b>判斷方向</b>：11/15 要<b>買</b>牛 → 怕價格漲 → <b>long hedge</b>','<b>避險比率</b>：h* = ρ × σ<sub>S</sub> ÷ σ<sub>F</sub> = 0.7 × 1.2 ÷ 1.4 = 0.84 ÷ 1.4 = <b>0.6</b>','<b>要避險的數量</b>：0.6 × 200,000 = 120,000 磅','<b>口數</b>：N* = 120,000 ÷ 40,000 = <b>3 口</b>','<b>做法</b>：現在 long 3 口 12 月活牛期貨，11/15 買牛時平倉'],
+    p3_14: ['<b>天氣差</b>：自己的產量減少','但天氣影響的是整個地區 → 全體玉米產量都減少 → 玉米價格<b>上漲</b>','<b>如果已經 short 期貨</b>：價格上漲 → 期貨虧錢；同時自己沒有足夠的玉米可賣 → 雙重損失','<b>產量和價格負相關</b>時，收入本身就有部分自然避險','<b>結論</b>：農夫有道理一部分；避險時不該對「預期產量」全額 short，要考慮產量和價格的關係，只避險一部分'],
+    p3_15: ['<b>現貨部位價值</b>：V<sub>A</sub> = 50,000 × $30 = $1,500,000','<b>一口期貨價值</b>：V<sub>F</sub> = 1,500 × $50 = $75,000','<b>口數</b>：N* = β × V<sub>A</sub> ÷ V<sub>F</sub> = 1.3 × 1,500,000 ÷ 75,000 = 1,950,000 ÷ 75,000 = <b>26</b>','<b>策略</b>：short 26 口 9 月 Mini S&amp;P 500 期貨，一個月後平倉','<b>何時獲利</b>：市場風險被消除後，剩下的報酬 ≈ 無風險利率 + 股票的 alpha → 股票表現<b>優於</b> CAPM 預期時獲利'],
+    p3_21: ['<b>實際價格</b> = F<sub>1</sub> + b<sub>2</sub>；原本預期 b<sub>2</sub> = 0，實際 b<sub>2</sub> = +0.20','<b>總數量</b>：60 口 × 5,000 oz = 300,000 oz','<b>避險買進白銀</b>（long hedge）：實際付出 F<sub>1</sub> + 0.20 → 每 oz 多付 0.20','損失 = 300,000 × 0.20 = <b>$60,000</b>','<b>避險賣出白銀</b>（short hedge）：實際收到 F<sub>1</sub> + 0.20 → 每 oz 多收 0.20','獲利 = 300,000 × 0.20 = <b>$60,000</b>'],
+    p3_22: ['(a) <b>h*</b> = ρ × σ<sub>S</sub> ÷ σ<sub>F</sub> = 0.95 × 0.43 ÷ 0.40 = 0.4085 ÷ 0.40 = <b>1.0213</b>','(b) 手上有 55,000 單位資產、怕價格跌 → <b>short</b> 期貨','(c) <b>不考慮每日結算</b>：N* = h* × Q<sub>A</sub> ÷ Q<sub>F</sub> = 1.0213 × 55,000 ÷ 5,000 = 11.23 → <b>11 口</b>','(d) <b>Tailing</b>：用價值取代數量，N* = h* × V<sub>A</sub> ÷ V<sub>F</sub>','V<sub>A</sub> = 55,000 × 28 = 1,540,000；V<sub>F</sub> = 5,000 × 27 = 135,000','N* = 1.0213 × 1,540,000 ÷ 135,000 = 11.65 → <b>12 口</b>'],
+    p3_23: ['(a) <b>h*</b> = ρ × σ<sub>S</sub> ÷ σ<sub>F</sub>；σ<sub>S</sub> 比 σ<sub>F</sub> 大 50% → σ<sub>S</sub> ÷ σ<sub>F</sub> = 1.5','h* = 0.6 × 1.5 = <b>0.9</b>','(b) <b>曝險量</b>：每加侖漲 $0.01 損失 $1,000,000 → Q × 0.01 = 1,000,000 → Q = <b>1 億加侖</b>','(c) 價格上漲對公司不利 → <b>long</b> 汽油期貨：0.9 × 100,000,000 = <b>9,000 萬加侖</b>','(d) <b>口數</b>：90,000,000 ÷ 42,000 = 2,142.86 → <b>2,143 口</b>'],
+    p3_25: ['<b>一口期貨價值</b>：V<sub>F</sub> = 2,000 × $250 = $500,000','<b>公式</b>：N = (β* − β) × V<sub>A</sub> ÷ V<sub>F</sub>；負數 = short、正數 = long','(a) β* = 0.5：(0.5 − 1.2) × 100,000,000 ÷ 500,000 = −0.7 × 200 = −140 → <b>short 140 口</b>','(b) β* = 1.5：(1.5 − 1.2) × 100,000,000 ÷ 500,000 = 0.3 × 200 = +60 → <b>long 60 口</b>'],
+
+    // ---------- Ch4 ----------
+    p4_1: ['<b>公式</b>：R<sub>c</sub> = m × ln(1 + R<sub>m</sub>/m)','(a) R<sub>c</sub> = 4 × ln(1 + 0.07/4) = 4 × ln(1.0175) = 4 × 0.017349 = <b>6.94%</b>','<b>公式</b>：年複利 = (1 + R<sub>m</sub>/m)<sup>m</sup> − 1','(b) (1.0175)<sup>4</sup> − 1 = 1.07186 − 1 = <b>7.19%</b>'],
+    p4_2: ['<b>每期票息</b> = 100 × 4% ÷ 2 = 2；<b>每期殖利率</b> = 5.2% ÷ 2 = 2.6%','<b>債券價格</b>：P = 2/1.026 + 2/1.026<sup>2</sup> + 102/1.026<sup>3</sup>','= 1.9493 + 1.8999 + 94.4405 = <b>98.29</b>','<b>求 18 個月零息利率 R</b>：前兩期用 5% 零息利率（每期 2.5%）折現','2/1.025 + 2/1.025<sup>2</sup> = 1.9512 + 1.9036 = 3.8548','102/(1 + R/2)<sup>3</sup> = 98.29 − 3.8548 = 94.435','(1 + R/2)<sup>3</sup> = 102 ÷ 94.435 = 1.08011 → 1 + R/2 = 1.08011<sup>1/3</sup> = 1.02602','R = 2 × 0.02602 = <b>5.204%</b>（半年複利）'],
+    p4_3: ['(a) <b>年複利</b>：1,000(1 + R) = 1,100 → R = 1,100/1,000 − 1 = <b>10%</b>','(b) <b>半年複利</b>：(1 + R/2)<sup>2</sup> = 1.1 → R = 2 × (√1.1 − 1) = 2 × 0.04881 = <b>9.76%</b>','(c) <b>月複利</b>：(1 + R/12)<sup>12</sup> = 1.1 → R = 12 × (1.1<sup>1/12</sup> − 1) = 12 × 0.007974 = <b>9.57%</b>','(d) <b>連續複利</b>：e<sup>R</sup> = 1.1 → R = ln 1.1 = <b>9.53%</b>','複利越頻繁，得到同樣終值所需的報價利率越低'],
+    p4_4: ['<b>公式</b>：R<sub>F</sub> = (R<sub>2</sub>T<sub>2</sub> − R<sub>1</sub>T<sub>1</sub>) ÷ (T<sub>2</sub> − T<sub>1</sub>)，每季 T<sub>2</sub> − T<sub>1</sub> = 0.25','第 2 季：(3.2 × 0.5 − 3.0 × 0.25) ÷ 0.25 = (1.6 − 0.75) ÷ 0.25 = <b>3.4%</b>','第 3 季：(3.4 × 0.75 − 3.2 × 0.5) ÷ 0.25 = (2.55 − 1.6) ÷ 0.25 = <b>3.8%</b>','第 4 季：(3.5 × 1 − 3.4 × 0.75) ÷ 0.25 = (3.5 − 2.55) ÷ 0.25 = <b>3.8%</b>','第 5 季：(3.6 × 1.25 − 3.5 × 1) ÷ 0.25 = (4.5 − 3.5) ÷ 0.25 = <b>4.0%</b>','第 6 季：(3.7 × 1.5 − 3.6 × 1.25) ÷ 0.25 = (5.55 − 4.5) ÷ 0.25 = <b>4.2%</b>'],
+    p4_5: ['<b>這張 FRA 的期間</b>：T<sub>1</sub> = 1 年 → T<sub>2</sub> = 1.25 年；持有人收固定 R<sub>K</sub> = 4.5%（季複利）、付浮動','<b>遠期利率</b>（連續複利）：(3.6 × 1.25 − 3.5 × 1) ÷ 0.25 = 4.0%','<b>換成季複利</b>才能和 4.5% 比：R<sub>F</sub> = 4 × (e<sup>0.04/4</sup> − 1) = 4 × 0.010050 = 4.0201%','<b>公式</b>（收固定方）：V = L × (R<sub>K</sub> − R<sub>F</sub>) × (T<sub>2</sub> − T<sub>1</sub>) × e<sup>−R<sub>2</sub>T<sub>2</sub></sup>','到期淨額：1,000,000 × (0.045 − 0.040201) × 0.25 = $1,199.8','折現（用 1.25 年零息利率 3.6%）：e<sup>−0.036 × 1.25</sup> = 0.95600','V = 1,199.8 × 0.95600 = <b>$1,147</b>'],
+    p4_8: ['<b>公式</b>：R<sub>c</sub> = m × ln(1 + R<sub>m</sub>/m)','R<sub>c</sub> = 12 × ln(1 + 0.08/12) = 12 × ln(1.006667) = 12 × 0.0066445 = <b>7.97%</b>'],
+    p4_9: ['<b>公式</b>：R<sub>m</sub> = m × (e<sup>R<sub>c</sub>/m</sup> − 1)','R<sub>4</sub> = 4 × (e<sup>0.04/4</sup> − 1) = 4 × (1.010050 − 1) = 4.0201%','<b>每季利息</b> = 本金 × R<sub>4</sub> ÷ 4 = 10,000 × 0.040201 ÷ 4 = <b>$100.50</b>'],
+    p4_10: ['<b>每期票息</b> = 100 × 4% ÷ 2 = 2；最後一期 2 + 100 = 102','<b>公式</b>：B = Σ c<sub>i</sub> e<sup>−R<sub>i</sub>t<sub>i</sub></sup>，每筆用自己期限的零息利率','0.5 年：2e<sup>−0.04 × 0.5</sup> = 1.9604','1.0 年：2e<sup>−0.042 × 1</sup> = 1.9177','1.5 年：2e<sup>−0.044 × 1.5</sup> = 1.8723','2.0 年：2e<sup>−0.046 × 2</sup> = 1.8242','2.5 年：102e<sup>−0.048 × 2.5</sup> = 90.4659','B = 1.9604 + 1.9177 + 1.8723 + 1.8242 + 90.4659 = <b>98.04</b>'],
+    p4_13: ['<b>公式</b>：R<sub>F</sub> = (R<sub>2</sub>T<sub>2</sub> − R<sub>1</sub>T<sub>1</sub>) ÷ (T<sub>2</sub> − T<sub>1</sub>)，每年 T<sub>2</sub> − T<sub>1</sub> = 1','第 2 年：3.0 × 2 − 2.0 × 1 = 6.0 − 2.0 = <b>4.0%</b>','第 3 年：3.7 × 3 − 3.0 × 2 = 11.1 − 6.0 = <b>5.1%</b>','第 4 年：4.2 × 4 − 3.7 × 3 = 16.8 − 11.1 = <b>5.7%</b>','第 5 年：4.5 × 5 − 4.2 × 4 = 22.5 − 16.8 = <b>5.7%</b>'],
+    p4_18: ['(a) <b>價格</b>：B = Σ c<sub>i</sub> e<sup>−yt<sub>i</sub></sup>，y = 7%','8e<sup>−0.07</sup> = 7.4592；8e<sup>−0.14</sup> = 6.9549；8e<sup>−0.21</sup> = 6.4847；8e<sup>−0.28</sup> = 6.0463；108e<sup>−0.35</sup> = 76.1063','B = 7.4592 + 6.9549 + 6.4847 + 6.0463 + 76.1063 = <b>103.05</b>','(b) <b>存續期間</b>：D = Σ t<sub>i</sub> × PV<sub>i</sub> ÷ B','Σ t × PV = 1(7.4592) + 2(6.9549) + 3(6.4847) + 4(6.0463) + 5(76.1063) = 7.4592 + 13.9097 + 19.4540 + 24.1851 + 380.5316 = 445.54','D = 445.54 ÷ 103.05 = <b>4.3235 年</b>','(c) <b>價格變動</b>：ΔB = −B × D × Δy = −103.05 × 4.3235 × (−0.002) = <b>+0.891</b> → 估計價格 103.94','(d) <b>用 y = 6.8% 重算</b>：B = Σ c<sub>i</sub> e<sup>−0.068t<sub>i</sub></sup> = <b>103.95</b>，和 (c) 的 103.94 幾乎相同'],
+
+    // ---------- Ch5 ----------
+    p5_2: ['<b>公式</b>（不付息資產）：F<sub>0</sub> = S<sub>0</sub>e<sup>rT</sup>','F<sub>0</sub> = 30 × e<sup>0.05 × 0.5</sup> = 30 × e<sup>0.025</sup> = 30 × 1.025315 = <b>$30.76</b>'],
+    p5_3: ['<b>公式</b>（已知收益率 q）：F<sub>0</sub> = S<sub>0</sub>e<sup>(r − q)T</sup>','(r − q)T = (0.04 − 0.03) × 4/12 = 0.003333','F<sub>0</sub> = 350 × e<sup>0.003333</sup> = 350 × 1.003339 = <b>351.17</b>'],
+    p5_5: ['外幣存在外國可以賺<b>外國無風險利率 r<sub>f</sub></b>','這筆利息以外幣計，金額和持有的外幣數量成正比 → 換成本國幣後也和外幣價值成正比','這正是「已知收益率」資產的特徵（就像股價指數的股利率 q）','代入 F<sub>0</sub> = S<sub>0</sub>e<sup>(r − q)T</sup>，把 q 換成 r<sub>f</sub> → <b>F<sub>0</sub> = S<sub>0</sub>e<sup>(r − r<sub>f</sub>)T</sup></b>'],
+    p5_7: ['(a) <b>遠期價格</b>：F<sub>0</sub> = S<sub>0</sub>e<sup>rT</sup> = 40 × e<sup>0.05 × 1</sup> = 40 × 1.051271 = <b>42.05</b>','<b>初始價值</b>：交割價 K 就設為 F<sub>0</sub> → 價值 = <b>0</b>','(b) <b>6 個月後的遠期價格</b>：剩 T − t = 0.5 年，F<sub>t</sub> = 45 × e<sup>0.05 × 0.5</sup> = 45 × 1.025315 = <b>46.14</b>','<b>多頭價值</b>：f = S<sub>t</sub> − Ke<sup>−r(T − t)</sup> = 45 − 42.05 × e<sup>−0.025</sup> = 45 − 41.01 = <b>3.99</b>','<b>驗算</b>：f = (F<sub>t</sub> − K)e<sup>−r(T − t)</sup> = (46.14 − 42.05) × 0.975310 = 3.99 ✓'],
+    p5_8: ['<b>公式</b>：F<sub>0</sub> = S<sub>0</sub>e<sup>(r − q)T</sup>','(r − q)T = (0.07 − 0.032) × 0.5 = 0.019','F<sub>0</sub> = 150 × e<sup>0.019</sup> = 150 × 1.019182 = <b>152.88</b>'],
+    p5_9: ['<b>期間</b>：7/31 到 12/31 共 5 個月（8、9、10、11、12 月）','股利率 5% 的月份：8、11 月（2 個月）；2% 的月份：9、10、12 月（3 個月）','<b>股利總量</b>：q × T = 0.05 × 2/12 + 0.02 × 3/12 = 0.008333 + 0.005 = 0.013333','<b>利息</b>：r × T = 0.04 × 5/12 = 0.016667','<b>公式</b>：F<sub>0</sub> = S<sub>0</sub>e<sup>rT − qT</sup> = 1,300 × e<sup>0.016667 − 0.013333</sup> = 1,300 × e<sup>0.003333</sup>','= 1,300 × 1.003339 = <b>1,304.34</b>'],
+    p5_10: ['<b>理論期貨價格</b>：F<sub>0</sub> = S<sub>0</sub>e<sup>(r − q)T</sup> = 400 × e<sup>(0.06 − 0.04) × 4/12</sup> = 400 × e<sup>0.006667</sup> = 400 × 1.006689 = <b>402.68</b>','<b>比較</b>：市場報價 405 &gt; 理論值 402.68 → 期貨太貴','<b>套利</b>：short 期貨；同時借錢買進指數成分股（股利再投資）','4 個月後用股票交割、還借款','<b>每單位利潤</b> ≈ 405 − 402.68 = <b>2.32</b> 點'],
+    p5_12: ['<b>公式</b>：F<sub>0</sub> = S<sub>0</sub>e<sup>(r − r<sub>f</sub>)T</sup>，r = 2%（美國）、r<sub>f</sub> = 1%（瑞士）','F<sub>0</sub> = 1.0500 × e<sup>(0.02 − 0.01) × 2/12</sup> = 1.0500 × e<sup>0.001667</sup> = 1.0500 × 1.001668 = <b>1.0518</b>','<b>比較</b>：市場期貨 1.0500 &lt; 理論 1.0518 → 期貨太便宜 → <b>買期貨</b>','<b>套利</b>：借瑞郎（利率 1%）→ 換成美元存起來（2%）→ long 瑞郎期貨','2 個月後用期貨以 1.0500 買回瑞郎，還瑞郎借款','<b>每瑞郎利潤</b> ≈ 1.0518 − 1.0500 = <b>$0.0018</b>'],
+    p5_13: ['<b>儲存成本</b>：每年 0.24 → 每季 0.06，在每季<b>期初</b>付：t = 0、0.25、0.5 年','<b>現值</b>：U = 0.06 + 0.06e<sup>−0.05 × 0.25</sup> + 0.06e<sup>−0.05 × 0.5</sup> = 0.06 + 0.05925 + 0.05852 = 0.1778','<b>公式</b>：F<sub>0</sub> = (S<sub>0</sub> + U)e<sup>rT</sup>','F<sub>0</sub> = (25 + 0.1778) × e<sup>0.05 × 0.75</sup> = 25.1778 × 1.038212 = <b>$26.14</b>'],
+    p5_22: ['<b>理論遠期</b>：F<sub>0</sub> = S<sub>0</sub>e<sup>(r − r<sub>f</sub>)T</sup> = 1.0404 × e<sup>(0.0025 − 0) × 0.25</sup> = 1.0404 × 1.000625 = <b>1.0411</b>','<b>報價 1.0300</b> &lt; 1.0411 → 遠期太便宜 → <b>long 遠期</b>','做法：借瑞郎（0%）→ 即期換成美元存 0.25% → long 遠期，到期用 1.0300 買回瑞郎還款','每瑞郎利潤 ≈ 1.0411 − 1.0300 = <b>$0.0111</b>','<b>報價 1.0500</b> &gt; 1.0411 → 遠期太貴 → <b>short 遠期</b>','做法：借美元（0.25%）→ 即期買瑞郎存 0% → short 遠期，到期用 1.0500 賣出瑞郎換美元還款','每瑞郎利潤 ≈ 1.0500 − 1.0411 = <b>$0.0089</b>'],
+    p5_23: ['<b>公式</b>：F<sub>0</sub> = S<sub>0</sub>e<sup>(r − q)T</sup>，每個期限用自己的 r 和 q','3 個月：(0.03 − 0.012) × 0.25 = 0.0045 → 1,200 × e<sup>0.0045</sup> = 1,200 × 1.004510 = <b>1,205.41</b>','6 個月：(0.035 − 0.01) × 0.5 = 0.0125 → 1,200 × e<sup>0.0125</sup> = 1,200 × 1.012578 = <b>1,215.09</b>'],
+    p5_24: ['<b>公式</b>：F<sub>0</sub> = S<sub>0</sub>e<sup>(r − r<sub>f</sub>)T</sup> → 解 r<sub>f</sub>','1.1950 = 1.2000 × e<sup>(0.01 − r<sub>f</sub>) × 0.5</sup>','兩邊除以 1.2 再取 ln：ln(1.1950 ÷ 1.2000) = ln(0.995833) = −0.004175','(0.01 − r<sub>f</sub>) × 0.5 = −0.004175 → 0.01 − r<sub>f</sub> = −0.008351','r<sub>f</sub> = 0.01 + 0.008351 = <b>1.835%</b>（遠期低於即期 → 外國利率較高）'],
+    p5_25: ['<b>儲存成本在年底付</b>：在 T 時直接加上，不用先折現再複利','<b>上限</b>：F<sub>0</sub> ≤ S<sub>0</sub>e<sup>rT</sup> + 儲存成本 = 50 × e<sup>0.05</sup> + 3','= 50 × 1.051271 + 3 = 52.56 + 3 = <b>$55.56</b>','<b>為什麼是上限</b>：若期貨高於 55.56 → 借錢買現貨、儲存、short 期貨可套利','期貨可以低於這個值，因為持有實物的人有便利殖利率，不一定願意賣現貨'],
+    p5_30: ['(a) <b>股利現值</b>：I = 1 × e<sup>−0.08 × 2/12</sup> + 1 × e<sup>−0.08 × 5/12</sup> = 0.98676 + 0.96722 = 1.9540','<b>遠期價格</b>：F<sub>0</sub> = (S<sub>0</sub> − I)e<sup>rT</sup> = (50 − 1.9540) × e<sup>0.08 × 0.5</sup> = 48.0460 × 1.040811 = <b>50.01</b>','<b>初始價值</b> = 0','(b) 3 個月後：2 個月那筆股利已經發了，只剩 5 個月那筆（距今 2 個月）','I = 1 × e<sup>−0.08 × 2/12</sup> = 0.98676','<b>新的遠期價格</b>：F<sub>t</sub> = (48 − 0.98676) × e<sup>0.08 × 3/12</sup> = 47.0132 × 1.020201 = <b>47.96</b>','<b>空頭價值</b>：f = (K − F<sub>t</sub>)e<sup>−r(T − t)</sup> = (50.0068 − 47.9630) × e<sup>−0.08 × 0.25</sup> = 2.0438 × 0.980199 = <b>2.00</b>','（用四捨五入後的 50.01 − 47.96 = 2.05 去算會得到 2.01，差異來自四捨五入）'],
+
+    // ---------- Ch7 ----------
+    p7_1: ['<b>步驟 1：算利差</b>　固定：6.4% − 5.0% = 1.4%；浮動：(SOFR + 0.6%) − (SOFR + 0.1%) = 0.5%','<b>步驟 2：總利益</b> = 1.4% − 0.5% = 0.9%','<b>步驟 3：分配</b>　銀行 0.1% → 剩 0.8%，平分 → A、B 各省 <b>0.4%</b>','<b>步驟 4：誰借什麼</b>　B 在浮動只多付 0.5%（相對划算）→ B 借浮動 SOFR + 0.6%；A 借固定 5.0%','<b>步驟 5：目標成本</b>　A：SOFR + 0.1% − 0.4% = SOFR − 0.3%；B：6.4% − 0.4% = 6.0%','<b>步驟 6：定交換利率</b>　A 收固定 x、付 SOFR：−5.0% + x − SOFR = −(SOFR − 0.3%) → x = <b>5.3%</b>','B 付固定 y、收 SOFR：−(SOFR + 0.6%) + SOFR − y = −6.0% → y = <b>5.4%</b>','<b>步驟 7：驗算銀行</b>　收 B 的 5.4%、付 A 的 5.3%；浮動一收一付抵銷 → 賺 <b>0.1%</b> ✓'],
+    p7_2: ['<b>時間軸</b>：剩 10 個月、每半年交換 → 交換在 4 個月（t = 0.3333）和 10 個月（t = 0.8333）後','<b>第 1 次交換</b>（浮動利率已知 2.4%）　固定 = 100M × 4% × 0.5 = 2.0M；浮動 = 100M × 2.4% × 0.5 = 1.2M','付浮動方淨收 = 2.0 − 1.2 = 0.8M → 現值 0.8 × e<sup>−0.027 × 0.3333</sup> = 0.8 × 0.99104 = <b>0.7928M</b>','<b>第 2 次交換</b>（假設遠期利率 3% 會實現）　固定 = 2.0M；浮動 = 100M × 3% × 0.5 = 1.5M','淨收 = 2.0 − 1.5 = 0.5M → 現值 0.5 × e<sup>−0.027 × 0.8333</sup> = 0.5 × 0.97775 = <b>0.4889M</b>','<b>加總</b>：0.7928 + 0.4889 = <b>1.2817M</b>（付浮動方）','付固定方剛好相反：<b>−1.2817M</b>'],
+    p7_3: ['<b>步驟 1：算利差</b>　日圓：6.5% − 5.0% = 1.5%；美元：10.0% − 9.6% = 0.4%','<b>步驟 2：總利益</b> = 1.5% − 0.4% = 1.1%','<b>步驟 3：分配</b>　銀行 0.5% → 剩 0.6% → X、Y 各省 <b>0.3%</b>','<b>步驟 4：誰借什麼</b>　Y 在美元只多付 0.4% → Y 借美元 10.0%；X 借日圓 5.0%','<b>步驟 5：目標成本</b>　X 想要美元：9.6% − 0.3% = <b>9.3%</b>；Y 想要日圓：6.5% − 0.3% = <b>6.2%</b>','<b>步驟 6：交換</b>　X：收日圓 5.0%（拿去付日圓借款）、付美元 9.3% → 淨付美元 9.3% ✓','Y：收美元 10.0%（拿去付美元借款）、付日圓 6.2% → 淨付日圓 6.2% ✓','<b>步驟 7：銀行</b>　美元：收 9.3%、付 10.0% → −0.7%；日圓：收 6.2%、付 5.0% → +1.2%','銀行淨賺 1.2% − 0.7% = <b>0.5%</b>，但一個是日圓、一個是美元 → 銀行承擔匯率風險'],
+    p7_19: ['<b>報價解讀</b>　bid＝造市者<b>付</b>的固定利率；ask＝造市者<b>收</b>的固定利率','(a) A 借固定 3.45%、想要浮動 → 在交換裡<b>收固定、付浮動</b> → 造市者付 3 年 bid <b>3.05%</b>','A 的淨成本：−3.45%（借款）+ 3.05%（收固定）− 浮動 = −(浮動 + 0.40%) → <b>浮動 + 0.40%</b>','(b) B 借浮動 + 0.75%、想要固定 → 在交換裡<b>付固定、收浮動</b> → 付 5 年 ask <b>3.30%</b>','B 的淨成本：−(浮動 + 0.75%) + 浮動 − 3.30% = −4.05% → <b>固定 4.05%</b>','(c) <b>展期風險</b>：B 的 5 年浮動借款，通常是一連串短期借款到期後重借','若 B 的信用變差，重借時加碼可能高於 0.75%，甚至借不到','交換只把「浮動」那部分換成固定，<b>信用加碼的變動</b>仍由 B 承擔 → 實際成本可能高於 4.05%'],
+    p7_22: ['<b>步驟 1：算利差</b>　英鎊：11.0% − 10.6% = 0.4%；美元：7.0% − 6.2% = 0.8%','<b>步驟 2：總利益</b> = 0.8% − 0.4% = 0.4%','<b>步驟 3：分配檢查</b>　銀行 0.10% + A 0.15% + B 0.15% = 0.40% ✓','<b>步驟 4：誰借什麼</b>　A 在英鎊只多付 0.4% → A 借英鎊 11.0%；B 借美元 6.2%','<b>步驟 5：目標成本</b>　A 想要美元：7.0% − 0.15% = <b>6.85%</b>；B 想要英鎊：10.6% − 0.15% = <b>10.45%</b>','<b>步驟 6：交換</b>　A：收英鎊 11.0%、付美元 6.85% → 淨付美元 6.85% ✓','B：收美元 6.2%、付英鎊 10.45% → 淨付英鎊 10.45% ✓','<b>步驟 7：銀行</b>　英鎊：收 10.45%、付 11.0% → −0.55%；美元：收 6.85%、付 6.2% → +0.65%','銀行淨賺 0.65% − 0.55% = <b>0.10%</b>，承擔匯率風險']
+  };
+  const A = {
+    p5_30: '(a) 遠期價格 50.01，初始價值 0。(b) 遠期價格 47.96，空頭價值約 $2.00（四捨五入後算會得到 2.01）。',
+    p5_9: '1,304.34'
+  };
+  DATA.deriv.problems.forEach(p => { if (S[p.id]) p.steps = S[p.id]; if (A[p.id]) p.ans = A[p.id]; });
+})();
+// ===== 衍金 期中大抄（A4 正反面手抄）＋ BA II Plus 按法，以及公式教室的 Ch4、Ch7 公式 =====
+(() => {
+  const K = s => s.split(' ').map(k => `<kbd>${k.replace(/_/g, ' ')}</kbd>`).join(' '); // 按鍵：'2nd LN' → <kbd>2nd</kbd> <kbd>LN</kbd>
+  const blk = (t, body) => `<div class="cblk"><h4>${t}</h4>${body}</div>`;
+  const ul = a => `<ul>${a.map(x => `<li>${x}</li>`).join('')}</ul>`;
+
+  const must = `<div class="cmust"><h3>必抄區（先抄這區，字可以最小）</h3>
+${blk('1. 複利換算', ul([
+  'R<sub>c</sub> = m · ln(1 + R<sub>m</sub>/m)　　R<sub>m</sub> = m · (e<sup>R<sub>c</sub>/m</sup> − 1)',
+  '年有效 = (1 + R<sub>m</sub>/m)<sup>m</sup> − 1 = e<sup>R<sub>c</sub></sup> − 1',
+  '同樣終值：複利越頻繁，報價利率越低；比較或代公式前一定先換成同一種複利']))}
+${blk('2. 遠期／期貨價格（一個家族）', ul([
+  '無收益：F<sub>0</sub> = S<sub>0</sub>e<sup>rT</sup>',
+  '已知現金收益 I（股利、票息的現值）：F<sub>0</sub> = (S<sub>0</sub> − I)e<sup>rT</sup>',
+  '已知收益率 q（指數股利率）：F<sub>0</sub> = S<sub>0</sub>e<sup>(r − q)T</sup>',
+  '外匯（S<sub>0</sub>＝每 1 外幣值多少本國幣）：F<sub>0</sub> = S<sub>0</sub>e<sup>(r − r<sub>f</sub>)T</sup>',
+  '商品：F<sub>0</sub> ≤ (S<sub>0</sub> + U)e<sup>rT</sup>（U＝儲存成本現值）；比例 u：F<sub>0</sub> ≤ S<sub>0</sub>e<sup>(r + u)T</sup>；便利殖利率 y：F<sub>0</sub> = S<sub>0</sub>e<sup>(r + u − y)T</sup>',
+  '持有成本 c：投資資產 F<sub>0</sub> = S<sub>0</sub>e<sup>cT</sup>；消費資產 F<sub>0</sub> = S<sub>0</sub>e<sup>(c − y)T</sup>']))}
+${blk('3. 遠期合約價值（K＝當初約定價）', ul([
+  'Long：f = (F<sub>0</sub> − K)e<sup>−rT</sup>；Short：f = (K − F<sub>0</sub>)e<sup>−rT</sup>（F<sub>0</sub>＝「今天」的遠期價格）',
+  '無收益：f = S<sub>0</sub> − Ke<sup>−rT</sup>；收益 I：f = S<sub>0</sub> − I − Ke<sup>−rT</sup>；收益率 q：f = S<sub>0</sub>e<sup>−qT</sup> − Ke<sup>−rT</sup>',
+  '簽約當下 K = F<sub>0</sub> → 價值 0']))}
+${blk('4. 套利判斷', ul([
+  '市價 F &gt; 理論 F<sub>0</sub>：<b>short 期貨 ＋ 借錢買現貨</b>（cash-and-carry），到期用現貨交割',
+  '市價 F &lt; 理論 F<sub>0</sub>：<b>long 期貨 ＋ 放空（或賣出）現貨、錢拿去存</b>（reverse cash-and-carry）',
+  '外匯：遠期太便宜 → 借外幣、換本國幣存起來、long 遠期；遠期太貴 → 借本國幣、換外幣存起來、short 遠期',
+  '每單位利潤 ≈ |市價 − 理論價|（到期時的金額）']))}
+${blk('5. 保證金', ul([
+  '可虧額度 = 原始保證金 − 維持保證金（多口要乘口數）',
+  '追繳價：long = F<sub>0</sub> − 可虧額度 ÷ 總規模；short = F<sub>0</sub> + 可虧額度 ÷ 總規模',
+  '可提領 X：帳戶要高於原始保證金 X → long 價格要漲 X ÷ 總規模；short 要跌 X ÷ 總規模',
+  '追繳時要補回<b>原始</b>保證金；結算所會員只有原始保證金（沒有維持）']))}
+${blk('6. 避險', ul([
+  'h* = ρ · σ<sub>S</sub> / σ<sub>F</sub>（ρ = 1 才是完美避險）',
+  'N* = h* · Q<sub>A</sub> / Q<sub>F</sub>；tailing（考慮每日結算）N* = h* · V<sub>A</sub> / V<sub>F</sub>（V＝價格 × 數量）',
+  '股票組合：N* = β · V<sub>A</sub> / V<sub>F</sub>；調 β：N = (β* − β) · V<sub>A</sub> / V<sub>F</sub>（正 long、負 short）',
+  '基差 b = S − F；避險後實際價格 = F<sub>1</sub> + b<sub>2</sub>（short hedge 賣價、long hedge 買價）',
+  '基差變強（b 變大）→ short hedger 有利、long hedger 不利']))}
+${blk('7. 利率', ul([
+  '遠期利率：R<sub>F</sub> = (R<sub>2</sub>T<sub>2</sub> − R<sub>1</sub>T<sub>1</sub>) / (T<sub>2</sub> − T<sub>1</sub>)（連續複利）',
+  'FRA（收固定 R<sub>K</sub>）：V = L(R<sub>K</sub> − R<sub>F</sub>)(T<sub>2</sub> − T<sub>1</sub>)e<sup>−R<sub>2</sub>T<sub>2</sub></sup>；付固定加負號。R<sub>F</sub> 要先換成和 R<sub>K</sub> 同一種複利',
+  '債券：B = Σ c<sub>i</sub>e<sup>−R<sub>i</sub>t<sub>i</sub></sup>（零息利率）或 Σ c<sub>i</sub>e<sup>−yt<sub>i</sub></sup>（殖利率）',
+  '存續期間 D = Σ t<sub>i</sub>c<sub>i</sub>e<sup>−yt<sub>i</sub></sup> / B；ΔB ≈ −B · D · Δy',
+  'y 為 m 次複利：修正存續期間 D* = D / (1 + y/m)，ΔB ≈ −B · D* · Δy',
+  '凸性：ΔB/B ≈ −D · Δy + ½ · C · (Δy)<sup>2</sup>，C = Σ t<sub>i</sub><sup>2</sup>c<sub>i</sub>e<sup>−yt<sub>i</sub></sup> / B',
+  '平價收益率：c = (100 − 100d) · m / A（d＝最後一期折現因子、A＝各期折現因子總和）']))}
+${blk('8. 交換', ul([
+  '淨成本 = 原本借款 ＋ 交換的兩筆（收為 +、付為 −），浮動會抵銷',
+  '比較利益：總利益 = 兩個市場利差的差；扣掉銀行後平分',
+  '利率交換價值（付固定方）= Σ（浮動 − 固定）· e<sup>−rt</sup>，浮動用遠期利率估；簽約時價值 0',
+  '貨幣交換（收外幣、付本國幣）：V = S<sub>0</sub>B<sub>F</sub> − B<sub>D</sub>；或用 F<sub>t</sub> = S<sub>0</sub>e<sup>(r − r<sub>f</sub>)t</sup> 換算每期再折現',
+  '造市者：bid＝它<b>付</b>的固定利率、ask＝它<b>收</b>的固定利率；swap rate＝平均']))}
+${blk('9. 其他小公式', ul([
+  'OI 變化 = 買方開倉 − 賣方平倉（＝ 賣方開倉 − 買方平倉）',
+  'Payoff：long forward S<sub>T</sub> − K；long call max(S<sub>T</sub> − K, 0)；long put max(K − S<sub>T</sub>, 0)；profit = payoff − 權利金',
+  '損益兩平：call = K + c；put = K − p']))}
+</div>`;
+
+  const units = `<h3>各章觀念與做法</h3>
+${blk('Ch1 衍生性商品入門', ul([
+  '交易所（標準化、有結算所）vs OTC（客製化、有對手違約風險）',
+  '三種參與者：避險者（降低風險）、投機者（賭方向、用槓桿）、套利者（無風險鎖利）',
+  '遠期：約好未來價格，雙方都有義務；選擇權：買方有權利沒義務，要付權利金',
+  'Call＝買的權利、put＝賣的權利；American 到期前都能履約、European 只能到期履約']))}
+${blk('Ch2 期貨市場的運作', `<table class="tbl"><tr><th></th><th>期貨</th><th>遠期</th></tr><tr><td>交易</td><td>交易所</td><td>OTC</td></tr><tr><td>規格</td><td>標準化</td><td>客製化</td></tr><tr><td>結算</td><td>每日結算</td><td>到期結算</td></tr><tr><td>結束</td><td>通常到期前平倉</td><td>通常交割或現金結算</td></tr><tr><td>信用風險</td><td>幾乎沒有</td><td>有</td></tr></table>${ul([
+  '到期時期貨價格收斂到現貨價格；交割選擇（地點、品質、時間）在空方',
+  '委託單：market、limit、stop（觸價變市價）、stop-limit、MIT、discretionary、time-of-day、open、fill-or-kill',
+  '外匯報價：直接報價（每 1 外幣多少美元）vs 間接報價（每 1 美元多少外幣）；比較前先換成同一種'])}`)}
+${blk('Ch3 用期貨避險', ul([
+  'Short hedge：手上有、將來要賣（怕跌）；long hedge：將來要買（怕漲）',
+  '支持避險：專注本業、降低不確定性。反對：股東可自己分散、同業都不避險時反而增加風險、避險虧損難以向管理層解釋',
+  '基差風險：避險結束時基差不確定；用相關但不同的資產避險（cross hedge）時更大',
+  '選月份：避險結束之後最近的月份、避開交割月；選標的：和曝險資產相關性最高',
+  '為何避險股票：暫時想退出市場、或想賺 alpha（避掉 β 後剩無風險利率 + alpha）',
+  'Stack and roll：用短期合約一再展期避長期風險，風險是基差變動與保證金的流動性壓力']))}
+${blk('Ch4 利率', ul([
+  '利率種類：國庫券利率、SOFR（有擔保隔夜）、repo、OIS；衍生性商品評價用的無風險利率多用 OIS／SOFR',
+  '零息利率＝只在到期付一次的利率；拔靴法：由短到長，用已知的零息利率把前面票息折現，剩下解最後一期',
+  '到期殖利率：讓所有現金流折現等於價格的單一利率',
+  '遠期利率高於零息利率 ⇔ 零息利率曲線向上',
+  '利率期限結構理論：預期理論、市場區隔理論、流動性偏好理論（長期利率含流動性溢酬，曲線常向上）',
+  '存續期間＝加權平均到期時間，也是價格對利率的敏感度；凸性為正 → 漲多跌少']))}
+${blk('Ch5 遠期與期貨價格', ul([
+  '投資資產（為投資而持有，可用套利定價）vs 消費資產（為使用而持有，只能得到上限）',
+  '放空：借來賣、之後買回還；放空期間要付給出借人股利',
+  '利率確定時，遠期價格 = 期貨價格；利率與標的正相關時，期貨略高',
+  '股價指數：股利率 q；外幣：外國利率 r<sub>f</sub> 就像收益率',
+  '期貨價格 vs 預期現貨價格：系統風險為正 → F<sub>0</sub> &lt; E(S<sub>T</sub>)（normal backwardation）；系統風險為負 → contango']))}
+${blk('Ch7 交換', ul([
+  '交換＝一連串遠期；名目本金只用來算利息；SOFR 期間利率到期末才知道',
+  '把負債／投資的固定 ↔ 浮動互換：想付固定 → 交換裡付固定、收浮動',
+  '金融中介同時做兩張反向交換，賺價差、承擔違約風險；兩邊同時出現很少 → 當造市者',
+  '比較利益做法：(1) 算兩市場利差 (2) 總利益 = 利差的差 (3) 扣銀行後平分 (4) 各借有比較利益的那種 (5) 算目標成本 (6) 反推交換利率 (7) 驗算銀行',
+  '貨幣交換：本金期初、期末都交換；期初方向和之後相反；中介若承擔兩種貨幣的現金流 → 承擔匯率風險']))}`;
+
+  const methods = `<h3>常見題型的做法（只抄步驟，不抄題目）</h3>
+${blk('保證金追繳', ul(['判斷 long 怕跌、short 怕漲','可虧額度 ÷ 總規模 = 可變動的價格','從 F<sub>0</sub> 加或減，得到追繳價']))}
+${blk('避險口數', ul(['判斷 long 或 short hedge','有 ρ、σ → 先算 h*；有 β → 用 β','數量用 Q、tailing 或股票組合用 V（價格 × 數量）','四捨五入到整數口']))}
+${blk('套利', ul(['先用公式算理論 F<sub>0</sub>（注意收益、股利、外國利率）','和市價比，決定買或賣期貨','寫出現貨那一側的借貸與買賣','到期時的利潤 ≈ 差價']))}
+${blk('比較利益交換設計', ul(['算兩市場利差 → 總利益 = 利差的差','扣銀行費用，剩下依題目分配','各自去借相對划算的那種','算每家公司的目標成本 → 反推交換利率','驗算：三筆加總等於目標，銀行剛好賺到費用']))}
+${blk('交換評價', ul(['利率交換：畫時間軸 → 每期浮動用遠期利率（換成付息頻率的複利）→ 淨額折現加總','貨幣交換：債券法 B<sub>D</sub>、B<sub>F</sub> 各自折現，V = S<sub>0</sub>B<sub>F</sub> − B<sub>D</sub>；遠期法每期換匯再折現','注意站在哪一方：收的一方為正']))}
+${blk('債券與利率', ul(['零息利率逐筆折現；殖利率用同一個 y','拔靴：已知的前幾期先折現，用價格扣掉，解最後一期','遠期利率公式 → FRA 要換成相同複利再代入']))}`;
+
+  const ba = `<h3>BA II Plus 按法（考前練熟，不一定要抄）</h3>
+${blk('先設定一次', ul([
+  `小數 4 位：${K('2nd FORMAT')} 4 ${K('ENTER')} ${K('2nd QUIT')}`,
+  `你的計算機已設成先乘除後加減（AOS）：分子分母有加減時，一定要用 ${K('(')} ${K(')')} 包起來（例：遠期利率、N* 的分母）`,
+  `TVM 前：${K('2nd P/Y')} 1 ${K('ENTER')} ${K('2nd QUIT')}，再 ${K('2nd CLR_TVM')}`,
+  `記憶：${K('STO')} 1 存、${K('RCL')} 1 叫出；${K('STO')} ${K('+')} 1 把畫面上的數加進記憶 1（累加很多項時好用）`,
+  `e<sup>x</sup> 是 ${K('2nd LN')}；負數用 ${K('+/−')}，不是減號`]))}
+${blk('e<sup>rT</sup>、e<sup>−rT</sup>（遠期價格、折現）', ul([
+  `F<sub>0</sub> = 30e<sup>0.05 × 0.5</sup>：.05 ${K('×')} .5 ${K('=')} ${K('2nd LN')} ${K('×')} 30 ${K('=')} → 30.7595`,
+  `折現因子 e<sup>−0.036 × 1.25</sup>：.036 ${K('×')} 1.25 ${K('=')} ${K('+/−')} ${K('2nd LN')} → 0.9560`,
+  `F<sub>0</sub> = S<sub>0</sub>e<sup>(r − q)T</sup>：${K('(')} r ${K('−')} q ${K(')')} ${K('×')} T ${K('=')} ${K('2nd LN')} ${K('×')} S<sub>0</sub> ${K('=')}`]))}
+${blk('複利換算', ul([
+  `R<sub>c</sub> = 4 ln(1 + 0.07/4)：.07 ${K('÷')} 4 ${K('+')} 1 ${K('=')} ${K('LN')} ${K('×')} 4 ${K('=')} → 0.0694`,
+  `R<sub>m</sub> = 4(e<sup>0.04/4</sup> − 1)：.04 ${K('÷')} 4 ${K('=')} ${K('2nd LN')} ${K('−')} 1 ${K('=')} ${K('×')} 4 ${K('=')} → 0.0402`,
+  `年有效利率（ICONV）：${K('2nd ICONV')}（在 ${K('2')} 上）NOM＝7 ${K('ENTER')}，${K('↓')} ${K('↓')} C/Y＝4 ${K('ENTER')}，${K('↑')} 回到 EFF，${K('CPT')} → 7.1859`,
+  `開 n 次方 (1.08011)<sup>1/3</sup>：1.08011 ${K('y^x')} 3 ${K('1/x')} ${K('=')} → 1.0260`,
+  `ln：1.1 ${K('LN')} → 0.0953`]))}
+${blk('遠期利率、避險比率、口數', ul([
+  `R<sub>F</sub> = (3.6 × 1.25 − 3.5 × 1) ÷ 0.25：${K('(')} 3.6 ${K('×')} 1.25 ${K('−')} 3.5 ${K(')')} ${K('÷')} .25 ${K('=')} → 4（一定加括號）`,
+  `h* = 0.8 × 0.65 ÷ 0.81：.8 ${K('×')} .65 ${K('÷')} .81 ${K('=')} → 0.6420`,
+  `N* = 1.2 × 20,000,000 ÷ (1,080 × 250)：1.2 ${K('×')} 20000000 ${K('÷')} ${K('(')} 1080 ${K('×')} 250 ${K(')')} ${K('=')} → 88.89`]))}
+${blk('債券價格（每期不同零息利率）：用記憶累加', ul([
+  `第 1 筆：.04 ${K('×')} .5 ${K('=')} ${K('+/−')} ${K('2nd LN')} ${K('×')} 2 ${K('=')} ${K('STO')} 1`,
+  `第 2 筆起：.042 ${K('×')} 1 ${K('=')} ${K('+/−')} ${K('2nd LN')} ${K('×')} 2 ${K('=')} ${K('STO')} ${K('+')} 1，依此類推`,
+  `最後 ${K('RCL')} 1 就是債券價格`]))}
+${blk('債券價格（單一殖利率）', ul([
+  `<b>半年複利</b>（TVM）：${K('2nd CLR_TVM')} 3 ${K('N')} 2.6 ${K('I/Y')} 2 ${K('PMT')} 100 ${K('FV')} ${K('CPT')} ${K('PV')} → −98.29（負號代表付出）`,
+  `<b>連續複利</b>（CF 現金流表）：先把 y 換成每期有效利率 I = (e<sup>y</sup> − 1) × 100，例 y = 7%：.07 ${K('2nd LN')} ${K('−')} 1 ${K('=')} ${K('×')} 100 ${K('=')} → 7.2508`,
+  `${K('CF')} ${K('2nd CLR_WORK')} CF0＝0 ${K('ENTER')} ${K('↓')} C01＝8 ${K('ENTER')} ${K('↓')} F01＝4 ${K('ENTER')} ${K('↓')} C02＝108 ${K('ENTER')} ${K('NPV')} I＝7.2508 ${K('ENTER')} ${K('↓')} ${K('CPT')} → 103.05`,
+  `<b>存續期間</b>：同一個 CF 表把每筆改成 t × c（8、16、24、32、540）再算 NPV → Σ t·PV = 445.54，除以債券價格 → D`]))}
+${blk('FRA、交換評價', ul([
+  `FRA：.045 ${K('−')} .040201 ${K('=')} ${K('×')} .25 ${K('×')} 1000000 ${K('=')} ${K('STO')} 1；.036 ${K('×')} 1.25 ${K('=')} ${K('+/−')} ${K('2nd LN')} ${K('×')} ${K('RCL')} 1 ${K('=')} → 1,147`,
+  `利率交換：每期 (浮動 − 固定) 先算好，乘上 e<sup>−rt</sup>，用 ${K('STO')} ${K('+')} 1 累加`,
+  `貨幣交換：B<sub>D</sub> 存 1、B<sub>F</sub> 存 2；${K('RCL')} 2 ${K('÷')} 110 ${K('−')} ${K('RCL')} 1 ${K('=')} → S<sub>0</sub>B<sub>F</sub> − B<sub>D</sub>`]))}
+${blk('反解外國利率 r<sub>f</sub>', ul([
+  `1.195 = 1.2e<sup>(0.01 − r<sub>f</sub>)0.5</sup>：1.195 ${K('÷')} 1.2 ${K('=')} ${K('LN')} ${K('÷')} .5 ${K('=')} ${K('STO')} 1；.01 ${K('−')} ${K('RCL')} 1 ${K('=')} → 0.0184`]))}`;
+
+  DATA.deriv.cheat = `<div class="cheat"><p class="sm-p">A4 正反面手抄：建議<b>正面</b>抄必抄區＋Ch1–3，<b>背面</b>抄 Ch4、5、7 和題型做法。只放公式、觀念、做法，不放課本習題和答案。</p>${must}${units}${methods}${ba}</div>`;
+
+  // ---- 公式教室：Ch4、Ch7 ----
+  DATA.deriv.formulas.push(
+    { id:'F18', t:'複利頻率換算 R<sub>c</sub> ↔ R<sub>m</sub>', en:'Converting compounding frequencies',
+      q:'同一個投資，用不同複利方式報價，數字要怎麼換？',
+      tex:'<v s="rc">R<sub>c</sub></v> = <v s="m">m</v> · ln(1 + <v s="rm">R<sub>m</sub></v>/<v s="m">m</v>)　　<v s="rm">R<sub>m</sub></v> = <v s="m">m</v> · (e<sup><v s="rc">R<sub>c</sub></v>/<v s="m">m</v></sup> − 1)',
+      syms:{ rc:['連續複利利率','continuously compounded rate','每一瞬間都在複利的報價'], rm:['m 次複利利率','rate with m compounding periods','一年複利 m 次的報價'], m:['每年複利次數','compounding frequency','半年 2、季 4、月 12'] },
+      why:'兩種報法只要讓一年後的終值相同：(1 + R<sub>m</sub>/m)<sup>m</sup> = e<sup>R<sub>c</sub></sup>。兩邊取 ln 就得到第一式，反過來解就是第二式。',
+      steps:['確認原本是哪一種複利、m 是多少','連續 → m 次：除以 m、取 e<sup>x</sup>、減 1、乘 m','m 次 → 連續：除以 m、加 1、取 ln、乘 m'],
+      vars:[{k:'rm',s:'R<sub>m</sub>（%）',v:7,min:0,max:20,step:0.1},{k:'m',s:'m',v:4,min:1,max:12,step:1}],
+      calc:v=>{const rc=v.m*Math.log(1+v.rm/100/v.m);return `R<sub>c</sub> = ${v.m} × ln(1 + ${v.rm}%/${v.m}) = <b>${fx(rc*100,4)}%</b><br>年有效 = (1 + ${v.rm}%/${v.m})<sup>${v.m}</sup> − 1 = <b>${fx((Math.pow(1+v.rm/100/v.m,v.m)-1)*100,4)}%</b>`;},
+      oops:['把連續複利直接代進 m 次複利的公式（FRA、交換最常錯）','百分比忘了換成小數'],
+      exam:'Rates with different compounding frequencies are equivalent when they give the same terminal value: R<sub>c</sub> = m ln(1 + R<sub>m</sub>/m).' },
+    { id:'F19', t:'遠期利率', en:'Forward interest rate',
+      q:'從今天的零息利率，推算未來某一段期間的利率？',
+      tex:'<v s="rf">R<sub>F</sub></v> = (<v s="r2">R<sub>2</sub></v><v s="t2">T<sub>2</sub></v> − <v s="r1">R<sub>1</sub></v><v s="t1">T<sub>1</sub></v>) / (<v s="t2">T<sub>2</sub></v> − <v s="t1">T<sub>1</sub></v>)',
+      syms:{ rf:['遠期利率','forward rate','T<sub>1</sub> 到 T<sub>2</sub> 這段期間的利率'], r1:['T<sub>1</sub> 零息利率','zero rate to T<sub>1</sub>','到 T<sub>1</sub> 的利率'], r2:['T<sub>2</sub> 零息利率','zero rate to T<sub>2</sub>','到 T<sub>2</sub> 的利率'], t1:['較短期限','earlier maturity','年'], t2:['較長期限','later maturity','年'] },
+      why:'存到 T<sub>2</sub> 的錢，要等於先存到 T<sub>1</sub> 再用遠期利率存到 T<sub>2</sub>：e<sup>R<sub>2</sub>T<sub>2</sub></sup> = e<sup>R<sub>1</sub>T<sub>1</sub></sup> · e<sup>R<sub>F</sub>(T<sub>2</sub> − T<sub>1</sub>)</sup>，指數相等就得到公式（連續複利）。',
+      steps:['找兩個期限的零息利率（連續複利）','分子：長的 R × T 減短的 R × T','除以期間長度','要用在 FRA、交換時，再換成付息頻率的複利'],
+      vars:[{k:'r1',s:'R<sub>1</sub>（%）',v:3.5,min:0,max:10,step:0.1},{k:'t1',s:'T<sub>1</sub>',v:1,min:0.25,max:5,step:0.25},{k:'r2',s:'R<sub>2</sub>（%）',v:3.6,min:0,max:10,step:0.1},{k:'t2',s:'T<sub>2</sub>',v:1.25,min:0.5,max:6,step:0.25}],
+      calc:v=>v.t2<=v.t1?'T<sub>2</sub> 要大於 T<sub>1</sub>':`R<sub>F</sub> = (${v.r2} × ${v.t2} − ${v.r1} × ${v.t1}) / (${v.t2} − ${v.t1}) = <b>${fx((v.r2*v.t2-v.r1*v.t1)/(v.t2-v.t1),4)}%</b>`,
+      oops:['T<sub>2</sub> − T<sub>1</sub> 忘了除','零息利率曲線向上時，遠期利率會高於兩個零息利率'],
+      exam:'The forward rate for the period between T<sub>1</sub> and T<sub>2</sub> is R<sub>F</sub> = (R<sub>2</sub>T<sub>2</sub> − R<sub>1</sub>T<sub>1</sub>)/(T<sub>2</sub> − T<sub>1</sub>) with continuous compounding.' },
+    { id:'F20', t:'存續期間估債券價格變動', en:'Duration and bond price changes',
+      q:'利率小小變動，債券價格大約會變多少？',
+      tex:'Δ<v s="b">B</v> ≈ −<v s="b">B</v> · <v s="d">D</v> · Δ<v s="y">y</v>',
+      syms:{ b:['債券價格','bond price','現在的價格'], d:['存續期間','duration','現金流的加權平均到期時間（年）'], y:['殖利率','yield','連續複利的殖利率；m 次複利時改用 D/(1 + y/m)'] },
+      why:'債券價格是殖利率的函數，D 就是價格對 y 的敏感度（一階導數 ÷ 價格）。利率變一點點時，用直線（切線）估算變動。',
+      steps:['算出 B 和 D','Δy 用小數（降 20 bps → −0.002）','代入，記得前面有負號：利率降 → 價格升'],
+      vars:[{k:'b',s:'B',v:103.05,min:50,max:150,step:0.01},{k:'d',s:'D',v:4.32,min:0,max:30,step:0.01},{k:'bp',s:'Δy（bps）',v:-20,min:-200,max:200,step:5}],
+      calc:v=>{const d=-v.b*v.d*v.bp/10000;return `ΔB ≈ −${v.b} × ${v.d} × (${v.bp/10000}) = <b>${fx(d,4)}</b> → 新價格約 <b>${fx(v.b+d,3)}</b>`;},
+      oops:['Δy 用百分比沒換成小數','殖利率是 m 次複利卻沒用修正存續期間'],
+      exam:'For a small change in yield, ΔB ≈ −B·D·Δy; bonds with longer duration are more sensitive to interest rate changes.' },
+    { id:'F21', t:'交換後的淨借款成本', en:'Net cost after an interest rate swap',
+      q:'借了浮動、又做交換，最後實際付多少？',
+      tex:'淨成本 = (<v s="fl">浮動</v> + <v s="s">s</v>) − <v s="fl">浮動</v> + <v s="k">k</v> = <v s="k">k</v> + <v s="s">s</v>',
+      syms:{ fl:['浮動利率','floating rate（如 SOFR）','會變動，但在交換裡收進來又付出去，所以抵銷'], s:['借款加碼','spread over floating','原本借款比浮動多付的部分'], k:['交換固定利率','fixed rate in the swap','在交換裡付出的固定利率'] },
+      why:'原本借款付「浮動 + s」；交換裡收浮動、付固定 k。三筆加起來，浮動一付一收抵銷，剩下 k + s，變成固定利率負債。其他三種轉換（固定→浮動、投資的轉換）都用同樣的加總法。',
+      steps:['寫出原本的現金流（付為負、收為正）','寫出交換的兩筆','加總，浮動會抵銷','剩下的就是新的利率'],
+      vars:[{k:'s',s:'s（%）',v:0.1,min:-1,max:2,step:0.05},{k:'k',s:'k（%）',v:3.0,min:0,max:10,step:0.05}],
+      calc:v=>`淨付 = ${v.k}% + ${v.s}% = <b>${fx(v.k+v.s,3)}%</b>（固定）`,
+      oops:['收和付的正負號弄反','以為浮動利率不會抵銷'],
+      exam:'Adding the cash flows from the original loan and the swap, the floating payments cancel, leaving a fixed borrowing cost of k + s.' },
+    { id:'F22', t:'比較利益：交換的總利益', en:'Gain from a comparative-advantage swap',
+      q:'兩家公司做交換，總共能省多少？每家省多少？',
+      tex:'總利益 = (<v s="fb">固定<sub>B</sub></v> − <v s="fa">固定<sub>A</sub></v>) − (<v s="vb">浮動<sub>B</sub></v> − <v s="va">浮動<sub>A</sub></v>)',
+      syms:{ fa:['A 的固定利率','A’s fixed rate','信用較好的公司'], fb:['B 的固定利率','B’s fixed rate','信用較差的公司'], va:['A 的浮動加碼','A’s floating spread','例：SOFR − 0.1% 填 −0.1'], vb:['B 的浮動加碼','B’s floating spread','例：SOFR + 0.6% 填 0.6'] },
+      why:'B 在兩個市場都比較貴，但貴的幅度不同。B 去借相對沒那麼貴的那種、A 去借另一種，再交換，兩邊加起來就省下「兩個利差的差」。',
+      steps:['算固定利差和浮動利差','總利益 = 兩個利差的差（取正值）','扣掉銀行費用','剩下照題目分配（通常平分）'],
+      vars:[{k:'fa',s:'固定 A（%）',v:4.0,min:0,max:10,step:0.1},{k:'fb',s:'固定 B（%）',v:5.2,min:0,max:12,step:0.1},{k:'va',s:'浮動加碼 A',v:-0.1,min:-1,max:2,step:0.05},{k:'vb',s:'浮動加碼 B',v:0.6,min:-1,max:3,step:0.05},{k:'fee',s:'銀行（%）',v:0,min:0,max:1,step:0.01}],
+      calc:v=>{const g=Math.abs((v.fb-v.fa)-(v.vb-v.va));return `固定利差 ${fx(v.fb-v.fa,3)}%、浮動利差 ${fx(v.vb-v.va,3)}% → 總利益 <b>${fx(g,3)}%</b><br>扣銀行 ${v.fee}% 後平分：每家省 <b>${fx((g-v.fee)/2,3)}%</b>`;},
+      oops:['把兩個利差相加而不是相減','忘了扣銀行費用'],
+      exam:'The total gain from a comparative-advantage swap equals the difference between the two firms’ fixed-rate spread and floating-rate spread, shared among the parties.' },
+    { id:'F23', t:'貨幣交換的價值（債券法）', en:'Value of a currency swap in terms of bonds',
+      q:'收外幣、付本國幣的貨幣交換，現在值多少？',
+      tex:'<v s="v">V</v> = <v s="s">S<sub>0</sub></v> · <v s="bf">B<sub>F</sub></v> − <v s="bd">B<sub>D</sub></v>',
+      syms:{ v:['交換價值','swap value','對收外幣、付本國幣的一方'], s:['即期匯率','spot exchange rate','每 1 外幣值多少本國幣'], bf:['外幣債券價值','foreign bond value','外幣現金流用外國利率折現（外幣計）'], bd:['本國債券價值','domestic bond value','本國現金流用本國利率折現'] },
+      why:'收外幣現金流＝持有一張外幣債券；付本國幣現金流＝發行一張本國債券。把外幣債券換成本國幣，扣掉欠的本國債券，就是淨值。付外幣的一方剛好加負號。',
+      steps:['列出兩種貨幣的現金流（含期末本金）','各自用自己國家的利率折現 → B<sub>F</sub>、B<sub>D</sub>','B<sub>F</sub> 乘上 S<sub>0</sub> 換成本國幣','相減'],
+      vars:[{k:'bf',s:'B<sub>F</sub>（百萬日圓）',v:1252.01,min:0,max:3000,step:0.01},{k:'q',s:'每 1 美元幾日圓',v:110,min:50,max:200,step:1},{k:'bd',s:'B<sub>D</sub>（百萬美元）',v:10.4191,min:0,max:30,step:0.0001}],
+      calc:v=>`S<sub>0</sub>B<sub>F</sub> = ${v.bf} ÷ ${v.q} = ${fx(v.bf/v.q,4)}<br>V = ${fx(v.bf/v.q,4)} − ${v.bd} = <b>${fx(v.bf/v.q-v.bd,4)}</b> 百萬美元`,
+      oops:['匯率方向用反：日圓報價（每美元幾日圓）要「除以」','忘了期末本金也要折現'],
+      exam:'For the party receiving foreign currency and paying domestic currency, the value of a currency swap is V = S<sub>0</sub>B<sub>F</sub> − B<sub>D</sub>.' }
+  );
+})();
 // ===== 管理學 補充題：d_mgmt2.js 新卡片的題目與配對 =====
 DATA.mgmt.mcq.push(
   {u:'m4', q:'A culture where employees rarely challenge their boss and accept unequal power is high in:', o:['Individualism','Power distance','Long-term orientation','Nurturing'], a:1, e:'Power distance 權力距離：接受權力不平等分配的程度。'},
@@ -9815,7 +10211,7 @@ window.addEventListener('pagehide', savePos);
 // ---------- Routing ----------
 const PANES = {
   basic: [['learn', '基礎卡片'], ['formula', '公式教室'], ['play', '遊戲＆打怪'], ['notes', '我的筆記']],
-  deriv: [['learn', '知識點'], ['formula', '公式教室'], ['prob', '課本習題'], ['gen', '變化題'], ['play', '遊戲＆打怪'], ['notes', '我的筆記']],
+  deriv: [['learn', '知識點'], ['formula', '公式教室'], ['prob', '課本習題'], ['gen', '變化題'], ['cheat', '期中大抄'], ['play', '遊戲＆打怪'], ['notes', '我的筆記']],
   invest: [['learn', '知識點'], ['formula', '公式教室'], ['flash', '講義問題'], ['play', '遊戲＆打怪'], ['notes', '我的筆記']],
   law: [['learn', '知識點＋條文'], ['case', '情境題'], ['sum', '統整筆記'], ['play', '遊戲＆打怪'], ['notes', '我的筆記']],
   mgmt: [['learn', '知識點'], ['formula', '公式教室'], ['play', '遊戲＆打怪'], ['notes', '我的筆記']],
@@ -9842,7 +10238,7 @@ function go(k, tab, opt) {
   $$('.ptab', main).forEach(b => b.onclick = () => go(k, b.dataset.p));
   ST.tab[k] = tab; save();
   const pane = $('#pane');
-  ({ intro: () => renderCFA(pane), learn: () => renderLearn(k, pane), formula: () => renderFormulas(k, pane), mcq: () => renderMCQ(k, pane), prob: () => renderProblems(pane), gen: () => renderGens(pane), flash: () => renderFlash(pane), essay: () => renderEssay(pane), case: () => LAWCASE.renderCases(pane), sum: () => LAWCASE.renderSums(pane), game: () => renderGames(k, pane), play: () => renderGames(k, pane), notes: () => NOTES.page(k, pane) })[tab]();
+  ({ intro: () => renderCFA(pane), learn: () => renderLearn(k, pane), formula: () => renderFormulas(k, pane), mcq: () => renderMCQ(k, pane), prob: () => renderProblems(pane), gen: () => renderGens(pane), cheat: () => { pane.innerHTML = DATA[k].cheat || ''; }, flash: () => renderFlash(pane), essay: () => renderEssay(pane), case: () => LAWCASE.renderCases(pane), sum: () => LAWCASE.renderSums(pane), game: () => renderGames(k, pane), play: () => renderGames(k, pane), notes: () => NOTES.page(k, pane) })[tab]();
   updateCounts();
   opt && opt.top ? window.scrollTo(0, 0) : restorePos();
   NOTES.bmPill();
