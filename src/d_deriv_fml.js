@@ -105,9 +105,28 @@
   const cnt = {};
   Object.keys(FM).forEach(k => cnt[k] = { x: 0, v: 0, p: 0 });
   Object.entries(USE).forEach(([id, ks]) => ks.split(' ').forEach(k => { if (!cnt[k]) throw new Error('未知公式 ' + k); cnt[k][id[0]]++; }));
+  // 每條公式用在哪些題，做成連結
+  const ids = {};
+  Object.keys(FM).forEach(k => ids[k] = { x: [], v: [], p: [] });
+  Object.entries(USE).forEach(([id, ks]) => ks.split(' ').forEach(k => ids[k][id[0]].push(id)));
+  const num = id => id.replace(/^[xvp]/, '').split('_').map(n => parseInt(n, 10));
+  Object.values(ids).forEach(o => Object.values(o).forEach(a => a.sort((a1, b1) => { const A = num(a1), B = num(b1); return A[0] - B[0] || (A[1] || 0) - (B[1] || 0) || a1.localeCompare(b1); })));
+  const lab = id => id[0] === 'x' ? id.slice(1) : id[0] === 'v' ? id.slice(1).toUpperCase() : id.slice(1).replace('_', '.');
+  const plink = id => `<a class="plink" href="#c-prob-${id}" data-prob="${id}">${lab(id)}</a>`;
+  const links = (k, g) => ids[k][g].map(plink).join(' ');
+  document.addEventListener('click', e => {
+    const a = e.target.closest && e.target.closest('a[data-prob]'); if (!a) return;
+    e.preventDefault();
+    go('deriv', 'prob', { top: true });
+    const el = document.getElementById('c-prob-' + a.dataset.prob);
+    if (!el) { alert('這題被單元篩選藏起來了，先在「課本習題」上方把單元打開'); return; }
+    el.scrollIntoView({ block: 'start' }); window.scrollBy(0, -70);
+    el.classList.remove('pflash'); void el.offsetWidth; el.classList.add('pflash');
+  });
   const lv = k => { const c = cnt[k]; return c.x ? 3 : c.p >= 2 ? 2 : c.p ? 1 : 0; };
   const STAR = ['<span class="fst f0">○</span>', '<span class="fst f1">★</span>', '<span class="fst f2">★★</span>', '<span class="fst f3">★★★</span>'];
-  const useTxt = k => { const c = cnt[k], a = []; if (c.x) a.push('考古 ' + c.x); if (c.p) a.push('習題 ' + c.p); return a.length ? a.join('・') : '考古和習題沒用到'; };
+  const useTxt = k => { const c = cnt[k], a = []; if (c.x) a.push('考古 ' + links(k, 'x')); if (c.p) a.push('習題 ' + links(k, 'p')); return a.length ? a.join('　') : '考古和習題沒用到'; };
+  const varLinks = k => cnt[k].v ? ` <span class="fvar">變化 ${links(k, 'v')}</span>` : '';
   const varTag = k => cnt[k].v ? ` <span class="fvar">變化題 ×${cnt[k].v}</span>` : '';
 
   // 題目卡：標出公式
@@ -118,8 +137,8 @@
   // 大抄：照單元抄
   const byUnit = Object.keys(UNIT).map(u => {
     const ks = Object.keys(FM).filter(k => FM[k][0] === u).sort((a, b) => lv(b) - lv(a) || (cnt[b].x * 10 + cnt[b].p) - (cnt[a].x * 10 + cnt[a].p) || cnt[b].v - cnt[a].v);
-    return `<div class="cblk"><h4>${UNIT[u]}</h4><ul class="fmlist">${ks.map(k => `<li class="fl${lv(k)}">${STAR[lv(k)]} ${FM[k][1]} <span class="cuse">${useTxt(k)}</span>${varTag(k)}${keyHtml(k)}</li>`).join('')}</ul></div>`;
+    return `<div class="cblk"><h4>${UNIT[u]}</h4><ul class="fmlist">${ks.map(k => `<li class="fl${lv(k)}">${STAR[lv(k)]} ${FM[k][1]} <span class="cuse">${useTxt(k)}</span>${varLinks(k)}${keyHtml(k)}</li>`).join('')}</ul></div>`;
   }).join('');
-  const sec = `<div class="cunit"><h3>照單元抄（公式總表）</h3><p class="sm-p"><span class="fst f3">★★★</span> 考古考過，一定要抄、寫大一點　<span class="fst f2">★★</span> 課本習題用到 2 次以上　<span class="fst f1">★</span> 用過 1 次　<span class="fst f0">○</span> 考古和習題沒用到，有空間再抄。星等只看考古原題和課本習題；<span class="fvar">變化題</span> 標籤表示變化題有用到這條，不影響星等。灰色小字和標籤都<b>不用抄</b>。🧮 是計算機按法，只寫在要用特殊按鍵的公式旁邊；其他只有加減乘除，直接按。</p>${byUnit}</div>`;
+  const sec = `<div class="cunit"><h3>照單元抄（公式總表）</h3><p class="sm-p"><span class="fst f3">★★★</span> 考古考過，一定要抄、寫大一點　<span class="fst f2">★★</span> 課本習題用到 2 次以上　<span class="fst f1">★</span> 用過 1 次　<span class="fst f0">○</span> 考古和習題沒用到，有空間再抄。星等只看考古原題和課本習題；<span class="fvar">變化題</span> 標籤表示變化題有用到這條，不影響星等。灰色小字和標籤是用到這條公式的題號（點了直接跳到那題），都<b>不用抄</b>。🧮 是計算機按法，只寫在要用特殊按鍵的公式旁邊；其他只有加減乘除，直接按。</p>${byUnit}</div>`;
   DATA.deriv.cheat = DATA.deriv.cheat.replace('<div class="cmust">', sec + '<div class="cmust">');
 })();
