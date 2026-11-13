@@ -102,6 +102,10 @@ details summary{cursor:pointer;font-weight:700;color:var(--acc)} .body{max-width
 .note{font-size:14px;color:var(--mute);border-left:4px solid var(--acc);padding-left:10px}
 .cheat h3{margin:22px 0 8px} .cheat h4{margin:0 0 6px;font-size:15px} .cheat ul{margin:0;padding-left:20px} .cheat li{margin:3px 0;line-height:1.55} .cheat .tbl{margin:6px 0}
 .chot{border-color:#e03131 !important} .hotmark{color:#e03131} .pill.hotp{background:#e03131;color:#fff}
+.fmbox{background:color-mix(in srgb,var(--gold) 12%,var(--panel));border:2px solid var(--line);border-radius:10px;padding:6px 12px;margin:6px 0} .fmbox ul{margin:4px 0 0;padding-left:18px} .fmbox li{margin:2px 0;line-height:1.6}
+.fkey{font-size:.85em;margin:2px 0 4px;padding:4px 8px;border-left:3px solid var(--acc);background:color-mix(in srgb,var(--acc) 6%,var(--panel));border-radius:6px;font-weight:400;color:var(--ink);line-height:1.9} .fkey kbd{font-size:.9em}
+.fvar{font-size:.72em;font-weight:400;color:#7048e8;border:1px solid #b197fc;border-radius:8px;padding:0 6px;white-space:nowrap}
+.fst{font-weight:700;white-space:nowrap} .fst.f3{color:#e03131} .fst.f2{color:#e8590c} .fst.f1{color:#f08c00} .fst.f0{color:var(--mute)} .fmlist{padding-left:18px} .fmlist li{margin:3px 0;line-height:1.6} .fmlist li.fl3{font-weight:600} .fmlist li.fl0{color:var(--mute)} .cuse{font-size:.75em;color:var(--mute);font-weight:400;white-space:nowrap} .cunit .cblk{border-color:#e8590c}
 .prob .ba{background:var(--why);border:2px solid var(--line);border-radius:10px;padding:8px 12px;margin:8px 0} .prob .ba ul{margin:4px 0 0;padding-left:20px} .prob .ba li{margin:3px 0;line-height:1.6}
 .cblk{background:var(--panel);border:2px solid var(--line);border-radius:12px;padding:10px 14px;margin:10px 0} .cmust .cblk{border-color:var(--acc)}
 kbd{font:inherit;font-size:12px;font-weight:700;border:1.5px solid var(--line);border-bottom-width:3px;border-radius:6px;padding:0 5px;background:var(--soft);white-space:nowrap}
@@ -6407,42 +6411,13 @@ ${blk('比較利益交換設計', ul(['算兩市場利差 → 總利益 = 利差
 ${blk('交換評價', ul(['利率交換：畫時間軸 → 每期浮動用遠期利率（換成付息頻率的複利）→ 淨額折現加總','貨幣交換：債券法 B<sub>D</sub>、B<sub>F</sub> 各自折現，V = S<sub>0</sub>B<sub>F</sub> − B<sub>D</sub>；遠期法每期換匯再折現','注意站在哪一方：收的一方為正']))}
 ${blk('債券與利率', ul(['零息利率逐筆折現；殖利率用同一個 y','拔靴：已知的前幾期先折現，用價格扣掉，解最後一期','遠期利率公式 → FRA 要換成相同複利再代入']))}`;
 
-  const ba = `<h3>BA II Plus 按法（考前練熟，不一定要抄）</h3>
+  const ba = `<h3>BA II Plus 先設定一次（各公式的按法在「照單元抄」公式旁邊）</h3>
 ${blk('先設定一次', ul([
   `小數 4 位：${K('2nd FORMAT')} 4 ${K('ENTER')} ${K('2nd QUIT')}`,
   `你的計算機已設成先乘除後加減（AOS）：分子分母有加減時，一定要用 ${K('(')} ${K(')')} 包起來（例：遠期利率、N* 的分母）`,
   `TVM 前：${K('2nd P/Y')} 1 ${K('ENTER')} ${K('2nd QUIT')}，再 ${K('2nd CLR_TVM')}`,
   `記憶：${K('STO')} 1 存、${K('RCL')} 1 叫出；${K('STO')} ${K('+')} 1 把畫面上的數加進記憶 1（累加很多項時好用）`,
-  `e<sup>x</sup> 是 ${K('2nd LN')}；負數用 ${K('+/−')}，不是減號`]))}
-${blk('e<sup>rT</sup>、e<sup>−rT</sup>（遠期價格、折現）', ul([
-  `F<sub>0</sub> = 30e<sup>0.05 × 0.5</sup>：.05 ${K('×')} .5 ${K('=')} ${K('2nd LN')} ${K('×')} 30 ${K('=')} → 30.7595`,
-  `折現因子 e<sup>−0.036 × 1.25</sup>：.036 ${K('×')} 1.25 ${K('=')} ${K('+/−')} ${K('2nd LN')} → 0.9560`,
-  `F<sub>0</sub> = S<sub>0</sub>e<sup>(r − q)T</sup>：${K('(')} r ${K('−')} q ${K(')')} ${K('×')} T ${K('=')} ${K('2nd LN')} ${K('×')} S<sub>0</sub> ${K('=')}`]))}
-${blk('複利換算', ul([
-  `R<sub>c</sub> = 4 ln(1 + 0.07/4)：.07 ${K('÷')} 4 ${K('+')} 1 ${K('=')} ${K('LN')} ${K('×')} 4 ${K('=')} → 0.0694`,
-  `R<sub>m</sub> = 4(e<sup>0.04/4</sup> − 1)：.04 ${K('÷')} 4 ${K('=')} ${K('2nd LN')} ${K('−')} 1 ${K('=')} ${K('×')} 4 ${K('=')} → 0.0402`,
-  `年有效利率（ICONV）：${K('2nd ICONV')}（在 ${K('2')} 上）NOM＝7 ${K('ENTER')}，${K('↓')} ${K('↓')} C/Y＝4 ${K('ENTER')}，${K('↑')} 回到 EFF，${K('CPT')} → 7.1859`,
-  `開 n 次方 (1.08011)<sup>1/3</sup>：1.08011 ${K('y^x')} 3 ${K('1/x')} ${K('=')} → 1.0260`,
-  `ln：1.1 ${K('LN')} → 0.0953`]))}
-${blk('遠期利率、避險比率、口數', ul([
-  `R<sub>F</sub> = (3.6 × 1.25 − 3.5 × 1) ÷ 0.25：${K('(')} 3.6 ${K('×')} 1.25 ${K('−')} 3.5 ${K(')')} ${K('÷')} .25 ${K('=')} → 4（一定加括號）`,
-  `h* = 0.8 × 0.65 ÷ 0.81：.8 ${K('×')} .65 ${K('÷')} .81 ${K('=')} → 0.6420`,
-  `N* = 1.2 × 20,000,000 ÷ (1,080 × 250)：1.2 ${K('×')} 20000000 ${K('÷')} ${K('(')} 1080 ${K('×')} 250 ${K(')')} ${K('=')} → 88.89`]))}
-${blk('債券價格（每期不同零息利率）：用記憶累加', ul([
-  `第 1 筆：.04 ${K('×')} .5 ${K('=')} ${K('+/−')} ${K('2nd LN')} ${K('×')} 2 ${K('=')} ${K('STO')} 1`,
-  `第 2 筆起：.042 ${K('×')} 1 ${K('=')} ${K('+/−')} ${K('2nd LN')} ${K('×')} 2 ${K('=')} ${K('STO')} ${K('+')} 1，依此類推`,
-  `最後 ${K('RCL')} 1 就是債券價格`]))}
-${blk('債券價格（單一殖利率）', ul([
-  `<b>半年複利</b>（TVM）：${K('2nd CLR_TVM')} 3 ${K('N')} 2.6 ${K('I/Y')} 2 ${K('PMT')} 100 ${K('FV')} ${K('CPT')} ${K('PV')} → −98.29（負號代表付出）`,
-  `<b>連續複利</b>（CF 現金流表）：先把 y 換成每期有效利率 I = (e<sup>y</sup> − 1) × 100，例 y = 7%：.07 ${K('2nd LN')} ${K('−')} 1 ${K('=')} ${K('×')} 100 ${K('=')} → 7.2508`,
-  `${K('CF')} ${K('2nd CLR_WORK')} CF0＝0 ${K('ENTER')} ${K('↓')} C01＝8 ${K('ENTER')} ${K('↓')} F01＝4 ${K('ENTER')} ${K('↓')} C02＝108 ${K('ENTER')} ${K('NPV')} I＝7.2508 ${K('ENTER')} ${K('↓')} ${K('CPT')} → 103.05`,
-  `<b>存續期間</b>：同一個 CF 表把每筆改成 t × c（8、16、24、32、540）再算 NPV → Σ t·PV = 445.54，除以債券價格 → D`]))}
-${blk('FRA、交換評價', ul([
-  `FRA：.045 ${K('−')} .040201 ${K('=')} ${K('×')} .25 ${K('×')} 1000000 ${K('=')} ${K('STO')} 1；.036 ${K('×')} 1.25 ${K('=')} ${K('+/−')} ${K('2nd LN')} ${K('×')} ${K('RCL')} 1 ${K('=')} → 1,147`,
-  `利率交換：每期 (浮動 − 固定) 先算好，乘上 e<sup>−rt</sup>，用 ${K('STO')} ${K('+')} 1 累加`,
-  `貨幣交換：B<sub>D</sub> 存 1、B<sub>F</sub> 存 2；${K('RCL')} 2 ${K('÷')} 110 ${K('−')} ${K('RCL')} 1 ${K('=')} → S<sub>0</sub>B<sub>F</sub> − B<sub>D</sub>`]))}
-${blk('反解外國利率 r<sub>f</sub>', ul([
-  `1.195 = 1.2e<sup>(0.01 − r<sub>f</sub>)0.5</sup>：1.195 ${K('÷')} 1.2 ${K('=')} ${K('LN')} ${K('÷')} .5 ${K('=')} ${K('STO')} 1；.01 ${K('−')} ${K('RCL')} 1 ${K('=')} → 0.0184`]))}`;
+  `e<sup>x</sup> 是 ${K('2nd LN')}；負數用 ${K('+/−')}，不是減號`]))}`;
 
   DATA.deriv.cheat = `<div class="cheat"><p class="sm-p">A4 正反面手抄：建議<b>正面</b>抄必抄區＋Ch1–3，<b>背面</b>抄 Ch4、5、7 和題型做法。只放公式、觀念、做法，不放課本習題和答案。</p>${must}${units}${methods}${ba}</div>`;
 
@@ -6766,6 +6741,131 @@ ${blk('反解外國利率 r<sub>f</sub>', ul([
     '股票組合：N* = β', '基差 b = S − F', '存續期間 D = Σ', '比較利益：總利益', '貨幣交換（收外幣、付本國幣）', 'OI 變化'
   ];
   star.forEach(s => { DATA.deriv.cheat = DATA.deriv.cheat.replace('<li>' + s, '<li><b class="hotmark">★考古</b> ' + s); });
+})();
+// ===== 衍金 公式標注：每題（考古、變化題、課本習題）標出用到的公式；大抄加「照單元抄」，依使用次數自動打星 =====
+(() => {
+  const s = x => `<sub>${x}</sub>`, p = x => `<sup>${x}</sup>`;
+  // key: [單元, 公式（要抄的內容）]
+  const FM = {
+    // Ch1
+    payoff: ['ch1', `Payoff：long forward S${s('T')} − K；long call max(S${s('T')} − K, 0)；long put max(K − S${s('T')}, 0)；profit = payoff − 權利金；損益兩平 call K + c、put K − p`],
+    // Ch2
+    mloss: ['ch2', `可虧額度 = (原始保證金 − 維持保證金) × 口數；總規模 = 口數 × 每口數量`],
+    mcall: ['ch2', `追繳價：long = F${s(0)} − 可虧額度 ÷ 總規模；short = F${s(0)} + 可虧額度 ÷ 總規模`],
+    mwd: ['ch2', `可提領 X：long 價格 ≥ F${s(0)} + X ÷ 總規模；short 價格 ≤ F${s(0)} − X ÷ 總規模`],
+    mtop: ['ch2', `被追繳要補回<b>原始</b>保證金：補繳 = 原始保證金 − 帳戶餘額`],
+    mcm: ['ch2', `結算所會員（只有原始保證金）：要補 = 新口數 × 原始保證金 − 舊部位當日獲利 + 新部位當日虧損`],
+    oi: ['ch2', `ΔOI = 買方開倉 − 賣方平倉 = 賣方開倉 − 買方平倉`],
+    fxq: ['ch2', `直接 ↔ 間接報價：每 1 外幣多少美元 = 1 ÷（每 1 美元多少外幣）`],
+    // Ch3
+    hstar: ['ch3', `h* = ρ · σ${s('S')} / σ${s('F')}（ρ = 1 才是完美避險）`],
+    nstar: ['ch3', `N* = h* · Q${s('A')} / Q${s('F')}（四捨五入到整數口；h = 1 時就是 Q${s('A')} / Q${s('F')}）`],
+    tail: ['ch3', `Tailing：N* = h* · V${s('A')} / V${s('F')}（V = 價格 × 數量）`],
+    qloss: ['ch3', `「每漲 1 美分虧 X」→ 曝險量 Q${s('A')} = X ÷ 0.01`],
+    beta0: ['ch3', `股票組合避險：N* = β · V${s('A')} / V${s('F')}，V${s('F')} = 期貨價格 × 乘數`],
+    betaadj: ['ch3', `調 β：N = (β* − β) · V${s('A')} / V${s('F')}（正 long、負 short）`],
+    basis: ['ch3', `基差 b = S − F；避險後實際價格 = F${s(1)} + b${s(2)}（short 是賣價、long 是買價）`],
+    basisdir: ['ch3', `基差變強（b 變大）→ short hedger 變好、long hedger 變差；變弱相反`],
+    // Ch4
+    rc: ['ch4', `R${s('c')} = m · ln(1 + R${s('m')}/m)；R${s('m')} = m · (e${p(`R${s('c')}/m`)} − 1)`],
+    rr: ['ch4', `由終值反推：(1 + R${s('m')}/m)${p('mT')} = FV/PV；連續複利 R${s('c')} = ln(FV/PV) / T`],
+    fwd: ['ch4', `遠期利率 R${s('F')} = (R${s(2)}T${s(2)} − R${s(1)}T${s(1)}) / (T${s(2)} − T${s(1)})（連續複利）`],
+    fra: ['ch4', `FRA（收固定 R${s('K')}）：V = L(R${s('K')} − R${s('F')})(T${s(2)} − T${s(1)})e${p(`−R${s(2)}T${s(2)}`)}；R${s('F')} 先換成和 R${s('K')} 同一種複利`],
+    bondz: ['ch4', `債券（零息利率）：B = Σ c${s('i')}e${p(`−R${s('i')}t${s('i')}`)}`],
+    bondy: ['ch4', `債券（連續複利殖利率）：B = Σ c${s('i')}e${p(`−yt${s('i')}`)}`],
+    bondm: ['ch4', `債券（m 次複利）：B = Σ c${s('i')} / (1 + y/m)${p(`mt${s('i')}`)}；年複利 m = 1`],
+    boot: ['ch4', `拔靴：價格 − 前面各期票息折現 = 最後一筆 × 折現因子 → 解出最後一期零息利率`],
+    dur: ['ch4', `存續期間 D = Σ t${s('i')} · PV${s('i')} / B`],
+    dB: ['ch4', `ΔB ≈ −B · D · Δy（Δy 用小數）；y 為 m 次複利改用 D* = D / (1 + y/m)`],
+    conv: ['ch4', `凸性：ΔB/B ≈ −D·Δy + ½·C·(Δy)${p(2)}，C = Σ t${s('i')}${p(2)}c${s('i')}e${p(`−yt${s('i')}`)} / B`],
+    par: ['ch4', `平價收益率：c = (100 − 100d) · m / A（d = 最後一期折現因子、A = 各期折現因子總和）`],
+    // Ch5
+    f0: ['ch5', `無收益：F${s(0)} = S${s(0)}e${p('rT')}`],
+    f0i: ['ch5', `已知現金收益：F${s(0)} = (S${s(0)} − I)e${p('rT')}，I = Σ D${s('i')}e${p(`−rt${s('i')}`)}（只算到期前的股利）`],
+    f0q: ['ch5', `已知收益率 q：F${s(0)} = S${s(0)}e${p('(r − q)T')}（q 每段不同時用時間加權平均）`],
+    f0fx: ['ch5', `外匯：F${s(0)} = S${s(0)}e${p(`(r − r${s('f')})T`)}（S${s(0)} = 每 1 外幣多少本國幣）`],
+    rfinv: ['ch5', `反推外國利率：r${s('f')} = r − ln(F${s(0)}/S${s(0)}) / T`],
+    f0u: ['ch5', `商品：F${s(0)} ≤ (S${s(0)} + U)e${p('rT')}（U = 儲存成本現值）；比例 u：S${s(0)}e${p('(r + u)T')}`],
+    fv: ['ch5', `遠期價值：long f = (F${s(0)} − K)e${p('−rT')}；無收益 f = S${s(0)} − Ke${p('−rT')}；簽約時 K = F${s(0)} → 0`],
+    fvi: ['ch5', `收益 I：long f = S${s('t')} − I − Ke${p('−r(T − t)')}；short 加負號（I 只算還沒發的）`],
+    fvq: ['ch5', `收益率 q：long f = S${s('t')}e${p('−q(T − t)')} − Ke${p('−r(T − t)')}`],
+    arb: ['ch5', `套利：市價 &gt; 理論 → short 期貨 ＋ 借錢買現貨；市價 &lt; 理論 → long 期貨 ＋ 賣現貨存錢；外匯太便宜 → 借外幣、換本國幣存、long；利潤 ≈ |市價 − 理論|`],
+    // Ch7
+    gain: ['ch7', `比較利益：總利益 = |利差${s('市場1')} − 利差${s('市場2')}|，扣銀行後依題目分；各借有比較利益的那種`],
+    net: ['ch7', `淨成本 = 原借款 ＋ 交換的兩筆（收 +、付 −）；目標成本 = 自己直接借的利率 − 省下的`],
+    irs: ['ch7', `利率交換（付固定方）V = Σ (浮動 − 固定) · L · Δt · e${p('−rt')}；浮動用遠期利率，已定的那期用已知利率`],
+    ccs: ['ch7', `貨幣交換（收外幣、付本國幣）：V = S${s(0)}B${s('F')} − B${s('D')}；付外幣加負號；本金到期要算`],
+    ccsf: ['ch7', `貨幣交換遠期法：F${s('t')} = S${s(0)}e${p(`(r − r${s('f')})t`)}，每期外幣 × F${s('t')} − 本國幣，再折現加總`],
+    mm: ['ch7', `造市者：bid = 它付的固定、ask = 它收的固定；你付固定用 ask、收固定用 bid`]
+  };
+  const UNIT = { ch1: 'Ch1 衍生性商品入門', ch2: 'Ch2 期貨市場', ch3: 'Ch3 用期貨避險', ch4: 'Ch4 利率', ch5: 'Ch5 遠期與期貨價格', ch7: 'Ch7 交換' };
+
+  // 計算機按法：只有用到特殊按鍵（2nd LN、ICONV、TVM、CF/NPV、STO/RCL、y^x）的公式才寫
+  const kk = str => str.replace(/\[([^\]]+)\]/g, (_, g) => g.split(' ').map(k => `<kbd>${k.replace(/_/g, ' ')}</kbd>`).join(' '));
+  const KEY = {
+    rc: ['R<sub>c</sub>：R<sub>m</sub> [÷] m [+] 1 [=] [LN] [×] m [=]', 'R<sub>m</sub>：R<sub>c</sub> [÷] m [=] [2nd LN] [−] 1 [=] [×] m [=]', '年有效：[2nd ICONV] NOM [ENTER] [↓] [↓] C/Y [ENTER] [↑] [CPT] → EFF', 'm₁ 次換 m₂ 次：先照上面 [CPT] 出 EFF，再 [↓] 改 C/Y = m₂ [ENTER]，[↑] [↑] 到 NOM [CPT]'],
+    rr: ['m 次：[2nd CLR_TVM] mT [N] PV [+/−] [PV] 0 [PMT] FV [FV] [CPT] [I/Y] → 每期 %，再 [×] m', '連續：FV [÷] PV [=] [LN] [÷] T [=]'],
+    fra: ['差額 (R<sub>K</sub> − R<sub>F</sub>) × L × Δt 先算好 [STO] 1；R<sub>2</sub> [×] T<sub>2</sub> [=] [+/−] [2nd LN] [×] [RCL] 1 [=]'],
+    bondz: ['每筆：R<sub>i</sub> [×] t<sub>i</sub> [=] [+/−] [2nd LN] [×] c<sub>i</sub> [=]；第一筆 [STO] 1，之後 [STO] [+] 1，最後 [RCL] 1'],
+    bondy: ['每期有效 I：年付息 y [2nd LN] [−] 1 [=] [×] 100 [=]（半年付息用 y/2）', '[CF] [2nd CLR_WORK] 0 [ENTER] [↓] 票息 [ENTER] [↓] 次數 [ENTER] [↓] 最後一筆（含本金）[ENTER] [NPV] I [ENTER] [↓] [CPT] → B', '也可以用 bondz 的 [STO] [+] 1 逐筆累加'],
+    bondm: ['整數期：[2nd CLR_TVM] 期數 [N] y/m×100 [I/Y] 每期票息 [PMT] 100 [FV] [CPT] [PV]（負號是付出）', '不是整數期：c [÷] (1 + y) [y^x] t [=]，用 [STO] [+] 1 累加'],
+    boot: ['m 次：最後一筆 [÷] 剩下的錢 [=] [y^x] 期數 [1/x] [=] [−] 1 [=] [×] m [=]', '連續：最後一筆 [÷] 剩下的錢 [=] [LN] [÷] T [=]'],
+    dur: ['用 bondy 的 CF 表，把每筆改成 t × c（例：8、16、24、32、540）再 [NPV] [CPT] → Σ t·PV，[÷] B [=]'],
+    conv: ['同一個 CF 表把每筆改成 t² × c，[NPV] [CPT] 後 [÷] B'],
+    f0: ['r [×] T [=] [2nd LN] [×] S<sub>0</sub> [=]'],
+    f0i: ['I：每筆 r [×] t [=] [+/−] [2nd LN] [×] D [=]，[STO] 1 / [STO] [+] 1', 'S<sub>0</sub> [−] [RCL] 1 [=] [STO] 2；r [×] T [=] [2nd LN] [×] [RCL] 2 [=]'],
+    f0q: ['[(] r [−] q [)] [×] T [=] [2nd LN] [×] S<sub>0</sub> [=]（括號一定要加）'],
+    f0fx: ['[(] r [−] r<sub>f</sub> [)] [×] T [=] [2nd LN] [×] S<sub>0</sub> [=]'],
+    rfinv: ['F<sub>0</sub> [÷] S<sub>0</sub> [=] [LN] [÷] T [=] [STO] 1；r [−] [RCL] 1 [=]'],
+    f0u: ['U：每筆儲存成本 r [×] t [=] [+/−] [2nd LN] [×] 成本 [=]，[STO] [+] 1 累加', '[RCL] 1 [+] S<sub>0</sub> [=] [STO] 2；r [×] T [=] [2nd LN] [×] [RCL] 2 [=]'],
+    fv: ['r [×] T [=] [+/−] [2nd LN] [×] K [=] [STO] 1；S<sub>0</sub> [−] [RCL] 1 [=]'],
+    fvi: ['I 照 f0i 存 [STO] 1；r [×] (T − t) [=] [+/−] [2nd LN] [×] K [=] [STO] 2；S<sub>t</sub> [−] [RCL] 1 [−] [RCL] 2 [=]'],
+    fvq: ['q [×] (T − t) [=] [+/−] [2nd LN] [×] S<sub>t</sub> [=] [STO] 1；r [×] (T − t) [=] [+/−] [2nd LN] [×] K [=] [STO] 2；[RCL] 1 [−] [RCL] 2 [=]'],
+    irs: ['每期淨額 (浮動 − 固定) × L × Δt 先算，[×] 折現因子（r [×] t [=] [+/−] [2nd LN]），[STO] [+] 1 累加，最後 [RCL] 1'],
+    ccs: ['B<sub>D</sub> 逐筆折現存 [STO] 1、B<sub>F</sub> 存 [STO] 2；[RCL] 2 [×] S<sub>0</sub> [−] [RCL] 1 [=]（報價是「每 1 本國幣幾外幣」就改成 [÷]）'],
+    ccsf: ['F<sub>t</sub>：[(] r [−] r<sub>f</sub> [)] [×] t [=] [2nd LN] [×] S<sub>0</sub> [=]；每期淨額再折現，[STO] [+] 1 累加']
+  };
+  Object.keys(KEY).forEach(k => { if (!FM[k]) throw new Error('KEY 沒有對應公式 ' + k); });
+  const keyHtml = k => KEY[k] ? `<div class="fkey">🧮 ${KEY[k].map(kk).join('<br>')}</div>` : '';
+
+  // 每題用到的公式
+  const USE = {
+    p2_1: 'mloss mcall', p2_7: 'mloss mcall mwd', p2_24: 'mloss mcall mwd', p2_11: 'mcm', p2_13: 'fxq', p2_19: 'nstar', p2_23: 'oi',
+    p3_3: 'hstar', p3_4: 'beta0 betaadj', p3_10: 'hstar', p3_11: 'basis', p3_15: 'beta0', p3_23: 'hstar qloss nstar', p3_7: 'basis basisdir',
+    p3_13: 'hstar nstar', p3_25: 'betaadj', p3_21: 'basis basisdir', p3_22: 'hstar nstar tail',
+    p4_1: 'rc', p4_8: 'rc', p4_9: 'rc', p4_3: 'rr rc', p4_4: 'fwd', p4_13: 'fwd', p4_5: 'fwd rc fra', p4_10: 'bondz', p4_2: 'bondm boot', p4_18: 'bondy dur dB',
+    p5_2: 'f0', p5_7: 'f0 fv', p5_3: 'f0q', p5_8: 'f0q', p5_9: 'f0q', p5_10: 'f0q arb', p5_12: 'f0fx arb', p5_22: 'f0fx arb', p5_5: 'f0fx',
+    p5_13: 'f0u', p5_25: 'f0u', p5_23: 'f0q', p5_24: 'f0fx rfinv', p5_30: 'f0i fvi',
+    p7_1: 'gain net', p7_3: 'gain net', p7_22: 'gain net', p7_2: 'irs', p7_19: 'mm net',
+    x1: 'gain net', v1a: 'gain net', v1b: 'gain net', x2: 'ccs bondm', v2a: 'ccs bondm', v2b: 'ccs ccsf bondy',
+    x3: 'f0i fvi', v3a: 'f0i fvi', v3b: 'f0q fvq', x4: 'f0fx arb', v4a: 'f0fx arb', v4b: 'f0fx arb',
+    x5: 'bondy dur dB', v5a: 'bondy dur dB', v5b: 'bondy dur dB',
+    x6: 'hstar qloss nstar', v6a: 'hstar qloss nstar', v6b: 'hstar nstar', x7: 'basis basisdir', v7a: 'basis basisdir', v7b: 'basis basisdir',
+    x8: 'mloss mcall mwd', v8a: 'mloss mcall mwd', v8b: 'mloss mcall mtop', x9: 'oi', v9a: 'oi', v9b: 'oi',
+    x10: 'beta0 betaadj', v10a: 'beta0 betaadj', v10b: 'beta0 betaadj'
+  };
+
+  // 統計：考古原題、變化題、課本習題各用幾次
+  const cnt = {};
+  Object.keys(FM).forEach(k => cnt[k] = { x: 0, v: 0, p: 0 });
+  Object.entries(USE).forEach(([id, ks]) => ks.split(' ').forEach(k => { if (!cnt[k]) throw new Error('未知公式 ' + k); cnt[k][id[0]]++; }));
+  const lv = k => { const c = cnt[k]; return c.x ? 3 : c.p >= 2 ? 2 : c.p ? 1 : 0; };
+  const STAR = ['<span class="fst f0">○</span>', '<span class="fst f1">★</span>', '<span class="fst f2">★★</span>', '<span class="fst f3">★★★</span>'];
+  const useTxt = k => { const c = cnt[k], a = []; if (c.x) a.push('考古 ' + c.x); if (c.p) a.push('習題 ' + c.p); return a.length ? a.join('・') : '考古和習題沒用到'; };
+  const varTag = k => cnt[k].v ? ` <span class="fvar">變化題 ×${cnt[k].v}</span>` : '';
+
+  // 題目卡：標出公式
+  DATA.deriv.fmBox = keys => `<div class="fmbox"><b>📌 這題用到的公式</b><ul>${keys.map(k => `<li>${STAR[lv(k)]} ${FM[k][1]}${varTag(k)}${keyHtml(k)}</li>`).join('')}</ul></div>`;
+  const SPECIAL = /<kbd>(2nd|LN|CPT|STO|RCL|CF|NPV|PV|FV|PMT|N|I\/Y|y\^x|1\/x|ICONV|\+\/−)<\/kbd>/;
+  DATA.deriv.problems.forEach(pr => { if (USE[pr.id]) pr.fm = USE[pr.id].split(' '); if (pr.ba && !SPECIAL.test(pr.ba.join(' '))) delete pr.ba; });
+
+  // 大抄：照單元抄
+  const byUnit = Object.keys(UNIT).map(u => {
+    const ks = Object.keys(FM).filter(k => FM[k][0] === u).sort((a, b) => lv(b) - lv(a) || (cnt[b].x * 10 + cnt[b].p) - (cnt[a].x * 10 + cnt[a].p) || cnt[b].v - cnt[a].v);
+    return `<div class="cblk"><h4>${UNIT[u]}</h4><ul class="fmlist">${ks.map(k => `<li class="fl${lv(k)}">${STAR[lv(k)]} ${FM[k][1]} <span class="cuse">${useTxt(k)}</span>${varTag(k)}${keyHtml(k)}</li>`).join('')}</ul></div>`;
+  }).join('');
+  const sec = `<div class="cunit"><h3>照單元抄（公式總表）</h3><p class="sm-p"><span class="fst f3">★★★</span> 考古考過，一定要抄、寫大一點　<span class="fst f2">★★</span> 課本習題用到 2 次以上　<span class="fst f1">★</span> 用過 1 次　<span class="fst f0">○</span> 考古和習題沒用到，有空間再抄。星等只看考古原題和課本習題；<span class="fvar">變化題</span> 標籤表示變化題有用到這條，不影響星等。灰色小字和標籤都<b>不用抄</b>。🧮 是計算機按法，只寫在要用特殊按鍵的公式旁邊；其他只有加減乘除，直接按。</p>${byUnit}</div>`;
+  DATA.deriv.cheat = DATA.deriv.cheat.replace('<div class="cmust">', sec + '<div class="cmust">');
 })();
 // ===== 管理學 補充題：d_mgmt2.js 新卡片的題目與配對 =====
 DATA.mgmt.mcq.push(
@@ -10309,7 +10409,7 @@ function renderGames(key, root) { ARCADE.render(key, root); }
 // ---------- 衍金 textbook problems ----------
 function renderProblems(root) {
   const ALL = DATA.deriv.problems, P = UNITS.filter('deriv', ALL);
-  root.innerHTML = `<div class="tipbox"></div><div class="punits"></div><div class="quizbar"><button class="btn on" data-f="all" type="button">全部</button><button class="btn ghost" data-f="課本" type="button">老師勾選（11版）</button><button class="btn ghost" data-f="類題" type="button">課本類似題</button><button class="btn ghost" data-f="考古" type="button">考古題</button><button class="btn ghost" data-f="考古變化" type="button">考古變化題</button></div><div class="plist">${P.map(p => `<div class="prob" id="c-prob-${p.id}" data-t="習題 ${p.src}" data-l="${p.lvl}"><div class="psrc"><span class="pill ${p.lvl === '課本' ? 'good' : p.lvl === '考古' ? 'hotp' : ''}">${p.lvl}</span> ${p.src}</div><div class="qtext">${ST.lang === 'zh' || !p.qEn ? `<p>${p.q}</p>` : ST.lang === 'en' ? `<p>${p.qEn}</p>` : `<p>${p.qEn}</p><p class="zhsub">${p.q}</p>`}</div><ol class="steps">${p.steps.map(s => `<li hidden>${s}</li>`).join('')}</ol>${p.ba ? `<div class="ba" hidden><b>BA II Plus 按法</b><ul>${p.ba.map(b => `<li>${b}</li>`).join('')}</ul></div>` : ''}<div class="ans" hidden><p><b>答：</b>${p.ans}</p>${p.ansEn && ST.lang !== 'zh' ? `<p class="en-ans"><b>English answer:</b> ${p.ansEn} <button class="mini" type="button" data-say="${esc(p.ansEn)}">朗讀</button></p>` : ''}</div><div class="pbtn"><button class="btn ghost hint" type="button">下一步提示</button><button class="btn ghost reveal" type="button">看完整解答</button><label class="chk"><input type="checkbox" data-pd="${p.id}"${ST.done['P' + p.id] ? ' checked' : ''}> 我會了</label></div></div>`).join('')}</div>`;
+  root.innerHTML = `<div class="tipbox"></div><div class="punits"></div><div class="quizbar"><button class="btn on" data-f="all" type="button">全部</button><button class="btn ghost" data-f="課本" type="button">老師勾選（11版）</button><button class="btn ghost" data-f="類題" type="button">課本類似題</button><button class="btn ghost" data-f="考古" type="button">考古題</button><button class="btn ghost" data-f="考古變化" type="button">考古變化題</button></div><div class="plist">${P.map(p => `<div class="prob" id="c-prob-${p.id}" data-t="習題 ${p.src}" data-l="${p.lvl}"><div class="psrc"><span class="pill ${p.lvl === '課本' ? 'good' : p.lvl === '考古' ? 'hotp' : ''}">${p.lvl}</span> ${p.src}</div><div class="qtext">${ST.lang === 'zh' || !p.qEn ? `<p>${p.q}</p>` : ST.lang === 'en' ? `<p>${p.qEn}</p>` : `<p>${p.qEn}</p><p class="zhsub">${p.q}</p>`}</div>${p.fm ? DATA.deriv.fmBox(p.fm) : ''}<ol class="steps">${p.steps.map(s => `<li hidden>${s}</li>`).join('')}</ol>${p.ba ? `<div class="ba" hidden><b>BA II Plus 按法</b><ul>${p.ba.map(b => `<li>${b}</li>`).join('')}</ul></div>` : ''}<div class="ans" hidden><p><b>答：</b>${p.ans}</p>${p.ansEn && ST.lang !== 'zh' ? `<p class="en-ans"><b>English answer:</b> ${p.ansEn} <button class="mini" type="button" data-say="${esc(p.ansEn)}">朗讀</button></p>` : ''}</div><div class="pbtn"><button class="btn ghost hint" type="button">下一步提示</button><button class="btn ghost reveal" type="button">看完整解答</button><label class="chk"><input type="checkbox" data-pd="${p.id}"${ST.done['P' + p.id] ? ' checked' : ''}> 我會了</label></div></div>`).join('')}</div>`;
   FUN.say($('.tipbox', root), tip('prob'));
   UNITS.picker('deriv', $('.punits', root), { count: u => ALL.filter(p => p.u === u).length, total: ALL.length, label: '選單元（可多選）', onChange: () => renderProblems(root) });
   $$('[data-say]', root).forEach(b => b.onclick = () => speak(b.dataset.say));
