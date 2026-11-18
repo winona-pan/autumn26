@@ -381,7 +381,7 @@ const NOTES = (() => {
   // ---- 我的筆記頁 ----
   function page(k, root) {
     hide();
-    const cards = subjCards(DATA[k]).concat(k === 'deriv' ? DATA.deriv.problems.map(p => ({ id: 'prob-' + p.id, t: '習題 ' + p.src, prob: 1 })) : []);
+    const cards = subjCards(DATA[k]).concat(TERM.midCards(k)).concat(k === 'deriv' ? DATA.deriv.problems.map(p => ({ id: 'prob-' + p.id, t: '習題 ' + p.src, prob: 1 })) : []);
     const view = ST.ntview = ST.ntview || { f: 'all', c: '' };
     const draw = () => {
       const q = ($('#ntq', root) || {}).value ? $('#ntq', root).value.trim().toLowerCase() : '';
