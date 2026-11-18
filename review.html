@@ -9194,7 +9194,7 @@ DATA.invest.sort = [
 ];
 
 ['i7', 'i8', 'i9'].forEach(u => TERM.balance(DATA.invest.mcq.filter(q => q.u === u)));
-// ===== 衍金 期末：Ch10 選擇權市場的運作（Ch11–13 講義出來後再加） =====
+// ===== 衍金 期末：Ch10 選擇權市場的運作（Ch11–13 在 f_deriv2.js） =====
 DATA.deriv.sections.push(
   { id:'ch10', t:'Ch10 選擇權市場的運作', cards: [
     { id:'f10a', t:'選擇權是什麼？和遠期、期貨差在哪', en:'Options vs. forwards and futures',
@@ -9316,7 +9316,7 @@ DATA.deriv.sort = [
     items:[['Call，S = 55、K = 50',0], ['Put，S = 45、K = 50',0], ['Call，S = 50、K = 50',1], ['Put，S = 50、K = 50',1], ['Call，S = 45、K = 50',2], ['Put，S = 55、K = 50',2]] }
 ];
 
-// 期末大抄（目前只有 Ch10；之後的章節講義出來再補）
+// 期末大抄：Ch10 版本，f_deriv2.js 會換成 Ch10–13 完整版
 DATA.deriv.cheat = `<div class="cheat"><p class="sm-p">A4 正反面手抄：只放公式、觀念、做法，<b>不可抄考古題和習題</b>。目前只有 Ch10，Ch11–13 講義出來後會補上。</p>
 <div class="cmust"><h3>Ch10 選擇權市場</h3>
 <div class="cblk"><h4>四種部位</h4><ul><li>Long call：max(S<sub>T</sub> − K, 0) − c；兩平 K + c；最大損失 c</li><li>Short call：−max(S<sub>T</sub> − K, 0) + c；最大利潤 c、損失無限</li><li>Long put：max(K − S<sub>T</sub>, 0) − p；兩平 K − p；最大利潤 K − p</li><li>Short put：−max(K − S<sub>T</sub>, 0) + p；最大損失 K − p</li><li><b>要不要履約看 payoff，不是 profit</b></li></ul></div>
@@ -9325,6 +9325,353 @@ DATA.deriv.cheat = `<div class="cheat"><p class="sm-p">A4 正反面手抄：只�
 </div></div>`;
 
 TERM.balance(DATA.deriv.mcq.filter(q => q.u === 'ch10'));
+// ===== 衍金 期末：Ch11 股票選擇權的性質、Ch12 選擇權交易策略、Ch13 二元樹（依課本整理，講義出來再對照） =====
+DATA.deriv.sections.push(
+  { id:'ch11', t:'Ch11 股票選擇權的性質', cards: [
+    { id:'f11a', t:'影響選擇權價格的六個因素', en:'Six factors affecting option prices',
+      plain:'股價 S、履約價 K、到期時間 T、波動度 σ、無風險利率 r、股利 D。Call 喜歡 S 高、K 低、σ 高、r 高、股利少；put 幾乎全部相反，只有 σ 一樣是越高越好。',
+      life:'買權像「便宜買票的權利」：票價越高、約定價越低越值錢；票價越會亂跳（σ 大），你越可能撿到大便宜，壞的情況反正可以放棄。',
+      terms:[['volatility','波動度'],['risk-free rate','無風險利率'],['ex-dividend date','除息日']],
+      ex:'A call increases in value as S0, σ and r increase and decreases as K and dividends increase; a put behaves in the opposite way, except that it also increases in value with volatility.' },
+    { id:'f11b', t:'到期時間：美式一定加分，歐式不一定', en:'Time to expiration',
+      plain:'美式選擇權期間越長，至少不會更差（長的包含短的所有履約機會）。歐式不一定：如果短期和長期之間有一筆大股利，長期的歐式 call 可能比較便宜。',
+      life:'兩張自助餐券：一張這週有效、一張這個月有效，可以隨時用的話月券一定不會比較差。但如果只能在「最後一天」用，而中間餐廳會漲價，短期券反而可能比較划算。',
+      ex:'American options never decrease in value as time to expiration increases, but a European call can be worth less with a longer life if a large dividend is paid in between.' },
+    { id:'f11c', t:'利率和波動度為什麼這樣影響', en:'Why interest rates and volatility matter',
+      plain:'利率上升：未來要付的 K 現值變小，call 變貴、put 變便宜（其他條件不變）。波動度上升：好的情況賺更多，壞的情況最多虧權利金，所以 call 和 put 都變貴。',
+      life:'「三個月後付 100 元」的約定，利率越高，現在看起來越便宜——對要付錢的 call 方有利，對要收錢的 put 方不利。',
+      ex:'Higher volatility increases the value of both calls and puts because the holder benefits from favorable movements but has limited downside; higher r increases calls and decreases puts.' },
+    { id:'f11d', t:'選擇權價格的上下限', en:'Upper and lower bounds',
+      plain:'上限：call 不會超過股價 S0；美式 put 不超過 K、歐式 put 不超過 Ke<sup>−rT</sup>。下限（無股利歐式）：c ≥ max(S0 − Ke<sup>−rT</sup>, 0)，p ≥ max(Ke<sup>−rT</sup> − S0, 0)。',
+      life:'「用 K 買股票的權利」不可能比股票本身還貴——不然直接買股票就好。',
+      terms:[['upper bound','上限'],['lower bound','下限'],['arbitrage','套利']],
+      ex:'For a non-dividend-paying stock, c ≥ max(S0 − Ke^(−rT), 0) and p ≥ max(Ke^(−rT) − S0, 0); a call can never be worth more than the stock.' },
+    { id:'f11e', t:'價格跌破下限時怎麼套利', en:'Arbitrage when a bound is violated',
+      plain:'Call 太便宜：放空股票、買進 call、把錢存起來；到期最少能賺到差額。Put 太便宜：借錢買 put 和股票；到期最少可以用 K 賣掉股票還錢。',
+      life:'看到東西標價低於「保證回收價」，就買下來、同時鎖住賣出價，穩賺。',
+      ex:'If a European call is below S0 − Ke^(−rT), an arbitrageur can short the stock, buy the call and invest the proceeds at the risk-free rate, locking in a profit.' },
+    { id:'f11f', t:'買賣權平價 Put–call parity', en:'Put–call parity',
+      plain:'Call ＋ 到期付 K 的零息債券 ＝ Put ＋ 一股股票：c + Ke<sup>−rT</sup> = p + S0。到期時兩個組合都等於 max(S<sub>T</sub>, K)，所以今天價值相同。只適用歐式。',
+      life:'兩種保底方案：①買「便宜買股票的權利」＋存好 K 元；②直接拿股票＋買「至少能賣 K 元」的保險。最後結果都是「股票值多少拿多少，但至少拿 K」，所以今天的成本一定一樣。',
+      terms:[['put–call parity','買賣權平價'],['fiduciary call','保本買權組合'],['protective put','保護性賣權']],
+      ex:'Put–call parity states that c + Ke^(−rT) = p + S0 for European options on a non-dividend-paying stock; if it does not hold, an arbitrage opportunity exists.' },
+    { id:'f11g', t:'美式選擇權：買賣權的不等式', en:'American options: bounds on C − P',
+      plain:'美式沒有等式，只有範圍：S0 − K ≤ C − P ≤ S0 − Ke<sup>−rT</sup>（無股利）。有股利時左邊再減 D：S0 − D − K ≤ C − P ≤ S0 − Ke<sup>−rT</sup>。',
+      life:'平價是「等號」，美式因為可以提早履約，只能說「差距在某個範圍內」。',
+      ex:'For American options on a non-dividend-paying stock, S0 − K ≤ C − P ≤ S0 − Ke^(−rT).' },
+    { id:'f11h', t:'無股利美式 call 永遠不要提早履約', en:'Never exercise an American call early (no dividends)',
+      plain:'提早履約會丟掉兩樣東西：①K 晚點付的利息；②選擇權的保險功能（股價跌回 K 以下時可以不買）。想賺錢的話直接把 call 賣掉更好。所以無股利時 C = c。',
+      life:'演唱會票權利還有一個月，你現在就付錢換票，等於提早付錢、又失去「看情況不去」的彈性。想變現就把權利轉賣給別人。',
+      ex:'It is never optimal to exercise an American call on a non-dividend-paying stock early, so its value equals that of the corresponding European call.' },
+    { id:'f11i', t:'美式 put 可能值得提早履約', en:'Early exercise of American puts',
+      plain:'Put 夠深價內（股價接近 0）時，提早履約可以馬上拿到 K 去賺利息；股價也不可能再跌到 0 以下，等下去好處有限。所以 P ≥ p，而且常常 P > p。',
+      life:'機車保險說「隨時可以用 70 元賣給保險公司」。機車已經變成廢鐵了，越早拿到 70 元越早能存銀行。',
+      ex:'It can be optimal to exercise an American put early when it is sufficiently deep in the money, because the holder receives K earlier and can earn interest on it.' },
+    { id:'f11j', t:'股利的影響', en:'Effect of dividends',
+      plain:'用 D 表示選擇權期間股利的現值。下限變成 c ≥ S0 − D − Ke<sup>−rT</sup>、p ≥ D + Ke<sup>−rT</sup> − S0；平價變成 c + D + Ke<sup>−rT</sup> = p + S0。有股利時，美式 call 可能在除息日前一刻提早履約。',
+      life:'除息後股價會掉，拿 call 的人拿不到股利、還要吃股價下跌 → call 變便宜、put 變貴。',
+      ex:'With dividends, put–call parity becomes c + D + Ke^(−rT) = p + S0, and it can be optimal to exercise an American call immediately before an ex-dividend date.' }
+  ]},
+  { id:'ch12', t:'Ch12 選擇權交易策略', cards: [
+    { id:'f12a', t:'保本型商品', en:'Principal-protected notes',
+      plain:'零息債券 ＋ 買權。債券到期還本，保證本金；剩下的錢買 call 參與上漲。利率越高、零息債券越便宜，能拿來買選擇權的錢越多。',
+      life:'把 1,000 元裡的 950 元放定存，一年後剛好回到 1,000；剩下 50 元去買彩券。最壞拿回本金，運氣好就多賺。',
+      terms:[['principal-protected note','保本型商品'],['zero-coupon bond','零息債券']],
+      ex:'A principal-protected note combines a zero-coupon bond with a call option, so the investor gets the principal back plus any upside from the option.' },
+    { id:'f12b', t:'選擇權＋股票：掩護性買權、保護性賣權', en:'Covered call and protective put',
+      plain:'掩護性買權 covered call＝持有股票＋賣 call，利潤圖像像「賣 put」。保護性賣權 protective put＝持有股票＋買 put，利潤圖像像「買 call」。反向部位就是圖形上下翻轉。',
+      life:'Covered call：手上有房子，收一筆訂金答應「對方可以用某個價格跟你買」——房價大漲你只能賣在約定價。Protective put：房子買保險，跌價時有人用約定價接手。',
+      terms:[['covered call','掩護性買權'],['protective put','保護性賣權']],
+      ex:'Writing a covered call (long stock + short call) has the same profit pattern as a short put, while a protective put (long stock + long put) has the same profit pattern as a long call.' },
+    { id:'f12c', t:'多頭價差 Bull spread', en:'Bull spreads',
+      plain:'買低履約價 K1 的 call、賣高履約價 K2 的 call（K1 < K2）。期初要付錢；看漲但把獲利和損失都限住：最大收益 K2 − K1。也可以用 put 做（買 K1 put、賣 K2 put，期初收錢）。',
+      life:'你覺得票價會漲，但不會漲太多：買「100 元買票」的權利，同時把「120 元買票」的權利賣給別人換錢，最多賺 20 元的價差。',
+      terms:[['bull spread','多頭價差'],['vertical spread','垂直價差']],
+      ex:'A bull spread can be created by buying a call with strike K1 and selling a call with a higher strike K2; it limits both the upside and the downside.' },
+    { id:'f12d', t:'空頭價差 Bear spread', en:'Bear spreads',
+      plain:'買高履約價 K2 的 put、賣低履約價 K1 的 put，期初付錢；或用 call：買 K2 call、賣 K1 call，期初收錢。看跌，最大收益 K2 − K1。',
+      life:'和多頭價差是鏡像：你覺得會跌、但不會跌太多，就把獲利上限換成比較便宜的成本。',
+      terms:[['bear spread','空頭價差']],
+      ex:'A bear spread created from puts involves buying a put with a high strike and selling a put with a low strike; created from calls, it gives an initial cash inflow.' },
+    { id:'f12e', t:'箱型價差 Box spread', en:'Box spreads',
+      plain:'K1、K2 的多頭 call 價差＋同樣 K1、K2 的空頭 put 價差。到期一定拿到 K2 − K1，所以今天價值 ＝ (K2 − K1)e<sup>−rT</sup>。只對歐式成立。',
+      life:'不管票價怎麼變，最後一定拿到固定金額——等於一張零息債券。',
+      terms:[['box spread','箱型價差']],
+      ex:'A box spread combines a bull call spread and a bear put spread with the same strikes; its payoff is always K2 − K1, so its value is (K2 − K1)e^(−rT) for European options.' },
+    { id:'f12f', t:'蝴蝶價差 Butterfly spread', en:'Butterfly spreads',
+      plain:'買一個 K1 call、買一個 K3 call、賣兩個 K2 call（K2 通常在中間）。股價停在 K2 附近時賺最多（K2 − K1），跑太遠只虧小小的期初成本。適合覺得股價不太會動的人。',
+      life:'押「下週溫度剛好在 25 度附近」：猜中賺最多，猜錯也只虧一點點。',
+      terms:[['butterfly spread','蝴蝶價差']],
+      ex:'A butterfly spread involves buying calls with strikes K1 and K3 and selling two calls with strike K2; it profits if the stock price stays close to K2.' },
+    { id:'f12g', t:'日曆價差與對角價差', en:'Calendar and diagonal spreads',
+      plain:'日曆價差：同一個履約價，賣短期的、買長期的。短期到期時股價接近 K 就賺；跑太遠會小虧。對角價差：履約價和到期日都不同。',
+      life:'同樣是「100 元買票」的權利，把下週到期的賣給別人、自己留一張下個月到期的。下週如果票價剛好在 100 附近，別人的權利幾乎沒用，你手上的還值錢。',
+      terms:[['calendar spread','日曆價差'],['diagonal spread','對角價差'],['horizontal spread','水平價差']],
+      ex:'A calendar spread is created by selling a short-maturity option and buying a longer-maturity option with the same strike; it profits if the stock price is close to K when the short option expires.' },
+    { id:'f12h', t:'跨式 Straddle', en:'Straddles',
+      plain:'買同履約價、同到期日的 call 和 put。賭「會大漲或大跌，但不知道方向」。股價停在 K 附近時虧最多（兩個權利金）。兩個損益兩平點：K ± 總權利金。',
+      life:'公司要宣布重大消息，可能大好可能大壞：兩邊都押，只怕沒消息。',
+      terms:[['straddle','跨式'],['bottom straddle','買進跨式']],
+      ex:'A straddle consists of a long call and a long put with the same strike and expiration; it is profitable if there is a large move in either direction.' },
+    { id:'f12i', t:'Strip、Strap、勒式 Strangle', en:'Strips, straps and strangles',
+      plain:'Strip＝1 call＋2 puts，賭大波動、覺得跌比較可能。Strap＝2 calls＋1 put，覺得漲比較可能。Strangle＝買 K1 put＋買 K2 call（K1 < K2），比跨式便宜，但要動更大才賺。',
+      life:'Strip 是「下跌那邊多押一份」；strap 是「上漲那邊多押一份」；strangle 是兩邊都押、但押得遠一點所以比較便宜。',
+      terms:[['strip','偏空跨式（1C+2P）'],['strap','偏多跨式（2C+1P）'],['strangle','勒式']],
+      ex:'A strip is one call plus two puts, a strap is two calls plus one put, and a strangle is a put and a call with different strikes; a strangle needs a larger move than a straddle to profit.' }
+  ]},
+  { id:'ch13', t:'Ch13 二元樹', cards: [
+    { id:'f13a', t:'一期二元樹：建立無風險組合', en:'One-step tree and no-arbitrage',
+      plain:'股價只會變成 S0u 或 S0d。買 Δ 股股票、賣 1 個 call，選 Δ 讓兩種情況的組合價值一樣 → 這個組合沒有風險，只能賺無風險利率，就可以反推 call 的價格。',
+      life:'找一個「不管天氣怎樣結果都一樣」的組合：一半帶傘、一半帶太陽眼鏡，下雨晴天都剛好。沒風險的東西只能賺定存利率。',
+      terms:[['binomial tree','二元樹'],['riskless portfolio','無風險組合'],['no-arbitrage','無套利']],
+      ex:'In a one-step binomial tree, a portfolio of Δ shares and a short call is made riskless by setting Δ = (fu − fd)/(S0u − S0d); it must earn the risk-free rate.' },
+    { id:'f13b', t:'Delta Δ', en:'Delta',
+      plain:'Δ ＝ 選擇權價格變動 ÷ 股價變動 ＝ (fu − fd)/(S0u − S0d)。賣 1 個 call 要買 Δ 股避險（delta hedging）。Call 的 Δ 在 0 到 1；put 的 Δ 是負的。每一個節點的 Δ 都不一樣，要不斷調整。',
+      life:'方向盤要轉多少度，車頭才會轉一度——Δ 就是選擇權跟著股價動的比例。',
+      terms:[['delta','Delta'],['delta hedging','Delta 避險']],
+      ex:'Delta is the ratio of the change in the option price to the change in the underlying stock price; it changes from node to node in a binomial tree.' },
+    { id:'f13c', t:'風險中立評價', en:'Risk-neutral valuation',
+      plain:'假裝所有人都不在乎風險，股票期望報酬＝無風險利率。上漲機率 p = (e<sup>rΔt</sup> − d)/(u − d)，選擇權價值 ＝ 期望收益用 r 折現：f = e<sup>−rΔt</sup>[p·fu + (1 − p)·fd]。',
+      life:'不用問每個人有多怕風險，換一個「大家都只要定存利率」的世界算，答案一樣。',
+      terms:[['risk-neutral valuation','風險中立評價'],['risk-neutral probability','風險中立機率']],
+      ex:'Under risk-neutral valuation, p = (e^(rΔt) − d)/(u − d) and the option value is the expected payoff in a risk-neutral world discounted at the risk-free rate.' },
+    { id:'f13d', t:'股票的真實期望報酬不重要', en:'Irrelevance of the expected return',
+      plain:'公式裡沒有股票的真實上漲機率或期望報酬。因為我們是用「股價」本身來定選擇權的價格，股價已經反映了大家對未來的看法。',
+      life:'問「這張保險要多少錢」，看的是房子現在值多少、可能變多少，不用問你覺得房價明年會不會漲。',
+      ex:'The option value does not depend on the real-world probabilities of up and down movements or on the expected return of the stock.' },
+    { id:'f13e', t:'二期二元樹：往回推', en:'Two-step trees',
+      plain:'先算最後一排（到期）的收益，再一步一步往回用 f = e<sup>−rΔt</sup>[p·fu + (1 − p)·fd] 折現到今天。歐式也可以一次算：f = e<sup>−2rΔt</sup>[p²fuu + 2p(1 − p)fud + (1 − p)²fdd]。',
+      life:'像回推考試成績：先知道期末每種可能分數，再往回推期中要考多少。',
+      ex:'In a two-step tree, option values are calculated at the final nodes and then worked back through the tree using risk-neutral valuation at each node.' },
+    { id:'f13f', t:'美式選擇權：每個節點比較要不要提早履約', en:'American options on a tree',
+      plain:'往回推時，每個節點取「立刻履約的收益」和「繼續持有的價值」中比較大的。美式 put 常在下跌的節點提早履約，所以價格比歐式 put 高。',
+      life:'每一站都問一次：現在下車拿錢比較好，還是繼續坐？',
+      terms:[['early exercise','提早履約']],
+      ex:'For an American option, the value at each node is the greater of the value from immediate exercise and the value from continuing to hold the option.' },
+    { id:'f13g', t:'用波動度決定 u 和 d', en:'Matching volatility with u and d',
+      plain:'u = e<sup>σ√Δt</sup>、d = 1/u = e<sup>−σ√Δt</sup>（CRR）。不管在真實世界還是風險中立世界，波動度一樣，只有期望報酬不同。',
+      life:'波動度越大，每一步可能漲跌的幅度就越大，樹「張得越開」。',
+      terms:[['Cox–Ross–Rubinstein','CRR 模型'],['volatility','波動度']],
+      ex:'The parameters u = e^(σ√Δt) and d = 1/u match the stock price volatility; volatility is the same in the real world and in the risk-neutral world.' },
+    { id:'f13h', t:'步數越多，越接近 BSM', en:'Increasing the number of steps',
+      plain:'實務上會切成 30 步以上。步數越多、Δt 越小，二元樹的答案越接近 Black–Scholes–Merton 的答案。n 步的樹最後一排有 n + 1 個節點。',
+      life:'用很多小階梯來畫斜坡，階梯越細越像真正的斜坡。',
+      ex:'As the number of time steps increases, the binomial tree price converges to the Black–Scholes–Merton price.' },
+    { id:'f13i', t:'其他標的：指數、外幣、期貨', en:'Options on indices, currencies and futures',
+      plain:'只要改 p 裡的成長率 a：股價指數 a = e<sup>(r − q)Δt</sup>（q 是股利率）；外幣 a = e<sup>(r − r<sub>f</sub>)Δt</sup>；期貨 a = 1（期貨不用錢就能進場，風險中立下期望報酬為 0）。p = (a − d)/(u − d)。',
+      life:'標的本身會不會「生利息」決定它在風險中立世界長多快：指數有股利、外幣有外國利率、期貨不用本錢所以不長。',
+      ex:'For trees on other assets, p = (a − d)/(u − d) where a = e^((r − q)Δt) for an index, e^((r − rf)Δt) for a currency, and a = 1 for a futures contract.' }
+  ]}
+);
+
+// 每張卡的完整重點
+(() => {
+  const B = {
+    f11a: '<ul><li>六個因素：<b>S0 股價、K 履約價、T 到期時間、σ 波動度、r 無風險利率、D 股利</b>。</li><li>增加時的影響（其他不變）：<br>S0：call ↑、put ↓<br>K：call ↓、put ↑<br>T：美式 call ↑、美式 put ↑；歐式通常 ↑ 但不一定<br>σ：call ↑、put ↑<br>r：call ↑、put ↓<br>D：call ↓、put ↑</li><li>記法：<b>call 和股價同方向</b>，會讓股價變低的（K 高、股利多）都對 call 不利；<b>put 全部反過來，只有 σ 一樣</b>。</li></ul>',
+    f11b: '<ul><li><b>美式</b>：長期的包含短期的所有履約機會 → 價值<b>不會比較低</b>。</li><li><b>歐式</b>：只能在到期日履約。例：一個月後到期和兩個月後到期的 call，第 6 週有一筆大股利 → 股價會掉，<b>短期的 call 可能比較值錢</b>。</li><li>沒有股利時，歐式 call 也會隨 T 增加而變貴（之後會看到它跟美式一樣）。</li></ul>',
+    f11c: '<ul><li><b>波動度 σ</b>：股價變動的不確定性。對持有股票的人來說，好壞互相抵消；對選擇權買方來說，<b>好的情況收益無上限，壞的情況最多虧權利金</b> → σ ↑ 時 call 和 put 都 ↑。</li><li><b>利率 r</b>：r ↑ 時，①股票期望成長率變高；②未來現金流折現變小。對 call（未來要<b>付</b> K）有利 → call ↑；對 put（未來<b>收</b> K）不利 → put ↓。</li><li>注意：這是「其他條件不變」下的效果。現實中利率上升常伴隨股價下跌，兩個效果可能抵消。</li></ul>',
+    f11d: '<ul><li><b>上限</b>：c ≤ S0、C ≤ S0（買的權利不會比股票貴）；P ≤ K（最多拿 K）；p ≤ Ke<sup>−rT</sup>（歐式只能到期拿 K，折現）。</li><li><b>Call 下限（無股利）</b>：組合 A＝1 個 call ＋ Ke<sup>−rT</sup> 現金；組合 B＝1 股。到期 A = max(S<sub>T</sub>, K) ≥ B = S<sub>T</sub> → <b>c ≥ S0 − Ke<sup>−rT</sup></b>，又 c ≥ 0。</li><li><b>Put 下限（無股利）</b>：組合 C＝1 個 put ＋ 1 股；組合 D＝Ke<sup>−rT</sup> 現金。到期 C = max(S<sub>T</sub>, K) ≥ D = K → <b>p ≥ Ke<sup>−rT</sup> − S0</b>，又 p ≥ 0。</li><li>例：S0 = 50、K = 45、r = 6%、T = 0.5 → c ≥ 50 − 45e<sup>−0.03</sup> = 6.33。</li></ul>',
+    f11e: '<ul><li><b>Call 低於下限</b>（c &lt; S0 − Ke<sup>−rT</sup>）：放空 1 股拿到 S0 → 買 call → 剩下的 S0 − c 存起來。到期有 (S0 − c)e<sup>rT</sup> &gt; K。<br>S<sub>T</sub> &gt; K：用 K 履約買股還券；S<sub>T</sub> &lt; K：在市場用更便宜的價格買股還券。<b>兩種情況都賺</b>。</li><li><b>Put 低於下限</b>（p &lt; Ke<sup>−rT</sup> − S0）：借 S0 + p 買 1 股和 put。到期要還 (S0 + p)e<sup>rT</sup> &lt; K。<br>S<sub>T</sub> &lt; K：履約用 K 賣股；S<sub>T</sub> &gt; K：直接在市場賣更高價。還完錢一定有剩。</li><li>原則：<b>買被低估的，賣被高估的，用股票和借貸把風險抵銷</b>。</li></ul>',
+    f11f: '<ul><li><b>c + Ke<sup>−rT</sup> = p + S0</b>（歐式、無股利、同一個 K 和 T）。</li><li>證明：到期時<br>S<sub>T</sub> &gt; K：左邊 = (S<sub>T</sub> − K) + K = S<sub>T</sub>；右邊 = 0 + S<sub>T</sub> = S<sub>T</sub><br>S<sub>T</sub> &lt; K：左邊 = 0 + K = K；右邊 = (K − S<sub>T</sub>) + S<sub>T</sub> = K<br>到期都等於 max(S<sub>T</sub>, K)，歐式不能提早履約 → 今天價值也一定相等。</li><li><b>套利</b>：左邊便宜 → 買 call、存 Ke<sup>−rT</sup>，賣 put、放空股票；右邊便宜 → 買 put、買股票，賣 call、借 Ke<sup>−rT</sup>。</li><li>例：c = 4、S0 = 40、K = 40、r = 8%、T = 0.5 → p = 4 + 40e<sup>−0.04</sup> − 40 = 2.43。</li><li>移項看合成部位：<b>股票＋put ＝ call＋債券</b>（保護性賣權＝保本買權）；<b>股票＋賣 call ＝ 債券＋賣 put</b>。</li></ul>',
+    f11g: '<ul><li>美式可以提早履約，平價的等號不成立，只剩不等式：<br><b>S0 − K ≤ C − P ≤ S0 − Ke<sup>−rT</sup></b>（無股利）</li><li>有股利：<b>S0 − D − K ≤ C − P ≤ S0 − Ke<sup>−rT</sup></b>。</li><li>例：S0 = 20、K = 20、r = 5%、T = 1 → 0 ≤ C − P ≤ 20 − 19.02 = 0.98。</li><li>如果已知 C，就能算出 P 的範圍：C − (S0 − Ke<sup>−rT</sup>) ≤ P ≤ C − (S0 − K)。</li></ul>',
+    f11h: '<ul><li>提早履約的兩個損失：<br>① <b>保險價值</b>：持有 call 時，股價跌破 K 可以不買；先履約就變成持有股票，失去保護。<br>② <b>貨幣時間價值</b>：K 越晚付越好，可以多賺利息。</li><li>用下限看：C ≥ c ≥ S0 − Ke<sup>−rT</sup> &gt; S0 − K（r &gt; 0）→ call 的價值<b>永遠大於</b>立刻履約的收益 S0 − K → 賣掉 call 比履約划算。</li><li>結論：<b>無股利股票的美式 call 價值 C = 歐式 c</b>。</li><li>如果覺得股價太高、想鎖利潤：賣 call，或放空股票，都比履約好。</li></ul>',
+    f11i: '<ul><li>極端例子：K = 10、股價幾乎 0 → 立刻履約拿 10；股價不可能再更低，等下去只會<b>少賺 K 的利息</b>。</li><li>一般原則：S0 越低、r 越高、σ 越低 → 越可能值得提早履約。</li><li>所以美式 put 的價格 P ≥ p，並且 P ≥ K − S0（任何時候都可以立刻履約），曲線會在某個股價以下直接等於 K − S0。</li><li>歐式 put 深價內時，價格可能<b>低於</b>內含價值 K − S0（下限是 Ke<sup>−rT</sup> − S0）。</li></ul>',
+    f11j: '<ul><li>D＝選擇權期間股利的現值，<b>以除息日</b>折現。</li><li>下限：<b>c ≥ S0 − D − Ke<sup>−rT</sup></b>；<b>p ≥ D + Ke<sup>−rT</sup> − S0</b>。</li><li>平價：<b>c + D + Ke<sup>−rT</sup> = p + S0</b>。<br>例：c = 5、S0 = 50、K = 50、D = 1、r = 6%、T = 1 → p = 5 + 1 + 47.09 − 50 = 3.09。</li><li>美式：S0 − D − K ≤ C − P ≤ S0 − Ke<sup>−rT</sup>。</li><li>提早履約：有股利時美式 call <b>只可能在除息日前一刻</b>提早履約，其他時間都不會。</li></ul>',
+    f12a: '<ul><li>結構：<b>零息債券＋at-the-money call</b>。例：本金 1,000、3 年、r = 6% → 債券現值 1,000e<sup>−0.18</sup> = 835.27，剩 164.73 可以買選擇權。</li><li>如果 call 太貴（例如利率很低、波動很大），銀行可以調整：<b>提高履約價、限制最高報酬（cap）、加入平均價格、加入 knock-out</b>等，讓選擇權便宜一點。</li><li>投資人放棄的是：本金這段期間的利息（拿來買選擇權了）。</li><li>利率越高、債券越便宜 → 能買的選擇權越多 → 商品越好設計。</li></ul>',
+    f12b: '<ul><li><b>Covered call 掩護性買權</b>＝long 股票＋short call。股票保護了 short call 的上漲風險。利潤圖像＝short put。</li><li><b>反向</b>：short 股票＋long call ＝ long put 的圖形。</li><li><b>Protective put 保護性賣權</b>＝long 股票＋long put。利潤圖像＝long call。</li><li><b>反向</b>：short 股票＋short put ＝ short call 的圖形。</li><li>用平價記：p + S0 = c + Ke<sup>−rT</sup> + D → 股票＋put ＝ call＋現金；S0 − c = Ke<sup>−rT</sup> + D − p → 股票−call ＝ 現金−put。</li></ul>',
+    f12c: '<ul><li><b>用 call</b>：買 K1 call、賣 K2 call（K1 &lt; K2），期初<b>付錢</b>（K1 的 call 比較貴）。</li><li>到期收益：<br>S<sub>T</sub> ≤ K1：0<br>K1 &lt; S<sub>T</sub> &lt; K2：S<sub>T</sub> − K1<br>S<sub>T</sub> ≥ K2：K2 − K1</li><li>例：買 30 call 付 3、賣 35 call 收 1 → 淨成本 2。S<sub>T</sub> = 37：收益 5、利潤 3；最大損失 2、最大利潤 3。</li><li><b>用 put</b>：買 K1 put、賣 K2 put，期初<b>收錢</b>，到期收益在 −(K2 − K1) 到 0 之間。</li><li>三種類型：兩個都價外（最便宜、最積極）、一個價內一個價外、兩個都價內（最保守）。</li></ul>',
+    f12d: '<ul><li><b>用 put</b>：買 K2 put、賣 K1 put（K1 &lt; K2），期初<b>付錢</b>。</li><li>到期收益：<br>S<sub>T</sub> ≥ K2：0<br>K1 &lt; S<sub>T</sub> &lt; K2：K2 − S<sub>T</sub><br>S<sub>T</sub> ≤ K1：K2 − K1</li><li><b>用 call</b>：買 K2 call、賣 K1 call，期初<b>收錢</b>，到期收益在 −(K2 − K1) 到 0 之間。</li><li>和多頭價差一樣：用價差把成本壓低，換來獲利上限。</li></ul>',
+    f12e: '<ul><li>Box spread ＝ 多頭 call 價差（K1、K2）＋空頭 put 價差（K1、K2）。</li><li>到期收益<b>永遠 = K2 − K1</b>：<br>S<sub>T</sub> ≥ K2：call 價差 K2 − K1、put 價差 0<br>K1 &lt; S<sub>T</sub> &lt; K2：(S<sub>T</sub> − K1) + (K2 − S<sub>T</sub>) = K2 − K1<br>S<sub>T</sub> ≤ K1：0 + (K2 − K1)</li><li>所以今天價值 = <b>(K2 − K1)e<sup>−rT</sup></b>。例：K1 = 50、K2 = 60、r = 5%、T = 1 → 9.51。</li><li>市價低於理論價 → 買進 box；高於 → 賣出 box。<b>只對歐式成立</b>；美式可能被提早履約，賣 box 有風險。</li></ul>',
+    f12f: '<ul><li>買 1 個 K1 call、買 1 個 K3 call、賣 2 個 K2 call，K2 通常是 K1 和 K3 的中點。期初要付一小筆錢。</li><li>到期收益（K2 在中點）：<br>S<sub>T</sub> ≤ K1：0<br>K1 &lt; S<sub>T</sub> ≤ K2：S<sub>T</sub> − K1<br>K2 &lt; S<sub>T</sub> &lt; K3：K3 − S<sub>T</sub><br>S<sub>T</sub> ≥ K3：0</li><li>例：K = 50、55、60，S<sub>T</sub> = 57 → (57 − 50) − 2 × (57 − 55) = 3。最大收益在 S<sub>T</sub> = 55：5。</li><li>也可以用 put 做：買 K1 put、K3 put，賣 2 個 K2 put，結果一樣（由平價）。</li><li>反向（賣出蝴蝶）：預期會大動時用。</li></ul>',
+    f12g: '<ul><li><b>Calendar spread</b>：同 K，<b>賣短期、買長期</b>。長期的比較貴 → 期初付錢。</li><li>短期選擇權到期時（假設長期的那時賣掉）：<br>S<sub>T</sub> 接近 K：短期的幾乎 0、長期的還有時間價值 → <b>賺</b><br>S<sub>T</sub> 遠高或遠低於 K：兩個價值接近 → 小虧</li><li>Neutral（K 接近現價）、bullish（K 較高）、bearish（K 較低）。</li><li>反向 calendar：買短期、賣長期，股價大動時賺。</li><li><b>Diagonal spread</b>：K 和到期日都不同。<b>Vertical</b>（bull、bear）：不同 K、同到期日。</li></ul>',
+    f12h: '<ul><li>買 1 個 call ＋ 1 個 put，<b>同 K、同到期日</b>。</li><li>到期收益 = |S<sub>T</sub> − K|；利潤 = |S<sub>T</sub> − K| − (c + p)。</li><li>例：K = 40、c = 4、p = 3 → 成本 7。S<sub>T</sub> = 50：利潤 3；S<sub>T</sub> = 40：虧 7（最大損失）。損益兩平：<b>33 和 47</b>。</li><li>適合：預期有重大消息（併購、財報、官司），但不知道方向。</li><li>注意：如果市場也預期會大動，選擇權價格已經很貴，straddle 不一定賺。</li><li><b>賣出跨式</b>（top straddle）：股價不太動時賺權利金，但大漲時損失<b>無限</b>，風險很高。</li></ul>',
+    f12i: '<ul><li><b>Strip</b>＝1 call＋2 puts（同 K、同 T）：賭大波動，覺得<b>跌</b>比較可能。</li><li><b>Strap</b>＝2 calls＋1 put：賭大波動，覺得<b>漲</b>比較可能。</li><li><b>Strangle</b>＝買 K1 put＋買 K2 call（K1 &lt; K2，通常兩個都價外）：<br>S<sub>T</sub> ≤ K1：收益 K1 − S<sub>T</sub><br>K1 &lt; S<sub>T</sub> &lt; K2：0<br>S<sub>T</sub> ≥ K2：S<sub>T</sub> − K2</li><li>例：45 put＋55 call，成本 3：S<sub>T</sub> = 60 → 利潤 2；S<sub>T</sub> = 50 → 虧 3。兩平 42 和 58。</li><li>Strangle 比 straddle 便宜，但股價要動<b>更遠</b>才賺；K 拉得越開，越便宜、越需要大波動。賣出 strangle 的風險同樣無限。</li><li>Other payoffs：如果每個履約價都有歐式選擇權，理論上可以組合出任何到期收益形狀（用蝴蝶價差拼出小尖塔）。</li></ul>',
+    f13a: '<ul><li>假設：股價一步後只有兩種：S0u 或 S0d（u &gt; 1、d &lt; 1）。選擇權對應 f<sub>u</sub>、f<sub>d</sub>。</li><li>組合：<b>long Δ 股＋short 1 個選擇權</b>。讓兩種結果相等：S0uΔ − f<sub>u</sub> = S0dΔ − f<sub>d</sub> → <b>Δ = (f<sub>u</sub> − f<sub>d</sub>)/(S0u − S0d)</b>。</li><li>無風險 → 今天成本 S0Δ − f = 到期價值 × e<sup>−rΔt</sup>，解出 f。</li><li>例：S0 = 40、u = 1.2、d = 0.8、K = 42、r = 6%、Δt = 0.5。<br>S0u = 48 → f<sub>u</sub> = 6；S0d = 32 → f<sub>d</sub> = 0<br>Δ = 6/16 = 0.375；到期組合價值 48 × 0.375 − 6 = 32 × 0.375 = 12<br>今天價值 12e<sup>−0.03</sup> = 11.645 = 40 × 0.375 − f → <b>f = 3.355</b></li></ul>',
+    f13b: '<ul><li><b>Δ = 選擇權價格變動 ÷ 股價變動</b>。</li><li>建立無風險組合時，每賣 1 個 call 要買 Δ 股——這叫 <b>delta hedging</b>。</li><li>Call：0 ≤ Δ ≤ 1；put：−1 ≤ Δ ≤ 0（股價漲、put 跌）。</li><li>二元樹中每個節點的 Δ 都不同。例：二期樹裡上漲節點的 Δ 可能是 0.7、下跌節點是 0 → 避險部位要<b>隨時間調整</b>（動態避險）。</li></ul>',
+    f13c: '<ul><li>把一期公式整理：<b>f = e<sup>−rΔt</sup>[p f<sub>u</sub> + (1 − p) f<sub>d</sub>]</b>，其中 <b>p = (e<sup>rΔt</sup> − d)/(u − d)</b>。</li><li>p 可以解釋成「風險中立世界的上漲機率」：在這個機率下，股票期望價格 pS0u + (1 − p)S0d = S0e<sup>rΔt</sup>，也就是股票期望報酬＝無風險利率。</li><li><b>風險中立評價</b>：①假設所有資產期望報酬 = r；②算選擇權的期望收益；③用 r 折現。結果在真實世界也成立。</li><li>例：u = 1.1、d = 0.9、r = 4%、Δt = 0.25 → p = (e<sup>0.01</sup> − 0.9)/0.2 = 0.5503。</li><li>無套利條件：d &lt; e<sup>rΔt</sup> &lt; u，否則 p 不在 0 和 1 之間。</li></ul>',
+    f13d: '<ul><li>公式裡沒有：<b>股票的真實上漲機率 p*、真實期望報酬 μ、投資人的風險偏好</b>。</li><li>直覺：我們是用「已知的股價」去定選擇權的價格（相對評價），股價已經反映了市場對未來的看法和風險偏好。</li><li>如果用真實世界的機率算期望收益，就必須用一個「選擇權的風險調整折現率」——這個折現率很難直接知道，而且通常比股票的還高（call 槓桿大）。</li></ul>',
+    f13e: '<ul><li>每一步時間 Δt，每一步都乘 u 或 d：節點股價 S0u²、S0ud、S0d²（ud 和 du 是同一個節點）。</li><li>步驟：①算最後一排收益；②每個節點用 f = e<sup>−rΔt</sup>[p f<sub>上</sub> + (1 − p) f<sub>下</sub>] 往回推；③推到今天。</li><li>歐式也可以一次算：<b>f = e<sup>−2rΔt</sup>[p² f<sub>uu</sub> + 2p(1 − p) f<sub>ud</sub> + (1 − p)² f<sub>dd</sub>]</b>。</li><li>例：S0 = 50、u = 1.1、d = 0.9、K = 52、r = 4%、Δt = 0.25 → 到期 60.5、49.5、40.5，只有最上面收益 8.5 → f = e<sup>−0.02</sup> × 0.5503² × 8.5 = 2.52。</li></ul>',
+    f13f: '<ul><li>從最後一排往回推，每個中間節點：<b>節點價值 = max(立刻履約收益, e<sup>−rΔt</sup>[p f<sub>上</sub> + (1 − p) f<sub>下</sub>])</b>。今天（第 0 個節點）也要比較。</li><li>例（美式 put）：S0 = 50、u = 1.2、d = 0.8、K = 54、r = 5%、Δt = 1，兩步。p = 0.6282。<br>到期 72、48、32 → 收益 0、6、22<br>上漲節點 S = 60：持有 2.12、履約 0 → 2.12<br>下跌節點 S = 40：持有 11.37、<b>履約 14</b> → 取 14（提早履約）<br>今天：e<sup>−0.05</sup>[0.6282 × 2.12 + 0.3718 × 14] = 6.22 &gt; 履約 4 → <b>美式 put = 6.22</b>（歐式只有 5.29）</li></ul>',
+    f13g: '<ul><li>讓二元樹每一步報酬的變異數 = σ²Δt，得到 <b>u = e<sup>σ√Δt</sup>、d = 1/u = e<sup>−σ√Δt</sup></b>（Cox–Ross–Rubinstein）。</li><li>例：σ = 30%、Δt = 0.25 → u = e<sup>0.15</sup> = 1.1618、d = 0.8607。</li><li><b>真實世界和風險中立世界的 σ 相同</b>，只有期望報酬不同（μ 換成 r），所以不管哪個世界，u、d 公式都一樣（Girsanov 定理）。</li><li>真實世界機率 p* = (e<sup>μΔt</sup> − d)/(u − d)；風險中立 p = (e<sup>rΔt</sup> − d)/(u − d)。</li></ul>',
+    f13h: '<ul><li>兩步、三步的樹只是教學用；實務上至少 <b>30 步</b>。</li><li>n 步的樹：最後一排有 <b>n + 1</b> 個節點，總共有 2<sup>n</sup> 條路徑。</li><li>步數越多，二元樹的歐式價格越接近 <b>Black–Scholes–Merton</b> 的答案（BSM 可以看成無限多步的二元樹）。</li><li>美式選擇權沒有 BSM 公式，實務上就靠二元樹算。</li></ul>',
+    f13i: '<ul><li>通式：<b>p = (a − d)/(u − d)</b>，u = e<sup>σ√Δt</sup>、d = 1/u。</li><li><b>無股利股票</b>：a = e<sup>rΔt</sup></li><li><b>股價指數</b>（股利率 q）：a = e<sup>(r − q)Δt</sup>。例：r = 5%、q = 3%、Δt = 0.5、u = 1.1、d = 0.9 → p = (e<sup>0.01</sup> − 0.9)/0.2 = 0.55。</li><li><b>外幣</b>（外國利率 r<sub>f</sub>）：a = e<sup>(r − r<sub>f</sub>)Δt</sup>（外幣像是付「r<sub>f</sub> 股利率」的資產）。</li><li><b>期貨</b>：進場不用錢，風險中立下期望成長率 = 0 → a = 1，<b>p = (1 − d)/(u − d)</b>。例：u = 1.1、d = 0.9 → p = 0.5。</li></ul>'
+  };
+  DATA.deriv.sections.forEach(s => s.cards.forEach(c => { if (B[c.id]) c.body = B[c.id]; }));
+})();
+
+DATA.deriv.formulas.push(
+  { id:'F26', t:'歐式選擇權的下限', en:'Lower bounds for European options',
+    q:'Call 和 put 至少值多少？低於這個價格就有套利機會。',
+    tex:'<v s="c">c</v> ≥ max(<v s="s">S<sub>0</sub></v> − <v s="d">D</v> − <v s="k">K</v>e<sup>−<v s="r">r</v><v s="t">T</v></sup>, 0)　<v s="p">p</v> ≥ max(<v s="d">D</v> + <v s="k">K</v>e<sup>−<v s="r">r</v><v s="t">T</v></sup> − <v s="s">S<sub>0</sub></v>, 0)',
+    syms:{ c:['歐式買權','European call price','只能到期履約的 call'], p:['歐式賣權','European put price','只能到期履約的 put'], s:['目前股價','current stock price','今天的股價'], d:['股利現值','PV of dividends','選擇權期間股利的現值；無股利就是 0'], k:['履約價','strike price','約定價格'], r:['無風險利率','risk-free rate','連續複利'], t:['到期時間','time to maturity','以年為單位'] },
+    why:'Call 組合：一個 call ＋ D + Ke<sup>−rT</sup> 的現金，到期至少和一股股票一樣值錢，所以 c + D + Ke<sup>−rT</sup> ≥ S0。Put 組合：一個 put ＋ 一股股票，到期至少值 K（加上股利），所以 p + S0 ≥ D + Ke<sup>−rT</sup>。',
+    steps:['算 K 的現值 Ke<sup>−rT</sup>','有股利就算 D（每筆股利用除息日折現）','call：S0 − D − PV(K)；put：D + PV(K) − S0','負的就是 0'],
+    vars:[{k:'s',s:'S0',v:50,min:0,max:200,step:1},{k:'k',s:'K',v:45,min:1,max:200,step:1},{k:'r',s:'r（%）',v:6,min:0,max:20,step:0.5},{k:'t',s:'T（年）',v:0.5,min:0.05,max:3,step:0.05},{k:'d',s:'D 股利現值',v:0,min:0,max:20,step:0.1}],
+    calc:v=>{const pk=v.k*Math.exp(-v.r/100*v.t);return `PV(K) = ${v.k}e<sup>−${v.r/100}×${v.t}</sup> = ${fx(pk,4)}<br>Call 下限 = max(${v.s} − ${v.d} − ${fx(pk,4)}, 0) = <b>${fx(Math.max(v.s-v.d-pk,0),4)}</b><br>Put 下限 = max(${v.d} + ${fx(pk,4)} − ${v.s}, 0) = <b>${fx(Math.max(v.d+pk-v.s,0),4)}</b>`;},
+    oops:['K 忘了折現','有股利時 call 忘了減 D、put 忘了加 D','美式 put 的下限是 K − S0（可以立刻履約），不用折現'], exam:'For a non-dividend-paying stock, a European call is worth at least S0 − Ke^(−rT) and a European put is worth at least Ke^(−rT) − S0.', cfa:'CFA Derivatives：option bounds' },
+  { id:'F27', t:'買賣權平價', en:'Put–call parity',
+    q:'知道 call 價格，同一個 K、T 的歐式 put 應該值多少？',
+    tex:'<v s="c">c</v> + <v s="d">D</v> + <v s="k">K</v>e<sup>−<v s="r">r</v><v s="t">T</v></sup> = <v s="p">p</v> + <v s="s">S<sub>0</sub></v>',
+    syms:{ c:['歐式買權','European call price','同一個 K、T'], p:['歐式賣權','European put price','同一個 K、T'], s:['目前股價','current stock price','今天的股價'], d:['股利現值','PV of dividends','無股利就是 0'], k:['履約價','strike price','約定價格'], r:['無風險利率','risk-free rate','連續複利'], t:['到期時間','time to maturity','以年為單位'] },
+    why:'左邊（call ＋ 債券）和右邊（put ＋ 股票）到期都等於 max(S<sub>T</sub>, K)，到期價值一樣，今天價格就一定一樣，否則買便宜的、賣貴的就能套利。',
+    steps:['算 PV(K) = Ke<sup>−rT</sup>（有股利再加 D）','比較 c + D + PV(K) 和 p + S0','相等：沒套利；不相等：買便宜那邊、賣貴那邊'],
+    vars:[{k:'c',s:'c',v:4,min:0,max:100,step:0.01},{k:'s',s:'S0',v:40,min:1,max:300,step:1},{k:'k',s:'K',v:40,min:1,max:300,step:1},{k:'r',s:'r（%）',v:8,min:0,max:20,step:0.5},{k:'t',s:'T（年）',v:0.5,min:0.05,max:3,step:0.05},{k:'d',s:'D 股利現值',v:0,min:0,max:20,step:0.1},{k:'p',s:'市場上的 p',v:2.25,min:0,max:100,step:0.01}],
+    calc:v=>{const pk=v.k*Math.exp(-v.r/100*v.t),L=v.c+v.d+pk,R=v.p+v.s,pp=L-v.s;return `理論 p = c + D + PV(K) − S0 = ${v.c} + ${v.d} + ${fx(pk,4)} − ${v.s} = <b>${fx(pp,4)}</b><br>左邊 c + D + PV(K) = ${fx(L,4)}；右邊 p + S0 = ${fx(R,4)}<br>${Math.abs(L-R)<0.005?'兩邊相等，沒有套利機會':L<R?'右邊比較貴 → <b>買 call、賣 put、放空股票</b>，剩下的錢存起來，到期賺 '+fx((R-L)*Math.exp(v.r/100*v.t),4):'左邊比較貴 → <b>買 put、買股票、賣 call</b>，不足的錢用借的，到期賺 '+fx((L-R)*Math.exp(v.r/100*v.t),4)}`;},
+    oops:['用在美式選擇權（美式只有不等式）','K 忘了折現','套利方向弄反：永遠是買便宜那邊、賣貴那邊'], exam:'Put–call parity: c + Ke^(−rT) = p + S0 for European options; with dividends, c + D + Ke^(−rT) = p + S0.', cfa:'CFA Derivatives：put–call parity' },
+  { id:'F28', t:'價差與組合策略的收益', en:'Payoffs of spreads and combinations',
+    q:'到期股價 S<sub>T</sub>，各種策略各拿到多少（還沒扣成本）？',
+    tex:'多頭 call 價差：max(<v s="st">S<sub>T</sub></v> − <v s="k1">K<sub>1</sub></v>, 0) − max(<v s="st">S<sub>T</sub></v> − <v s="k2">K<sub>2</sub></v>, 0)　蝴蝶：c(<v s="k1">K<sub>1</sub></v>) + c(<v s="k3">K<sub>3</sub></v>) − 2c(<v s="k2">K<sub>2</sub></v>)　跨式：|<v s="st">S<sub>T</sub></v> − <v s="k2">K<sub>2</sub></v>|',
+    syms:{ st:['到期股價','stock price at maturity','到期當天'], k1:['低履約價','lower strike','K1 < K2 < K3'], k2:['中間履約價','middle strike','蝴蝶賣兩個；跨式用這個'], k3:['高履約價','higher strike','蝴蝶的另一邊'] },
+    why:'每個策略就是幾個 call、put 的收益加加減減。畫圖時先畫每個選擇權的收益線，再疊起來；轉折點一定在履約價。',
+    steps:['把策略拆成「買幾個、賣幾個、哪個 K」','每一個分別算 max(S<sub>T</sub> − K, 0) 或 max(K − S<sub>T</sub>, 0)','買的加、賣的減','要算利潤再扣掉期初淨成本'],
+    vars:[{k:'st',s:'S<sub>T</sub>',v:57,min:0,max:150,step:1},{k:'k1',s:'K1',v:50,min:1,max:150,step:1},{k:'k2',s:'K2',v:55,min:1,max:150,step:1},{k:'k3',s:'K3',v:60,min:1,max:150,step:1}],
+    calc:v=>{const C=k=>Math.max(v.st-k,0),P=k=>Math.max(k-v.st,0);return `多頭 call 價差（買 K1、賣 K2）：<b>${C(v.k1)-C(v.k2)}</b><br>空頭 put 價差（買 K2、賣 K1）：<b>${P(v.k2)-P(v.k1)}</b><br>蝴蝶（買 K1、K3，賣 2 個 K2）：<b>${C(v.k1)+C(v.k3)-2*C(v.k2)}</b><br>跨式（K2 的 call＋put）：<b>${C(v.k2)+P(v.k2)}</b><br>勒式（K1 put＋K3 call）：<b>${P(v.k1)+C(v.k3)}</b><br>Strip（1C＋2P，K2）：<b>${C(v.k2)+2*P(v.k2)}</b>　Strap（2C＋1P，K2）：<b>${2*C(v.k2)+P(v.k2)}</b>`;},
+    oops:['蝴蝶中間要賣「兩個」','收益（payoff）和利潤（profit）搞混：利潤要扣期初成本','空頭 call 價差是期初收錢、多頭 call 價差是期初付錢'], exam:'The payoff from a bull call spread is max(ST − K1, 0) − max(ST − K2, 0), which lies between 0 and K2 − K1.', cfa:'CFA Derivatives：option strategies' },
+  { id:'F29', t:'一期二元樹', en:'One-step binomial tree',
+    q:'股價只會漲到 S0u 或跌到 S0d，call 今天值多少？',
+    tex:'<v s="p">p</v> = (e<sup><v s="r">r</v><v s="t">Δt</v></sup> − <v s="d">d</v>) / (<v s="u">u</v> − <v s="d">d</v>)　<v s="f">f</v> = e<sup>−<v s="r">r</v><v s="t">Δt</v></sup>[<v s="p">p</v>·f<sub>u</sub> + (1 − <v s="p">p</v>)·f<sub>d</sub>]　Δ = (f<sub>u</sub> − f<sub>d</sub>)/(S<sub>0</sub><v s="u">u</v> − S<sub>0</sub><v s="d">d</v>)',
+    syms:{ p:['風險中立上漲機率','risk-neutral probability','不是真實機率'], r:['無風險利率','risk-free rate','連續複利'], t:['一步的時間','time step','以年為單位'], u:['上漲倍數','up factor','漲後股價 ÷ 現在股價'], d:['下跌倍數','down factor','跌後股價 ÷ 現在股價'], f:['選擇權價值','option value','今天的價格'] },
+    why:'買 Δ 股、賣 1 個 call，兩種結果價值相同 → 無風險 → 用 r 折現等於今天的成本 S0Δ − f，解出 f。整理後就是風險中立公式。',
+    steps:['算兩個節點的股價 S0u、S0d','算兩個節點的收益 fu、fd','p = (e<sup>rΔt</sup> − d)/(u − d)','f = e<sup>−rΔt</sup>[p·fu + (1 − p)·fd]','（需要時）Δ = (fu − fd)/(S0u − S0d)'],
+    vars:[{k:'s',s:'S0',v:40,min:1,max:300,step:1},{k:'u',s:'u',v:1.2,min:1.01,max:2,step:0.01},{k:'d',s:'d',v:0.8,min:0.3,max:0.99,step:0.01},{k:'k',s:'K',v:42,min:1,max:300,step:1},{k:'r',s:'r（%）',v:6,min:0,max:20,step:0.5},{k:'t',s:'Δt（年）',v:0.5,min:0.05,max:2,step:0.05}],
+    calc:v=>{const Su=v.s*v.u,Sd=v.s*v.d,cu=Math.max(Su-v.k,0),cd=Math.max(Sd-v.k,0),pu=Math.max(v.k-Su,0),pd=Math.max(v.k-Sd,0),g=Math.exp(v.r/100*v.t),p=(g-v.d)/(v.u-v.d);if(p<=0||p>=1)return '這組 u、d、r 不合理（p 要在 0 和 1 之間）';const c=(p*cu+(1-p)*cd)/g,pp=(p*pu+(1-p)*pd)/g;return `S0u = ${fx(Su,4)}、S0d = ${fx(Sd,4)}<br>p = (${fx(g,6)} − ${v.d})/(${v.u} − ${v.d}) = <b>${fx(p,4)}</b><br>Call：fu = ${fx(cu,4)}、fd = ${fx(cd,4)} → f = <b>${fx(c,4)}</b>，Δ = ${fx((cu-cd)/(Su-Sd),4)}<br>Put：fu = ${fx(pu,4)}、fd = ${fx(pd,4)} → f = <b>${fx(pp,4)}</b>，Δ = ${fx((pu-pd)/(Su-Sd),4)}`;},
+    oops:['用真實機率算（要用風險中立機率 p）','折現忘了乘 Δt','Δ 的分母是「股價差」，不是 u − d'], exam:'In a one-step binomial tree, p = (e^(rΔt) − d)/(u − d) and f = e^(−rΔt)[p fu + (1 − p) fd].', cfa:'CFA Derivatives：binomial model' },
+  { id:'F30', t:'CRR：用波動度算 u、d', en:'u and d from volatility',
+    q:'已知年波動度 σ 和每一步時間 Δt，u、d、p 是多少？',
+    tex:'<v s="u">u</v> = e<sup><v s="sg">σ</v>√<v s="t">Δt</v></sup>　<v s="d">d</v> = 1/<v s="u">u</v>　<v s="p">p</v> = (<v s="a">a</v> − <v s="d">d</v>)/(<v s="u">u</v> − <v s="d">d</v>)',
+    syms:{ u:['上漲倍數','up factor','每一步上漲的倍數'], d:['下跌倍數','down factor','等於 1/u'], sg:['波動度','volatility','年化標準差'], t:['一步的時間','time step','T ÷ 步數'], p:['風險中立機率','risk-neutral probability','上漲的機率'], a:['成長因子','growth factor','股票 e<sup>rΔt</sup>、指數 e<sup>(r−q)Δt</sup>、外幣 e<sup>(r−rf)Δt</sup>、期貨 1'] },
+    why:'讓二元樹每一步報酬的變異數等於 σ²Δt，就得到 u = e<sup>σ√Δt</sup>。真實世界和風險中立世界的波動度相同，只有期望報酬不同。',
+    steps:['Δt = T ÷ 步數','u = e<sup>σ√Δt</sup>、d = 1/u','看標的決定 a','p = (a − d)/(u − d)'],
+    vars:[{k:'sg',s:'σ（%）',v:30,min:1,max:100,step:1},{k:'t',s:'Δt（年）',v:0.25,min:0.01,max:2,step:0.01},{k:'r',s:'r（%）',v:5,min:0,max:20,step:0.5},{k:'q',s:'q 或 r<sub>f</sub>（%）',v:0,min:0,max:20,step:0.5}],
+    calc:v=>{const u=Math.exp(v.sg/100*Math.sqrt(v.t)),d=1/u,a1=Math.exp(v.r/100*v.t),a2=Math.exp((v.r-v.q)/100*v.t),P=a=>fx((a-d)/(u-d),4);return `u = e<sup>${v.sg/100}×√${v.t}</sup> = <b>${fx(u,4)}</b>，d = <b>${fx(d,4)}</b><br>無股利股票 p = ${P(a1)}<br>指數（q）或外幣（r<sub>f</sub>）p = ${P(a2)}<br>期貨 p = (1 − d)/(u − d) = ${P(1)}`;},
+    oops:['σ 忘了乘 √Δt','d 寫成 1 − u（應該是 1/u）','期貨的 a 寫成 e<sup>rΔt</sup>（應該是 1）'], exam:'To match volatility, u = e^(σ√Δt) and d = 1/u; for a futures option, p = (1 − d)/(u − d).', cfa:'CFA Derivatives：binomial model' },
+  { id:'F31', t:'二期二元樹（歐式與美式）', en:'Two-step binomial tree',
+    q:'兩步的樹，歐式 call、歐式 put 和美式 put 各值多少？',
+    tex:'歐式：<v s="f">f</v> = e<sup>−2<v s="r">r</v>Δt</sup>[<v s="p">p</v>²f<sub>uu</sub> + 2<v s="p">p</v>(1 − <v s="p">p</v>)f<sub>ud</sub> + (1 − <v s="p">p</v>)²f<sub>dd</sub>]　美式：每個節點取 max(立刻履約, 繼續持有)',
+    syms:{ f:['選擇權價值','option value','今天的價格'], r:['無風險利率','risk-free rate','連續複利'], p:['風險中立機率','risk-neutral probability','(e<sup>rΔt</sup> − d)/(u − d)'] },
+    why:'從最後一排往回推，每一步都用風險中立機率取期望值再折現一步。美式在每個中間節點都要跟立刻履約的收益比較，取大的。',
+    steps:['畫樹：S0u²、S0ud、S0d²','算最後一排收益','往回推一步：e<sup>−rΔt</sup>[p·上 + (1 − p)·下]','美式：每個節點和立刻履約比較，取大的','再推回今天（美式也要比較今天立刻履約）'],
+    vars:[{k:'s',s:'S0',v:50,min:1,max:300,step:1},{k:'u',s:'u',v:1.2,min:1.01,max:2,step:0.01},{k:'d',s:'d',v:0.8,min:0.3,max:0.99,step:0.01},{k:'k',s:'K',v:54,min:1,max:300,step:1},{k:'r',s:'r（%）',v:5,min:0,max:20,step:0.5},{k:'t',s:'Δt（年）',v:1,min:0.05,max:2,step:0.05}],
+    calc:v=>{const g=Math.exp(v.r/100*v.t),p=(g-v.d)/(v.u-v.d);if(p<=0||p>=1)return '這組 u、d、r 不合理（p 要在 0 和 1 之間）';const S=[[v.s],[v.s*v.u,v.s*v.d],[v.s*v.u*v.u,v.s*v.u*v.d,v.s*v.d*v.d]];const back=(pay,am)=>{let f=S[2].map(pay);const out=[];for(let i=1;i>=0;i--){f=S[i].map((x,j)=>{const h=(p*f[j]+(1-p)*f[j+1])/g;return am?Math.max(h,pay(x)):h;});out.unshift(f);}return out;};const C=back(x=>Math.max(x-v.k,0),0),PE=back(x=>Math.max(v.k-x,0),0),PA=back(x=>Math.max(v.k-x,0),1);const ex=[1,0].map(j=>PA[1][j]>PE[1][j]+1e-9?`${j?'下跌':'上漲'}節點（S = ${fx(S[1][j],4)}）提早履約：${fx(v.k-S[1][j],4)} > 繼續持有 ${fx(PE[1][j],4)}`:'').filter(Boolean);return `p = <b>${fx(p,4)}</b>；到期股價 ${S[2].map(x=>fx(x,4)).join('、')}<br>歐式 call = <b>${fx(C[0][0],4)}</b><br>歐式 put = <b>${fx(PE[0][0],4)}</b><br>美式 put = <b>${fx(PA[0][0],4)}</b>${ex.length?'<br>'+ex.join('<br>'):''}`;},
+    oops:['美式忘了在中間節點比較立刻履約','中間節點 ud 只有一個（不是兩個）','最後一排算對了，往回推忘了折現'], exam:'For an American option on a tree, the value at each node is max(immediate exercise payoff, discounted risk-neutral expected value).', cfa:'CFA Derivatives：binomial model' }
+);
+
+DATA.deriv.mcq.push(
+  // ---- Ch11 ----
+  {u:'ch11', q:'Holding other factors constant, an increase in the stock price volatility will:', o:['Increase the value of calls and decrease the value of puts','Increase the value of both calls and puts','Decrease the value of both calls and puts','Have no effect on European options'], a:1, e:'波動度上升：好的情況賺更多，壞的情況最多虧權利金 → call 和 put 都變貴。'},
+  {u:'ch11', q:'Holding other factors constant, an increase in the risk-free interest rate will usually:', o:['Increase call prices and decrease put prices','Decrease call prices and increase put prices','Increase both call and put prices','Decrease both call and put prices'], a:0, e:'利率上升 → 未來要付（call）或收（put）的 K 現值變小：對 call 有利、對 put 不利。'},
+  {u:'ch11', q:'An increase in the expected dividends during the life of the option will:', o:['Increase the call price and the put price','Decrease the call price and increase the put price','Increase the call price and decrease the put price','Have no effect on option prices'], a:1, e:'除息後股價下跌 → call 變便宜、put 變貴。'},
+  {u:'ch11', q:'For which option can a longer time to expiration lead to a lower price?', o:['American call','American put','European call when a large dividend is expected in between','None, all options increase with time to expiration'], a:2, e:'美式期間越長一定不會更差；歐式如果中間有大額股利，長期的 call 可能比較便宜。'},
+  {u:'ch11', q:'What is the upper bound for the price of a European put option?', o:['S0','K','Ke^(−rT)','S0 − Ke^(−rT)'], a:2, e:'歐式 put 到期最多拿到 K，所以今天不超過 Ke^(−rT)。美式 put 上限是 K。'},
+  {u:'ch11', q:'A call option can never be worth more than:', o:['The strike price','The stock price','The present value of the strike price','The put price'], a:1, e:'Call 是「用 K 買股票的權利」，不可能比股票本身貴，所以 c ≤ S0、C ≤ S0。'},
+  {u:'ch11', q:'S0 = $50, K = $45, r = 6% (continuous), T = 6 months, no dividends. What is the lower bound for a European call?', o:['$5.00','$6.33','$3.67','$0'], a:1, e:'50 − 45e^(−0.06×0.5) = 50 − 43.67 = 6.33。'},
+  {u:'ch11', q:'S0 = $30, K = $34, r = 5%, T = 3 months, no dividends. What is the lower bound for a European put?', o:['$4.00','$3.58','$4.42','$0'], a:1, e:'34e^(−0.05×0.25) − 30 = 33.58 − 30 = 3.58。'},
+  {u:'ch11', q:'A European call is priced below its lower bound S0 − Ke^(−rT). Which strategy locks in an arbitrage profit?', o:['Buy the stock and sell the call','Short the stock, buy the call, and invest the proceeds at the risk-free rate','Buy the call and borrow to buy the stock','Sell the call and buy a put'], a:1, e:'Call 太便宜 → 買 call；放空股票拿到 S0，扣掉 call 成本後存起來。到期至少可用 K 買回股票。'},
+  {u:'ch11', q:'c = $4, S0 = $40, K = $40, r = 8%, T = 6 months, no dividends. By put–call parity the European put should be worth about:', o:['$2.43','$4.00','$5.57','$1.57'], a:0, e:'p = c + Ke^(−rT) − S0 = 4 + 40e^(−0.04) − 40 = 4 + 38.43 − 40 = 2.43。'},
+  {u:'ch11', q:'c = $3, p = $2.50, S0 = $31, K = $30, r = 10%, T = 3 months. Which strategy exploits the mispricing?', o:['Buy the put and the stock, sell the call','Buy the call, sell the put, and short the stock','Buy the call and the put','No arbitrage exists'], a:1, e:'c + Ke^(−rT) = 3 + 29.26 = 32.26 < p + S0 = 33.50 → 右邊貴：賣 put、放空股票，買 call，剩下的錢存起來。'},
+  {u:'ch11', q:'Which two portfolios are both worth max(ST, K) at expiration?', o:['A call plus a share; a put plus cash Ke^(−rT)','A call plus a zero-coupon bond paying K; a put plus a share','A long call and a short put','A put plus a zero-coupon bond paying K; a call plus a share'], a:1, e:'Call ＋ 零息債券（到期付 K）與 put ＋ 一股，到期都等於 max(ST, K) → c + Ke^(−rT) = p + S0。'},
+  {u:'ch11', q:'Put–call parity c + Ke^(−rT) = p + S0 holds exactly for:', o:['American options only','European options only','Both American and European options','Options on dividend-paying stocks without adjustment'], a:1, e:'平價只對歐式成立。美式只有 S0 − K ≤ C − P ≤ S0 − Ke^(−rT)。'},
+  {u:'ch11', q:'S0 = $20, K = $20, r = 5%, T = 1 year, no dividends. For American options, C − P must lie between:', o:['0 and 0.98','−0.98 and 0','0 and 20','−1 and 1'], a:0, e:'S0 − K = 0 ≤ C − P ≤ S0 − Ke^(−rT) = 20 − 19.02 = 0.98。'},
+  {u:'ch11', q:'Why is it never optimal to exercise an American call on a non-dividend-paying stock early?', o:['Because the call has no time value','Because delaying exercise saves interest on K and keeps the insurance against a price decline','Because American calls cannot be exercised before maturity','Because the stock price always rises'], a:1, e:'晚點付 K 可以賺利息，還保留「股價跌了可以不買」的保險。想變現就賣掉 call，不要履約。'},
+  {u:'ch11', q:'When can it be optimal to exercise an American put on a non-dividend-paying stock early?', o:['Never','When it is sufficiently deep in the money','Only when it is out of the money','Only on the expiration date'], a:1, e:'夠深價內時，提早拿到 K 可以賺利息，而股價最低也只到 0，等待的好處有限。'},
+  {u:'ch11', q:'S0 = $50, K = $48, PV of dividends D = $1.50, r = 5%, T = 6 months. What is the lower bound for a European call?', o:['$3.19','$1.69','$2.00','$0.50'], a:1, e:'S0 − D − Ke^(−rT) = 50 − 1.50 − 48e^(−0.025) = 48.50 − 46.81 = 1.69。'},
+  {u:'ch11', q:'c = $5, S0 = $50, K = $50, PV of dividends D = $1, r = 6%, T = 1 year. The European put should be worth about:', o:['$2.09','$3.09','$5.00','$4.09'], a:1, e:'有股利的平價：p = c + D + Ke^(−rT) − S0 = 5 + 1 + 47.09 − 50 = 3.09。'},
+  {u:'ch11', q:'When dividends are expected, an American call may be optimally exercised:', o:['At any time','Immediately before an ex-dividend date','Immediately after an ex-dividend date','Only at maturity'], a:1, e:'除息後股價會掉，所以只有在除息日前一刻可能值得提早履約，其他時間都不會。'},
+  {u:'ch11', q:'An increase in the strike price will:', o:['Increase call prices and put prices','Decrease call prices and increase put prices','Increase call prices and decrease put prices','Decrease both'], a:1, e:'K 越高：call 要付更多（變便宜）、put 可以收更多（變貴）。'},
+  // ---- Ch12 ----
+  {u:'ch12', q:'A principal-protected note is typically created by combining:', o:['A zero-coupon bond and a call option','A short stock position and a put','Two call options with different strikes','A long put and a short call'], a:0, e:'零息債券保本，剩下的錢買 call 參與上漲。'},
+  {u:'ch12', q:'Writing a covered call (long stock + short call) has a profit pattern similar to:', o:['A long call','A long put','A short put','A short call'], a:2, e:'由平價 S0 − c = Ke^(−rT) − p：股票＋賣 call ＝ 債券＋賣 put，利潤圖像和賣 put 一樣：獲利有上限、下跌虧損大。'},
+  {u:'ch12', q:'A protective put (long stock + long put) has a profit pattern similar to:', o:['A long call','A short call','A short put','A bear spread'], a:0, e:'p + S0 = c + Ke^(−rT) → 股票＋買 put ≈ 買 call＋債券，下跌有保護、上漲無限。'},
+  {u:'ch12', q:'A bull spread using calls is created by:', o:['Buying a call with strike K2 and selling a call with strike K1 (K1 < K2)','Buying a call with strike K1 and selling a call with strike K2 (K1 < K2)','Buying a call and a put with the same strike','Selling two calls with the middle strike'], a:1, e:'買低 K、賣高 K 的 call。低 K 的 call 比較貴，所以期初要付錢。'},
+  {u:'ch12', q:'A bull call spread uses strikes $30 and $35. What is the payoff if ST = $33?', o:['$0','$2','$3','$5'], a:2, e:'max(33 − 30, 0) − max(33 − 35, 0) = 3 − 0 = 3。'},
+  {u:'ch12', q:'An investor buys a $30 call for $3 and sells a $35 call for $1. What is the profit if ST = $37?', o:['$5','$3','$2','$7'], a:1, e:'Payoff = 7 − 2 = 5（上限 K2 − K1）；淨成本 2 → 利潤 3。最大損失就是 2。'},
+  {u:'ch12', q:'Which spread produces an initial cash inflow?', o:['Bull spread using calls','Bear spread using puts','Bear spread using calls','Butterfly spread using calls'], a:2, e:'空頭 call 價差：買高 K call（便宜）、賣低 K call（貴）→ 期初收錢。'},
+  {u:'ch12', q:'A box spread with K1 = $50 and K2 = $60 matures in 1 year; r = 5%. What should it be worth today (European options)?', o:['$10.00','$9.51','$10.51','$5.00'], a:1, e:'到期一定拿到 K2 − K1 = 10 → 今天 10e^(−0.05) = 9.51。'},
+  {u:'ch12', q:'A butterfly spread is constructed with calls at strikes $50, $55 and $60. What is the payoff if ST = $57?', o:['$7','$5','$3','$0'], a:2, e:'(57 − 50) + 0 − 2×(57 − 55) = 7 − 4 = 3。最大收益在 ST = 55，為 5。'},
+  {u:'ch12', q:'A butterfly spread is most appropriate for an investor who believes the stock price will:', o:['Rise sharply','Fall sharply','Stay close to the middle strike','Move a lot in either direction'], a:2, e:'蝴蝶在 K2 附近賺最多，跑遠只虧小小成本 → 預期不太會動。'},
+  {u:'ch12', q:'A calendar spread is created by:', o:['Buying and selling calls with different strikes and the same maturity','Selling a short-maturity option and buying a long-maturity option with the same strike','Buying a call and a put with the same strike and maturity','Buying a call and a put with different strikes'], a:1, e:'日曆（水平）價差：同 K、不同到期日。履約價和到期日都不同的是對角價差。'},
+  {u:'ch12', q:'An investor buys a straddle with K = $40, paying $4 for the call and $3 for the put. What is the profit if ST = $50?', o:['$10','$3','$6','−$7'], a:1, e:'Payoff = |50 − 40| = 10，成本 7 → 利潤 3。'},
+  {u:'ch12', q:'For the straddle above (K = $40, total cost $7), the breakeven stock prices are:', o:['$33 and $47','$36 and $44','$37 and $43','$40 only'], a:0, e:'K ± 總權利金 = 40 ± 7 → 33 和 47。'},
+  {u:'ch12', q:'A strip consists of:', o:['Two calls and one put with the same strike','One call and two puts with the same strike','One call and one put with different strikes','A call and a put with the same strike'], a:1, e:'Strip＝1C＋2P（覺得跌比較可能）；strap＝2C＋1P（覺得漲比較可能）。'},
+  {u:'ch12', q:'An investor expects a big move but thinks an increase is more likely than a decrease. Which strategy fits best?', o:['Strip','Strap','Butterfly','Bear spread'], a:1, e:'Strap＝2 個 call＋1 個 put，上漲那邊多押一份。'},
+  {u:'ch12', q:'Compared with a straddle, a strangle:', o:['Costs more and needs a smaller move to profit','Costs less but needs a larger move to profit','Has the same cost','Profits most when the stock price stays at the strike'], a:1, e:'勒式買價外的 put 和 call，比較便宜，但股價要動更遠才賺。'},
+  {u:'ch12', q:'A strangle uses a $45 put and a $55 call with a total cost of $3. What is the profit if ST = $60?', o:['$5','$2','$15','−$3'], a:1, e:'Payoff = 60 − 55 = 5（put 不履約）→ 利潤 5 − 3 = 2。'},
+  {u:'ch12', q:'Which position has unlimited potential loss?', o:['Long straddle','Short straddle','Long butterfly','Bull call spread'], a:1, e:'賣出跨式：股價大漲時 short call 虧損無限。另外三個損失都有限。'},
+  {u:'ch12', q:'A bear spread using puts involves:', o:['Buying a put with a low strike and selling a put with a high strike','Buying a put with a high strike and selling a put with a low strike','Buying two puts','Selling a put and buying a call'], a:1, e:'買高 K put（貴）、賣低 K put → 期初付錢，看跌，最大收益 K2 − K1。'},
+  {u:'ch12', q:'A spread in which the options have both different strike prices and different maturities is called a:', o:['Vertical spread','Calendar spread','Diagonal spread','Box spread'], a:2, e:'垂直（bull/bear）：不同 K、同到期；水平（calendar）：同 K、不同到期；對角：兩個都不同。'},
+  // ---- Ch13 ----
+  {u:'ch13', q:'S0 = $40, u = 1.2, d = 0.8, r = 6%, Δt = 0.5 year. What is the risk-neutral probability of an up move?', o:['0.50','0.58','0.62','0.55'], a:1, e:'p = (e^(0.03) − 0.8)/(1.2 − 0.8) = (1.0305 − 0.8)/0.4 = 0.576。'},
+  {u:'ch13', q:'Using the tree above (S0 = $40, u = 1.2, d = 0.8, r = 6%, Δt = 0.5), what is the value of a European call with K = $42?', o:['$3.00','$3.35','$3.46','$2.65'], a:1, e:'fu = 48 − 42 = 6、fd = 0；f = e^(−0.03) × 0.576 × 6 = 3.35。'},
+  {u:'ch13', q:'In the same tree, how many shares should be bought for each call sold to create a riskless portfolio?', o:['0.250','0.375','0.576','1.000'], a:1, e:'Δ = (6 − 0)/(48 − 32) = 0.375。'},
+  {u:'ch13', q:'A portfolio is long 0.375 shares and short one call (S0 = $40, u = 1.2, d = 0.8, K = $42). What is its value at the end of the period?', o:['$12 in both states','$18 if up, $12 if down','$12 if up, $6 if down','$0 in both states'], a:0, e:'上漲：48 × 0.375 − 6 = 12；下跌：32 × 0.375 − 0 = 12 → 無風險。'},
+  {u:'ch13', q:'In a one-step binomial model, the riskless portfolio must earn:', o:['The expected return on the stock','The risk-free rate','Zero','The option’s implied return'], a:1, e:'沒有風險的組合只能賺無風險利率，否則有套利機會。'},
+  {u:'ch13', q:'The option price from a binomial tree does not depend on:', o:['The risk-free rate','The volatility through u and d','The real-world probability of an up movement','The strike price'], a:2, e:'真實機率和股票期望報酬都不在公式裡；股價本身已經反映了這些資訊。'},
+  {u:'ch13', q:'In risk-neutral valuation, the expected return on the stock is assumed to be:', o:['The real-world expected return','The risk-free rate','Zero','The dividend yield'], a:1, e:'風險中立世界：所有資產期望報酬＝無風險利率，期望收益再用 r 折現。'},
+  {u:'ch13', q:'S0 = $50, u = 1.1, d = 0.9, r = 4%, Δt = 3 months, two steps. What is a European call with K = $52 worth?', o:['$2.52','$3.20','$1.74','$8.50'], a:0, e:'p = (e^(0.01) − 0.9)/0.2 = 0.5503；只有 Suu = 60.5 時有收益 8.5 → f = e^(−0.02) × 0.5503² × 8.5 = 2.52。'},
+  {u:'ch13', q:'How should an American option be valued at each node of a binomial tree?', o:['Use only the payoff from immediate exercise','Use only the discounted expected value','Take the greater of the immediate exercise payoff and the discounted expected value','Take the average of the two'], a:2, e:'每個節點比較「立刻履約」和「繼續持有」，取大的。'},
+  {u:'ch13', q:'S0 = $50, u = 1.2, d = 0.8, K = $54, r = 5%, Δt = 1 year, two steps. At the down node (S = $40), the continuation value of the put is $11.37. The American put value at that node is:', o:['$11.37','$14.00','$12.69','$4.00'], a:1, e:'立刻履約 54 − 40 = 14 > 繼續持有 11.37 → 提早履約，節點價值 14。'},
+  {u:'ch13', q:'Compared with an otherwise identical European put, an American put is worth:', o:['Less','The same or more','Always exactly the same','The same as a European call'], a:1, e:'美式多了提早履約的權利，所以 P ≥ p；下跌節點提早履約時 P > p。'},
+  {u:'ch13', q:'With volatility σ = 30% and Δt = 0.25 year, the Cox–Ross–Rubinstein parameters are:', o:['u = 1.30, d = 0.70','u = 1.1618, d = 0.8607','u = 1.075, d = 0.925','u = 1.35, d = 0.74'], a:1, e:'u = e^(0.3×√0.25) = e^(0.15) = 1.1618；d = 1/u = 0.8607。'},
+  {u:'ch13', q:'When moving from the real world to the risk-neutral world:', o:['Volatility changes but expected return stays the same','Expected return changes but volatility stays the same','Both change','Neither changes'], a:1, e:'換測度時期望報酬改變（變成 r），波動度不變，所以 u、d 公式一樣。'},
+  {u:'ch13', q:'For a binomial tree on a stock index paying a dividend yield q, the probability of an up move is:', o:['(e^(rΔt) − d)/(u − d)','(e^((r − q)Δt) − d)/(u − d)','(1 − d)/(u − d)','(e^((q − r)Δt) − d)/(u − d)'], a:1, e:'指數有股利率 q：a = e^((r − q)Δt)。外幣用 r_f 取代 q。'},
+  {u:'ch13', q:'For an option on a futures contract, the risk-neutral probability of an up move is:', o:['(e^(rΔt) − d)/(u − d)','(1 − d)/(u − d)','(e^(−rΔt) − d)/(u − d)','0.5 always'], a:1, e:'期貨不用本錢進場，風險中立期望報酬為 0 → a = 1，p = (1 − d)/(u − d)。'},
+  {u:'ch13', q:'A futures price is 100, u = 1.1 and d = 0.9. What is the risk-neutral probability of an up move?', o:['0.45','0.50','0.55','0.60'], a:1, e:'p = (1 − 0.9)/(1.1 − 0.9) = 0.5。'},
+  {u:'ch13', q:'r = 5%, dividend yield q = 3%, Δt = 0.5, u = 1.1, d = 0.9. The risk-neutral probability for an index option tree is about:', o:['0.50','0.55','0.63','0.45'], a:1, e:'a = e^((0.05 − 0.03)×0.5) = 1.01005 → p = (1.01005 − 0.9)/0.2 = 0.55。'},
+  {u:'ch13', q:'The delta of a put option in a binomial tree is:', o:['Always between 0 and 1','Negative','Always equal to 1','Equal to the call delta'], a:1, e:'股價上漲時 put 變便宜，fu < fd → Δ < 0。'},
+  {u:'ch13', q:'As the number of time steps in a binomial tree increases, the option price:', o:['Diverges','Converges to the Black–Scholes–Merton price','Becomes zero','Equals the intrinsic value'], a:1, e:'步數越多、Δt 越小，二元樹答案越接近 BSM。'},
+  {u:'ch13', q:'Why does delta need to be adjusted over the life of an option?', o:['Because the strike price changes','Because delta changes from node to node as the stock price and time change','Because the risk-free rate is zero','It never needs adjustment'], a:1, e:'每個節點的 Δ 都不同，要持續調整避險部位（動態避險）。'}
+);
+
+DATA.deriv.match = DATA.deriv.match.concat([
+  ['c lower bound','S0 − Ke^(−rT)'], ['p lower bound','Ke^(−rT) − S0'], ['European put upper bound','Ke^(−rT)'], ['call upper bound','S0'],
+  ['put–call parity','c + Ke^(−rT) = p + S0'], ['American C − P','介於 S0 − K 和 S0 − Ke^(−rT)'], ['volatility ↑','call、put 都變貴'], ['dividend ↑','call 變便宜、put 變貴'],
+  ['American call, no dividend','不要提早履約'], ['deep ITM American put','可能值得提早履約']
+].map(p => (p.u = 'ch11', p)), [
+  ['covered call','股票＋賣 call'], ['protective put','股票＋買 put'], ['bull call spread','買 K1 call、賣 K2 call'], ['bear put spread','買 K2 put、賣 K1 put'],
+  ['box spread','(K2 − K1)e^(−rT)'], ['butterfly','買 K1、K3，賣 2 個 K2'], ['calendar spread','同 K、不同到期日'], ['straddle','同 K 的 call＋put'],
+  ['strip','1 call＋2 puts'], ['strap','2 calls＋1 put'], ['strangle','K1 put＋K2 call']
+].map(p => (p.u = 'ch12', p)), [
+  ['p (stock)','(e^(rΔt) − d)/(u − d)'], ['p (futures)','(1 − d)/(u − d)'], ['a (index)','e^((r − q)Δt)'], ['a (currency)','e^((r − rf)Δt)'],
+  ['u (CRR)','e^(σ√Δt)'], ['d (CRR)','1/u'], ['delta','(fu − fd)/(S0u − S0d)'], ['riskless portfolio','買 Δ 股＋賣 1 個 call'],
+  ['American node value','max(立刻履約, 繼續持有)'], ['many steps','趨近 BSM']
+].map(p => (p.u = 'ch13', p)));
+
+DATA.deriv.sort = DATA.deriv.sort.concat([
+  { t:'這個因素「增加」時，歐式 call 的價格？', b:['變貴','變便宜'], u:'ch11',
+    items:[['股價 S0',0], ['波動度 σ',0], ['無風險利率 r',0], ['履約價 K',1], ['預期股利',1]] },
+  { t:'這個因素「增加」時，歐式 put 的價格？', b:['變貴','變便宜'], u:'ch11',
+    items:[['履約價 K',0], ['波動度 σ',0], ['預期股利',0], ['股價 S0',1], ['無風險利率 r',1]] },
+  { t:'你對股價的看法，該用哪個策略？', b:['看漲','看跌','覺得不太會動','覺得會大動、方向不確定'], u:'ch12',
+    items:[['Bull spread',0], ['Strap',0], ['Bear spread',1], ['Strip',1], ['Butterfly',2], ['Calendar spread',2], ['Straddle',3], ['Strangle',3]] },
+  { t:'這個標的的二元樹，成長因子 a 是？', b:['e^(rΔt)','e^((r − q)Δt) 或 e^((r − rf)Δt)','1'], u:'ch13',
+    items:[['無股利股票',0], ['股價指數',1], ['外幣',1], ['期貨',2]] }
+]);
+
+// 期末大抄（Ch10–13）
+DATA.deriv.cheat = `<div class="cheat"><p class="sm-p">A4 正反面手抄：只放公式、觀念、做法，<b>不可抄考古題和習題</b>。Ch11–13 依課本整理，講義出來後再對照增減。</p>
+<div class="cmust"><h3>Ch10 選擇權市場</h3>
+<div class="cblk"><h4>四種部位</h4><ul><li>Long call：max(S<sub>T</sub> − K, 0) − c；兩平 K + c；最大損失 c</li><li>Short call：−max(S<sub>T</sub> − K, 0) + c；最大利潤 c、損失無限</li><li>Long put：max(K − S<sub>T</sub>, 0) − p；兩平 K − p；最大利潤 K − p</li><li>Short put：−max(K − S<sub>T</sub>, 0) + p；最大損失 K − p</li><li><b>要不要履約看 payoff，不是 profit</b></li></ul></div>
+<div class="cblk"><h4>價內價外與價值</h4><ul><li>Call 價內 S &gt; K；put 價內 S &lt; K</li><li>內含價值：call max(S − K, 0)、put max(K − S, 0)；時間價值 = 價格 − 內含價值</li></ul></div>
+<div class="cblk"><h4>合約規格</h4><ul><li>美國股票 100 股；台灣股票選擇權 2,000 股；指數 $100 × 指數（TXO NT$50 × 指數）</li><li>循環：Jan 1/4/7/10、Feb 2/5/8/11、Mar 3/6/9/12；可交易＝當月＋下個月＋循環中下兩個月</li><li>n-for-m 分割：K × m/n、股數 × n/m；股票股利同分割；現金股利不調整</li><li>部位限制：long call 和 short put 同方向</li><li>買方 9 個月內全額付清；賣方繳保證金；OCC 保證履約</li></ul></div>
+</div>
+<div class="cmust"><h3>Ch11 股票選擇權的性質</h3>
+<div class="cblk"><h4>六個因素（增加時）</h4><ul><li>S0：c ↑ p ↓　K：c ↓ p ↑　σ：c ↑ p ↑　r：c ↑ p ↓　D：c ↓ p ↑</li><li>T：美式 ↑；歐式通常 ↑（中間有大股利時 call 可能 ↓）</li></ul></div>
+<div class="cblk"><h4>上下限</h4><ul><li>上限：c, C ≤ S0；p ≤ Ke<sup>−rT</sup>；P ≤ K</li><li>★ c ≥ max(S0 − D − Ke<sup>−rT</sup>, 0)</li><li>★ p ≥ max(D + Ke<sup>−rT</sup> − S0, 0)</li><li>跌破下限：買便宜的選擇權，搭配股票和借貸鎖利潤</li></ul></div>
+<div class="cblk"><h4>平價</h4><ul><li>★ c + D + Ke<sup>−rT</sup> = p + S0（只限歐式）</li><li>兩邊到期都 = max(S<sub>T</sub>, K)；不相等 → 買便宜那邊、賣貴那邊</li><li>美式：S0 − D − K ≤ C − P ≤ S0 − Ke<sup>−rT</sup></li></ul></div>
+<div class="cblk"><h4>提早履約</h4><ul><li>無股利美式 call：不要提早履約 → C = c</li><li>有股利：只可能在除息日前一刻</li><li>美式 put：深價內可能提早 → P ≥ p</li></ul></div>
+</div>
+<div class="cmust"><h3>Ch12 交易策略</h3>
+<div class="cblk"><h4>選擇權＋股票</h4><ul><li>保本型商品＝零息債券＋call</li><li>Covered call（股票＋賣 C）≈ 賣 put；protective put（股票＋買 P）≈ 買 call</li></ul></div>
+<div class="cblk"><h4>價差（K1 &lt; K2 &lt; K3）</h4><ul><li>Bull：買 K1 C、賣 K2 C（期初付）；或買 K1 P、賣 K2 P（期初收）；收益 0 ~ K2 − K1</li><li>Bear：買 K2 P、賣 K1 P（期初付）；或買 K2 C、賣 K1 C（期初收）</li><li>★ Box＝bull call＋bear put，價值 (K2 − K1)e<sup>−rT</sup></li><li>Butterfly：買 K1、K3，賣 2 個 K2；股價在 K2 附近賺最多（K2 − K1）</li><li>Calendar：同 K、賣短買長；diagonal：K 和 T 都不同</li></ul></div>
+<div class="cblk"><h4>組合</h4><ul><li>Straddle：同 K 買 C＋P；兩平 K ± 總權利金</li><li>Strip 1C＋2P（偏跌）；strap 2C＋1P（偏漲）</li><li>Strangle：K1 P＋K2 C，較便宜、要動更大</li><li>做法：拆成每個選擇權的 payoff 疊起來，轉折點在各 K；利潤再扣淨成本</li></ul></div>
+</div>
+<div class="cmust"><h3>Ch13 二元樹</h3>
+<div class="cblk"><h4>一期</h4><ul><li>★ Δ = (f<sub>u</sub> − f<sub>d</sub>)/(S0u − S0d)；買 Δ 股＋賣 1 個 call ＝ 無風險</li><li>★ p = (e<sup>rΔt</sup> − d)/(u − d)</li><li>★ f = e<sup>−rΔt</sup>[p f<sub>u</sub> + (1 − p) f<sub>d</sub>]</li><li>真實機率、期望報酬不影響價格</li></ul></div>
+<div class="cblk"><h4>多期與美式</h4><ul><li>二期歐式：f = e<sup>−2rΔt</sup>[p²f<sub>uu</sub> + 2p(1 − p)f<sub>ud</sub> + (1 − p)²f<sub>dd</sub>]</li><li>從最後一排往回推；美式每個節點取 max(立刻履約, 繼續持有)，今天也要比</li><li>Put 的 Δ &lt; 0；Δ 每個節點不同</li></ul></div>
+<div class="cblk"><h4>u、d 和其他標的</h4><ul><li>★ u = e<sup>σ√Δt</sup>、d = 1/u（真實和風險中立世界的 σ 一樣）</li><li>p = (a − d)/(u − d)：股票 a = e<sup>rΔt</sup>；指數 e<sup>(r − q)Δt</sup>；外幣 e<sup>(r − r<sub>f</sub>)Δt</sup>；期貨 a = 1</li><li>步數越多 → 趨近 BSM</li></ul></div>
+</div></div>`;
+
+TERM.balance(DATA.deriv.mcq.filter(q => ['ch11', 'ch12', 'ch13'].includes(q.u)));
 // ===== CFA 特區：考試介紹、十大科目、報名費用、日程、讀書計畫、小測驗 =====
 // 資料整理自 CFA Institute 官網與各補習班整理（2026 年 10 月），日期與費用以官網為準
 const CFA_LINK = {

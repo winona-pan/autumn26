@@ -1,4 +1,4 @@
-// ===== 衍金 期末：Ch10 選擇權市場的運作（Ch11–13 講義出來後再加） =====
+// ===== 衍金 期末：Ch10 選擇權市場的運作（Ch11–13 在 f_deriv2.js） =====
 DATA.deriv.sections.push(
   { id:'ch10', t:'Ch10 選擇權市場的運作', cards: [
     { id:'f10a', t:'選擇權是什麼？和遠期、期貨差在哪', en:'Options vs. forwards and futures',
@@ -120,7 +120,7 @@ DATA.deriv.sort = [
     items:[['Call，S = 55、K = 50',0], ['Put，S = 45、K = 50',0], ['Call，S = 50、K = 50',1], ['Put，S = 50、K = 50',1], ['Call，S = 45、K = 50',2], ['Put，S = 55、K = 50',2]] }
 ];
 
-// 期末大抄（目前只有 Ch10；之後的章節講義出來再補）
+// 期末大抄：Ch10 版本，f_deriv2.js 會換成 Ch10–13 完整版
 DATA.deriv.cheat = `<div class="cheat"><p class="sm-p">A4 正反面手抄：只放公式、觀念、做法，<b>不可抄考古題和習題</b>。目前只有 Ch10，Ch11–13 講義出來後會補上。</p>
 <div class="cmust"><h3>Ch10 選擇權市場</h3>
 <div class="cblk"><h4>四種部位</h4><ul><li>Long call：max(S<sub>T</sub> − K, 0) − c；兩平 K + c；最大損失 c</li><li>Short call：−max(S<sub>T</sub> − K, 0) + c；最大利潤 c、損失無限</li><li>Long put：max(K − S<sub>T</sub>, 0) − p；兩平 K − p；最大利潤 K − p</li><li>Short put：−max(K − S<sub>T</sub>, 0) + p；最大損失 K − p</li><li><b>要不要履約看 payoff，不是 profit</b></li></ul></div>
