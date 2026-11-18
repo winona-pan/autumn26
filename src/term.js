@@ -39,3 +39,9 @@ const TERM = { subj: ['deriv', 'invest', 'law', 'mgmt', 're'] };
   TERM.midCards = k => DATA[k + 'M'] ? DATA[k + 'M'].sections.reduce((a, x) => a.concat(x.cards), []) : [];
   TERM.isMid = (k, id) => TERM.midCards(k).some(c => c.id === id);
 })();
+// 選擇題正確答案平均分到四個位置：把正確選項和目標位置的選項對調（只用在期末新題目）
+TERM.balance = list => list.forEach((q, i) => {
+  const t = [2, 0, 3, 1][i % 4];
+  if (q.a === t) return;
+  const o = q.o.slice(); [o[q.a], o[t]] = [o[t], o[q.a]]; q.o = o; q.a = t;
+});
