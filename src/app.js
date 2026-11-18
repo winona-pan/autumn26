@@ -367,6 +367,13 @@ function posToast(p) {
 let posTimers = [];
 ['wheel', 'touchstart', 'keydown'].forEach(ev => window.addEventListener(ev, () => { posTimers.forEach(clearTimeout); posTimers = []; }, { passive: true }));
 { let tm; window.addEventListener('scroll', () => { clearTimeout(tm); tm = setTimeout(savePos, 400); }, { passive: true }); }
+// 讀到下面時右下角出現「回到頂端」：一鍵回到這頁最上面（題目、公式、知識點都適用）
+{ const b = document.createElement('button'); b.type = 'button'; b.id = 'totop'; b.className = 'totop'; b.hidden = true; b.setAttribute('aria-label', '回到頂端'); b.title = '回到頂端';
+  b.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19 V6 M6 11 L12 5 L18 11"/></svg><span>頂端</span>';
+  b.onclick = () => { window.scrollTo({ top: 0, behavior: 'smooth' }); const t = $('#postoast'); if (t) t.hidden = true; };
+  document.body.appendChild(b);
+  let raf = 0; const upd = () => { raf = 0; const on = window.scrollY > Math.max(500, innerHeight * 0.8); if (b.hidden === on) { b.hidden = !on; document.body.classList.toggle('hastop', on); } };
+  window.addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(upd); }, { passive: true }); }
 document.addEventListener('visibilitychange', () => document.visibilityState === 'hidden' && savePos());
 window.addEventListener('pagehide', savePos);
 
