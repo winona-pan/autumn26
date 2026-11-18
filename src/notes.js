@@ -264,6 +264,7 @@ const NOTES = (() => {
   function jumpBm(id) {
     const d = BM()[id]; if (!d) return;
     const tab = d.tab || 'learn';
+    if (d.s && DATA[d.s] && !DATA[d.s].archived) TERM.focus(d.s, id);
     const go2 = () => { const card = $('#c-' + id); if (!card) return; const det = card.querySelector('details'); if (det) det.open = true; const rv = card.querySelector('.reveal'); if (rv) rv.click(); const el = card.querySelector('.bmk') || card; window.scrollTo(0, Math.max(0, scrollY + el.getBoundingClientRect().top - innerHeight / 3)); el.classList.add('flash'); setTimeout(() => el.classList.remove('flash'), 1600); };
     if (CUR[0] === d.s && CUR[1] === tab && $('#c-' + id)) go2(); else { if (tab === 'prob') showProb(id); go(d.s, tab, { top: 1 }); setTimeout(go2, 120); }
   }
