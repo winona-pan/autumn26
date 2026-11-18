@@ -114,7 +114,7 @@
   const lab = id => id[0] === 'x' ? id.slice(1) : id[0] === 'v' ? id.slice(1).toUpperCase() : id.slice(1).replace('_', '.');
   const plink = id => `<a class="plink" href="#c-prob-${id}" data-prob="${id}">${lab(id)}</a>`;
   const links = (k, g) => ids[k][g].map(plink).join(' ');
-  document.addEventListener('click', e => {
+  if (typeof document !== 'undefined') document.addEventListener('click', e => {
     const a = e.target.closest && e.target.closest('a[data-prob]'); if (!a) return;
     e.preventDefault();
     go('deriv', 'prob', { top: true });

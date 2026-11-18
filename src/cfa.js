@@ -133,7 +133,7 @@ function renderCFA(root) {
   // 現有卡片和公式上的 CFA 標籤
   const learned = {}; CFA_L1.forEach(t => learned[t.k] = []);
   ORDER.forEach(k => {
-    subjCards(DATA[k]).forEach(c => c.cfa && learned[cfaTopic(c.cfa)].push({ k, id: c.id, t: c.t, cfa: c.cfa, card: 1 }));
+    subjCards(DATA[k]).concat(TERM.midCards(k)).forEach(c => c.cfa && learned[cfaTopic(c.cfa)].push({ k, id: c.id, t: c.t, cfa: c.cfa, card: 1 }));
     (DATA[k].formulas || []).forEach(f => f.cfa && /CFA/.test(f.cfa) && !/較少|了解即可/.test(f.cfa) && learned[cfaTopic(f.cfa)].push({ k, id: f.id, t: f.t.replace(/<[^>]+>/g, ''), cfa: f.cfa }));
   });
   const cards = Object.values(learned).flat().filter(x => x.card), done = cards.filter(x => ST.done[x.id]).length;

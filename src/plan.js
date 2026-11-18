@@ -112,7 +112,7 @@ function planTasksAll(k, f) {
     const T = [];
     RE_UNITS.forEach((u, i) => {
       if ((u[1] === 'mid') !== (k === 're')) return;
-      const x = DATA.re.sections[i];
+      const x = DATA.re.sections.concat(DATA.reM ? DATA.reM.sections : []).find(s => s.id === 're' + (i + 1));
       if (!P.reDone[i]) T.push({ k, sec: x.t, t: `看單元 ${i + 1} 影片（約 ${+P.reV || 2} 小時）`, min: Math.round((+P.reV || 2) * 60), kind: 'v' });
       x.cards.forEach(c => { if (!ST.done[c.id]) T.push({ k, id: c.id, sec: x.t, t: c.t, min: PLAN_MIN.re * f, kind: 'c' }); });
     });

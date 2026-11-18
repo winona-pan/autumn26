@@ -60,10 +60,10 @@ function secGroupsHTML(x) {
 }
 function renderLearn(key, root) {
   const s = DATA[key];
-  root.innerHTML = `<div class="tipbox"></div><div class="learn"><nav class="toc" aria-label="章節">${s.sections.map(x => `<a href="#sec-${x.id}">${x.t}<span class="cnt" data-sec="${x.id}"></span></a>`).join('')}${key === 'law' ? '<a href="#sec-art">條文速記表</a>' : ''}</nav>
+  root.innerHTML = `<div class="tipbox"></div><div class="learn"><nav class="toc" aria-label="章節">${s.sections.map(x => `<a href="#sec-${x.id}">${x.t}<span class="cnt" data-sec="${x.id}"></span></a>`).join('')}${key === 'lawM' ? '<a href="#sec-art">條文速記表</a>' : ''}</nav>
     <div class="cards"><div class="searchbar"><input type="search" id="q-${key}" placeholder="搜尋名詞或關鍵字（例：basis、要約、BCG）" aria-label="搜尋"></div>
     ${s.sections.map(x => `<section class="sec" id="sec-${x.id}"><h3>${x.t}</h3>${x.groups ? secGroupsHTML(x) : x.cards.map(cardHTML).join('')}</section>`).join('')}
-    ${key === 'law' ? `<section class="sec" id="sec-art"><h3>條文速記表</h3><p class="sm-p">選擇題常考「第幾條」。按「遮住內容」後，點每一列偷看答案。</p><button class="btn ghost" id="arthide" type="button">遮住內容</button><div class="tblwrap"><table class="tbl arts">${LAWART.map(a => `<tr><td><b>${a[0]}</b></td><td class="artc">${a[1]}</td></tr>`).join('')}</table></div></section>` : ''}
+    ${key === 'lawM' ? `<section class="sec" id="sec-art"><h3>條文速記表</h3><p class="sm-p">選擇題常考「第幾條」。按「遮住內容」後，點每一列偷看答案。</p><button class="btn ghost" id="arthide" type="button">遮住內容</button><div class="tblwrap"><table class="tbl arts">${LAWART.map(a => `<tr><td><b>${a[0]}</b></td><td class="artc">${a[1]}</td></tr>`).join('')}</table></div></section>` : ''}
     </div></div>`;
   FUN.say($('.tipbox', root), tip('learn'));
   $$('.wmount', root).forEach(m => WIDGETS[m.dataset.w] && WIDGETS[m.dataset.w](m));
@@ -84,10 +84,22 @@ function renderLearn(key, root) {
 function updateCounts() {
   ORDER.concat('cfa').forEach(k => {
     const s = DATA[k]; const all = subjCards(s); const d = all.filter(c => ST.done[c.id]).length;
-    $$(`[data-prog="${k}"]`).forEach(e => { e.style.setProperty('--p', (d / all.length * 100).toFixed(1) + '%'); e.title = `${d}/${all.length}`; });
+    $$(`[data-prog="${k}"]`).forEach(e => { e.style.setProperty('--p', (d / (all.length || 1) * 100).toFixed(1) + '%'); e.title = `${d}/${all.length}`; });
     $$(`[data-progt="${k}"]`).forEach(e => e.textContent = `${d}/${all.length}`);
-    s.sections.forEach(x => $$(`[data-sec="${x.id}"]`).forEach(e => e.textContent = `${x.cards.filter(c => ST.done[c.id]).length}/${x.cards.length}`));
+    s.sections.concat(DATA[k + 'M'] ? DATA[k + 'M'].sections : []).forEach(x => $$(`[data-sec="${x.id}"]`).forEach(e => e.textContent = `${x.cards.filter(c => ST.done[c.id]).length}/${x.cards.length}`));
   });
+}
+
+// ---------- 期中（收起來）：期中的知識卡、公式、大抄、統整筆記 ----------
+function renderMid(k, root) {
+  const M = DATA[k + 'M'];
+  const subs = [['learn', k === 'law' ? '知識點＋條文' : '知識點'], (M.formulas || []).length && ['formula', '公式教室'], M.cheat && ['cheat', '期中大抄'], (M.sums || []).length && ['sum', '統整筆記']].filter(Boolean);
+  ST.midSub = ST.midSub || {};
+  const cur = subs.some(s => s[0] === ST.midSub[k]) ? ST.midSub[k] : 'learn';
+  root.innerHTML = `<div class="midbar"><p class="sm-p">期中考範圍收在這裡：卡片、打勾、筆記、螢光筆都還在，題目沒有保留。要讀期末範圍請回「知識點」。</p>${subs.length > 1 ? `<div class="quizbar">${subs.map(s => `<button class="btn ${s[0] === cur ? 'on' : 'ghost'}" data-ms="${s[0]}" type="button">${s[1]}</button>`).join('')}</div>` : ''}</div><div class="midpane"></div>`;
+  const P = $('.midpane', root);
+  ({ learn: () => renderLearn(k + 'M', P), formula: () => renderFormulas(k + 'M', P), cheat: () => { P.innerHTML = M.cheat; }, sum: () => LAWCASE.renderSums(P, M) })[cur]();
+  $$('[data-ms]', root).forEach(b => b.onclick = () => { ST.midSub[k] = b.dataset.ms; save(); renderMid(k, root); window.scrollTo(0, 0); });
 }
 
 // ---------- Formula classroom ----------
@@ -321,7 +333,7 @@ function renderHome(root) {
 }
 
 function jumpFormula(k, id) { go(k, 'formula', { top: 1 }); setTimeout(() => { const el = $('#f-' + id); if (el) { window.scrollTo(0, Math.max(0, scrollY + el.getBoundingClientRect().top - topGap())); el.classList.add('flash'); setTimeout(() => el.classList.remove('flash'), 1600); } }, 60); }
-function jumpCard(k, id) { go(k, 'learn', { top: 1 }); setTimeout(() => { const el = $('#c-' + id); if (el) { const d = el.querySelector('details'); if (d) d.open = true; window.scrollTo(0, Math.max(0, scrollY + el.getBoundingClientRect().top - topGap())); el.classList.add('flash'); setTimeout(() => el.classList.remove('flash'), 1600); } }, 60); }
+function jumpCard(k, id) { if (TERM.isMid(k, id)) { ST.midSub = ST.midSub || {}; ST.midSub[k] = 'learn'; go(k, 'mid', { top: 1 }); } else go(k, 'learn', { top: 1 }); setTimeout(() => { const el = $('#c-' + id); if (el) { const d = el.querySelector('details'); if (d) d.open = true; window.scrollTo(0, Math.max(0, scrollY + el.getBoundingClientRect().top - topGap())); el.classList.add('flash'); setTimeout(() => el.classList.remove('flash'), 1600); } }, 60); }
 
 // ---------- 記住每一頁讀到哪裡 ----------
 // 以「畫面最上方那張卡片／區塊」當錨點（版面寬度、展開收合改變也找得回來），找不到才用捲動距離。
@@ -361,13 +373,15 @@ window.addEventListener('pagehide', savePos);
 // ---------- Routing ----------
 const PANES = {
   basic: [['learn', '基礎卡片'], ['formula', '公式教室'], ['play', '遊戲＆打怪'], ['notes', '我的筆記']],
-  deriv: [['learn', '知識點'], ['formula', '公式教室'], ['prob', '課本習題'], ['gen', '變化題'], ['cheat', '期中大抄'], ['play', '遊戲＆打怪'], ['notes', '我的筆記']],
-  invest: [['learn', '知識點'], ['formula', '公式教室'], ['flash', '講義問題'], ['play', '遊戲＆打怪'], ['notes', '我的筆記']],
-  law: [['learn', '知識點＋條文'], ['case', '情境題'], ['sum', '統整筆記'], ['play', '遊戲＆打怪'], ['notes', '我的筆記']],
-  mgmt: [['learn', '知識點'], ['formula', '公式教室'], ['play', '遊戲＆打怪'], ['notes', '我的筆記']],
-  re: [['learn', '知識點'], ['play', '遊戲＆打怪'], ['notes', '我的筆記']],
+  // 期末：期中範圍收在最後的「期中（收起來）」分頁（term.js）；沒有資料的公式、大抄分頁不顯示
+  deriv: [['learn', '知識點'], ['formula', '公式教室'], ['cheat', '期末大抄'], ['play', '遊戲＆打怪'], ['notes', '我的筆記'], ['mid', '期中（收起來）']],
+  invest: [['learn', '知識點'], ['formula', '公式教室'], ['play', '遊戲＆打怪'], ['notes', '我的筆記'], ['mid', '期中（收起來）']],
+  law: [['learn', '知識點'], ['play', '遊戲＆打怪'], ['notes', '我的筆記'], ['mid', '期中（收起來）']],
+  mgmt: [['learn', '知識點'], ['formula', '公式教室'], ['play', '遊戲＆打怪'], ['notes', '我的筆記'], ['mid', '期中（收起來）']],
+  re: [['learn', '知識點'], ['play', '遊戲＆打怪'], ['notes', '我的筆記'], ['mid', '期中（收起來）']],
   cfa: [['intro', '考試指南'], ['learn', 'Level I 完整筆記'], ['play', '遊戲＆打怪'], ['notes', '我的筆記']]
 };
+TERM.subj.forEach(k => PANES[k] = PANES[k].filter(p => (p[0] !== 'formula' || (DATA[k].formulas || []).length) && (p[0] !== 'cheat' || DATA[k].cheat)));
 let CUR = [];
 function go(k, tab, opt) {
   NOTES.hide(); ARCADE.stop(); SOUND.stop();
@@ -388,7 +402,7 @@ function go(k, tab, opt) {
   $$('.ptab', main).forEach(b => b.onclick = () => go(k, b.dataset.p));
   ST.tab[k] = tab; save();
   const pane = $('#pane');
-  ({ intro: () => renderCFA(pane), learn: () => renderLearn(k, pane), formula: () => renderFormulas(k, pane), mcq: () => renderMCQ(k, pane), prob: () => renderProblems(pane), gen: () => renderGens(pane), cheat: () => { pane.innerHTML = DATA[k].cheat || ''; }, flash: () => renderFlash(pane), essay: () => renderEssay(pane), case: () => LAWCASE.renderCases(pane), sum: () => LAWCASE.renderSums(pane), game: () => renderGames(k, pane), play: () => renderGames(k, pane), notes: () => NOTES.page(k, pane) })[tab]();
+  ({ intro: () => renderCFA(pane), learn: () => renderLearn(k, pane), formula: () => renderFormulas(k, pane), mcq: () => renderMCQ(k, pane), prob: () => renderProblems(pane), gen: () => renderGens(pane), cheat: () => { pane.innerHTML = DATA[k].cheat || ''; }, flash: () => renderFlash(pane), essay: () => renderEssay(pane), case: () => LAWCASE.renderCases(pane), sum: () => LAWCASE.renderSums(pane), game: () => renderGames(k, pane), play: () => renderGames(k, pane), notes: () => NOTES.page(k, pane), mid: () => renderMid(k, pane) })[tab]();
   updateCounts();
   opt && opt.top ? window.scrollTo(0, 0) : restorePos();
   NOTES.bmPill();

@@ -62,8 +62,12 @@ const LAWCASE = (() => {
     $('[data-redo]', el).onclick = () => { opts.forEach(b => { b.disabled = false; b.classList.remove('ok', 'no'); }); x.hidden = true; el.scrollIntoView({ block: 'start' }); window.scrollBy(0, -topGap()); };
   }
 
-  function renderSums(root) {
-    const S = DATA.law.sums || [], ALL = DATA.law.cases || [];
+  function renderSums(root, D) {
+    D = D || DATA.law;
+    const S = D.sums || [], ALL = D.cases || [];
+    const uname = u => u === 'x' ? '跨單元' : ((D.sections.find(x => x.id === u) || {}).t || u).replace(/[（(].*$/, '');
+    const cardT = id => { for (const s of D.sections) { const c = s.cards.find(c => c.id === id); if (c) return c.t.replace(/[（(]§.*$/, ''); } return id; };
+    if (!S.length) { root.innerHTML = ''; return; }
     let cur = S.some(s => s.u === ST.lsum) || ST.lsum === 'all' ? ST.lsum : S[0].u;
     root.innerHTML = `<div class="tipbox"></div><div class="ubar"><span class="lbl">選單元</span><div class="uchips">${S.map(s => `<button class="uchip" data-su="${s.u}" type="button">${uname(s.u)}</button>`).join('')}<button class="uchip" data-su="all" type="button">全部單元一次看</button></div></div><div class="lsumbody"></div>`;
     FUN.say($('.tipbox', root), tip('sum'));
